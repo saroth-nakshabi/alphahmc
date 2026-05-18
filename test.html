@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Section</title>
+    <!-- Importing fonts to match the design: Playfair Display for headings and Inter for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Playfair+Display:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            color: #333;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .about-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding-top: 130px;
+            width: 100%;
+        }
+
+        .eyebrow {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #999;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 52px;
+            font-weight: 400;
+            letter-spacing: -0.5px;
+            color: #111;
+            line-height: 1.15;
+            margin-bottom: 45px;
+        }
+
+        .paragraph-container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .paragraph {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 24px;
+        }
+
+        .paragraph:last-of-type {
+            margin-bottom: 50px;
+        }
+
+        .btn-apply {
+            display: inline-block;
+            padding: 15px 42px;
+            border: 1px solid #d2d2d2;
+            border-radius: 40px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            margin-bottom: 60px;
+        }
+
+        .btn-apply:hover {
+            border-color: #333;
+            color: #111;
+            background-color: #f9f9f9;
+        }
+
+        .image-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            /* Align image to the bottom */
+            height: 400px;
+            /* Keep height constrained to allow clipping */
+            margin-top: 20px;
+            /* Optional: if you want the fade out effect at the very bottom */
+            -webkit-mask-image: linear-gradient(to top, transparent 0%, black 15%);
+            mask-image: linear-gradient(to top, transparent 0%, black 15%);
+        }
+
+        .image-wrapper img {
+            max-width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: bottom;
+            /* Anchor person to the bottom */
+            /* This gives the exact soft drop shadow seen in the design, and grayscales it */
+            filter: grayscale(100%) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.2));
+            /* Note: this effect looks best with a transparent PNG cutout */
+        }
+
+        @media (max-width: 768px) {
+            .heading {
+                font-size: 38px;
+            }
+
+            .about-section {
+                padding-top: 80px;
+            }
+
+            .paragraph-container {
+                padding: 0 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+  <section class="flipbook-section">
+    <h2>Project Flip Book</h2>
+
+    <div class="flipbook-container">
+        <div class="flipbook-page">
+            <img src="images/project1.jpg" alt="Project Image 1">
+        </div>
+        <div class="flipbook-page">
+            <video controls>
+                <source src="videos/demo1.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="flipbook-page">
+            <div class="doc-card">
+                <p>Project Report.pdf</p>
+                <a href="docs/report1.pdf" target="_blank">Open</a>
+            </div>
+        </div>
+        <!-- Add more pages here -->
+    </div>
+
+    <!-- Navigation -->
+    <div class="flipbook-nav">
+        <button onclick="prevPage()">Prev</button>
+        <button onclick="nextPage()">Next</button>
+    </div>
+</section>
+
+</body>
+
+</html>
+
+
+
+<section class="strategy-section">
+    <div class="container">
+        <div class="strategy-grid">
+            <div class="image-grid-parent">
+                <div class="grid-card grid-exterior">
+                    <img src="https://www.mua.edu/uploads/sites/10/2023/02/istock-482499394.webp?w=1536"
+                        alt="Hospital Exterior">
+                </div>
+                <div class="grid-card grid-portrait">
+                    <img src="https://investin.org/cdn/shop/articles/jafar-ahmed-E285pJbC4uE-unsplash.jpg?v=1634293259"
+                        alt="Doctor Portrait">
+                </div>
+                <div class="grid-card grid-lobby">
+                    <img
+                        src="https://srilankamirror.com/wp-content/uploads/2025/12/Strike_Doctors_1200px675_17_12_25.jpg">
+                </div>
+                <div class="grid-card grid-slider-card slider-container" id="grid-slider">
+                    <div class="slider-track">
+                        <div class="slide">
+                            <img src="https://media-cldnry.s-nbcnews.com/image/upload/t_fit-560w,f_auto,q_auto:best/rockcms/2024-05/240513-women-surgeons-se-1215p-de7fda.jpg"
+                                alt="Site Plan">
+                        </div>
+                        <div class="slide">
+                            <img src="https://www.onlanka.com/wp-content/uploads/2023/04/health-service-doctor.jpg"
+                                alt="Medical Technology">
+                        </div>
+                        <div class="slide">
+                            <img src="https://people.com/thmb/pL4SWz870QR9h-uqQBBoejqPbbw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc():focal(576x467:578x469)/female-doctor-stock-2-042324-a7bc2e3ef76b4512b6792338539a9b03.jpg"
+                                alt="Architectural Sketch">
+                        </div>
+                    </div>
+                    <div class="slider-controls">
+                        <button class="slider-btn prev-btn">‹</button>
+                        <button class="slider-btn next-btn">›</button>
+                    </div>
+                </div>
+            </div>
+            <div class="strategy-cards">
+                <div class="strategy-track">
+                    <div class="strat-card">
+                        <h3>Strategic Foundation</h3>
+                        <p>Defining the core principles that drive healthcare excellence and facility efficiency. We
+                            establish a robust roadmap for spatial optimization and operational resilience.</p>
+                    </div>
+                    <div class="strat-card">
+                        <h3>Strategic Approach</h3>
+                        <p>Tailored methodologies to optimize clinical workflows and patient experience. Our approach
+                            integrates evidence-based design with emerging medical trends.</p>
+                    </div>
+                    <div class="strat-card">
+                        <h3>Future Ready Design</h3>
+                        <p>Transforming vision into structured reality. We develop scalable facility master plans that
+                            adapt to changing community needs and technological advancements.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

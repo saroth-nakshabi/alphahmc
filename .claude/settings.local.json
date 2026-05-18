@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir /a)",
+      "Bash(php artisan *)",
+      "Bash(php -l \"app\\\\Http\\\\Controllers\\\\ServiceController.php\")",
+      "Bash(php -l \"app\\\\Models\\\\Service.php\")",
+      "Bash(php -l \"app\\\\Http\\\\Controllers\\\\HomeController.php\")",
+      "Bash(php -l \"app\\\\Http\\\\Controllers\\\\MainHomeController.php\")",
+      "Bash(php -l \"app\\\\Http\\\\Controllers\\\\SearchController.php\")",
+      "Bash(php -l \"app\\\\Http\\\\Controllers\\\\ServiceGroupController.php\")",
+      "Bash(xargs grep -l \"service_groups\")",
+      "Bash(xargs grep -l \"CREATE.*service_group\\\\|table.*service_group\\\\|'service_group\")",
+      "Bash(xargs -0 grep -l \"service_groups\")",
+      "Bash(xargs grep -l \"create.*service_groups\\\\|Schema.*service_groups\")",
+      "Bash(xargs grep -l \"service_group\")",
+      "Bash(xargs grep -l \"service_group\\\\|belongsToMany\\\\|pivot\")",
+      "Bash(python3 search.py \"healthcare consultancy service page UAE professional trust\" --design-system -p \"Alpha Healthcare - Service Packages\")",
+      "Bash(python3 search.py \"healthcare professional consultancy trust authority\" --domain color)",
+      "Bash(python3 search.py \"service package detail page features\" --domain ux)",
+      "Bash(python3 search.py \"healthcare consultancy service category professional minimal\" --design-system -p \"Alpha Healthcare\")",
+      "Bash(findstr /i \"service_group\")",
+      "Bash(Select-String -Pattern \"profes\" -SimpleMatch)",
+      "Bash(git *)"
+    ]
+  }
+}

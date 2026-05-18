@@ -1,0 +1,587 @@
+/* ==========================================================
+   UNIFIED PREMIUM GLASS NAVBAR STYLES
+   ========================================================== */
+
+:root {
+  --alpha-teal: #066D77;
+  --alpha-dark: #053335;
+  --alpha-light: #f8fafc;
+  --glass-bg: rgba(255, 255, 255, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-content-bg: rgba(255, 255, 255, 0.15);
+  --transition-curve: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  --premium-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+/* 1. Main Floating Container (Glassmorphism) */
+.navbar-content {
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 65%;
+  max-width: 1730px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid var(--glass-border);
+  border-radius: 60px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  z-index: 9999 !important;
+  overflow: visible;
+  height: 90px;
+  transition: var(--transition-curve);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Expanded State */
+.navbar-content.menu-is-open {
+  height: 720px;
+  border-radius: 40px;
+  background: rgba(255, 255, 255, 0.75);
+  /* Increased clarity for readability */
+  box-shadow: var(--premium-shadow);
+}
+
+/* 2. Top Bar Layout (Left: Explore, Center: Logo, Right: Search) */
+.navbar-top {
+  height: 90px;
+  display: grid;
+  grid-template-columns: 1fr 200px 1fr;
+  align-items: center;
+  padding: 0 45px;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.nav-column {
+  display: flex;
+  align-items: center;
+}
+
+.nav-left {
+  justify-content: flex-start;
+}
+
+.nav-center {
+  justify-content: center;
+}
+
+.nav-right {
+  justify-content: flex-end;
+}
+
+/* 3. Logo Styling */
+.navbar-logo img {
+  height: 60px;
+  width: auto;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.navbar-logo:hover img {
+  transform: scale(1.1);
+}
+
+/* 4. Glass Search Bar (Right Side) */
+.glass-search-container {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 30px;
+  padding: 5px 20px;
+  width: 280px;
+  transition: var(--transition-curve);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+}
+
+.glass-search-container:focus-within {
+  background: rgba(255, 255, 255, 0.5);
+  width: 320px;
+  border-color: var(--alpha-teal);
+  box-shadow: 0 8px 30px rgba(30, 167, 161, 0.1);
+}
+
+.glass-search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  color: var(--alpha-dark);
+  width: 100%;
+  padding: 10px 0;
+}
+
+.glass-search-input::placeholder {
+  color: rgba(12, 47, 47, 0.4);
+  font-weight: 500;
+}
+
+.glass-search-btn {
+  background: transparent;
+  border: none;
+  color: var(--alpha-dark);
+  cursor: pointer;
+  padding: 5px;
+  font-size: 18px;
+  opacity: 0.6;
+  transition: all 0.3s;
+}
+
+.glass-search-btn:hover {
+  opacity: 1;
+  color: var(--alpha-teal);
+  transform: scale(1.1);
+}
+
+@media(max-width:768px){
+  .glass-search-container{
+    width:48px;
+    height:48px;
+    padding:0;
+    background: var(--alpha-teal);
+    justify-content: center;
+
+  }
+  .glass-search-input{
+    display: none;
+
+  }
+  .glass-search-btn{
+    color: #fff;
+    opacity: 1;
+    font-size: 16px;
+    
+  }
+}
+
+/* 6. Premium Explore Button (Left Side) */
+.explore-btn-premium {
+  background: #066D77;
+  color: #fff;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 35px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 1.8px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  transition: var(--transition-curve);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.explore-btn-premium:hover {
+  background: var(--alpha-teal);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(30, 167, 161, 0.3);
+}
+
+/* Custom Burger Icon */
+.burger-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 22px;
+}
+
+.burger-icon span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: var(--transition-curve);
+}
+
+.burger-icon span:last-child {
+  width: 100%;
+  /* Symmetrical burger */
+}
+
+
+/* Scrollbar width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track (background) */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Thumb (the draggable part) */
+::-webkit-scrollbar-thumb {
+  background: #066D77;
+  border-radius: 10px;
+}
+
+/* Hover effect */
+::-webkit-scrollbar-thumb:hover {
+  background: #053335;
+}
+
+/* Active State for Burger */
+.explore-btn-premium.is-active .burger-icon span:first-child {
+  transform: translateY(4px) rotate(45deg);
+}
+
+.explore-btn-premium.is-active .burger-icon span:last-child {
+  transform: translateY(-4px) rotate(-45deg);
+}
+
+/* 7. Dropdown Content Area (Unified Glass Content) */
+#sidebar-menu {
+  display: flex !important;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateY(-15px);
+  flex-grow: 1;
+  overflow: hidden;
+  background: transparent;
+}
+
+.menu-is-open #sidebar-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  border-radius:40px;
+}
+
+.sidebar-inner-content {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(10px);
+ 
+}
+
+/* Column 1: Categories (Left) */
+.sidebar-content {
+  /* width: 320px; */
+  background: rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 50px 30px 50px 30px;
+  overflow-y: auto;
+  transition: var(--transition-curve);
+   width: 400px;
+  max-width: 400px;
+}
+
+/* Column 2 & 3 Combined detail area (Right) */
+.sidebar-content-1 {
+  flex-grow: 1;
+  padding: 50px 30px;
+  background: rgba(255, 255, 255, 0.2);
+  overflow-y: auto;
+}
+
+.sidebar-menu-heading {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  color: var(--alpha-teal);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  margin-bottom: 30px;
+  opacity: 0.8;
+}
+
+.service-content {
+  margin-bottom: 5px;
+}
+
+.service-content a {
+  text-decoration: none;
+  color: var(--alpha-dark);
+  font-family: 'Outfit', sans-serif;
+  /* font-size: 17px; */
+  /* font-weight: 600; */
+  padding: 12px 15px;
+  transition: var(--transition-curve);
+  display: flex;
+  align-items: center;
+  position: relative;
+  opacity: 0.7;
+}
+
+.service-content a:hover,
+.active-category {
+  color: var(--alpha-teal) !important;
+  opacity: 1 !important;
+  padding-left: 15px;
+  border-radius: 15px;
+  background:rgba(230, 230, 230, 0.4);
+  border-bottom: 2px solid var(--alpha-teal);
+  
+}
+
+@media(max-width:768px){
+  .service-content a:hover,
+  .active-category{
+    border-bottom: none;
+  }
+}
+
+/* .service-content a.active-category::before {
+  content: '';
+  position: absolute;
+  left: -15px;
+  width: 4px;
+  height: 60%;
+  background: var(--alpha-teal);
+  border-radius: 2px;
+} */
+
+/* Right Detail Area Typography */
+#dynamic-heading {
+  font-family: 'Outfit', sans-serif;
+  color: var(--alpha-dark);
+  font-weight: 600;
+  margin-bottom: 5px;
+  letter-spacing: -1px;
+}
+
+#dynamic-desc {
+  font-family: 'Outfit', sans-serif;
+  font-size: 17px;
+  color: #57606a;
+  max-width: 600px;
+  line-height: 1.7;
+  font-weight: 400;
+  height:70px;
+}
+
+/* Sub-Categories and Services Layout */
+.categories_service {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 10px;
+}
+
+/* Sub-column header style */
+.categories_service h6 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  color: rgba(12, 47, 47, 0.4);
+  margin-bottom: 20px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.sub_categories a {
+  color: var(--alpha-dark);
+  font-family: 'Outfit', sans-serif;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
+  opacity: 1;
+  padding: 10px 15px;
+  position: relative;
+}
+
+.sub_categories a::after {
+  content: '→';
+  flex-shrink: 0;
+  margin-left: 8px;
+  opacity: 0;
+  transition: margin-left 0.3s ease, opacity 0.3s ease;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.sub_categories a:hover::after {
+  opacity: 1;
+  margin-left: 12px;
+}
+
+
+
+.sub_categories a:hover,
+.sub_categories a.active-category {
+  color: var(--alpha-teal);
+  transform: translateX(5px);
+}
+
+.service-item a {
+  color: #57606a;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+  padding: 8px 15px;
+  border-radius: 12px;
+  background: transparent;
+}
+
+.service-item a:hover {
+  color: var(--alpha-dark);
+  background: rgba(230, 230, 230, 0.4);
+  padding-left: 20px;
+}
+
+/* .service-item a::before {
+  content: '→';
+  margin-right: 12px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  font-weight: 800;
+} */
+
+.service-item a:hover::before {
+  opacity: 1;
+  color: var(--alpha-teal);
+}
+
+/* 8. Mobile Responsiveness */
+@media (max-width: 991px) {
+  .navbar-content {
+    width: 94%;
+    top: 10px;
+    height: 75px;
+    border-radius: 50px;
+  }
+
+  .navbar-content.menu-is-open {
+    height: 90vh;
+    border-radius: 30px;
+  }
+
+  .navbar-top {
+    height: 75px;
+    grid-template-columns: 80px 1fr 80px;
+    padding: 0 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .nav-column {
+    justify-content: center;
+  }
+
+  .nav-left {
+    justify-content: flex-start;
+  }
+
+  .nav-right {
+    justify-content: flex-end;
+  }
+
+  .explore-btn-premium {
+    padding: 0;
+    width: 48px;
+    height: 48px;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .btn-label {
+    display: none;
+  }
+
+  .burger-icon {
+    width: 20px;
+  }
+
+  .navbar-logo img {
+    height: 45px;
+  }
+
+  .glass-search-container {
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    background: var(--alpha-teal);
+    border: none;
+    border-radius: 50%;
+    justify-content: center;
+    display: flex;
+  }
+
+  .glass-search-input {
+    display: none;
+  }
+
+  .glass-search-btn {
+    color: #fff;
+    opacity: 1;
+    font-size: 16px;
+  }
+
+  .sidebar-inner-content {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  /* .sidebar-content {
+    width: 100%;
+    padding: 40px 25px;
+    border-right: none;
+    background: rgba(255, 255, 255, 0.05);
+  } */
+
+  /* .sidebar-content-1 {
+    width: 100%;
+    padding: 40px 25px;
+    background: #fff;
+  } */
+
+  #dynamic-heading {
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
+
+  #dynamic-desc {
+    font-size: 15px;
+    margin-bottom: 30px;
+  }
+
+  .categories_service {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .sub_categories a {
+    margin-bottom: 12px;
+  }
+
+  .service-item a {
+    font-size: 15px;
+    padding: 10px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-content {
+    width: 96%;
+    top: 8px;
+  }
+
+  .navbar-top {
+    padding: 0 10px;
+    grid-template-columns: 60px 1fr 60px;
+  }
+
+  .navbar-logo img {
+    height: 38px;
+  }
+
+  .explore-btn-premium,
+  .glass-search-container {
+    width: 42px;
+    height: 42px;
+  }
+}
