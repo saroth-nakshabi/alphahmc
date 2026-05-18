@@ -1,0 +1,22 @@
+---
+deployment:
+  tasks:
+    # ── Paths — update these to match your cPanel setup ─────────────────────
+    # REPOPATH: the directory you set when creating the repo in Git Version Control
+    # PHP:      your server's PHP CLI path — check cPanel → MultiPHP CLI or ask host
+    - export REPOPATH=/home/$USER/alphahmc
+    - export PHP=/usr/local/bin/php
+
+    # ── Permissions ─────────────────────────────────────────────────────────
+    - chmod -R 775 $REPOPATH/storage
+    - chmod -R 775 $REPOPATH/bootstrap/cache
+
+    # ── Laravel cache clear ──────────────────────────────────────────────────
+    - cd $REPOPATH && $PHP artisan config:clear
+    - cd $REPOPATH && $PHP artisan cache:clear
+    - cd $REPOPATH && $PHP artisan view:clear
+    - cd $REPOPATH && $PHP artisan route:clear
+
+    # ── Optional: run new migrations automatically ───────────────────────────
+    # Uncomment the line below only after your .env and database are configured
+    # - cd $REPOPATH && $PHP artisan migrate --force
