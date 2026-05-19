@@ -1,133 +1,269 @@
-@extends('front/layout')
+@extends('front/layout-2')
 
-@section('meta_tags')
-    <title>Medical facility quality assurance services| Alpha TSN</title>
-@endsection
+@push('page_title', 'Healthcare Quality Assurance | Tawqeet | Alpha Health Group')
+
+@section('meta_description')Tawqeet by Alpha Health Group — a comprehensive healthcare quality assurance platform that monitors KPIs, tracks compliance, and drives excellence for medical and homecare facilities in the UAE.@endsection
 
 @section('custom_css')
+    <style>
+        body { font-family: 'Outfit', sans-serif; }
+
+        /* Hero */
+        .tawqeet-hero {
+            position: relative;
+            min-height: 280px;
+            background: url("{{ asset('public/front/assets/img/bg-tawkeet.jpg') }}") center/cover no-repeat;
+            display: flex;
+            align-items: center;
+        }
+        .tawqeet-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(6,109,119,0.82) 0%, rgba(0,144,149,0.7) 100%);
+        }
+        .tawqeet-hero .hero-inner { position: relative; z-index: 1; width: 100%; padding: 60px 0; }
+        .tawqeet-hero img.tawqeet-logo { max-width: 240px; filter: brightness(0) invert(1); }
+        .tawqeet-hero .badge-pill {
+            background: rgba(255,255,255,0.18);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 50px;
+            padding: 6px 18px;
+            font-size: 0.78rem;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 18px;
+        }
+        .tawqeet-hero h1 { color: #fff; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; margin-bottom: 10px; }
+        .tawqeet-hero p.sub { color: rgba(255,255,255,0.85); font-size: 1rem; }
+        .taw-breadcrumb { background: rgba(255,255,255,0.12); border-radius: 8px; padding: 9px 16px; display: inline-flex; gap: 6px; align-items: center; margin-top: 18px; }
+        .taw-breadcrumb a, .taw-breadcrumb span { color: rgba(255,255,255,0.85); font-size: 0.83rem; text-decoration: none; }
+        .taw-breadcrumb .sep { color: rgba(255,255,255,0.45); }
+        .taw-breadcrumb span.active { color: #fff; font-weight: 600; }
+
+        /* Section shared */
+        .sec-label {
+            display: inline-block;
+            background: #e6f4f5;
+            color: #066D77;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            padding: 5px 14px;
+            border-radius: 50px;
+            margin-bottom: 12px;
+        }
+        .sec-title { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; color: #0d2126; }
+        .sec-sub { color: #5a7070; font-size: 0.97rem; line-height: 1.75; }
+
+        /* Intro card */
+        .intro-quote {
+            background: #fff;
+            border-left: 4px solid #066D77;
+            border-radius: 0 12px 12px 0;
+            padding: 32px 36px;
+            box-shadow: 0 4px 20px rgba(6,109,119,0.08);
+            font-style: italic;
+            color: #1a4a4e;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        /* Feature icons */
+        .feat-icon-wrap {
+            width: 72px; height: 72px;
+            background: linear-gradient(135deg, #066D77, #009095);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 14px;
+            color: #fff;
+            font-size: 1.8rem;
+            box-shadow: 0 6px 20px rgba(6,109,119,0.25);
+        }
+        .feat-label { font-weight: 600; color: #0d2126; font-size: 0.95rem; text-align: center; }
+
+        /* How Tawqeet Works */
+        .tawqeet-how { padding: 80px 0; background: #f8fafb; }
+
+        /* Packages */
+        .pkg-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px 28px;
+            height: 100%;
+            border: 1px solid #e4eff0;
+            transition: transform .25s, box-shadow .25s;
+            position: relative;
+            overflow: hidden;
+        }
+        .pkg-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #066D77, #009095);
+        }
+        .pkg-card:hover { transform: translateY(-5px); box-shadow: 0 14px 36px rgba(6,109,119,0.13); }
+        .pkg-card h4 { font-size: 1.1rem; font-weight: 700; color: #066D77; margin-bottom: 14px; }
+        .pkg-card p { color: #5a7070; font-size: 0.93rem; line-height: 1.7; }
+
+        /* Facility cards */
+        .fac-card {
+            border-radius: 16px;
+            padding: 36px 32px;
+            height: 100%;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        .fac-card.mc { background: linear-gradient(135deg, #066D77 0%, #008a8e 100%); }
+        .fac-card.hc { background: linear-gradient(135deg, #0d4f5c 0%, #066D77 100%); }
+        .fac-card::before {
+            content: '';
+            position: absolute;
+            top: -30px; right: -30px;
+            width: 150px; height: 150px;
+            background: rgba(255,255,255,0.07);
+            border-radius: 50%;
+        }
+        .fac-card h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 16px; }
+        .fac-card p { color: rgba(255,255,255,0.88); font-size: 0.94rem; line-height: 1.7; margin-bottom: 20px; }
+        .fac-list { list-style: none; padding: 0; margin: 0 0 24px; }
+        .fac-list li {
+            display: flex; align-items: center; gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            font-size: 0.92rem;
+            color: rgba(255,255,255,0.92);
+        }
+        .fac-list li:last-child { border-bottom: none; }
+        .fac-list li i { color: rgba(255,255,255,0.7); font-size: 0.8rem; }
+        .fac-card .btn-light-ghost {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.35);
+            color: #fff;
+            border-radius: 8px;
+            padding: 10px 24px;
+            font-weight: 600;
+            font-size: 0.92rem;
+            text-decoration: none;
+            transition: background .2s;
+        }
+        .fac-card .btn-light-ghost:hover { background: rgba(255,255,255,0.28); }
+
+        /* Contact form */
+        .contact-section { padding: 80px 0; background: #f8fafb; }
+        .contact-card { background: #fff; border-radius: 20px; padding: 48px 40px; box-shadow: 0 8px 32px rgba(6,109,119,0.08); }
+        .contact-card .form-control {
+            border: 1.5px solid #d8e8ea;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color .2s;
+        }
+        .contact-card .form-control:focus { border-color: #066D77; box-shadow: 0 0 0 3px rgba(6,109,119,0.1); }
+        .contact-card .btn-submit {
+            background: linear-gradient(135deg, #066D77, #009095);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 13px 32px;
+            font-weight: 700;
+            font-size: 1rem;
+            font-family: 'Outfit', sans-serif;
+            transition: opacity .2s;
+        }
+        .contact-card .btn-submit:hover { opacity: 0.9; }
+        .success-msg { display: none; color: #066D77; text-align: center; font-weight: 600; padding: 12px; background: #e6f4f5; border-radius: 8px; }
+    </style>
 @endSection
 
 @section('content')
-    <div class="page-title " data-bg-img="{{ asset('public/front/assets/img/bg-audit.jpg') }}"
-        style="background-image: url({{ asset('public/front/assets/img/bg-tawkeet.jpg') }}); padding-bottom: 50px; padding-top: 50px; background-size: cover;">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6 col-md-12">
-                    <img class="department-logo-width" src="{{ asset('public/front/assets/img/tawqueet-logo.svg') }}"
-                        alt="Facility Quality Assurance">
-                </div>
-                <div class="col-lg-6 col-md-12 about-head" style="margin: auto; ">
-                </div>
-            </div>
-        </div>
 
-        <div class="bg-pattern"><img src="{{ asset('public/front/assets/img/bg-pattern-2.png') }}" alt="pattern"></div>
-    </div>
-    <!-- Page Title -->
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-light p-3 rounded shadow-sm">
-            <li class="breadcrumb-item"><a class="text-dark font-weight-bold" href="{{ route('home') }}">Home</a></li>
-            <li class="breadcrumb-item active"><a class="text-dark font-weight-bold"
-                    href="{{ route('front.services') }}">Services</a></li>
-            <li class="breadcrumb-item active text-dark font-weight-bold">Facility Quality Assurance</li>
-        </ol>
-    </nav>
-    <!-- End Page Title -->
-
-    <!-- Right Side Modal -->
-    @include('front.view.side-bar')
-    <!-- End Right Side Modal -->
-
-    <!-- Features Area -->
-
-    <section class="features-area  ptb-100">
-        <div class="container">
-            <div class="row ">
-                <div class="col-lg-2 col-md-6"></div>
-                <div class="col-lg-8 col-md-10 text-center mx-auto">
-                    <div class="xservice-content p-5 border rounded-lg shadow-lg bg-white">
-                        <h4 class="mb-4" style="color: #076371;">
-                            <i>
-                                We analyze your existing healthcare business system to understand areas for improvement and
-                                enhance the working processes to achieve an optimal outcome of patient satisfaction and
-                                financial circumstances for the organisation. We help you define combined Key Performance
-                                Indicators (KPIs) in all processes of the facility, which aids in the business improvement
-                                plan developed by our healthcare expert team. Our extensive and varied expertise in the
-                                domains of healthcare makes it easier for us to design tailor-made performance improvement
-                                plans, which align with international best practices and also ensure regulatory compliance.
-                            </i>
-                        </h4>
-                    </div>
-
-                    <div class="p-5 mt-4 border-top rounded-lg shadow-sm bg-light">
-                        <p class="lead mb-3">
-                            We assign a dedicated project manager to handle every client, so you have access to a single
-                            point of contact at all times during the implementation. This manager will continuously monitor
-                            and make necessary changes to bridge any shortcomings.
-                        </p>
-                        <p class="mb-4">
-                            We conduct adequate training exercises for your in-house staff to implement industry best
-                            practices and design periodic monitoring systems to ensure continuity of compliance after the
-                            processes have been set, moving towards the assigned goal. <strong>Improvise, Accomplish, and
-                                Sustain</strong> is what Tawqeet stands for.
-                        </p>
-
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div class="d-flex flex-column align-items-center mx-4">
-                                <div class="p-4 rounded-circle shadow-sm d-flex justify-content-center align-items-center"
-                                    style="width: 60px; height: 60px; background-color:#066d77;">
-                                    <i class="bi bi-person-check fs-1 text-white" style="font-size: 1.75rem;"></i>
-                                </div>
-                                <p class="mt-2 text-center">Dedicated Project Manager</p>
-                            </div>
-                            <div class="d-flex flex-column align-items-center mx-4">
-                                <div class="p-4 rounded-circle shadow-sm d-flex justify-content-center align-items-center"
-                                    style="width: 60px; height: 60px; background-color:#066d77;">
-                                    <i class="bi bi-gear-fill fs-1 text-white" style="font-size: 1.75rem;"></i>
-                                </div>
-                                <p class="mt-2 text-center">Continuous Monitoring</p>
-                            </div>
-                            <div class="d-flex flex-column align-items-center mx-4">
-                                <div class="p-4 rounded-circle shadow-sm d-flex justify-content-center align-items-center"
-                                    style="width: 60px; height: 60px; background-color:#066d77;">
-                                    <i class="bi bi-clipboard-data fs-1 text-white" style="font-size: 1.75rem;"></i>
-                                </div>
-                                <p class="mt-2 text-center">Industry Best Practices</p>
-                            </div>
-                        </div>
+    {{-- Hero --}}
+    <section class="tawqeet-hero">
+        <div class="container hero-inner">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <span class="badge-pill">Healthcare Quality Assurance</span>
+                    <h1>Facility Quality Assurance</h1>
+                    <p class="sub">Helping healthcare facilities achieve compliance, operational excellence, and patient satisfaction.</p>
+                    <div class="taw-breadcrumb">
+                        <a href="{{ route('home') }}"><i class="bi bi-house-fill me-1"></i>Home</a>
+                        <span class="sep">/</span>
+                        <a href="{{ route('front.all-services') }}">Services</a>
+                        <span class="sep">/</span>
+                        <span class="active">Facility Quality Assurance</span>
                     </div>
                 </div>
-
-                <div class="col-lg-2 col-md-6">
-
+                <div class="col-lg-5 text-center mt-4 mt-lg-0">
+                    <img class="tawqeet-logo img-fluid" src="{{ asset('public/front/assets/img/tawqueet-logo.svg') }}" alt="Tawqeet — Facility Quality Assurance">
                 </div>
             </div>
         </div>
     </section>
-    <section class="bg-fbf9f8">
+
+    {{-- Main Description --}}
+    <section style="padding: 72px 0; background: #fff;">
         <div class="container">
-            <div class="row ">
-                <div class="col-md-12 ptb-100 bg-fbf9f8">
-                    <div class="row">
+            <div class="row justify-content-center">
+                <div class="col-lg-9">
+                    <div class="text-center mb-5">
+                        <span class="sec-label">What We Do</span>
+                        <h2 class="sec-title mt-2">Tawqeet — Results-Driven Quality Assurance</h2>
+                    </div>
+                    <div class="intro-quote mb-5">
+                        We analyze your existing healthcare business system to understand areas for improvement and enhance the working processes to achieve optimal patient satisfaction and financial outcomes. We help you define combined Key Performance Indicators (KPIs) across all facility processes, which aids in the business improvement plan developed by our healthcare expert team. Our extensive expertise in healthcare makes it easier to design tailor-made performance improvement plans that align with international best practices and ensure regulatory compliance.
+                    </div>
+                    <p class="sec-sub mb-4">
+                        We assign a dedicated project manager to every client — your single point of contact throughout the entire implementation. This manager continuously monitors the engagement and makes necessary adjustments. We also conduct training exercises for your in-house staff and design periodic monitoring systems to ensure continuity of compliance. <strong>Improvise, Accomplish, and Sustain</strong> is what Tawqeet stands for.
+                    </p>
 
-                        <div class="col-lg-4 col-md-4">
-                            <div class="xservice-content">
-                                <h2>How Tawqeet Works </h2>
-                                <h4 class="textg"><i>The objective of Tawqeet is to analyses and review the adaptability
-                                        and compliance of an existing facility for a set of defined standard and guidelines,
-                                        across Clinical, Operational, Infrastructural, Administrative domains. Tawqeet
-                                        ensures the facility is fulfilling operational efficiency, patient satisfaction and
-                                        quality of service, this helps in providing meaningful insight to the facility
-                                        owners and investors to evaluate the outcomes and sustainability. Tawqeet not only
-                                        enhances the entire work system of a facility, but ensures that the facility
-                                        satisfies the regulatory compliances too. </i></h4>
-                                <br>
+                    <div class="row g-4 text-center mt-2">
+                        <div class="col-4">
+                            <div class="feat-icon-wrap">
+                                <i class="bi bi-person-check-fill"></i>
                             </div>
+                            <div class="feat-label">Dedicated Project Manager</div>
                         </div>
-
-                        <div class="col-lg-1 col-md-4"> </div>
-                        <div class="col-lg-7 col-md-4">
-                            <h3>The Tawqeet Key Point Indicators</h3> <br>
+                        <div class="col-4">
+                            <div class="feat-icon-wrap">
+                                <i class="bi bi-gear-fill"></i>
+                            </div>
+                            <div class="feat-label">Continuous Monitoring</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="feat-icon-wrap">
+                                <i class="bi bi-clipboard-data-fill"></i>
+                            </div>
+                            <div class="feat-label">Industry Best Practices</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="tawqeet-how">
+        <div class="container">
+            <div class="row g-5 align-items-start">
+                <div class="col-lg-4">
+                    <span class="sec-label">How It Works</span>
+                    <h2 class="sec-title mt-2 mb-4">How Tawqeet Works</h2>
+                    <p class="sec-sub">
+                        Tawqeet analyses and reviews the adaptability and compliance of your facility against defined standards and guidelines across Clinical, Operational, Infrastructural, and Administrative domains.
+                    </p>
+                    <p class="sec-sub mt-3">
+                        Tawqeet ensures the facility fulfils operational efficiency, patient satisfaction, and quality of service — providing meaningful insights to facility owners and investors to evaluate outcomes and sustainability. Tawqeet not only enhances the entire work system of a facility, but ensures full regulatory compliance too.
+                    </p>
+                </div>
+                <div class="col-lg-8">
+                    <span class="sec-label mb-3 d-block">Key Performance Indicators</span>
                             <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 641.74 272.54">
                                 <defs>
@@ -553,214 +689,151 @@
                                     <tspan class="cls-48" x="98.66" y="0">T</tspan>
                                 </text>
                             </svg>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </section>
-    <section class="blog-area ptb-100">
+
+    {{-- Tawqeet Process --}}
+    <section style=”padding: 72px 0; background: #fff;”>
+        <div class=”container”>
+            <div class=”text-center mb-5”>
+                <span class=”sec-label”>Our Process</span>
+                <h2 class=”sec-title mt-2”>The Tawqeet Process</h2>
+                <p class=”sec-sub mx-auto mt-3” style=”max-width:700px;”>
+                    A comprehensive audit of the healthcare facility is conducted by healthcare experts across all functional domains. Processes are evaluated based on preset checklists derived from combined KPIs and international best practices. GAP analysis is presented to facility management, and a Corrective Action Plan is developed in concurrence with the facility. Implementation involves staff training and process improvisation — all overseen by an assigned client manager.
+                </p>
+            </div>
+            <div class=”text-center”>
+                <img src=”{{ asset('public/front/assets/img/towqeet-result.svg') }}” class=”img-fluid” style=”max-width: 100%;” alt=”Tawqeet Process Diagram”>
+            </div>
+        </div>
+    </section>
+    {{-- Packages --}}
+    <section style="padding: 80px 0; background: #f8fafb;">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-12">
-                    <div class="row">
-                        <div class="col-lg-2 col-md-4"></div>
-                        <div class="col-lg-8 col-md-4 text-center">
-                            <h1 class="mb-30 xservice-content">The Tawqeet Process</h1>
-                            <h4 class="mb-30"><i>A comprehensive audit of the healthcare facility is conducted by
-                                    healthcare experts across all functional domains. The processes are evaluated based on
-                                    preset checklists derived from combined Key Performance Indicators (KPIs) and
-                                    international best practices. GAP analysis on the areas for improvement is presented to
-                                    the facility management and the Corrective Action Plan is developed in concurrence with
-                                    the facility. Implementation involves staff training and changes/improvisation in the
-                                    existing work mechanisms. The entire process is overlooked by an assigned “client
-                                    manager”.</i></h4>
-
+            <div class="text-center mb-5">
+                <span class="sec-label">Choose Your Plan</span>
+                <h2 class="sec-title mt-2">Tawqeet Packages</h2>
+                <p class="sec-sub mx-auto mt-3" style="max-width:650px;">Select the Tawqeet plan that best meets your facility's requirements. All packages are custom-made to suit your facility size, budget, and needs — and can be converted or amended as required.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="pkg-card">
+                        <div class="feat-icon-wrap mb-3" style="width:52px;height:52px;font-size:1.4rem;border-radius:12px;">
+                            <i class="bi bi-shield-check"></i>
                         </div>
-                        <div class="col-lg-2 col-md-4"></div>
-                        <img src="{{ asset('public/front/assets/img/towqeet-result.svg') }}" style=" width: 100%; ">
+                        <h4>Audit Compliance</h4>
+                        <p>A one-off solution for situational audits — periodic regulatory inspections, change of location, addition of specialty, or internal plan changes. Ensures your facility is audit-ready and fully compliant.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="pkg-card">
+                        <div class="feat-icon-wrap mb-3" style="width:52px;height:52px;font-size:1.4rem;border-radius:12px;">
+                            <i class="bi bi-arrow-up-circle-fill"></i>
+                        </div>
+                        <h4>Facility Enhancement</h4>
+                        <p>Redesign existing work processes, optimize resources, improve efficiency and business productivity while satisfying regulatory requirements. A complete facility overhaul across all operational domains.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="pkg-card">
+                        <div class="feat-icon-wrap mb-3" style="width:52px;height:52px;font-size:1.4rem;border-radius:12px;">
+                            <i class="bi bi-award-fill"></i>
+                        </div>
+                        <h4>Full Compliance Program</h4>
+                        <p>The comprehensive package ensuring long-term sustainability of enhancements. Overseen by a dedicated client manager, each domain is optimised for compliance — keeping your facility ready for any regulatory audit at any time.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- Features Area -->
-    <section class="repair-services-area ptb-100 pb-0 bg-fbf9f8">
+    {{-- Facility Types --}}
+    <section style="padding: 80px 0; background: #fff;">
         <div class="container">
-            <div class="section-title text-left">
-                <span>Enhance your Medical Facility Standards with Tawqeet!</span>
-                <h3>Tawqeet Packages</h3>
-                <div style="width: 65%;">
-                    <p>Select the right Tawqeet plan which meets the requirement of your medical facility. Tawqeet packages
-                        are now custom made to suite your facility size and requirements, choose the right one to suit your
-                        budget and requirements, depending on the necessity, you could always convert or amend the package.
-                    </p>
+            <div class="text-center mb-5">
+                <span class="sec-label">Facility Types</span>
+                <h2 class="sec-title mt-2">Tawqeet For Your Facility</h2>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="fac-card mc">
+                        <h3><i class="bi bi-hospital-fill me-2"></i>Medical Centers</h3>
+                        <p>Get your medical center audited across Clinical, Operational, Infrastructural, and Administrative domains. Identify gaps in existing processes, adopt international best practices, and ensure full regulatory compliance for better care delivery and improved business outcomes.</p>
+                        <ul class="fac-list">
+                            <li><i class="bi bi-check-circle-fill"></i> DOH Audit Compliance</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Jawda Compliance</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Resource Efficiency</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Operational Enhancement</li>
+                        </ul>
+                        <a href="https://wa.me/971555595200?text=Request%20Tawqeet%20for%20Medical%20center" class="btn-light-ghost" target="_blank" rel="noopener">
+                            <i class="bi bi-whatsapp me-2"></i>Get Started
+                        </a>
+                    </div>
                 </div>
-                <div>
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6">
-                            <div class="hplpackages">
-                                <h3>Tawqeet for facility Audit Compliance</h3>
-                                <p>This package is a one off solution for a situational audit, when the need arises for
-                                    compliance, like: periodic inspection by the regulatory body/ change of location /
-                                    addition of specialty / change of internal plan. The Tawqeet process implementation will
-                                    make certain, adequate staff training, ensuring that your facility is audit ready and
-                                    compliant with the regulatory requirements.</p>
-                                <br>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="hplpackages">
-                                <h3>Tawqeet for Facility Enhancement </h3>
-                                <p>This package helps your facility redesign your existing work processes, optimize
-                                    resources, improve efficiency and business productivity, while also satisfying the
-                                    regulatory requirements. This package helps you in a complete facility overhaul
-                                    addressing all the domains of the facility operations. Also this keeps facility ready
-                                    for sudden, surprise audit from regulatory body anytime</p>
-                                <br>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="hplpackages">
-                                <h3>Full Tawqeet Compliance Program</h3>
-                                <p>This comprehensive package is standout feature of Tawqeet program is ensuring
-                                    sustainability of the enhancement is done. This process overlooked by a dedicated client
-                                    manager and implemented by our expert team. Each domain will be optimized compliance and
-                                    ensuring improvements, makes your facility, all time ready for any surprise regulatory
-                                    audits. </p>
-                                <br>
-                            </div>
-                        </div>
+                <div class="col-lg-6">
+                    <div class="fac-card hc">
+                        <h3><i class="bi bi-house-heart-fill me-2"></i>Homecare Centers</h3>
+                        <p>Get your Home Care operation audited across focus domains including billing verification. Tawqeet analysis covers both your corporate office and patient care area, addressing Health Authority and Tasneef requirements for better care delivery and improved business outcomes.</p>
+                        <ul class="fac-list">
+                            <li><i class="bi bi-check-circle-fill"></i> Tasneef Compliance</li>
+                            <li><i class="bi bi-check-circle-fill"></i> DOH Audit Compliance</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Jawda Compliance</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Operational Enhancement</li>
+                        </ul>
+                        <a href="https://wa.me/971555595200?text=Request%20Tawqeet%20for%20homecare%20center" class="btn-light-ghost" target="_blank" rel="noopener">
+                            <i class="bi bi-whatsapp me-2"></i>Get Started
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <section class="blog-area ptb-100">
+
+    {{-- Contact Form --}}
+    <section class="contact-section">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-12">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-4">
-                            <div class="tawqeetpackages  dmbg-2">
-                                <h2>Tawqeet for Medical Centers</h2><br>
-                                <p>You can request for the above mentioned Tawqeet Packages and get your medical center
-                                    audited across Clinical, Operational, Infrastructural, Administrative domains. The audit
-                                    helps you identify the gaps in the existing process and improvise or eliminate them, to
-                                    ensure better care delivery at your facility and improve business outcomes. Not only
-                                    would the facility adopt international best practises but also be compliant for the
-                                    regulatory standards. </p>
-                                <div class="">
-
-                                    <p>DOH Audit Compliance</p>
-                                    <hr>
-                                    <p>Jawda Compliance</p>
-                                    <hr>
-                                    <p>Resource Efficiency</p>
-                                    <hr>
-                                    <p>Operational Enhancement</p>
-                                    <hr>
-
-                                    <a href="https://wa.me/971555595200?&text=Request Tawqeet for Medical center"
-                                        class="btn btn-primary btnx">Get Started</a>
+            <div class="row justify-content-center">
+                <div class="col-lg-9">
+                    <div class="contact-card">
+                        <div class="text-center mb-4">
+                            <span class="sec-label">Enquire Now</span>
+                            <h2 class="sec-title mt-2">Send Us an Email</h2>
+                            <p class="sec-sub mt-2">Fill in your details and we'll get back to you shortly.</p>
+                        </div>
+                        <form id="contactForm" name="contactForm">
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-3">
+                                    <input id="fullName" name="fullName" type="text" placeholder="Your Name *" required class="form-control">
+                                </div>
+                                <div class="col-md-3">
+                                    <input id="Email" name="Email" type="email" placeholder="Email Address *" required class="form-control">
+                                </div>
+                                <div class="col-md-3">
+                                    <input id="Phone" name="Phone" type="tel" placeholder="Phone Number" class="form-control">
+                                </div>
+                                <div class="col-md-3">
+                                    <select name="service" class="form-control form-select">
+                                        <option selected>Select package type</option>
+                                        <option value="Tawqeet for Medical Center">Tawqeet for Medical Center</option>
+                                        <option value="Tawqeet for Home Care Center">Tawqeet for Home Care Center</option>
+                                    </select>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="col-lg-6 col-md-4">
-                            <div class="tawqeetpackages dmbg-3">
-                                <h2>Tawqeet for Homecare Centers</h2><br>
-                                <p>Get Tawqeet Packages and get your Home Care audited across the focus domains including
-                                    billing and submissions will be cross verified for the accuracy. Home Care Tawqeet
-                                    analysis is applicable to both your corporate office and the patient care area. The gap
-                                    analysis compliances are not only covering the internal operations but also Health
-                                    Authority & Thasneef requirements to ensure better care delivery at your facility and
-                                    improve business outcomes.</p>
-                                <div class="">
-                                    <p>Tasneef Compliance</p>
-                                    <hr>
-                                    <p>DOH Audit Compliance</p>
-                                    <hr>
-                                    <p>Jawda Compliance</p>
-                                    <hr>
-                                    <p>Operational Enhancement</p>
-                                    <hr>
-
-                                    <a href="https://wa.me/971555595200?&text=Request Tawqeet for homecare center"
-                                        class="btn btn-primary btnx">Get Started</a>
-                                </div>
+                            <div class="mb-3">
+                                <textarea id="Message" name="Message" class="form-control" rows="4" placeholder="Your message..."></textarea>
                             </div>
-                        </div>
+                            <p class="success-msg" id="formSuccess">We have received your enquiry — a representative will contact you shortly.</p>
+                            <div class="text-center">
+                                <button type="submit" class="btn-submit">Send Message</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <section class="mb-50">
-        <div class="col-md-8 offset-md-2 section-title text-center">
-            <div class="  repair-services-inner">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="">
-
-                            <h3>Send us an Email!</h3>
-                            <form id="contactForm" name="contactForm" class="">
-                                <div class="row">
-                                    <div class="col-lg-3  form-group">
-                                        <input id="fullName" name="fullName" type="text" placeholder="Your Name*"
-                                            required class="form-control">
-                                    </div>
-
-                                    <div class="col-lg-3 form-group">
-                                        <input id="Email" name="Email" type="email" placeholder="Email*"
-                                            required class="form-control">
-                                    </div>
-
-                                    <div class="col-lg-3 form-group">
-                                        <input id="Phone" name="Phone" type="text" placeholder="Phone Number*"
-                                            class="form-control">
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <select class="browser-default custom-select form-group form-control"
-                                            name="service">
-                                            <option selected>Select package type</option>
-                                            <option value="Digital Marketing">Tawqeet for Medical Center</option>
-                                            <option value="Healthcare Professional Licensing">Towqeet for Home Care Center
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <textarea id="Message" name="Message" class="form-control required" rows="3" placeholder="Enter Message"></textarea>
-                                </div>
-                                <p class="success"
-                                    style="display:none;color:#066d77;text-align:center;width:100%;position:absolute;">We
-                                    have received your inquiry, one of your representatives will contact you shorly</p><br>
-                                <button type="submit" class="btn btn-primary">Send Message Now</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    </section>
-    <div id="myButton"></div>
 @endsection
 
 @section('custom_js')
-    <!-- Chat -->
-    <script type="text/javascript" src="{{ asset('public/front/assets/js/chat-hmc.js') }}"></script>
-    <script>
-        $(function() {
-            $('#myButton').floatingWhatsApp({
-                phone: '+971564200934',
-                popupMessage: "You can chat with our licensing consultant to discuss New license Application, Dataflow Processing, Exam Booking, Renew your license, Transfer your license, Activate your license",
-                message: "Hello, I would like to inquire about your services.",
-                showPopup: true,
-                headerTitle: 'Welcome to Alpha Chat Assistant!',
-                headerColor: '#009688',
-                backgroundColor: '#009688',
-                buttonImage: '<img src="{{ asset('public/front/assets/img/whatsapp.svg') }}" alt="WhatsApp" />'
-            });
-        });
-    </script>
 @endSection

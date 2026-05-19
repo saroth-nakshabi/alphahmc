@@ -57,8 +57,25 @@ use GuzzleHttp\Client;
 use App\Http\Controllers\globalController;
 use App\Http\Controllers\googleController;
 use App\Http\Controllers\ChatWidgetController;
+use App\Http\Controllers\SitemapController;
 
 // Front-end routes
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+
+Route::get('/robots.txt', function () {
+    $content = implode("\n", [
+        'User-agent: *',
+        'Disallow: /admin/',
+        'Disallow: /dashboard/',
+        'Disallow: /login',
+        'Disallow: /register',
+        'Disallow: /password/',
+        'Allow: /',
+        '',
+        'Sitemap: ' . rtrim(config('app.url'), '/') . '/sitemap.xml',
+    ]);
+    return response($content, 200, ['Content-Type' => 'text/plain']);
+})->name('front.robots');
 Route::get('/service-packages/{slug}', [ServiceGroupController::class, 'front'])->name('service-packages');
 Route::get('/service-group-front', function (\Illuminate\Http\Request $r) {
     $slug = $r->query('slug');
@@ -77,6 +94,7 @@ Route::get('/new_service/{slug}', function ($slug) {
 });
 Route::get('/service-category/{slug}', [MainHomeController::class, 'serviceCategory'])->name('front.service-category');
 Route::get('/all_services', [MainHomeController::class, 'allServices'])->name('front.all-services');
+Route::redirect('/services', '/all_services', 301);
 Route::post('/inquiry/submit', [MainHomeController::class, 'submitInquiry'])->name('front.inquiry.submit');
 Route::get('/new_blog', [MainHomeController::class, 'blog'])->name('front.new_blog');
 // Route::get('/blog_single/{slug}', [MainHomeController::class, 'singleBlog'])->name('front.singleBlog');
@@ -100,9 +118,7 @@ Route::get('/new-about', [MainHomeController::class, 'about'])->name('front.new-
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::post('/contact/send', [MainHomeController::class, 'sendContact'])->name('contact.send');
-Route::get('/services', [HomeController::class, 'services'])->name('front.services');
-Route::get('/services/{category_name}', [HomeController::class, 'viewCategory'])->name('view_category');
-Route::get('/service/{slug}', [HomeController::class, 'viewService'])->name('view_service');
+
 Route::get('/service-calendar', [HomeController::class, 'serviceCalendar'])->name('service_calendar');
 Route::post('/set-timezone', [TimezoneController::class, 'setTimezone'])->name('set_timezone');
 Route::get('/blog', [HomeController::class, 'blog'])->name('front.blog');

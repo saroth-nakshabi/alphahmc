@@ -5,23 +5,86 @@
     <meta name="robots" content="index, follow">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    {{-- <title>Healthcare Consultancy in Dubai | Alpha Health Group</title> --}}
     <title>@stack('page_title')</title>
+    <meta name="description" content="@yield('meta_description', 'Alpha Health Group delivers expert healthcare consultancy, DOH compliance, quality assurance, and operational excellence for healthcare facilities in the UAE.')">
     @stack('meta')
 
     <link rel="canonical" href="{{ url()->current() }}">
 
+    {{-- Default Open Graph tags — pages can override via @push('og_tags') --}}
+    <meta property="og:site_name" content="Alpha Health Group" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ url()->current() }}" />
+    <meta property="og:title" content="@stack('page_title')" />
+    <meta property="og:description" content="@yield('meta_description', 'Alpha Health Group delivers expert healthcare consultancy, DOH compliance, quality assurance, and operational excellence for healthcare facilities in the UAE.')" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@AlphaHealthGrp" />
     @stack('og_tags')
 
     <link rel="shortcut icon" href="{{ asset('public/favicon.png') }}">
+    <link rel="sitemap" type="application/xml" href="{{ url('/sitemap.xml') }}" />
+    <link rel="alternate" type="text/plain" title="LLMs.txt" href="{{ asset('llms.txt') }}" />
 
-{{-- Global Tags from database --}}
-{{-- @foreach($globaltags as $tag)
-    <script type="application/ld+json">
-        {!! json_encode(json_decode(html_entity_decode(strip_tags($tag->tags))), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
-    </script>
-@endforeach --}}
+{{-- ═══════════════════════════════════════════════════════════════
+     CONSENT MODE V2 — MUST be the very first script, before any
+     tracking tags (GA4, GTM, Meta Pixel) so they receive the
+     consent signal on initialization, not retroactively.
+════════════════════════════════════════════════════════════════ --}}
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
 
+    // ── Expiry helper ──────────────────────────────────────────────
+    var CONSENT_EXPIRY_DAYS = 30;
+
+    function setConsentWithExpiry(value) {
+        var item = {
+            value:  value,
+            expiry: new Date().getTime() + (CONSENT_EXPIRY_DAYS * 24 * 60 * 60 * 1000),
+        };
+        localStorage.setItem('cookie_consent', JSON.stringify(item));
+    }
+
+    function getConsentWithExpiry() {
+        var raw = localStorage.getItem('cookie_consent');
+        if (!raw) return null;
+        try {
+            var item = JSON.parse(raw);
+            if (typeof item === 'string') { localStorage.removeItem('cookie_consent'); return null; }
+            if (new Date().getTime() > item.expiry) { localStorage.removeItem('cookie_consent'); return null; }
+            return item.value; // "accepted" | "rejected"
+        } catch(e) {
+            localStorage.removeItem('cookie_consent');
+            return null;
+        }
+    }
+
+    // ── Set consent default BEFORE any tracking scripts load ──────
+    var _savedConsent = getConsentWithExpiry();
+
+    if (_savedConsent === 'accepted') {
+        gtag('consent', 'default', {
+            analytics_storage:  'granted',
+            ad_storage:         'granted',
+            ad_user_data:       'granted',
+            ad_personalization: 'granted',
+        });
+    } else {
+        gtag('consent', 'default', {
+            analytics_storage:  'denied',
+            ad_storage:         'denied',
+            ad_user_data:       'denied',
+            ad_personalization: 'denied',
+            wait_for_update:    500,
+        });
+        // Consent Mode V2: model conversions even when ads consent denied
+        gtag('set', 'url_passthrough', true);
+        gtag('set', 'ads_data_redaction', true);
+    }
+</script>
+
+{{-- Global Tags from database (GA4, GTM, etc.) — fire AFTER consent default above --}}
 @foreach($globaltags as $tag)
     {!! $tag->tags !!}
 @endforeach
@@ -121,7 +184,7 @@
                 '@type'    => 'ListItem',
                 'position' => 2,
                 'name'     => 'Services',
-                'item'     => route('front.services'),
+                'item'     => route('front.all-services'),
             ],
             [
                 '@type'    => 'ListItem',
@@ -137,70 +200,7 @@
 @endisset
 
 
- {{-- Consent Cookie Starting Mode Default --}}
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){ dataLayer.push(arguments); }
-
-            // ── Expiry helper ──────────────────────────────────────
-    var CONSENT_EXPIRY_DAYS = 30; // 1 months — change as needed
-
-    function setConsentWithExpiry(value) {
-        var now = new Date();
-        var item = {
-            value:   value,
-            expiry:  now.getTime() + (CONSENT_EXPIRY_DAYS * 24 * 60 * 60 * 1000),
-        };
-        localStorage.setItem('cookie_consent', JSON.stringify(item));
-    }
-
-    function getConsentWithExpiry() {
-        var raw = localStorage.getItem('cookie_consent');
-        if (!raw) return null;
-
-        try {
-            var item = JSON.parse(raw);
-
-            // Old format (plain string) — treat as expired
-            if (typeof item === 'string') {
-                localStorage.removeItem('cookie_consent');
-                return null;
-            }
-
-            // Check if expired
-            if (new Date().getTime() > item.expiry) {
-                localStorage.removeItem('cookie_consent');
-                return null;
-            }
-
-            return item.value; // "accepted" or "rejected"
-
-        } catch(e) {
-            localStorage.removeItem('cookie_consent');
-            return null;
-        }
-    }
-
-        // Set consent default on page load
-        var savedConsent = getConsentWithExpiry();
-
-        if (savedConsent === 'accepted') {
-            gtag('consent', 'default', {
-                'analytics_storage':  'granted',
-                'ad_storage':         'granted',
-                'ad_user_data':       'granted',
-                'ad_personalization': 'granted',
-            });
-        } else {
-            gtag('consent', 'default', {
-                'analytics_storage':  'denied',
-                'ad_storage':         'denied',
-                'ad_user_data':       'denied',
-                'ad_personalization': 'denied',
-                'wait_for_update':    500,
-            });
-        }
-    </script>
+{{-- Consent initialization moved above $globaltags — see top of head --}}
 
 
     {{-- Google Tag --}}
@@ -210,42 +210,108 @@
     </script>
 @endforeach
 
+    {{-- Global WebSite Schema (enables Google Sitelinks Search Box) --}}
+    <script type="application/ld+json">
+    {!!
+        json_encode([
+            '@context' => 'https://schema.org',
+            '@type'    => 'WebSite',
+            'name'     => 'Alpha Health Group',
+            'alternateName' => 'Alpha Health Consultancies',
+            'url'      => config('app.url'),
+            'potentialAction' => [
+                '@type'       => 'SearchAction',
+                'target'      => [
+                    '@type'       => 'EntryPoint',
+                    'urlTemplate' => url('/search') . '?q={search_term_string}',
+                ],
+                'query-input' => 'required name=search_term_string',
+            ],
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+    !!}
+    </script>
+
+    {{-- Global Organization Schema --}}
+    <script type="application/ld+json">
+    {!!
+        json_encode([
+            '@context'     => 'https://schema.org',
+            '@type'        => 'Organization',
+            'name'         => 'Alpha Health Group',
+            'alternateName'=> 'Alpha Health Consultancies',
+            'url'          => config('app.url'),
+            'logo'         => [
+                '@type' => 'ImageObject',
+                'url'   => asset('public/front-new/assets/images/alpha-logo.svg'),
+            ],
+            'description'  => 'Alpha Health Group delivers expert healthcare consultancy, DOH compliance, accreditation support, quality assurance, and operational excellence for healthcare facilities across the UAE.',
+            'areaServed'   => [
+                ['@type' => 'Country', 'name' => 'United Arab Emirates'],
+            ],
+            'contactPoint' => [
+                '@type'             => 'ContactPoint',
+                'contactType'       => 'customer service',
+                'areaServed'        => 'AE',
+                'availableLanguage' => ['English', 'Arabic'],
+            ],
+            'sameAs' => [],
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+    !!}
+    </script>
 
 
 
 
-    <!-- Outfit Font -->
+
+    <!-- Preconnect & DNS prefetch for external origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://code.jquery.com">
 
+    <!-- Fonts — non-render-blocking, reduced weights (300/500/700 dropped — not used in critical path) -->
+    <link rel="preload" as="style"
+          href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
+          onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap">
+    </noscript>
+
+    <!-- Bootstrap CSS — blocking (needed for above-fold grid layout) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
 
+    <!-- Site CSS — blocking (critical nav + layout styles) -->
     <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/slide-menu.css') }}">
 
+    <!-- Icon fonts + animation libs — deferred (not needed for first paint) -->
+    <link rel="preload" as="style"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
 
-    <!-- Link Swiper's CSS -->
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/> --}}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <!-- Font Awesome 6 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="preload" as="style"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"></noscript>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css" />
-    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <link rel="preload" as="style"
+          href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css"
+          onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css"></noscript>
 
-    <!-- Custom styles merged into style.css and slide-menu.css -->
+    <link rel="preload" as="style"
+          href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+          onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"></noscript>
 
+    <link rel="preload" as="style"
+          href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"
+          onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"></noscript>
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="">
     @stack('meta_scripts')
 
     @yield('custom_css')
@@ -507,10 +573,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
          // ── Accept ─────────────────────────────────────────────
     function acceptAllCookies() {
         gtag('consent', 'update', {
-            'analytics_storage':  'granted',
-            'ad_storage':         'granted',
-            'ad_user_data':       'granted',
-            'ad_personalization': 'granted',
+            analytics_storage:  'granted',
+            ad_storage:         'granted',
+            ad_user_data:       'granted',
+            ad_personalization: 'granted',
         });
         setConsentWithExpiry('accepted');
         hideCookieBanner();
@@ -519,11 +585,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     // ── Reject ─────────────────────────────────────────────
     function rejectAllCookies() {
         gtag('consent', 'update', {
-            'analytics_storage':  'denied',
-            'ad_storage':         'denied',
-            'ad_user_data':       'denied',
-            'ad_personalization': 'denied',
+            analytics_storage:  'denied',
+            ad_storage:         'denied',
+            ad_user_data:       'denied',
+            ad_personalization: 'denied',
         });
+        // Keep conversion modeling active even after rejection
+        gtag('set', 'url_passthrough', true);
+        gtag('set', 'ads_data_redaction', true);
         setConsentWithExpiry('rejected');
         hideCookieBanner();
     }
@@ -561,8 +630,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <div class="cookie-content">
             <h6 class="cookie-title">We use cookies</h6>
             <p class="cookie-text">
-                We use cookies to analyse traffic, personalise content, and improve your experience within our website. You can accept only essential cookies or continue with your preferences.
-                <a href="#" class="cookie-policy-link">Cookie Policy</a>
+                We use cookies to analyse traffic, personalise content, and improve your experience. You can manage your preferences at any time.
+                <a href="{{ route('contact') }}#privacy" class="cookie-policy-link">Cookie Policy</a>
             </p>
         </div>
         <div class="cookie-actions">
@@ -777,6 +846,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                                     </a>
                                                 </li>
                                             @endforeach
+                                            @foreach ($category->serviceGroups as $group)
+                                                <li class="service-item filter-sub_{{ $category->id }}" style="display: none;">
+                                                    <a href="{{ route('service-packages', $group->slug) }}">
+                                                        {{ $group->name }}
+                                                    </a>
+                                                </li>
+                                            @endforeach
                                         @endif
                                     @endforeach
                                 @endforeach
@@ -824,6 +900,142 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .view-all-services-wrapper {
         margin-left: 15px;
         margin-top: 20px;
+    }
+
+    /* ── Mobile L2: expandable row with chevron ── */
+    .mobile-sub-list .main-category-link-sub:not(.service-group-link):not(.disabled) {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 48px;
+        touch-action: manipulation;
+        padding-right: 4px;
+    }
+
+    .mobile-expand-chevron {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        border-radius: 50%;
+        background: rgba(0, 144, 149, 0.08);
+        color: #009095;
+        font-size: 0.65rem;
+        transition: transform 0.22s cubic-bezier(0.165, 0.84, 0.44, 1),
+                    background 0.22s ease;
+    }
+
+    .mobile-sub-expanded > a .mobile-expand-chevron {
+        transform: rotate(90deg);
+        background: rgba(0, 144, 149, 0.18);
+    }
+
+    /* ── Mobile L3: compact modern panel ── */
+    .mobile-service-list {
+        background: #ffffff !important;
+        border: 1px solid #eef2f7 !important;
+        margin: 4px 0 8px 0 !important;
+        padding: 5px 6px !important;
+        border-radius: 14px !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
+        overflow: hidden;
+    }
+
+    .mobile-service-list li {
+        display: block !important;
+    }
+
+    /* "Visit page →" — slim inline teal link at bottom of panel */
+    .mobile-visit-category {
+        border-top: 1px solid #f1f5f9;
+        margin-top: 4px;
+        padding-top: 4px;
+    }
+
+    .mobile-visit-category a {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        padding: 8px 10px !important;
+        font-size: 0.67rem !important;
+        font-weight: 700 !important;
+        color: #009095 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.8px !important;
+        text-decoration: none !important;
+        border-radius: 8px !important;
+        min-height: 36px !important;
+        touch-action: manipulation;
+        transition: background 0.14s ease !important;
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+
+    .mobile-visit-category a:active {
+        background: rgba(0, 144, 149, 0.07) !important;
+    }
+
+    .mobile-visit-category a i {
+        font-size: 0.58rem !important;
+    }
+
+    /* Service item rows — slim, clean, no heavy card */
+    .mobile-service-list .service-item {
+        position: relative;
+        margin-bottom: 2px;
+    }
+
+    .mobile-service-list .service-item > a {
+        display: block !important;
+        padding: 9px 30px 9px 10px !important;
+        font-size: 0.82rem !important;
+        font-weight: 500 !important;
+        color: #1e293b !important;
+        text-decoration: none !important;
+        min-height: 40px !important;
+        background: transparent !important;
+        border-radius: 9px !important;
+        border: none !important;
+        line-height: 1.35 !important;
+        touch-action: manipulation;
+        transition: background 0.14s ease !important;
+    }
+
+    .mobile-service-list .service-item > a:active {
+        background: rgba(0, 144, 149, 0.07) !important;
+    }
+
+    /* Subtle chevron */
+    .mobile-service-list .service-item::after {
+        content: '›';
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1rem;
+        line-height: 1;
+        color: #009095;
+        opacity: 0.3;
+        pointer-events: none;
+    }
+
+    /* Hairline divider between service items */
+    .mobile-service-list .service-item + .service-item > a {
+        border-top: 1px solid #f8fafc !important;
+        border-radius: 0 0 9px 9px !important;
+    }
+
+    /* Empty state */
+    .mobile-no-services span {
+        display: block;
+        padding: 10px 8px;
+        font-size: 0.78rem;
+        color: #94a3b8;
+        font-style: italic;
+        text-align: center;
     }
 }
 
@@ -897,6 +1109,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
     </div>
 
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- JavaScript for Unified Menu (Fixed & Cleaned) -->
     <script>
@@ -1169,6 +1383,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             $(".filter-" + mainId).each(function () {
                 let clone = $(this).clone();
                 clone.show();
+                // Add expand chevron to expandable sub-categories (skip service-group links and disabled)
+                clone.find(".main-category-link-sub:not(.service-group-link):not(.disabled)").each(function () {
+                    if (!$(this).find(".mobile-expand-chevron").length) {
+                        $(this).append('<span class="mobile-expand-chevron" aria-hidden="true"><i class="fas fa-chevron-right"></i></span>');
+                    }
+                });
                 subList.append(clone);
             });
 
@@ -1204,15 +1424,67 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     });
 
     /* =========================
-       MOBILE: SUB CATEGORY
+       MOBILE: SUB CATEGORY (L2 → accordion reveals L3 services)
     ========================= */
-    $(document).on("click", ".main-category-link-sub", function (e) {
-        if ($(this).hasClass("disabled")) {
-            e.preventDefault();
+
+    // Disabled links: always block navigation
+    $(document).on("click", ".main-category-link-sub.disabled", function (e) {
+        e.preventDefault();
+    });
+
+    // Expandable sub-categories: accordion on mobile, navigate on desktop (handled by hover above)
+    $(document).on("click", ".main-category-link-sub:not(.service-group-link):not(.disabled)", function (e) {
+        if (!isMobile()) return; // desktop uses hover — no change needed there
+
+        e.preventDefault(); // block page nav; user navigates via the "Visit →" link inside L3
+
+        var subId    = $(this).attr("id") || "";              // "sub_5"
+        var catId    = subId.replace("sub_", "");             // "5"
+        var catName  = $(this).clone().children().remove().end().text().trim();
+        var catUrl   = $(this).attr("href");
+        var parentLi = $(this).closest("li");
+
+        // ── Toggle: collapse if already open ──────────────────
+        if (parentLi.hasClass("mobile-sub-expanded")) {
+            parentLi.removeClass("mobile-sub-expanded");
+            parentLi.find(".mobile-service-list").slideUp(180, function () { $(this).remove(); });
             return;
         }
 
-        // Allow normal link navigation on mobile.
+        // ── Collapse any other open L3 ────────────────────────
+        $(".mobile-sub-expanded").each(function () {
+            $(this).removeClass("mobile-sub-expanded");
+            $(this).find(".mobile-service-list").slideUp(180, function () { $(this).remove(); });
+        });
+
+        parentLi.addClass("mobile-sub-expanded");
+
+        // ── Build L3 panel ────────────────────────────────────
+        var $panel = $('<ul class="mobile-service-list list-unstyled"></ul>');
+
+        // Actual services under this sub-category
+        var $services = $(".filter-sub_" + catId);
+        if ($services.length > 0) {
+            $services.each(function () {
+                $panel.append($(this).clone().show());
+            });
+        } else {
+            $panel.append('<li class="mobile-no-services"><span>No services listed yet</span></li>');
+        }
+
+        // "Visit [Category] page →" — last item so users can navigate to the full page
+        if (catUrl && catUrl !== "#") {
+            $panel.append(
+                '<li class="mobile-visit-category">' +
+                '<a href="' + catUrl + '">' +
+                '<i class="fas fa-arrow-right"></i>&nbsp;Visit ' + catName + ' page' +
+                '</a></li>'
+            );
+        }
+
+        $panel.hide();
+        parentLi.append($panel);
+        $panel.slideDown(250); // enter slower than exit — feels responsive (MD motion rule)
     });
 
     /* =========================
@@ -1319,7 +1591,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         <h4>Quick Links</h4>
                         <ul class="footer-links">
                             <li><a href="{{ route('front.new-about') }}"><i class="fas fa-chevron-right"></i> About Our Company</a></li>
-                            <li><a href="{{ route('front.services') }}"><i class="fas fa-chevron-right"></i> Healthcare Services</a></li>
+                            <li><a href="{{ route('front.all-services') }}"><i class="fas fa-chevron-right"></i> Healthcare Services</a></li>
                             <li><a href="#"><i class="fas fa-chevron-right"></i> Medical Consulting</a></li>
                             <li><a href="#"><i class="fas fa-chevron-right"></i> Patient Care</a></li>
                             <li><a href="{{ route('contact') }}"><i class="fas fa-chevron-right"></i> Contact Our Team</a></li>
@@ -2175,16 +2447,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         }
     </style>
 
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Optional: Inter font for better typography -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <script>
         // Create floating particles
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
-            const particleCount = 30;
+            const particleCount = 10;
 
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
@@ -2344,57 +2612,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </script>
 
 
-
-
-
-
-
-    <script>
-        // Initialize on load
-        document.addEventListener('DOMContentLoaded', () => {
-            createParticles();
-
-            // Animate links on page load
-            const linkItems = document.querySelectorAll('.footer-links li');
-            linkItems.forEach((item, index) => {
-                setTimeout(() => {
-                    item.style.animation = `slideIn 0.5s forwards`;
-                }, index * 100 + 300);
-            });
-
-            // Add scroll reveal animation
-            const footerElements = document.querySelectorAll('.footer-top, .footer-middle, .footer-bottom');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            footerElements.forEach(el => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(30px)';
-                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-                observer.observe(el);
-            });
-        });
-
-        // Add subtle parallax effect to background elements
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const bgCircles = document.querySelectorAll('.bg-circle');
-
-            bgCircles.forEach((circle, index) => {
-                const speed = 0.1 + (index * 0.05);
-                const yPos = -(scrolled * speed);
-                circle.style.transform = `translateY(${yPos}px)`;
-            });
-        });
-    </script>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
         $(document).ready(function () {
@@ -2654,6 +2871,108 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     @stack('scripts')
     @yield('custom_js')
+
+    {{-- ═══════════════════════════════════════════════════════════════
+         CONVERSION TRACKING — GTM-READY
+         Pushes dataLayer events for every conversion intent.
+         When you add your GTM ID, create triggers in GTM matching:
+           event = 'ahg_phone_call'
+           event = 'ahg_whatsapp_click'
+           event = 'ahg_email_click'
+           event = 'ahg_inquiry_opened'
+           event = 'ahg_inquiry_submitted'
+           event = 'ahg_contact_submitted'
+         Then attach Google Ads conversion tags to those triggers.
+    ════════════════════════════════════════════════════════════════ --}}
+    <script>
+    (function () {
+        'use strict';
+
+        // ── Helper: push event to dataLayer + fire gtag directly ──────
+        function trackConversion(eventName, params) {
+            var payload = Object.assign({ event: eventName, page_url: window.location.href }, params || {});
+
+            // 1. dataLayer push (GTM picks this up automatically)
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push(payload);
+
+            // 2. gtag event (for GA4 / Google Ads when configured via GTM)
+            if (typeof gtag === 'function') {
+                gtag('event', eventName, params || {});
+            }
+        }
+
+        // ── Global click tracker (event delegation, works on all pages) ─
+        document.addEventListener('click', function (e) {
+            var el = e.target.closest('a, button');
+            if (!el) return;
+
+            var href    = el.getAttribute('href') || '';
+            var label   = el.getAttribute('data-track-label') || el.innerText.trim().substring(0, 60);
+            var ctx = window._ahgPage || {};
+
+            // ── Phone call ────────────────────────────────────────────
+            if (href.indexOf('tel:') === 0) {
+                trackConversion('ahg_phone_call', {
+                    phone_number: href.replace('tel:', ''),
+                    service_name: ctx.service_name || '',
+                    element_label: label,
+                });
+                return;
+            }
+
+            // ── Email (mailto:) ───────────────────────────────────────
+            if (href.indexOf('mailto:') === 0) {
+                trackConversion('ahg_email_click', {
+                    email_address: href.replace('mailto:', ''),
+                    service_name: ctx.service_name || '',
+                    element_label: label,
+                });
+                return;
+            }
+
+            // ── WhatsApp ──────────────────────────────────────────────
+            if (href.indexOf('wa.me') !== -1 || href.indexOf('whatsapp') !== -1) {
+                trackConversion('ahg_whatsapp_click', {
+                    service_name: ctx.service_name || '',
+                    element_label: label,
+                });
+                return;
+            }
+
+            // ── Inquiry / Contact modal triggers ──────────────────────
+            var modalTarget = el.getAttribute('data-bs-target') || '';
+            if (modalTarget === '#inquiryModal') {
+                trackConversion('ahg_inquiry_opened', {
+                    trigger_element: label || el.className,
+                    service_name: ctx.service_name || '',
+                });
+                return;
+            }
+        });
+
+        // ── Form submits ───────────────────────────────────────────────
+        document.addEventListener('submit', function (e) {
+            var form = e.target;
+            var ctx  = window._ahgPage || {};
+
+            if (form.id === 'inquiryForm') {
+                trackConversion('ahg_inquiry_submitted', {
+                    service_name: ctx.service_name || '',
+                    form_id: 'inquiryForm',
+                });
+            }
+
+            // ── Contact page form ──────────────────────────────────────
+            if (form.id === 'contactForm' || form.classList.contains('contact-form')) {
+                trackConversion('ahg_contact_submitted', {
+                    form_id: form.id || 'contact_form',
+                });
+            }
+        });
+
+    })();
+    </script>
 
     @include('front.partials.ai-assistant')
 </body>

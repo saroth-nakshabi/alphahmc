@@ -1,13 +1,17 @@
-@extends('front/layout-2')
+﻿@extends('front/layout-2')
 
-@section('meta_title', 'Blog Page')
-@section('meta_description', 'About Page Description')
-@section('meta_keywords', 'About,Alpha,Education')
+@push('page_title', 'Healthcare Insights & Blog | Alpha Health Group')
 
-@section('meta_tags')
-    <!-- Additional meta tags (if necessary) -->
-    <meta property="og:title" content="About Page - My Website">
-    <meta property="og:description" content="This is the about page of My Website.">
+@section('meta_description', 'Stay informed with Alpha Health Group — expert articles on DOH compliance, healthcare accreditation, quality assurance, and industry news for UAE healthcare facilities.')
+
+@push('og_tags')
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Alpha Health Group" />
+    <meta property="og:title" content="Healthcare Insights & Blog | Alpha Health Group" />
+    <meta property="og:description" content="Expert articles on DOH compliance, healthcare accreditation, quality assurance, and industry news for UAE healthcare facilities." />
+    <meta property="og:url" content="{{ url()->current() }}" />
+    <meta name="twitter:card" content="summary_large_image" />
+@endpush
     <meta property="og:url" content="{{ url()->current() }}">
 @endsection
 
@@ -312,7 +316,7 @@
             .card-img-area { height: 260px; }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 @endSection
 
 @section('content')

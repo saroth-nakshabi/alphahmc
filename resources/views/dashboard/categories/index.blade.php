@@ -34,14 +34,14 @@
                 'id'       => $cat->id,
                 'name'     => $cat->name,
                 'slug'     => $cat->slug,
-                'cat_url'  => route('view_category', $cat->slug),
+                'cat_url'  => route('front.service-category', $cat->slug),
                 'edit_url' => route('categories.edit', $cat->id),
                 'main_cat' => optional($cat->mainCategory)->name ?? '—',
                 'services' => $cat->services->map(function ($s) {
                     return [
                         'id'   => $s->id,
                         'name' => $s->name,
-                        'url'  => route('view_service', $s->slug),
+                        'url'  => route('front.service', $s->slug),
                     ];
                 })->values()->toArray(),
                 'service_groups' => $cat->serviceGroups->map(function ($g) {
@@ -138,7 +138,7 @@
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a class="dropdown-item" href="{{ route('view_category', $category->slug) }}"
+                                                            <a class="dropdown-item" href="{{ route('front.service-category', $category->slug) }}"
                                                                 target="_blank">
                                                                 <i class="ti ti-external-link me-1"></i> Open Page
                                                             </a>

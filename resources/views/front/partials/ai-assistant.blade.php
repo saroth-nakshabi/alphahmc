@@ -8,7 +8,7 @@
 
     // Only show inquiry officer phone on specific service detail routes
     // This prevents the inquiry officer phone from appearing on all pages
-    $serviceRoutes = ['front.service', 'view_service'];
+    $serviceRoutes = ['front.service'];
     $currentRouteName = request()->route() ? request()->route()->getName() : null;
 
     if (in_array($currentRouteName, $serviceRoutes)) {

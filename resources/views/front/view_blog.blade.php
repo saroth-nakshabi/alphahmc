@@ -1,15 +1,41 @@
-@extends('front/layout-2')
+﻿@extends('front/layout-2')
 
-@section('meta_title', empty($blog->meta_title) ? $blog->name : $blog->meta_title)
-@section('meta_description', empty($blog->meta_description) ? null : $blog->meta_description)
-@section('meta_keywords', empty($blog->meta_keywords) ? null : $blog->meta_keywords)
+@push('page_title', (empty($blog->meta_title) ? $blog->name : $blog->meta_title) . ' | Alpha Health Group')
 
-@section('meta_tags')
-    <!-- Additional meta tags (if necessary) -->
-    <meta property="og:title" content="{{ empty($blog->meta_title) ? $blog->name : $blog->meta_title }}">
-    <meta property="og:description" content="{{ empty($blog->meta_description) ? null : $blog->meta_description }}">
-    <meta property="og:url" content="{{ url()->current() }}">
-@endsection
+@section('meta_description', empty($blog->meta_description) ? Str::limit(strip_tags($blog->content ?? ''), 155) : $blog->meta_description)
+
+@push('og_tags')
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Alpha Health Group" />
+    <meta property="og:title" content="{{ empty($blog->meta_title) ? $blog->name : $blog->meta_title }}" />
+    <meta property="og:description" content="{{ empty($blog->meta_description) ? Str::limit(strip_tags($blog->content ?? ''), 155) : $blog->meta_description }}" />
+    <meta property="og:url" content="{{ url()->current() }}" />
+    @if($blog->image)
+    <meta property="og:image" content="{{ asset('public/uploads/blog_images/' . $blog->image) }}" />
+    @endif
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ empty($blog->meta_title) ? $blog->name : $blog->meta_title }}" />
+    <meta name="twitter:description" content="{{ empty($blog->meta_description) ? Str::limit(strip_tags($blog->content ?? ''), 155) : $blog->meta_description }}" />
+    <script type="application/ld+json">
+    {!!
+        json_encode([
+            '@context'        => 'https://schema.org',
+            '@type'           => 'Article',
+            'headline'        => empty($blog->meta_title) ? $blog->name : $blog->meta_title,
+            'description'     => empty($blog->meta_description) ? Str::limit(strip_tags($blog->content ?? ''), 155) : $blog->meta_description,
+            'url'             => url()->current(),
+            'datePublished'   => $blog->created_at?->toIso8601String(),
+            'dateModified'    => $blog->updated_at?->toIso8601String(),
+            'publisher'       => [
+                '@type' => 'Organization',
+                'name'  => 'Alpha Health Group',
+                'logo'  => ['@type' => 'ImageObject', 'url' => asset('public/front-new/assets/images/alpha-logo.svg')],
+            ],
+            'image' => $blog->image ? asset('public/uploads/blog_images/' . $blog->image) : null,
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+    !!}
+    </script>
+@endpush
 
 @section('custom_css')
 <style>
@@ -248,8 +274,7 @@
         }
     }
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Outfit:wght@800&display=swap"
-    rel="stylesheet">
+
 @endSection
 
 @section('content')

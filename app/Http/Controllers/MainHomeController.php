@@ -87,7 +87,7 @@ class MainHomeController extends Controller
         $data = [];
         $data['service'] = Service::published()->with('agent', 'ServiceTab', 'faq', 'announcement')->where('slug', $slug)->first();
         if (!$data['service']) {
-            return redirect()->route('front.services');
+            return redirect()->route('front.all-services');
         }
 
         // Fetch related services
@@ -115,10 +115,10 @@ class MainHomeController extends Controller
     public function serviceCategory($slug)
     {
         $data = [];
-        $category = Category::with(['agent.user', 'services', 'faqs', 'magazines'])->where('slug', $slug)->first();
+        $category = Category::with(['agent.user', 'services', 'faqs', 'magazines', 'serviceGroups'])->where('slug', $slug)->first();
 
         if (!$category) {
-            return redirect()->route('front.services');
+            return redirect()->route('front.all-services');
         }
 
         // Keep the existing service_category view compatible with its current variable/relationship names.

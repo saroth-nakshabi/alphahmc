@@ -1,8 +1,11 @@
-@extends('front/layout-2')
+﻿@extends('front/layout-2')
+
+@push('page_title', 'About Alpha Health Group | Healthcare Consultancy UAE')
+
+@section('meta_description')Discover Alpha Health Group — a leading healthcare consultancy in the UAE delivering DOH compliance, accreditation, quality assurance, and operational excellence for hospitals and clinics.@endsection
 
 @section('content')
     <!-- Professional Typography & Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {

@@ -48,7 +48,7 @@ class HomeController extends Controller
 
     public function about()
     {
-        return view('front.about');
+        return redirect()->route('front.new-about');
     }
 
 
@@ -57,72 +57,6 @@ class HomeController extends Controller
         return view('front.contact');
     }
 
-    public function services(Request $request )
-    {
-        $data = [];
-        // $data['services'] = Service::paginate(9);
-
-        $search = $request->input('search');
-        $data['search'] = $search;
-
-        // Query the posts, optionally applying a search filter if the user entered a search term
-        $data['services'] = Service::published()->when($search, function ($query, $search) {
-            return $query->where('name', 'LIKE', '%' . $search . '%');
-        })->paginate(10);
-
-        return view('front.services', $data);
-    }
-
-    public function viewService($slug)
-    {
-        $data = [];
-        $data['service'] = Service::published()->where('slug', $slug)->first();
-
-        if (!$data['service']) {
-            return redirect()->route('front.services');
-        }
-
-        // Fetch related services and questions
-        $categoryIds = $data['service']->categories->pluck('id');
-        $data['related_services'] = Service::published()->whereHas('categories', function ($query) use ($categoryIds) {
-            $query->whereIn('categories.id', $categoryIds);
-        })->where('id', '!=', $data['service']->id)->get();
-
-
-        $data['test_questions'] = TestQuestion::where('service_id', $data['service']->id)->get();
-        $data['test_answers'] = TestAnswer::whereIn('test_question_id', $data['test_questions']->pluck('id'))->get();
-        $data['featuredServices'] = Service::published()->where('featured', true)->take(3)->get();
-        $data['agents'] = Agent::all();
-
-        return view('front.view_service', $data);
-    }
-
-
-
-
-    public function viewCategory(Request $request, $category_name)
-    {
-        $data = [];
-        // $service_name = Str::slug($service_name);
-        $category_name = str_replace('-', ' ', $category_name);
-        $data['category'] = Category::where('name', $category_name)->first();
-
-        if (!$data['category']) {
-            return redirect()->route('home');
-        }
-
-        $search = $request->input('search');
-        $data['search'] = $search;
-
-        $data['services'] = Service::published()->with(['categories' => function ($query) use ($category_name) {
-            $query->where('name', $category_name);
-        }])->when($search, function ($query, $search) {
-            return $query->where('name', 'LIKE', '%' . $search . '%');
-        })->paginate(9);
-
-        // Handle dynamic service name and return view
-        return view('front.category', $data);
-    }
 
     public function serviceCalendar()
     {

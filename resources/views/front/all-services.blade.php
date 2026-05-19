@@ -1,7 +1,11 @@
-@extends('front/layout-2')
+﻿@extends('front/layout-2')
+
+@push('page_title', 'All Healthcare Consultancy Services | Alpha Health Group')
+
+@section('meta_description')Browse all healthcare consultancy services by Alpha Health Group — DOH licensing, JCIA accreditation, quality assurance, infection control, patient safety, and more for UAE facilities.@endsection
 
 @section('custom_css')
-<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ─── DESIGN TOKENS ────────────────────────────────────────────────── */
 :root {

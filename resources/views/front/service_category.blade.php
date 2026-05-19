@@ -1,12 +1,22 @@
-@extends('front/layout-2')
+﻿@extends('front/layout-2')
 
 @push('page_title')
     {!! $service->name !!}
 @endpush
 
 @push('meta')
-<meta name="description" content="{{ $service->meta_description }}">
+    <meta name="description" content="{{ $service->meta_description }}">
     <meta name="keywords" content="{{ $service->meta_keywords }}">
+    <link rel="preload" as="style"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
+    @php
+        $heroPreload = $service->hero_image
+            ? asset('public/' . ltrim($service->hero_image, '/'))
+            : asset('public/front/assets/img/hero/service-details-bg.jpg');
+    @endphp
+    <link rel="preload" as="image" href="{{ $heroPreload }}" fetchpriority="high">
 @endpush
 
 @push('og_tags')
@@ -30,11 +40,6 @@
 
 
 @section('content')
-    <!-- Standardized Typography -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-
     <style>
         :root {
             --brand-primary: #066D77;
@@ -88,15 +93,11 @@
         }
 
         @keyframes cinematicFocus {
-            0% {
-                transform: scale(1);
-                filter: brightness(0.8);
-            }
-
-            100% {
-                transform: scale(1.1);
-                filter: brightness(1);
-            }
+            0%   { transform: scale(1);   filter: brightness(0.8); }
+            100% { transform: scale(1.1); filter: brightness(1);   }
+        }
+        @media (max-width: 768px) {
+            .hero-background { animation: none; transform: scale(1); filter: brightness(0.8); }
         }
 
         .service-hero::before {
@@ -1219,23 +1220,23 @@
             }
 
             .mag-swiper-container {
-                /* padding-right: 0; */
                 overflow: hidden !important;
+                touch-action: pan-y;
             }
 
             .mag-card {
                 min-height: auto;
-                margin-left:40px;
+                margin-left: 40px;
             }
 
-            .mag-card-eyebrow{
+            .mag-card-eyebrow {
                 font-size: 0.7rem;
                 padding: 6px 18px;
             }
 
-            .mag-card .mag-desc{
+            .mag-card .mag-desc {
                 font-size: 0.95rem;
-                overflow: scroll;
+                overflow: visible;
             }
 
         }
@@ -1250,7 +1251,7 @@
 
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-10" data-aos="fade-up">
+                    <div class="col-lg-10">
                         <h1 class="hero-title">{{ $service->name }}</h1>
                         <div class="hero-desc-wrapper">
                             {!! $service->content !!}
@@ -1697,36 +1698,35 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
 <section class="browse-section" id="services">
     <div class="container">
   
+      @php
+        $categoryServices      = $service->services ?? collect();
+        $categoryServiceGroups = $service->serviceGroups ?? collect();
+        $totalItems            = $categoryServices->count() + $categoryServiceGroups->count();
+      @endphp
+
       <div class="browse-header reveal">
         <div class="browse-header-left">
           <div class="category-info mb-2">
-            <p class="category-name-text" style="font-size:1.75rem">{{ $service->name }} <span class="service-count-badge">{{ count($service->services ?? []) }} Services</span></p>
+            <p class="category-name-text" style="font-size:1.75rem">
+              {{ $service->name }}
+              <span class="service-count-badge">{{ $categoryServices->count() }} Services</span>
+              @if($categoryServiceGroups->count())
+                <span class="service-count-badge" style="background:rgba(0,144,149,.15);color:#009095;margin-left:.4rem">
+                  {{ $categoryServiceGroups->count() }} Package{{ $categoryServiceGroups->count() > 1 ? 's' : '' }}
+                </span>
+              @endif
+            </p>
           </div>
           <h2>{{ $service->service_header ?? 'Services in ' . $service->name }}</h2>
-          <p>Explore all services available under this category.</p>
+          <p>Explore all services and service packages available under this category.</p>
         </div>
         <div class="browse-header-right">
           <a href="{{ route('front.all-services') }}">View All Services &nbsp;→</a>
         </div>
       </div>
-  
+
       <div class="browse-grid reveal">
-        @php
-          $categoryServices = $service->services ?? collect();
-        @endphp
-        @forelse($categoryServices as $categoryService)
-          <a href="{{ route('front.service', $categoryService->slug) }}" class="browse-card current"
-            aria-label="{{ $categoryService->name }}">
-            <div class="browse-card-left">
-              {{-- <div class="browse-card-icon-wrap">{{ strtoupper(substr($categoryService->name, 0, 1)) }}</div> --}}
-              <div class="browse-card-text">
-                <div class="browse-card-title">{{ $categoryService->name }}</div>
-                <div class="browse-card-count">{!! $service->description !!}</div>
-              </div>
-            </div>
-            <div class="browse-card-arrow-btn">→</div>
-          </a>
-        @empty
+        @if($totalItems === 0)
           <div class="browse-card current">
             <div class="browse-card-left">
               <div class="browse-card-icon-wrap">i</div>
@@ -1736,7 +1736,41 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
               </div>
             </div>
           </div>
-        @endforelse
+        @else
+          {{-- Individual services --}}
+          @foreach($categoryServices as $categoryService)
+            <a href="{{ route('front.service', $categoryService->slug) }}" class="browse-card current"
+              aria-label="{{ $categoryService->name }}">
+              <div class="browse-card-left">
+                <div class="browse-card-text">
+                  <div class="browse-card-title">{{ $categoryService->name }}</div>
+                  <div class="browse-card-count">{!! $service->description !!}</div>
+                </div>
+              </div>
+              <div class="browse-card-arrow-btn">→</div>
+            </a>
+          @endforeach
+
+          {{-- Service packages / groups --}}
+          @foreach($categoryServiceGroups as $group)
+            <a href="{{ route('service-packages', $group->slug) }}" class="browse-card current"
+              aria-label="{{ $group->name }}"
+              style="border-left:3px solid #009095">
+              <div class="browse-card-left">
+                <div class="browse-card-text">
+                  <div class="browse-card-title" style="display:flex;align-items:center;gap:.45rem">
+                    <i class="bi bi-collection-fill" style="color:#009095;font-size:.85rem;flex-shrink:0"></i>
+                    {{ $group->name }}
+                  </div>
+                  <div class="browse-card-count" style="color:#009095;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.4px">
+                    Service Package
+                  </div>
+                </div>
+              </div>
+              <div class="browse-card-arrow-btn">→</div>
+            </a>
+          @endforeach
+        @endif
       </div>
   
     </div>

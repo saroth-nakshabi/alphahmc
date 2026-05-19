@@ -78,7 +78,7 @@
                                 <td style="padding-left:20px;">
                                     <div style="font-size:14px;font-weight:700;color:#0f172a;font-family:'Outfit',sans-serif;">Alpha Healthcare Consultancy</div>
                                     <div style="font-size:12px;color:#64748b;margin-top:2px;">Advisory & Strategy Division</div>
-                                    <a href="https://nexthealthos.com/alphahmc-com/" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;margin-top:6px;display:block;">Secure Portal Access &rarr;</a>
+                                    <a href="{{ config('app.url') }}" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;margin-top:6px;display:block;">Secure Portal Access &rarr;</a>
                                 </td>
                             </tr>
                         </table>

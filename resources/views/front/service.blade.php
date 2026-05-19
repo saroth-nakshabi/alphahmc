@@ -1,26 +1,39 @@
-@extends('front/layout-2')
+﻿@extends('front/layout-2')
 
 @push('page_title')
     {!! $service->name !!}
 @endpush
 
 @push('meta')
-<meta name="description" content="{{ $service->meta_description }}">
+    <meta name="description" content="{{ $service->meta_description }}">
     <meta name="keywords" content="{{ $service->meta_keywords }}">
+    {{-- Non-blocking Inter font (moved out of body to prevent render-block) --}}
+    <link rel="preload" as="style"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
+    {{-- Preload hero image so browser fetches it at highest priority --}}
+    @php
+        $heroPreload = $service->hero_image
+            ? asset('public/uploads/service_images/' . $service->hero_image)
+            : asset('public/front/assets/img/hero/service-details-bg.jpg');
+    @endphp
+    <link rel="preload" as="image" href="{{ $heroPreload }}" fetchpriority="high">
 @endpush
 
 @push('og_tags')
     {{-- <link rel="canonical" href="{{ url('/' . $service->slug) }}"> --}}
 
-    <meta name="author" content="Alpha Health Management Consultancy">
+    <meta name="author" content="Alpha Health Group">
+    <meta property="og:site_name" content="Alpha Health Group" />
     <meta property="og:title" content="{{ $service->meta_title }}" />
     <meta property="og:description" content="{{ $service->meta_description }}" />
     <meta property="og:image" content="{{ asset('public/uploads/service_images/' . $service->hero_image) }}" />
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="website" />
-
-    <meta name="twitter:card" content="{{ strip_tags($service->content)}}">
-    {{-- <meta name="twitter:description" content="{{ strip_tags($service->meta_description ?? $service->overview) }}"> --}}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ $service->meta_title }}" />
+    <meta name="twitter:description" content="{{ $service->meta_description }}" />
 @endpush
 
 
@@ -30,12 +43,6 @@
 
 
 @section('content')
-    <!-- Standardized Typography & Modern Iconography -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-
     <style>
         :root {
             --brand-primary: #066D77;
@@ -89,15 +96,11 @@
         }
 
         @keyframes cinematicFocus {
-            0% {
-                transform: scale(1);
-                filter: brightness(0.8);
-            }
-
-            100% {
-                transform: scale(1.1);
-                filter: brightness(1);
-            }
+            0%   { transform: scale(1);   filter: brightness(0.8); }
+            100% { transform: scale(1.1); filter: brightness(1);   }
+        }
+        @media (max-width: 768px) {
+            .hero-background { animation: none; transform: scale(1); filter: brightness(0.8); }
         }
 
         .service-hero::before {
@@ -1206,25 +1209,29 @@
             }
 
             .mag-swiper-container {
-                /* padding-right: 0; */
                 overflow: hidden !important;
+                /* pan-y lets the browser handle vertical page scroll;
+                   Swiper handles horizontal swipe — prevents touch-event block */
+                touch-action: pan-y;
             }
 
             .mag-card {
                 min-height: auto;
-                margin-left:40px;
+                margin-left: 40px;
             }
 
-            .mag-card-eyebrow{
+            .mag-card-eyebrow {
                 font-size: 0.7rem;
                 padding: 6px 18px;
             }
 
-            .mag-card .mag-desc{
+            .mag-card .mag-desc {
                 font-size: 0.95rem;
-                overflow: scroll;
+                /* overflow:scroll was creating a nested scroll context that trapped
+                   the user's touch, blocking page scroll intermittently on mobile */
+                overflow: visible;
             }
-          
+
         }
     </style>
 
@@ -1237,7 +1244,7 @@
 
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-10" data-aos="fade-up">
+                    <div class="col-lg-10">
                         <h1 class="hero-title">{{ $service->name }}</h1>
                         <div class="hero-desc-wrapper">
                             {!! $service->content !!}
@@ -2070,5 +2077,16 @@ function toggleTransformationDesc() {
                 }
             }
         </script>
+    @endpush
+
+    {{-- Page context for conversion tracker --}}
+    @push('scripts')
+    <script>
+        window._ahgPage = {
+            service_name: @json($service->name ?? ''),
+            service_slug: @json($service->slug ?? ''),
+            page_type:    'service',
+        };
+    </script>
     @endpush
 @endsection

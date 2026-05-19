@@ -1,7 +1,7 @@
-@extends('front/layout-2')
+﻿@extends('front/layout-2')
 
 @section('custom_css')
-<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
 /* ─── DESIGN TOKENS ────────────────────────────────────────────────── */
@@ -1912,7 +1912,6 @@
 
 </div><!-- /pdl -->
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 <script src="https://unpkg.com/page-flip/dist/js/page-flip.browser.js"></script>
 

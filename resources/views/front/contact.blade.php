@@ -1,8 +1,11 @@
-@extends('front/layout-2')
+﻿@extends('front/layout-2')
+
+@push('page_title', 'Contact Us | Alpha Health Group')
+
+@section('meta_description')Get in touch with Alpha Health Group for healthcare consultancy services, DOH compliance support, and accreditation assistance for healthcare facilities across the UAE.@endsection
 
 @section('content')
     <!-- Professional Contact System -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
@@ -431,7 +434,6 @@
         </section>
 
         <!-- Get in Touch: Split Experience -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <section class="ultra-modern-touch" id="contactSection">
     

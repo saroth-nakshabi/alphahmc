@@ -1,13 +1,93 @@
 @extends('front/layout-2')
+
+@push('page_title', 'Healthcare Consultancy in Dubai | Alpha Health Group')
+
+@section('meta_description')Alpha Health Group — trusted healthcare consultancy in the UAE. We deliver DOH compliance, accreditation support, quality assurance, and operational excellence for hospitals and clinics.@endsection
+
+@push('meta')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Alpha Health Group Site Navigation",
+  "itemListElement": [
+    {
+      "@type": "SiteNavigationElement",
+      "position": 1,
+      "name": "Home",
+      "description": "Alpha Health Group — UAE healthcare consultancy home",
+      "url": "{{ route('home') }}"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 2,
+      "name": "About Alpha Health Group",
+      "description": "Learn about Alpha Health Group's mission, vision, and expertise in healthcare consultancy across the UAE.",
+      "url": "{{ route('front.new-about') }}"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 3,
+      "name": "All Services",
+      "description": "Explore all healthcare consultancy services offered by Alpha Health Group including DOH compliance and accreditation.",
+      "url": "{{ route('front.all-services') }}"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 4,
+      "name": "Healthcare Quality Assurance",
+      "description": "Tawqeet — Alpha Health Group's healthcare quality assurance and KPI monitoring platform.",
+      "url": "{{ route('healthcare_quality_assurance') }}"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 5,
+      "name": "How Alpha Works",
+      "description": "Our proven 4-step methodology for healthcare facility compliance, planning, execution, and results.",
+      "url": "{{ route('how_alpha_work') }}"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 6,
+      "name": "Blog & Insights",
+      "description": "Healthcare industry news, compliance updates, and expert insights from Alpha Health Group.",
+      "url": "{{ route('front.blog') }}"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "position": 7,
+      "name": "Contact Us",
+      "description": "Get in touch with Alpha Health Group for healthcare consultancy services in the UAE.",
+      "url": "{{ route('contact') }}"
+    }
+  ]
+}
+</script>
+@endpush
+
 @section('content')
 
      <!-- ===== DUAL-MODE HERO SECTION ===== -->
     <section class="hero-video-modern" id="heroSection">
 
         <!-- BACKGROUND: Video Layer (Default Active) -->
-        <video autoplay muted loop playsinline class="hero-bg-video hero-bg-active" id="heroVideo">
-            <source src="{{ asset('public/front-new/assets/images/AHG Hero Video.mp4') }}" type="video/mp4">
+        <!-- poster shows instantly; source is injected only on desktop to avoid mobile network hit -->
+        <video muted loop playsinline class="hero-bg-video hero-bg-active" id="heroVideo"
+               poster="{{ asset('public/front-new/assets/images/video-thumbnail.jpg') }}">
         </video>
+        <script>
+            if (window.innerWidth >= 768) {
+                (function () {
+                    var v = document.getElementById('heroVideo');
+                    var s = document.createElement('source');
+                    s.src  = '{{ asset("public/front-new/assets/images/AHG Hero Video.mp4") }}';
+                    s.type = 'video/mp4';
+                    v.appendChild(s);
+                    v.load();
+                    v.play().catch(function () {});
+                })();
+            }
+        </script>
 
         <!-- BACKGROUND: Image Slider Layer -->
         <div class="hero-bg-images" id="heroImageLayer">
@@ -17,6 +97,14 @@
                         style="background-image: url('{{ asset('public/uploads/slider_images/' . $slider->image) }}');"
                         data-image-index="{{ $index }}">
                     </div>
+                    @if($index === 0)
+                        {{-- Preload the first hero image so it's fetched at highest priority --}}
+                        @push('meta')
+                        <link rel="preload" as="image"
+                              href="{{ asset('public/uploads/slider_images/' . $slider->image) }}"
+                              fetchpriority="high">
+                        @endpush
+                    @endif
                 @endforeach
             @endif
         </div>
@@ -602,8 +690,8 @@
                         <span class="article-category-tag">INSIGHT</span>
                         <h4>{{ $category->name }}</h4>
                         <p>{{ Str::limit(strip_tags($category->description), 100) }}</p>
-                        <a href="{{ route('view_category', Str::slug($category->name)) }}" class="btn-premium-read-more">
-                            READ MORE <i class="fa-solid fa-arrow-right ms-2"></i>
+                        <a href="{{ route('front.service-category', $category->slug) }}" class="btn-premium-read-more" aria-label="Read more about {{ $category->name }}">
+                            Read More <i class="fa-solid fa-arrow-right ms-2" aria-hidden="true"></i>
                         </a>
                     </div>
                 </div>

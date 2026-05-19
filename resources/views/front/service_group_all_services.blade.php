@@ -1,4 +1,4 @@
-@extends('front/layout-2')
+﻿@extends('front/layout-2')
 
 @push('page_title')
     {!! $service->name !!} - All Services
@@ -22,9 +22,8 @@
 
 @section('content')
     <!-- Standardized Typography & Modern Iconography -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link
-        href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
     <style>

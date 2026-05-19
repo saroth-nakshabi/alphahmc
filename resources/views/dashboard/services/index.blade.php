@@ -54,9 +54,27 @@
             <div class="col-12">
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
-                        <div class="d-flex align-items-center mb-3 gap-2">
+                        <div class="d-flex align-items-center mb-3 gap-2 flex-wrap">
                             <h5 class="mb-0 fw-semibold">Services List</h5>
                             <span class="badge bg-light-primary text-primary ms-2">{{ count($services) }} total</span>
+                            <div class="ms-auto d-flex align-items-center gap-2">
+                                <div class="input-group" style="width:280px">
+                                    <span class="input-group-text bg-white border-end-0">
+                                        <i class="ti ti-search text-muted" style="font-size:.95rem"></i>
+                                    </span>
+                                    <input type="text" id="service-search" class="form-control border-start-0 ps-0"
+                                        placeholder="Search by name, category…" style="font-size:.875rem">
+                                    <button class="btn btn-outline-secondary border-start-0" id="search-clear"
+                                        title="Clear" style="display:none">
+                                        <i class="ti ti-x" style="font-size:.85rem"></i>
+                                    </button>
+                                </div>
+                                <select id="status-filter" class="form-select" style="width:130px;font-size:.875rem">
+                                    <option value="">All Status</option>
+                                    <option value="published">Published</option>
+                                    <option value="draft">Draft</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="table-responsive">
                             <table id="items-table" class="table table-hover border table-bordered display">
@@ -129,7 +147,7 @@
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-end shadow">
                                                         <li>
-                                                            <a class="dropdown-item" href="{{ route('view_service', $service->slug) }}" target="_blank">
+                                                            <a class="dropdown-item" href="{{ route('front.service', $service->slug) }}" target="_blank">
                                                                 <i class="ti ti-external-link me-2 text-info"></i>Open Page
                                                             </a>
                                                         </li>
@@ -236,6 +254,30 @@
                 { orderable: false, targets: [4, 5] },
                 { searchable: false, targets: [4, 5] },
             ],
+        });
+
+        /* ─── Custom search ─── */
+        $('#service-search').on('input', function () {
+            items_table.search(this.value).draw();
+            $('#search-clear').toggle(this.value.length > 0);
+        });
+
+        $('#search-clear').on('click', function () {
+            $('#service-search').val('');
+            items_table.search('').draw();
+            $(this).hide();
+        });
+
+        /* ─── Status filter ─── */
+        $.fn.dataTable.ext.search.push(function (settings, data) {
+            if (settings.nTable.id !== 'items-table') return true;
+            var val = $('#status-filter').val();
+            if (!val) return true;
+            return data[3].toLowerCase().indexOf(val) !== -1;
+        });
+
+        $('#status-filter').on('change', function () {
+            items_table.draw();
         });
 
         /* ─── Toggle publish/draft ─── */
