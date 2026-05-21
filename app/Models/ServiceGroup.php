@@ -23,16 +23,18 @@ class ServiceGroup extends Model
         'core_service_description',
         'process_header',
         'process_description',
-        'info_three',
+        'process_intro',
         'info_four',
         'announcement_id',
         'related_services',
-        'sliding_image',
         'meta_title',
         'meta_description',
         'meta_keywords',
+        'published_date',
+        'updated_date',
         'status',
         'category_id',
+        'show_testimonials',
     ];
 
     protected $casts = [
@@ -167,20 +169,11 @@ class ServiceGroup extends Model
         return $this->belongsToMany(Service::class, 'service_group_services', 'service_group_id', 'service_id');
     }
 
-    public function magazines()
-    {
-        return $this->hasMany(ServiceMagazine::class, 'service_group_id');
-    }
-
     public function faqs()
     {
         return $this->hasMany(Faq::class, 'service_group_id');
     }
 
-    public function images()
-    {
-        return $this->hasMany(ServiceImage::class, 'service_group_id');
-    }
 
     public function agent()
     {

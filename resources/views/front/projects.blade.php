@@ -18,7 +18,7 @@
 
     /* Hero Banner - Full Height & Parallax */
     .service-banner {
-        background-image: linear-gradient(rgba(0, 0, 0, 0.3), var(--premium-black)), 
+        background-image: linear-gradient(rgba(0, 0, 0, 0.3), var(--premium-black)),
                           url('{{ asset('public/front-new/assets/images/group-concentrated-surgical-doctor-team-260nw-2573615859.webp') }}');
         background-size: cover;
         background-position: center;
@@ -26,10 +26,27 @@
         min-height: 85vh;
         display: flex;
         align-items: center;
-        margin-top: -120px; /* Offset for transparent headers */
+        margin-top: -120px;
         padding-top: 150px;
         color: white;
+        position: relative;
     }
+
+    .hero-breadcrumb {
+        position: absolute;
+        bottom: 40px;
+        left: 0;
+        right: 0;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        z-index: 10;
+    }
+    .hero-breadcrumb a { color: rgba(255,255,255,0.75) !important; text-decoration: none; font-weight: 600; transition: color 0.25s ease; }
+    .hero-breadcrumb a:hover { color: #ffffff !important; }
+    .hero-breadcrumb .bc-sep { color: rgba(255,255,255,0.4); margin: 0 8px; }
+    .hero-breadcrumb .bc-current { color: rgba(255,255,255,0.95); font-weight: 700; }
+    @media (max-width: 767px) { .hero-breadcrumb { bottom: 24px; font-size: 0.75rem; } }
 
     .hero-title {
         font-size: clamp(2.8rem, 6vw, 4.8rem);
@@ -208,17 +225,53 @@
         .solutions-banner { flex-direction: column; padding: 40px; text-align: center; }
         .service-banner { height: auto; padding: 180px 0 100px 0; }
     }
+
+    /* ── Filter nav → horizontal carousel ─────────────────────── */
+    .premium-filter-nav {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 6px;
+        gap: 8px;
+    }
+    .premium-filter-nav::-webkit-scrollbar { display: none; }
+    .premium-filter-item { flex-shrink: 0; }
+    .premium-filter-btn  { white-space: nowrap; padding: 10px 22px; font-size: 0.82rem; }
+
+    /* ── Hero: disable fixed bg on mobile (iOS bug) ────────────── */
+    @media (max-width: 767px) {
+        .service-banner {
+            background-attachment: scroll;
+            min-height: 70vh;
+            padding: 140px 0 80px;
+            margin-top: -85px;
+        }
+        .hero-btn { padding: 14px 32px; font-size: 0.82rem; }
+    }
+
+    /* ── Project card grid ─────────────────────────────────────── */
+    @media (max-width: 767px) {
+        .premium-project-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 20px 0;
+        }
+        .project-img-container { height: 220px; }
+    }
+    @media (min-width: 768px) and (max-width: 1100px) {
+        .premium-project-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+    }
 </style>
 
 <!-- Hero Section -->
 <section class="service-banner">
     <div class="container">
         <div class="banner-text">
-            <div class="service-nav mb-4">
-                <a class="text-white-50 text-decoration-none small" href="#">HOME</a>
-                <span class="mx-2 text-white-50">/</span>
-                <a class="text-white-50 text-decoration-none small" href="#">PROJECTS</a>
-            </div>
             <h1 class="hero-title">Architecting Digital <br>Success Stories</h1>
             <p class="hero-description">
                 Explore a gallery of our most impactful success stories. From complex IT staffing solutions to custom high-performance software, we deliver excellence across various industries worldwide.
@@ -228,6 +281,11 @@
             </a>
         </div>
     </div>
+    <nav class="hero-breadcrumb container" aria-label="Breadcrumb">
+        <a href="{{ route('home') }}">Home</a>
+        <span class="bc-sep">›</span>
+        <span class="bc-current">Projects</span>
+    </nav>
 </section>
 
 <!-- Project Summary -->
@@ -431,46 +489,66 @@
     <div class="glass-blob blob-2"></div>
 
     <div class="container">
-                <div class="featured-box">
-                    <div class="featured-image-side">
-                        <img src="{{ asset('public/front-new/assets/images/section-3-1st-image.jpg') }}"
-                            alt="Featured Project">
+        @if(isset($featuredProject) && $featuredProject)
+        <div class="featured-box">
+            <div class="featured-image-side">
+                @if($featuredProject->projects_images->count() > 0)
+                    <img src="{{ asset('public/' . $featuredProject->projects_images[0]->image) }}"
+                         alt="{{ $featuredProject->name }}">
+                @else
+                    <img src="{{ asset('public/front-new/assets/images/section-3-1st-image.jpg') }}"
+                         alt="{{ $featuredProject->name }}">
+                @endif
+            </div>
+            <div class="featured-content-side">
+                <span class="featured-badge">Featured Case Study</span>
+                <h2 class="featured-title">{{ $featuredProject->name }}</h2>
+                <p class="featured-desc">
+                    {{ Str::limit(strip_tags($featuredProject->description), 220) }}
+                </p>
+
+                <div class="featured-meta-grid">
+                    <div class="meta-item">
+                        <h4>Services Delivered</h4>
+                        @if(isset($featuredServices) && $featuredServices->count() > 0)
+                        <ul class="meta-list">
+                            @foreach($featuredServices->take(4) as $svc)
+                            <li><i class="fas fa-check-circle"></i> {{ $svc->name }}</li>
+                            @endforeach
+                        </ul>
+                        @else
+                        <ul class="meta-list">
+                            <li><i class="fas fa-check-circle"></i> {{ $featuredProject->project_category->name ?? 'Healthcare IT' }}</li>
+                        </ul>
+                        @endif
                     </div>
-                    <div class="featured-content-side">
-                        <span class="featured-badge">Featured Case Study</span>
-                        <h2 class="featured-title">Next-Gen Healthcare Management System</h2>
-                        <p class="featured-desc">
-                            We developed a highly specialized, enterprise-level digital ecosystem designed to streamline
-                            complex clinical workflows and patient data management for multi-regional hospital networks.
-                        </p>
-
-                        <div class="featured-meta-grid">
-                            <div class="meta-item">
-                                <h4>Key Features</h4>
-                                <ul class="meta-list">
-                                    <li><i class="fas fa-check-circle"></i> AI-Driven Diagnostics</li>
-                                    <li><i class="fas fa-check-circle"></i> Real-time EPR Sync</li>
-                                    <li><i class="fas fa-check-circle"></i> Predictive Analytics</li>
-                                </ul>
-                            </div>
-                            <div class="meta-item">
-                                <h4>Tech Stack</h4>
-                                <div class="tech-tags">
-                                    <span class="tech-tag">Laravel</span>
-                                    <span class="tech-tag">Vue.js</span>
-                                    <span class="tech-tag">AWS Cloud</span>
-                                    <span class="tech-tag">PostgreSQL</span>
-                                </div>
-                            </div>
+                    <div class="meta-item">
+                        <h4>Project Details</h4>
+                        <div class="tech-tags">
+                            @if($featuredProject->project_category)
+                                <span class="tech-tag">{{ $featuredProject->project_category->name }}</span>
+                            @endif
+                            @if($featuredProject->project_location)
+                                <span class="tech-tag">{{ $featuredProject->project_location }}</span>
+                            @endif
+                            @if($featuredProject->project_duration)
+                                <span class="tech-tag">{{ $featuredProject->project_duration }}</span>
+                            @endif
+                            @if($featuredProject->client_name)
+                                <span class="tech-tag">{{ $featuredProject->client_name }}</span>
+                            @endif
                         </div>
-
-                        <a href="{{ isset($projects[0]) ? route('front.project_details', $projects[0]->id) : route('front.project') }}"
-                            class="btn-featured-cta">
-                            View Full Case Study <i class="fas fa-arrow-right"></i>
-                        </a>
                     </div>
                 </div>
+
+                <a href="{{ route('front.project_details', $featuredProject->slug) }}"
+                   class="btn-featured-cta">
+                    View Full Case Study <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
+        </div>
+        @endif
+    </div>
 </section>
 
 <style>
@@ -677,13 +755,57 @@
                 flex-direction: column;
                 min-height: auto;
             }
+            .featured-image-side { height: 360px; }
+            .featured-title      { font-size: 2.2rem; }
+            .featured-content-side { padding: 48px; }
+        }
 
-            .featured-image-side {
-                height: 400px;
+        @media (max-width: 767px) {
+            .glass-showcase-section { padding: 48px 0; }
+
+            .featured-box { border-radius: 16px; margin: 0; }
+
+            .featured-image-side { height: 220px; }
+
+            .featured-content-side {
+                padding: 24px 20px 28px;
+            }
+
+            .featured-badge {
+                font-size: 0.65rem;
+                padding: 4px 12px;
+                margin-bottom: 14px;
             }
 
             .featured-title {
-                font-size: 2.5rem;
+                font-size: 1.55rem;
+                margin-bottom: 14px;
+            }
+
+            .featured-desc {
+                font-size: 0.9rem;
+                line-height: 1.65;
+                margin-bottom: 20px;
+            }
+
+            .featured-meta-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                margin-bottom: 20px;
+                padding-top: 18px;
+            }
+
+            .meta-item h4 { margin-bottom: 10px; }
+
+            .meta-list li { font-size: 0.9rem; margin-bottom: 8px; }
+
+            .tech-tags { gap: 8px; }
+            .tech-tag  { font-size: 0.78rem; padding: 5px 12px; }
+
+            .btn-featured-cta {
+                padding: 12px 22px;
+                font-size: 0.875rem;
+                gap: 10px;
             }
         }
 
@@ -896,99 +1018,44 @@
 @include('front.clients')
 
 <section class="premium-blog-section">
-    <div class="glass-bg-blobs"></div> {{-- Decorative Background Elements --}}
     <div class="container">
-        <div class="glass-main-card">
+        <div class="kb-main-card">
             <div class="blog-split-wrapper">
                 {{-- Left Info Panel --}}
                 <div class="blog-info-panel">
                     <span class="sub-badge">Stay Updated</span>
-                    <h2>Our Blog</h2>
+                    <h2>Knowledge Base</h2>
                     <p>
-                        Stay in the loop with the latest company updates, industry insights, and insider tips. 
+                        Stay in the loop with the latest company updates, industry insights, and insider tips.
                         Stay ahead with valuable knowledge curated by our experts.
                     </p>
-                    <a href="{{ route('front.new_blog') }}" class="glass-btn">
-                        <span>View All Posts</span>
+                    <a href="{{ route('front.new_blog') }}" class="kb-btn">
+                        <span>View All Articles</span>
                         <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
 
                 {{-- Right Blog List --}}
                 <div class="blog-list-panel">
-                    @php
-                        $display_blogs = collect();
-                        if (isset($latest_blogs) && $latest_blogs->count() > 0) $display_blogs = $latest_blogs->take(3);
-                        elseif (isset($recent_blogs) && $recent_blogs->count() > 0) $display_blogs = $recent_blogs->take(3);
-                        elseif (isset($blogs) && $blogs->count() > 0) $display_blogs = $blogs->take(3);
-                    @endphp
-
-                    @if ($display_blogs->count() > 0)
-                        @foreach ($display_blogs as $blog)
-                            <a href="{{ route('front.singleBlog', $blog->slug) }}" class="blog-list-item">
-                                <div class="blog-item-content">
-                                    <h3>{{ $blog->title }}</h3>
-                                    <div class="blog-item-meta">
-                                        <span class="meta-dot"></span>
-                                        <span>Alpha Health</span>
-                                        <span>{{ $blog->created_at->format('M d, Y') }}</span>
-                                        <span>• 3 min read</span>
-                                    </div>
-                                </div>
-                                <div class="blog-item-thumb">
-                                    <img src="{{ asset('public/uploads/blog_images/' . $blog->image) }}"
-                                        alt="{{ $blog->title }}">
-                                </div>
-                            </a>
-                        @endforeach
-                    @else
-                        {{-- Static placeholders matching screenshot design if no dynamic blogs --}}
-                        <a href="#" class="blog-list-item">
+                    @forelse ($latest_blogs ?? [] as $blog)
+                        <a href="{{ route('front.singleBlog', $blog->slug) }}" class="blog-list-item">
                             <div class="blog-item-content">
-                                <h3>Consultant Spotlight: Wes Williamson</h3>
+                                <h3>{{ $blog->title }}</h3>
                                 <div class="blog-item-meta">
                                     <span class="meta-dot"></span>
-                                    <span style="color: #066e78;">Helix Softworks</span>
-                                    <span style="color: #066e78;">Feb 16, 2026</span>
-                                    <span style="color: #066e78;">• 3 min read</span>
+                                    <span>Alpha Health</span>
+                                    <span>{{ $blog->created_at->format('M d, Y') }}</span>
+                                    <span>&#8226; 3 min read</span>
                                 </div>
                             </div>
                             <div class="blog-item-thumb">
-                                <img src="{{ asset('public/front-new/assets/images/section-3-1st-image.jpg') }}"
-                                    alt="Blog Thumb">
+                                <img src="{{ asset('public/uploads/blog_images/' . $blog->image) }}"
+                                    alt="{{ $blog->title }}" loading="lazy">
                             </div>
                         </a>
-                        <a href="#" class="blog-list-item">
-                            <div class="blog-item-content">
-                                <h3>How to Prepare for a Virtual Interview</h3>
-                                <div class="blog-item-meta">
-                                    <span class="meta-dot"></span>
-                                    <span style="color: #066e78;">Helix Softworks</span>
-                                    <span style="color: #066e78;">Jan 20, 2026</span>
-                                    <span style="color: #066e78;">• 3 min read</span>
-                                </div>
-                            </div>
-                            <div class="blog-item-thumb">
-                                <img src="{{ asset('public/front-new/assets/images/section-3-2nd-image.jpg') }}"
-                                    alt="Blog Thumb">
-                            </div>
-                        </a>
-                        <a href="#" class="blog-list-item">
-                            <div class="blog-item-content">
-                                <h3>Client Success with Continuous Compliance</h3>
-                                <div class="blog-item-meta">
-                                    <span class="meta-dot"></span>
-                                    <span style="color: #066e78;">Helix Softworks</span>
-                                    <span style="color: #066e78;">Nov 12, 2025</span>
-                                    <span style="color: #066e78;">• 2 min read</span>
-                                </div>
-                            </div>
-                            <div class="blog-item-thumb">
-                                <img src="{{ asset('public/front-new/assets/images/section-3-3rd-image.jpg') }}"
-                                    alt="Blog Thumb" style="color: #066e78;">
-                            </div>
-                        </a>
-                    @endif
+                    @empty
+                        <p class="text-muted text-center py-4">No articles published yet.</p>
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -996,45 +1063,20 @@
 </section>
 
 <style>
-    <style>
-:root {
-    --glass-bg: rgba(16, 191, 235, 0.05);
-    --glass-border: rgba(4, 95, 95, 0.856);
-    --accent-color: #64e1f1;
-    --text-main: #ffffff;
-    --text-muted: rgba(255, 255, 255, 0.7);
-}
-
 .premium-blog-section {
     padding: 100px 0;
-    /* background: radial-gradient(circle at top left, #1e1b4b, #0f172a); */
-    position: relative;
-    overflow: hidden;
+    background: #ffffff;
+    border-top: 1px solid #f1f5f9;
+    border-bottom: 1px solid #f1f5f9;
+    overflow-x: hidden;
 }
 
-/* Decorative Blobs for depth */
-.glass-bg-blobs {
-    position: absolute;
-    width: 400px;
-    height: 400px;
-    background: var(--accent-color);
-    filter: blur(120px);
-    opacity: 0.15;
-    z-index: 0;
-    top: -100px;
-    right: -100px;
-}
-
-.glass-main-card {
-    position: relative;
-    z-index: 1;
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
+.kb-main-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
     border-radius: 32px;
     padding: 60px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.04);
 }
 
 .blog-split-wrapper {
@@ -1046,104 +1088,122 @@
 
 /* Left Panel */
 .blog-info-panel h2 {
-    font-size: 3rem;
+    font-size: 2.8rem;
     font-weight: 800;
-    color: var(--text-main);
-    margin: 20px 0;
+    color: #0f172a;
+    margin: 16px 0 18px;
     letter-spacing: -1px;
 }
 
-.sub-badge {
-    text-transform: uppercase;
-    font-weight: 700;
-    font-size: 0.8rem;
-    letter-spacing: 2px;
-    /* color: var(--accent-color); */
-    background: rgba(99, 102, 241, 0.1);
-    padding: 6px 16px;
-    border-radius: 100px;
-    border: 1px solid rgba(99, 102, 241, 0.2);
+.blog-info-panel p {
+    color: #64748b;
+    font-size: 1rem;
+    line-height: 1.75;
 }
 
-/* Premium Button */
-.glass-btn {
+.sub-badge {
+    display: inline-block;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    color: #066D77;
+    background: rgba(6, 109, 119, 0.08);
+    padding: 6px 16px;
+    border-radius: 100px;
+    border: 1px solid rgba(6, 109, 119, 0.18);
+}
+
+.kb-btn {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    margin-top: 30px;
-    padding: 14px 32px;
-    background: var(--text-main);
-    color: #000;
+    gap: 10px;
+    margin-top: 28px;
+    padding: 13px 30px;
+    background: #0f172a;
+    color: #ffffff;
     border-radius: 100px;
     font-weight: 600;
+    font-size: 0.9rem;
     transition: all 0.3s ease;
     text-decoration: none;
 }
 
-.glass-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    background: var(--accent-color);
-    color: #000000;
+.kb-btn:hover {
+    background: #066D77;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(6,109,119,0.25);
 }
 
 /* Blog List Panel */
 .blog-list-panel {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 16px;
 }
 
 .blog-list-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px;
-    border-radius: 24px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid transparent;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 20px;
+    padding: 20px 24px;
+    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
     text-decoration: none;
 }
 
 .blog-list-item:hover {
-    background: rgba(255, 255, 255, 0.07);
-    border-color: var(--glass-border);
-    transform: translateX(10px);
+    border-color: #066D77;
+    box-shadow: 0 6px 20px rgba(6,109,119,0.08);
+    transform: translateX(6px);
+}
+
+.blog-item-content {
+    flex: 1;
+    min-width: 0;
 }
 
 .blog-item-content h3 {
-    /* color: var(--text-main); */
-    color: gray;
-    font-size: 1.25rem;
+    color: #1e293b;
+    font-size: 1.05rem;
+    font-weight: 700;
     margin-bottom: 8px;
-    transition: color 0.3s ease;
+    line-height: 1.4;
+    transition: color 0.25s ease;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 .blog-list-item:hover h3 {
-    /* color: var(--accent-color); */
-    color: black;
+    color: #066D77;
 }
 
 .blog-item-meta {
     display: flex;
     align-items: center;
-    gap: 12px;
-    color: var(--text-muted);
-    font-size: 0.85rem;
+    gap: 8px;
+    color: #94a3b8;
+    font-size: 0.8rem;
 }
 
 .meta-dot {
-    width: 6px;
-    height: 6px;
-    background: var(--accent-color);
+    width: 5px;
+    height: 5px;
+    background: #066D77;
     border-radius: 50%;
+    flex-shrink: 0;
 }
 
 .blog-item-thumb {
-    width: 100px;
-    height: 100px;
-    border-radius: 18px;
+    width: 88px;
+    height: 88px;
+    border-radius: 12px;
     overflow: hidden;
     flex-shrink: 0;
 }
@@ -1155,13 +1215,39 @@
     transition: transform 0.5s ease;
 }
 
-.blog-list-item:hover img {
-    transform: scale(1.1);
+.blog-list-item:hover .blog-item-thumb img {
+    transform: scale(1.08);
 }
 
 @media (max-width: 992px) {
     .blog-split-wrapper { grid-template-columns: 1fr; gap: 40px; }
-    .glass-main-card { padding: 30px; }
+    .kb-main-card { padding: 36px 30px; }
+}
+
+@media (max-width: 767px) {
+    .premium-blog-section { padding: 60px 0; }
+    .kb-main-card { padding: 20px 16px; border-radius: 20px; }
+    .blog-info-panel h2 { font-size: 1.85rem; }
+    .blog-list-item {
+        padding: 14px 12px;
+        gap: 10px;
+        /* prevent any child from breaking out */
+        overflow: hidden;
+        max-width: 100%;
+    }
+    .blog-item-content {
+        min-width: 0;   /* critical: lets flex child shrink below its content size */
+        flex: 1;
+    }
+    .blog-item-content h3 { font-size: 0.9rem; }
+    .blog-item-meta { flex-wrap: wrap; gap: 4px 8px; }
+    .blog-item-thumb { width: 60px; height: 60px; border-radius: 10px; flex-shrink: 0; }
+
+    /* solutions card */
+    .display-title { font-size: 1.9rem; }
+    .content-panel { padding: 28px 24px; }
+    .brand-panel   { padding: 30px; }
+    .tag-number    { font-size: 2.2rem; }
 }
 </style>
 
@@ -1274,6 +1360,8 @@
         </div>
     </div>
 </div>
+
+@include('front.partials.testimonial-pills')
 
 {{-- JavaScript Filtering --}}
 <script>

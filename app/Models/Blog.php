@@ -15,15 +15,29 @@ class Blog extends Model
         'image',
         'slug',
         'description',
+        'author_name',
+        'category_id',
+        'read_time',
         'featured',
+        'published_date',
+        'updated_date',
         'meta_title',
         'meta_description',
         'meta_keywords',
     ];
 
+    protected $casts = [
+        'published_date' => 'date',
+        'updated_date'   => 'date',
+    ];
 
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'blog_tags');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(\App\Models\Category::class);
     }
 }

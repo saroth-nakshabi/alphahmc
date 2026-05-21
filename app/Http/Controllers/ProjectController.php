@@ -10,6 +10,7 @@ use App\Models\ProjectDocument;
 use App\Models\ProjectCategory;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use App\Models\Service;
 
 
 class ProjectController extends Controller
@@ -18,27 +19,40 @@ class ProjectController extends Controller
     {
         $projectsCategories = ProjectCategory::all();
         $Projects = Project::all();
+        $services = Service::published()->orderBy('name')->get();
 
-        return view('dashboard.projects.index', compact('Projects', 'projectsCategories'));
+        return view('dashboard.projects.index', compact('Projects', 'projectsCategories', 'services'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'project_category' => 'nullable|exists:project_categories,id',
-            'image.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'video.*' => 'nullable|mimes:mp4,mov,ogg,qt|max:20480',
             'document.*' => 'nullable|mimes:pdf,doc,docx,txt|max:5120',
             'name' => 'required|max:255',
             'description' => 'required',
             'slug' => 'required|max:255',
+            'featured' => 'nullable|boolean',
+            'client_name' => 'nullable|max:255',
+            'project_duration' => 'nullable|max:255',
+            'project_location' => 'nullable|max:255',
+            'regulatory_authority' => 'nullable|max:255',
+            'client_website' => 'nullable|max:255',
+            'project_scope' => 'nullable',
+            'service_ids' => 'nullable|array',
+            'service_ids.*' => 'exists:services,id',
+            'challenge_heading' => 'nullable|max:255',
             'challenge_title' => 'nullable',
             'challenge' => 'nullable',
             'resolution' => 'nullable',
-            'meta_title' => 'nullable|max:255',
-            'meta_description' => 'nullable|max:255',
-            'meta_keywords' => 'nullable|max:255',
         ]);
+
+        // Enforce only one featured project
+        if ($request->boolean('featured')) {
+            Project::query()->update(['featured' => false]);
+        }
 
         $challengeTitles = $request->input('challenge_title', []);
         $challengeDescriptions = $request->input('challenge', []);
@@ -71,13 +85,19 @@ class ProjectController extends Controller
         }
 
         $item = Project::create([
-            'project_category_id' => $request->input('project_category') ?? null,
+            'project_category_id' => $request->input('project_category') ?: null,
             'name' => $request->input('name'),
             'description' => $request->input('description'),
             'slug' => $request->input('slug'),
-            'meta_title' => $request->input('meta_title'),
-            'meta_description' => $request->input('meta_description'),
-            'meta_keywords' => $request->input('meta_keywords'),
+            'client_name' => $request->input('client_name'),
+            'project_duration' => $request->input('project_duration'),
+            'project_location' => $request->input('project_location'),
+            'regulatory_authority' => $request->input('regulatory_authority'),
+            'client_website' => $request->input('client_website'),
+            'project_scope' => $request->input('project_scope'),
+            'featured' => $request->boolean('featured'),
+            'service_ids' => $request->input('service_ids') ?: null,
+            'challenge_heading' => $request->input('challenge_heading') ?: null,
             'challenge_title' => $challengeTitles[0] ?? null,
             'challenge' => $challengeDescriptions[0] ?? null,
             'resolution' => $challengeResolutions[0] ?? null,
@@ -162,18 +182,28 @@ class ProjectController extends Controller
             'name' => 'required|max:255',
             'description' => 'required',
             'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'video.*' => 'nullable|mimes:mp4,mov,ogg,qt|max:20480', // Max 20MB
-            'document.*' => 'nullable|mimes:pdf,doc,docx,txt|max:5120', // Max 5MB
+            'video.*' => 'nullable|mimes:mp4,mov,ogg,qt|max:20480',
+            'document.*' => 'nullable|mimes:pdf,doc,docx,txt|max:5120',
             'slug' => 'required|max:255',
-            'meta_title' => 'nullable|max:255',
-            'meta_description' => 'nullable|max:255',
-            'meta_keywords' => 'nullable|max:255',
+            'featured' => 'nullable|boolean',
+            'client_name' => 'nullable|max:255',
+            'project_duration' => 'nullable|max:255',
+            'project_location' => 'nullable|max:255',
+            'regulatory_authority' => 'nullable|max:255',
+            'client_website' => 'nullable|max:255',
+            'project_scope' => 'nullable',
+            'service_ids' => 'nullable|array',
+            'service_ids.*' => 'exists:services,id',
+            'challenge_heading' => 'nullable|max:255',
             'challenge_title' => 'nullable',
             'challenge' => 'nullable',
             'resolution' => 'nullable',
         ]);
 
-
+        // Enforce only one featured project
+        if ($request->boolean('featured')) {
+            Project::where('id', '!=', $id)->update(['featured' => false]);
+        }
 
         $challengeTitles = $request->input('challenge_title', []);
         $challengeDescriptions = $request->input('challenge', []);
@@ -207,13 +237,19 @@ class ProjectController extends Controller
 
         $item = Project::findOrFail($id);
         $item->update([
-            'project_category_id' => $request->input('project_category_id') ?? null,
+            'project_category_id' => $request->input('project_category_id') ?: null,
             'name' => $request->input('name'),
             'description' => $request->input('description'),
             'slug' => $request->input('slug'),
-            'meta_title' => $request->input('meta_title'),
-            'meta_description' => $request->input('meta_description'),
-            'meta_keywords' => $request->input('meta_keywords'),
+            'client_name' => $request->input('client_name'),
+            'project_duration' => $request->input('project_duration'),
+            'project_location' => $request->input('project_location'),
+            'regulatory_authority' => $request->input('regulatory_authority'),
+            'client_website' => $request->input('client_website'),
+            'project_scope' => $request->input('project_scope'),
+            'featured' => $request->boolean('featured'),
+            'service_ids' => $request->input('service_ids') ?: null,
+            'challenge_heading' => $request->input('challenge_heading') ?: null,
             'challenge_title' => $challengeTitles[0] ?? null,
             'challenge' => $challengeDescriptions[0] ?? null,
             'resolution' => $challengeResolutions[0] ?? null,

@@ -9,8 +9,6 @@ use App\Models\Agent;
 use App\Models\Announcement;
 use App\Models\MainCategory;
 use App\Models\Faq;
-use App\Models\ServiceMagazine;
-use App\Models\ServiceImage;
 use App\Models\Blog;
 use App\Models\Project;
 use App\Models\globaltag;
@@ -22,7 +20,7 @@ class ServiceGroupController extends Controller
 {
     public function front(Request $request, $slug = null)
     {
-        $serviceQuery = ServiceGroup::with(['agent.user', 'services', 'faqs', 'magazines', 'images', 'announcement']);
+        $serviceQuery = ServiceGroup::with(['agent.user', 'services', 'faqs', 'announcement']);
         $service = $slug
             ? $serviceQuery->where('slug', $slug)->first()
             : $serviceQuery->orderByDesc('is_featured')->latest()->first();
@@ -134,22 +132,14 @@ class ServiceGroupController extends Controller
             $heroImagePath = 'uploads/service_group_images/' . $hero_image_name;
         }
 
-        $slidingImagePath = null;
-        if ($request->hasFile('sliding_image')) {
-            $sliding_image = $request->file('sliding_image');
-            $sliding_image_name = time() . '_sliding_' . Str::uuid() . '.' . $sliding_image->getClientOriginalExtension();
-            $sliding_image->move(public_path('uploads/service_group_images'), $sliding_image_name);
-            $slidingImagePath = 'uploads/service_group_images/' . $sliding_image_name;
-        }
-
         $serviceGroup = ServiceGroup::create([
             'name'                     => $request->input('name'),
             'slug'                     => $request->input('slug'),
             'description'              => $request->input('description'),
             'image'                    => $imageName,
             'hero_image'               => $heroImagePath,
-            'sliding_image'            => $slidingImagePath,
             'is_featured'              => $request->has('featured') ? 1 : 0,
+            'show_testimonials'        => $request->has('show_testimonials') ? 1 : 0,
             'status'                   => $request->input('status', 'published'),
             'category_id'              => null,
             'agent_id'                 => $request->input('agent_id'),
@@ -162,13 +152,15 @@ class ServiceGroupController extends Controller
             'core_service_description' => $coreDescriptions,
             'process_header'           => $processHeaders,
             'process_description'      => $processDescriptions,
-            'info_three'               => $request->input('info_three'),
+            'process_intro'            => $request->input('process_intro'),
             'info_four'                => $request->input('info_four'),
             'announcement_id'          => $request->input('announcement_id'),
             'related_services'         => $request->input('related_services'),
             'meta_title'               => $request->input('meta_title'),
             'meta_description'         => $request->input('meta_description'),
             'meta_keywords'            => $request->input('meta_keywords'),
+            'published_date'           => $request->input('published_date') ?: now()->toDateString(),
+            'updated_date'             => $request->input('updated_date') ?: null,
         ]);
 
         if ($request->has('service_ids')) {
@@ -177,15 +169,6 @@ class ServiceGroupController extends Controller
 
         $serviceGroup->categories()->sync($request->input('category_ids', []));
 
-        // Handle Gallery Images
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image_file) {
-                $gallery_image_name = time() . '_gallery_' . Str::uuid() . '.' . $image_file->getClientOriginalExtension();
-                $image_file->move(public_path('uploads/service_group_images'), $gallery_image_name);
-                $serviceGroup->images()->create(['image' => 'uploads/service_group_images/' . $gallery_image_name]);
-            }
-        }
-
         // Handle FAQs
         if ($request->has('faqs')) {
             foreach ($request->input('faqs') as $faq) {
@@ -193,28 +176,6 @@ class ServiceGroupController extends Controller
                     $serviceGroup->faqs()->create([
                         'faq_question' => $faq['question'],
                         'faq_answer'   => $faq['answer'],
-                    ]);
-                }
-            }
-        }
-
-        // Handle Magazines
-        if ($request->has('magazines')) {
-            foreach ($request->file('magazines') as $index => $magazine_data) {
-                $title = $request->input("magazines.$index.title");
-                $description = $request->input("magazines.$index.description");
-                $image_file = $magazine_data['image'] ?? null;
-
-                if ($title && $description) {
-                    $mag_image_name = null;
-                    if ($image_file) {
-                        $mag_image_name = time() . '_mag_' . Str::uuid() . '.' . $image_file->getClientOriginalExtension();
-                        $image_file->move(public_path('uploads/service_group_images'), $mag_image_name);
-                    }
-                    $serviceGroup->magazines()->create([
-                        'title'       => $title,
-                        'description' => $description,
-                        'image'       => $mag_image_name,
                     ]);
                 }
             }
@@ -229,7 +190,7 @@ class ServiceGroupController extends Controller
 
     public function edit($id)
     {
-        $data['service_group'] = ServiceGroup::with(['services', 'faqs', 'magazines', 'images', 'categories'])->findOrFail($id);
+        $data['service_group'] = ServiceGroup::with(['services', 'faqs', 'categories'])->findOrFail($id);
         $data['services'] = Service::all();
         $data['agents'] = Agent::all();
         $data['announcements'] = Announcement::all();
@@ -295,25 +256,14 @@ class ServiceGroupController extends Controller
             $heroImagePath = 'uploads/service_group_images/' . $hero_image_name;
         }
 
-        $slidingImagePath = $serviceGroup->sliding_image;
-        if ($request->hasFile('sliding_image')) {
-            if ($slidingImagePath && file_exists(public_path($slidingImagePath))) {
-                unlink(public_path($slidingImagePath));
-            }
-            $sliding_image = $request->file('sliding_image');
-            $sliding_image_name = time() . '_sliding_' . Str::uuid() . '.' . $sliding_image->getClientOriginalExtension();
-            $sliding_image->move(public_path('uploads/service_group_images'), $sliding_image_name);
-            $slidingImagePath = 'uploads/service_group_images/' . $sliding_image_name;
-        }
-
         $serviceGroup->update([
             'name'                     => $request->input('name'),
             'slug'                     => $request->input('slug'),
             'description'              => $request->input('description'),
             'image'                    => $imageName,
             'hero_image'               => $heroImagePath,
-            'sliding_image'            => $slidingImagePath,
             'is_featured'              => $request->has('featured') ? 1 : 0,
+            'show_testimonials'        => $request->has('show_testimonials') ? 1 : 0,
             'status'                   => $request->input('status', 'published'),
             'category_id'              => null,
             'agent_id'                 => $request->input('agent_id'),
@@ -326,13 +276,15 @@ class ServiceGroupController extends Controller
             'core_service_description' => $coreDescriptions,
             'process_header'           => $processHeaders,
             'process_description'      => $processDescriptions,
-            'info_three'               => $request->input('info_three'),
+            'process_intro'            => $request->input('process_intro'),
             'info_four'                => $request->input('info_four'),
             'announcement_id'          => $request->input('announcement_id'),
             'related_services'         => $request->input('related_services'),
             'meta_title'               => $request->input('meta_title'),
             'meta_description'         => $request->input('meta_description'),
             'meta_keywords'            => $request->input('meta_keywords'),
+            'published_date'           => $request->input('published_date') ?: null,
+            'updated_date'             => $request->input('updated_date') ?: null,
         ]);
 
         if ($request->has('service_ids')) {
@@ -340,15 +292,6 @@ class ServiceGroupController extends Controller
         }
 
         $serviceGroup->categories()->sync($request->input('category_ids', []));
-
-        // Handle Gallery Images
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image_file) {
-                $gallery_image_name = time() . '_gallery_' . Str::uuid() . '.' . $image_file->getClientOriginalExtension();
-                $image_file->move(public_path('uploads/service_group_images'), $gallery_image_name);
-                $serviceGroup->images()->create(['image' => 'uploads/service_group_images/' . $gallery_image_name]);
-            }
-        }
 
         // Handle FAQs
         $serviceGroup->faqs()->delete();
@@ -358,31 +301,6 @@ class ServiceGroupController extends Controller
                     $serviceGroup->faqs()->create([
                         'faq_question' => $faq['question'],
                         'faq_answer'   => $faq['answer'],
-                    ]);
-                }
-            }
-        }
-
-        // Handle Magazines
-        if ($request->has('magazines')) {
-            // Optional: delete old magazine images if needed
-            $serviceGroup->magazines()->delete();
-            foreach ($request->input('magazines') as $index => $mag_data) {
-                $title = $mag_data['title'] ?? null;
-                $description = $mag_data['description'] ?? null;
-                if ($title && $description) {
-                    $mag_image_name = null;
-                    if ($request->hasFile("magazines.$index.image")) {
-                        $image_file = $request->file("magazines.$index.image");
-                        $mag_image_name = time() . '_mag_' . Str::uuid() . '.' . $image_file->getClientOriginalExtension();
-                        $image_file->move(public_path('uploads/service_group_images'), $mag_image_name);
-                    } elseif (isset($mag_data['existing_image'])) {
-                        $mag_image_name = $mag_data['existing_image'];
-                    }
-                    $serviceGroup->magazines()->create([
-                        'title'       => $title,
-                        'description' => $description,
-                        'image'       => $mag_image_name,
                     ]);
                 }
             }
@@ -408,13 +326,4 @@ class ServiceGroupController extends Controller
         ], 200);
     }
 
-    public function deleteGalleryImage(Request $request)
-    {
-        $image = ServiceImage::findOrFail($request->id);
-        if ($image->image && file_exists(public_path($image->image))) {
-            unlink(public_path($image->image));
-        }
-        $image->delete();
-        return response()->json(['success' => true]);
-    }
 }

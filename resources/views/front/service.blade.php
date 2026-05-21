@@ -119,6 +119,36 @@
             z-index: 10;
         }
 
+        /* ── Bottom breadcrumb (shared style) ─────────────────── */
+        .hero-breadcrumb {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            z-index: 10;
+        }
+        .hero-breadcrumb a {
+            color: rgba(255,255,255,0.75) !important;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.25s ease;
+        }
+        .hero-breadcrumb a:hover { color: #ffffff !important; }
+        .hero-breadcrumb .bc-sep {
+            color: rgba(255,255,255,0.4);
+            margin: 0 8px;
+        }
+        .hero-breadcrumb .bc-current {
+            color: rgba(255,255,255,0.95);
+            font-weight: 700;
+        }
+        @media (max-width: 767px) {
+            .hero-breadcrumb { bottom: 24px; font-size: 0.75rem; }
+        }
+
         .hero-title {
             font-size: clamp(3.2rem, 8vw, 5.2rem) !important;
             line-height: 1.05;
@@ -1091,16 +1121,19 @@
 
         /* Swiper Container */
         .mag-swiper-container {
-            /* width: 100%; */
             padding-right: 60px;
+            /* visible lets the next-card peek on desktop; clipped on mobile via media query */
             overflow: visible !important;
-            /* Allow cards to overflow container */
         }
 
-        /* Continuous sliding effect (Marquee) */
+        /* Continuous sliding effect */
         .mag-swiper-container .swiper-wrapper {
-            transition-timing-function: ease-in !important;
-            max-height: 85%;
+            transition-timing-function: ease-in-out !important;
+            align-items: stretch; /* all slides same height */
+        }
+
+        .mag-swiper-container .swiper-slide {
+            height: auto !important; /* stretch to tallest card */
         }
 
         /* The Cards */
@@ -1119,27 +1152,33 @@
             margin-left: 60px;
         }
 
-        .mag-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        /* Only lift on real pointer/mouse devices — tap on mobile triggers hover
+           which moves the card up into the overflow:hidden parent and clips it */
+        @media (hover: hover) and (pointer: fine) {
+            .mag-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            }
         }
 
-        /* Card Eyebrow (Pill) */
+        /* Card Eyebrow */
         .mag-card-eyebrow {
-            display: inline-block;
-            background: #e0f2f1;
+            display: block;
+            background: transparent;
             color: #00796b;
             font-family: 'Inter', sans-serif;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 700;
+            text-transform: lowercase;
+            letter-spacing: 0;
+            padding: 0 0 14px 0;
+            border-radius: 0;
+            margin-bottom: 20px;
+            width: 100%;
+            border-bottom: 2px solid #00796b;
+        }
+        .mag-card-eyebrow::first-letter {
             text-transform: uppercase;
-
-            letter-spacing: 0.15em;
-            padding: 8px 22px;
-            border-radius: 30px;
-            margin-bottom: 30px;
-            width: fit-content;
-
         }
 
       
@@ -1195,7 +1234,8 @@
                 width: 100%;
                 gap: 30px;
             }
-            .mag-image-container{
+
+            .mag-image-container {
                 max-height: 400px;
             }
 
@@ -1205,7 +1245,14 @@
             }
 
             .mag-content-side {
-                padding: 60px 25px;
+                /* Let height be driven by the tallest card so nothing gets clipped */
+                height: auto;
+                min-height: unset;
+                padding: 40px 20px 50px 20px;
+                /* overflow:hidden is kept so the teal rounded corners work, but
+                   because we removed the translateY on touch the card never moves
+                   up into the clipping boundary */
+                overflow: hidden;
             }
 
             .mag-swiper-container {
@@ -1213,25 +1260,42 @@
                 /* pan-y lets the browser handle vertical page scroll;
                    Swiper handles horizontal swipe — prevents touch-event block */
                 touch-action: pan-y;
+                /* Remove desktop peek-through padding — no room on mobile */
+                padding-right: 0;
             }
 
             .mag-card {
-                min-height: auto;
-                margin-left: 40px;
+                /* Uniform height across all slides so the teal container
+                   doesn't collapse/expand as you swipe */
+                min-height: 380px;
+                /* Remove the desktop left-margin that shifts cards off-screen */
+                margin-left: 0;
+                width: 100%;
+                border-radius: 20px;
+                padding: 32px 24px;
+                /* Prevent any residual translate on tap */
+                transform: none !important;
+                transition: box-shadow 0.3s ease;
             }
 
             .mag-card-eyebrow {
-                font-size: 0.7rem;
-                padding: 6px 18px;
+                font-size: 1rem;
+                padding: 0 0 12px 0;
+                margin-bottom: 16px;
             }
 
             .mag-card .mag-desc {
                 font-size: 0.95rem;
-                /* overflow:scroll was creating a nested scroll context that trapped
-                   the user's touch, blocking page scroll intermittently on mobile */
+                line-height: 1.75;
                 overflow: visible;
             }
+        }
 
+        @media (max-width: 575px) {
+            .mag-card {
+                min-height: 320px;
+                padding: 28px 20px;
+            }
         }
     </style>
 
@@ -1250,8 +1314,8 @@
                             {!! $service->content !!}
                         </div>
                         <div class="hero-meta mt-4" style="display: flex; gap: 25px; font-size: 0.9rem; color: rgba(255,255,255,0.8); border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; max-width: 500px;">
-                            <span title="Date this service was listed">Published: {{ $service->created_at->format('M d, Y') }}</span>
-                            <span title="Date this service was last modified"> Updated: {{ $service->updated_at->format('M d, Y') }}</span>
+                            <span title="Date this service was listed">Published: {{ ($service->published_date ?? $service->created_at)->format('M d, Y') }}</span>
+                            <span title="Date this service was last modified"> Updated: {{ ($service->updated_date ?? $service->updated_at)->format('M d, Y') }}</span>
                         </div>
                         <div class="hero-actions">
                             <button type="button"
@@ -1264,6 +1328,15 @@
                     </div>
                 </div>
             </div>
+            <nav class="hero-breadcrumb" aria-label="Breadcrumb">
+                <div class="container">
+                    <a href="{{ route('home') }}">Home</a>
+                    <span class="bc-sep">›</span>
+                    <a href="{{ url('/services') }}">Services</a>
+                    <span class="bc-sep">›</span>
+                    <span class="bc-current">{{ $service->name }}</span>
+                </div>
+            </nav>
         </section>
 
         <style>
@@ -1477,6 +1550,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
                         <div class="swiper mag-swiper-container">
                            <div class="swiper-wrapper">
     {{-- Original slides --}}
+
     @foreach ($displayMagazines as $mag)
         @php
             $currImg = $mag->image ? ((strpos($mag->image, 'http') === 0)
@@ -1521,8 +1595,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
     @endforeach
 </div>
                         </div>
-
-                       
+                        <div class="swiper-pagination mag-pagination"></div>
                     </div>
                 </div>
             </div>
@@ -1536,7 +1609,27 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
     width: 100% !important;   /* force full width per slide */
     flex-shrink: 0;
 }
-    </style>
+
+/* Pagination dots */
+.mag-pagination {
+    margin-top: 20px;
+    text-align: center;
+    position: static !important;
+    bottom: auto !important;
+}
+.mag-pagination .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.4);
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+.mag-pagination .swiper-pagination-bullet-active {
+    background: #ffffff;
+    width: 24px;
+    border-radius: 4px;
+}
+</style>
         <!-- Slider Script (Screenshot Style) -->
   <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -1575,6 +1668,20 @@ document.addEventListener('DOMContentLoaded', function () {
         allowTouchMove: true,
         centeredSlides: true,
         watchSlidesProgress: true,
+        pagination: {
+            el: '.mag-pagination',
+            clickable: true,
+        },
+        breakpoints: {
+            0: {
+                centeredSlides: false,
+                spaceBetween: 20,
+            },
+            992: {
+                centeredSlides: true,
+                spaceBetween: 8,
+            }
+        },
         autoplay: {
             delay: 3500,
             disableOnInteraction: false,
@@ -1834,6 +1941,11 @@ function toggleTransformationDesc() {
         </section>
 
 
+
+        {{-- ── Testimonials (conditional) ────────────────────── --}}
+        @if($service->show_testimonials)
+            @include('front.partials.testimonial-pills')
+        @endif
 
         <!-- Bottom Interests -->
         <section class="bottom-interests">

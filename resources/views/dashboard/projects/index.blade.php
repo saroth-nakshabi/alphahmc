@@ -106,6 +106,7 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
             <form class="modal-content" action="{{ route('project.store') }}" method="POST" id="add_form"
                 enctype="multipart/form-data">
+                @csrf
                 <div class="modal-header d-flex align-items-center">
                     <h4 class="modal-title">
                         Add New Project
@@ -114,6 +115,17 @@
                 </div>
                 <div class="modal-body">
                     <div class="row pt-3">
+                        <div class="col-12">
+                            <div class="mb-3 p-3 rounded" style="background:#fff8ed;border:1px solid #ffd080;">
+                                <div class="form-check form-switch mb-0">
+                                    <input class="form-check-input" type="checkbox" name="featured" id="featured" value="1">
+                                    <label class="form-check-label fw-semibold" for="featured">
+                                        ⭐ Feature this project
+                                    </label>
+                                    <div class="text-muted small mt-1">Only one project can be featured at a time. Enabling this will unfeature the current one.</div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-12">
                             <div class="mb-3">
                                 <label class="control-label mb-1">project category <span
@@ -186,6 +198,66 @@
                             </div>
                         </div>
 
+                        <div class="col-12 mt-2 mb-2">
+                            <p class="fw-semibold text-muted mb-0" style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;">Project Details</p>
+                            <hr class="mt-1 mb-3">
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="control-label mb-1">Client Name</label>
+                                <input type="text" name="client_name" class="form-control" placeholder="e.g. Dubai Health Authority" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="control-label mb-1">Project Duration</label>
+                                <input type="text" name="project_duration" class="form-control" placeholder="e.g. 18 months" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="control-label mb-1">Project Location</label>
+                                <input type="text" name="project_location" class="form-control" placeholder="e.g. Dubai, UAE" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="control-label mb-1">Regulatory Authority</label>
+                                <input type="text" name="regulatory_authority" class="form-control" placeholder="e.g. UAE DOH / MOH" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="control-label mb-1">Client Website</label>
+                                <input type="text" name="client_website" class="form-control" placeholder="e.g. https://www.example.com" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="control-label mb-1">Project Scope</label>
+                                <textarea name="project_scope" rows="3" class="form-control" placeholder="Brief description of the project scope..."></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="control-label mb-1">Services Delivered</label>
+                                <select name="service_ids[]" class="form-control select2-services" multiple data-placeholder="Select services delivered">
+                                    @foreach($services as $service)
+                                        <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="control-label mb-1">Challenges Section Title</label>
+                                <input type="text" name="challenge_heading" class="form-control" placeholder="e.g. Challenges & Solutions" />
+                                <small class="text-muted">Leave blank to hide this section entirely.</small>
+                            </div>
+                        </div>
+
                         <div id="challenge-sections-container">
                             <div class="challenge-section-item mb-3" data-challenge-index="0">
                                 <div class="col-12">
@@ -253,6 +325,7 @@
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
             <form class="modal-content" action="#" method="POST" id="edit_form" enctype="multipart/form-data">
+                @csrf
                 <div class="modal-header d-flex align-items-center">
                     <h4 class="modal-title">
                         Edit Project
@@ -261,6 +334,17 @@
                 </div>
                 <div class="modal-body">
                     <div class="row pt-3">
+                        <div class="col-12">
+                            <div class="mb-3 p-3 rounded" style="background:#fff8ed;border:1px solid #ffd080;">
+                                <div class="form-check form-switch mb-0">
+                                    <input class="form-check-input" type="checkbox" name="featured" id="edit_featured" value="1">
+                                    <label class="form-check-label fw-semibold" for="edit_featured">
+                                        ⭐ Feature this project
+                                    </label>
+                                    <div class="text-muted small mt-1">Only one project can be featured at a time. Enabling this will unfeature the current one.</div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-12">
                             <div class="mb-3">
                                 <label class="control-label mb-1">Project Category <span
@@ -341,8 +425,68 @@
                         <div class="col-md-12">
                             <div class="mb-3">
                                 <label class="control-label mb-1">Slug</label>
-                                <input type="text" id="slug" name="slug" class="form-control"
+                                <input type="text" id="edit_slug" name="slug" class="form-control"
                                     placeholder="Slug" />
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-2 mb-2">
+                            <p class="fw-semibold text-muted mb-0" style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;">Project Details</p>
+                            <hr class="mt-1 mb-3">
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="control-label mb-1">Client Name</label>
+                                <input type="text" id="edit_client_name" name="client_name" class="form-control" placeholder="e.g. Dubai Health Authority" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="control-label mb-1">Project Duration</label>
+                                <input type="text" id="edit_project_duration" name="project_duration" class="form-control" placeholder="e.g. 18 months" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="control-label mb-1">Project Location</label>
+                                <input type="text" id="edit_project_location" name="project_location" class="form-control" placeholder="e.g. Dubai, UAE" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="control-label mb-1">Regulatory Authority</label>
+                                <input type="text" id="edit_regulatory_authority" name="regulatory_authority" class="form-control" placeholder="e.g. UAE DOH / MOH" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="control-label mb-1">Client Website</label>
+                                <input type="text" id="edit_client_website" name="client_website" class="form-control" placeholder="e.g. https://www.example.com" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="control-label mb-1">Project Scope</label>
+                                <textarea id="edit_project_scope" name="project_scope" rows="3" class="form-control" placeholder="Brief description of the project scope..."></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="control-label mb-1">Services Delivered</label>
+                                <select id="edit_service_ids" name="service_ids[]" class="form-control select2-edit-services" multiple data-placeholder="Select services delivered">
+                                    @foreach($services as $service)
+                                        <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="control-label mb-1">Challenges Section Title</label>
+                                <input type="text" id="edit_challenge_heading" name="challenge_heading" class="form-control" placeholder="e.g. Challenges & Solutions" />
+                                <small class="text-muted">Leave blank to hide this section entirely.</small>
                             </div>
                         </div>
 
@@ -443,15 +587,41 @@
                 images_upload_url: '/uploads/tinymce-image',
             });
 
-            // select2 init
+            // select2 init — category dropdowns
             $('#addNewModal .select2').select2({
                 dropdownParent: '#addNewModal',
                 minimumResultsForSearch: 8,
             });
-            // select2 init
             $('#editModal .select2').select2({
                 dropdownParent: '#editModal',
                 minimumResultsForSearch: 8,
+            });
+
+            // select2 init — services multi-select (reinit on modal open to avoid z-index/focus issues)
+            $('#addNewModal').on('shown.bs.modal', function() {
+                var $sel = $(this).find('.select2-services');
+                if ($sel.hasClass('select2-hidden-accessible')) $sel.select2('destroy');
+                $sel.select2({
+                    dropdownParent: $(this),
+                    placeholder: 'Select services delivered',
+                    allowClear: true,
+                });
+            });
+
+            $('#editModal').on('shown.bs.modal', function() {
+                var $sel = $(this).find('.select2-edit-services');
+                if ($sel.hasClass('select2-hidden-accessible')) $sel.select2('destroy');
+                $sel.select2({
+                    dropdownParent: $(this),
+                    placeholder: 'Select services delivered',
+                    allowClear: true,
+                });
+                // Apply any pending service IDs stored before the modal opened
+                var pendingIds = $('#editModal').data('pending-service-ids');
+                if (pendingIds !== undefined) {
+                    $sel.val(pendingIds).trigger('change');
+                    $('#editModal').removeData('pending-service-ids');
+                }
             });
 
             let challengeIndex = 1;
@@ -560,6 +730,9 @@
                 updateChallengeRemoveButtons('#edit-challenge-sections-container');
             });
 
+            // Prevent native form submission regardless of validation state
+            $('#add_form, #edit_form').on('submit', function(e) { e.preventDefault(); });
+
             // add form handle
             $("#add_form").validate({
                 rules: {
@@ -586,6 +759,8 @@
 
                 },
                 submitHandler: function(form) {
+                    // Sync all TinyMCE editors to their textareas before collecting FormData
+                    if (typeof tinymce !== 'undefined') { try { tinymce.triggerSave(); } catch(e) {} }
                     // Collect the form data
                     let formData = new FormData(form);
                     // Send AJAX request
@@ -642,8 +817,9 @@
                             $('#addNewModal').modal(
                                 'hide'); // Replace #addNewModal with your modal ID
 
-                            // Optionally, clear the form
+                            // Clear the form
                             $('#add_form')[0].reset();
+                            $('#addNewModal .select2-services').val(null).trigger('change');
                             challengeIndex = 1;
                             renderChallengeSections('challenge-sections-container', [], false);
                         },
@@ -695,6 +871,8 @@
                     }
                 },
                 submitHandler: function(form) {
+                    // Sync all TinyMCE editors to their textareas before collecting FormData
+                    if (typeof tinymce !== 'undefined') { try { tinymce.triggerSave(); } catch(e) {} }
                     // Collect the form data
                     let formData = new FormData(form);
                     // Send AJAX request
@@ -792,7 +970,7 @@
 
             $(document).on('click', '.edit', function() {
                 const id = $(this).data('id');
-                const udpateUrl = `{{ route('project.update', '') }}/${id}`;
+                const udpateUrl = '{{ route("project.update", ["id" => "__ID__"]) }}'.replace('__ID__', id);
                 $('#edit_form').attr('action', udpateUrl);
 
                 $.ajax({
@@ -807,22 +985,38 @@
                     },
                     success: function(response) {
 
-                        $('#edit_form').find('[name="project_category_id"]').val(null)
-                            .trigger('change');
-
-                        // Set selected value by ID
-                        $('#edit_form').find('[name="project_category_id"]').val(response.data
-                            .project_category.id).trigger('change');
+                        const categoryId = response.data.project_category ? response.data.project_category.id : '';
+                        $('#edit_form').find('[name="project_category_id"]').val(null).trigger('change');
+                        $('#edit_form').find('[name="project_category_id"]').val(categoryId).trigger('change');
 
                         $('#editModal .select2').select2({
-                            dropdownParent: '#editModal',
+                            dropdownParent: $('#editModal'),
                             minimumResultsForSearch: 8,
                         });
 
-
                         $('#edit_form').find('#name').val(response.data.name);
-                        // console.log(response.data.description);
-                        tinymce.get('edit_description').setContent(response.data.description);
+                        $('#edit_form').find('#edit_slug').val(response.data.slug);
+                        const descEditor = tinymce.get('edit_description');
+                        if (descEditor) {
+                            descEditor.setContent(response.data.description || '');
+                        } else {
+                            $('#edit_description').val(response.data.description || '');
+                        }
+
+                        // New detail fields
+                        $('#edit_form').find('#edit_client_name').val(response.data.client_name || '');
+                        $('#edit_form').find('#edit_project_duration').val(response.data.project_duration || '');
+                        $('#edit_form').find('#edit_project_location').val(response.data.project_location || '');
+                        $('#edit_form').find('#edit_regulatory_authority').val(response.data.regulatory_authority || '');
+                        $('#edit_form').find('#edit_client_website').val(response.data.client_website || '');
+                        $('#edit_form').find('#edit_project_scope').val(response.data.project_scope || '');
+
+                        $('#edit_form').find('#edit_featured').prop('checked', !!response.data.featured);
+                        $('#edit_form').find('#edit_challenge_heading').val(response.data.challenge_heading || '');
+
+                        // Services multi-select — stored as data attr; applied by shown.bs.modal after select2 reinit
+                        const serviceIds = (response.data.service_ids || []).map(String);
+                        $('#editModal').data('pending-service-ids', serviceIds);
 
                         const challengeItems = (Array.isArray(response.data.challenges) && response.data.challenges.length)
                             ? response.data.challenges
@@ -849,7 +1043,7 @@
 
             $(document).on('click', '.delete', function() {
                 const id = $(this).data('id');
-                const deleteUrl = `{{ route('project.destroy', '') }}/${id}`;
+                const deleteUrl = '{{ route("project.destroy", ["id" => "__ID__"]) }}'.replace('__ID__', id);
                 const row = $(this).closest('tr'); // Get the closest table row
 
                 handleDelete(deleteUrl, items_table, row);

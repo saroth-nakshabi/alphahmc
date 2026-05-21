@@ -19,7 +19,7 @@ class BlogController extends Controller
 
         $data = [];
         $data['tags'] = Tag::all();
-        $data['blogs'] = Blog::all();
+        $data['blogs'] = Blog::with('tags')->get();
 
         return view('dashboard.blogs.index', $data);
     }
@@ -31,33 +31,39 @@ class BlogController extends Controller
     {
 
         $request->validate([
-            'title' => 'required|max:255',
-            'slug' => 'required|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'content' => 'required|string',
-            'description' => 'required|string',
-            'tags' => 'required',
+            'title'       => 'required|max:255',
+            'slug'        => 'required|max:255|unique:blogs,slug',
+            'image'       => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+            'content'     => 'required|string',
+            'description' => 'nullable|string',
+            'author_name' => 'nullable|string|max:255',
+            'read_time'   => 'nullable|integer|min:1|max:999',
         ]);
 
-        // Handle image uploads
         $image = $request->file('image');
         if (isset($image)) {
             $image_name = time() . '_' . Str::uuid() . '.' . $image->getClientOriginalExtension();
             $image->move(public_path('uploads/blog_images'), $image_name);
         }
+
         $blog = Blog::create([
-            'title' => $request->input('title'),
-            'slug' => $request->input('slug'),
-            'featured' => $request->input('featured') ?? 0,
-            'content' => $request->input('content'),
-            'description' => $request->input('description'),
-            'image' => $image_name ?? null,
-            'meta_title' => $request->input('meta_title'),
+            'title'            => $request->input('title'),
+            'slug'             => $request->input('slug'),
+            'featured'         => $request->has('featured') ? 1 : 0,
+            'content'          => $request->input('content'),
+            'description'      => $request->input('description'),
+            'author_name'      => $request->input('author_name'),
+            'read_time'        => $request->input('read_time'),
+            'published_date'   => $request->input('published_date') ?: now()->toDateString(),
+            'updated_date'     => $request->input('updated_date') ?: null,
+            'image'            => $image_name ?? null,
+            'meta_title'       => $request->input('meta_title'),
             'meta_description' => $request->input('meta_description'),
-            'meta_keywords' => $request->input('meta_keywords'),
+            'meta_keywords'    => $request->input('meta_keywords'),
         ]);
 
-        $blog->tags()->attach($request->input('tags')); // Assuming 'tags' is an array of tag IDs
+        $blog->tags()->sync($request->input('tags', []));
+        $blog->load('tags');
 
         return response()->json([
             'success' => true,
@@ -73,26 +79,30 @@ class BlogController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'title' => 'required|max:255',
-            'slug' => 'required|max:255|unique:' . Blog::class . ',slug,' . $id,
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'content' => 'required|string',
-            'description' => 'required|string',
-            'tags' => 'required',
+            'title'       => 'required|max:255',
+            'slug'        => 'required|max:255|unique:blogs,slug,' . $id,
+            'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+            'content'     => 'required|string',
+            'description' => 'nullable|string',
+            'author_name' => 'nullable|string|max:255',
+            'read_time'   => 'nullable|integer|min:1|max:999',
         ]);
 
         $blog = Blog::findOrFail($id);
 
-        // Update blog attributes
         $blog->update([
-            'title' => $request->input('title'),
-            'slug' => $request->input('slug'),
-            'featured' => $request->input('featured') ?? 0,
-            'content' => $request->input('content'),
-            'description' => $request->input('description'),
-            'meta_title' => $request->input('meta_title'),
+            'title'            => $request->input('title'),
+            'slug'             => $request->input('slug'),
+            'featured'         => $request->has('featured') ? 1 : 0,
+            'content'          => $request->input('content'),
+            'description'      => $request->input('description'),
+            'author_name'      => $request->input('author_name'),
+            'read_time'        => $request->input('read_time'),
+            'published_date'   => $request->input('published_date') ?: null,
+            'updated_date'     => $request->input('updated_date') ?: null,
+            'meta_title'       => $request->input('meta_title'),
             'meta_description' => $request->input('meta_description'),
-            'meta_keywords' => $request->input('meta_keywords'),
+            'meta_keywords'    => $request->input('meta_keywords'),
         ]);
 
         // Handle image uploads if a new image is provided
@@ -114,8 +124,8 @@ class BlogController extends Controller
             ]);
         }
 
-        $blog->tags()->sync($request->input('tags'));
-
+        $blog->tags()->sync($request->input('tags', []));
+        $blog->load('tags');
 
         return response()->json([
             'success' => true,
@@ -149,7 +159,7 @@ class BlogController extends Controller
     public function getBlog(Request $request)
     {
         $id = $request->input('id');
-        $blog = Blog::with(["tags"])->findOrFail($id); // Assuming Blog has a 'tags' relation
+        $blog = Blog::with(['tags', 'category'])->findOrFail($id);
 
         return response()->json([
             'success' => true,

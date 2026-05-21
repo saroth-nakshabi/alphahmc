@@ -24,15 +24,17 @@ class Service extends Model
         'announcement_id',
         'featured',
         'status',
+        'published_date',
+        'updated_date',
         'agent_id',
         'meta_title',
         'meta_description',
         'meta_keywords',
         'areaServed',
         'serviceType',
-        'announcement_id',
         'inq_officer_name',
         'inq_officer_phone',
+        'show_testimonials',
     ];
 
 
@@ -50,6 +52,8 @@ class Service extends Model
 
     protected $casts = [
         'related_services' => 'array',
+        'published_date'   => 'date',
+        'updated_date'     => 'date',
     ];
 
     public function categories()

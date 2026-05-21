@@ -10,8 +10,18 @@ class MainCategory extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name'
+        'name',
+        'sort_order',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function ($model) {
+            if (!$model->sort_order) {
+                $model->sort_order = (static::max('sort_order') ?? 0) + 1;
+            }
+        });
+    }
 
     public function categories()
     {

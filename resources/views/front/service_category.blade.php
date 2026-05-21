@@ -116,6 +116,22 @@
             z-index: 10;
         }
 
+        /* ── Bottom breadcrumb ─────────────────────────────── */
+        .hero-breadcrumb {
+            position: absolute;
+            bottom: 40px;
+            left: 0; right: 0;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            z-index: 10;
+        }
+        .hero-breadcrumb a { color: rgba(255,255,255,0.75) !important; text-decoration: none; font-weight: 600; transition: color 0.25s ease; }
+        .hero-breadcrumb a:hover { color: #fff !important; }
+        .hero-breadcrumb .bc-sep { color: rgba(255,255,255,0.4); margin: 0 8px; }
+        .hero-breadcrumb .bc-current { color: rgba(255,255,255,0.95); font-weight: 700; }
+        @media (max-width: 767px) { .hero-breadcrumb { bottom: 24px; font-size: 0.75rem; } }
+
         .hero-title {
             font-size: 4.5rem !important;
             line-height: 1.05;
@@ -1267,6 +1283,15 @@
                     </div>
                 </div>
             </div>
+            <nav class="hero-breadcrumb" aria-label="Breadcrumb">
+                <div class="container">
+                    <a href="{{ route('home') }}">Home</a>
+                    <span class="bc-sep">›</span>
+                    <a href="{{ url('/services') }}">Services</a>
+                    <span class="bc-sep">›</span>
+                    <span class="bc-current">{{ $service->name }}</span>
+                </div>
+            </nav>
         </section>
 
         <style>
@@ -3000,6 +3025,11 @@ function toggleTransformationDesc() {
         </section>
 
 
+
+        {{-- ── Testimonials (conditional) ────────────────────── --}}
+        @if($service->show_testimonials)
+            @include('front.partials.testimonial-pills')
+        @endif
 
         <!-- Bottom Interests -->
         <section class="bottom-interests" id="related-services">

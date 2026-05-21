@@ -13,6 +13,7 @@ use App\Models\ServiceImage;
 use App\Models\TapService;
 use App\Models\ServiceMagazine;
 use App\Models\Faq;
+use App\Services\ImageProcessor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -44,8 +45,8 @@ class ServiceController extends Controller
         $rules = [
             'name' => 'required|max:255',
             'slug' => 'required|max:255|unique:services,slug',
-            'hero_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'sliding_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'hero_image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'sliding_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'overview' => 'required|string',
             'content' => 'required|string',
             'info_one' => 'required|string',
@@ -124,15 +125,17 @@ class ServiceController extends Controller
             'info_four' => $request->input('info_four'),
             'related_services' => $request->input('related_services'),
             'announcement_id' => $request->input('announcement_id'),
-            'featured' => $request->input('featured') ?? 0,
-            'status' => in_array($request->input('status'), ['draft', 'published']) ? $request->input('status') : 'published',
-            'meta_title' => $request->input('meta_title'),
-            'meta_description' => $request->input('meta_description'),
-            'meta_keywords' => $request->input('meta_keywords'),
-            'areaServed' => $request->input('areaServed'),
-            'serviceType' => $request->input('serviceType'),
-            'agent_id' => $request->input('agent') ?? null,
-            'inq_officer_name' => $request->input('inq_officer_name'),
+            'featured'       => $request->input('featured') ?? 0,
+            'status'         => in_array($request->input('status'), ['draft', 'published']) ? $request->input('status') : 'published',
+            'published_date' => $request->input('published_date') ?: now()->toDateString(),
+            'updated_date'   => $request->input('updated_date') ?: now()->toDateString(),
+            'meta_title'        => $request->input('meta_title'),
+            'meta_description'  => $request->input('meta_description'),
+            'meta_keywords'     => $request->input('meta_keywords'),
+            'areaServed'        => $request->input('areaServed'),
+            'serviceType'       => $request->input('serviceType'),
+            'agent_id'          => $request->input('agent') ?? null,
+            'inq_officer_name'  => $request->input('inq_officer_name'),
             'inq_officer_phone' => $request->input('inq_officer_phone'),
         ]);
 
@@ -162,15 +165,12 @@ class ServiceController extends Controller
         // Store multiple service images
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $imageName = time() . '_' . Str::uuid() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('uploads/service_images'), $imageName);
-                ServiceImage::create([
-                    'service_id' => $service->id,
-                    'image' => $imageName,
-                ]);
+                $imageName = ImageProcessor::saveAsJpeg(
+                    $image, public_path('uploads/service_images'), time() . '_' . Str::uuid()
+                );
+                ServiceImage::create(['service_id' => $service->id, 'image' => $imageName]);
             }
         }
-
 
         // Create magazines if provided
         if (!empty($request->input('magazines'))) {
@@ -178,15 +178,17 @@ class ServiceController extends Controller
                 if (!empty($magItem['title'])) {
                     $magImage = null;
                     if ($request->hasFile("magazines.$index.image")) {
-                        $file = $request->file("magazines.$index.image");
-                        $magImage = time() . '_mag_' . Str::uuid() . '.' . $file->getClientOriginalExtension();
-                        $file->move(public_path('uploads/magazines'), $magImage);
+                        $magImage = ImageProcessor::saveAsJpeg(
+                            $request->file("magazines.$index.image"),
+                            public_path('uploads/magazines'),
+                            time() . '_mag_' . Str::uuid()
+                        );
                     }
                     ServiceMagazine::create([
-                        'title' => $magItem['title'],
+                        'title'       => $magItem['title'],
                         'description' => $magItem['description'] ?? null,
-                        'image' => $magImage,
-                        'service_id' => $service->id,
+                        'image'       => $magImage,
+                        'service_id'  => $service->id,
                     ]);
                 }
             }
@@ -243,8 +245,8 @@ class ServiceController extends Controller
         $rules = [
             'name' => 'required|max:255',
             'slug' => 'required|max:255|unique:services,slug,' . $id,
-            'hero_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'sliding_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'hero_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'sliding_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'overview' => 'required|string',
             'content' => 'required|string',
             'info_one' => 'required|string',
@@ -266,7 +268,9 @@ class ServiceController extends Controller
             'magazines' => 'nullable|array',
             'magazines.*.title' => 'required_with:magazines|string|max:255',
             'magazines.*.description' => 'required_with:magazines|string',
-            'magazines.*.image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'magazines.*.image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'published_date' => 'nullable|date',
+            'updated_date'   => 'nullable|date',
         ];
 
         if ($request->accreditation_body == 'yes') {
@@ -293,15 +297,18 @@ class ServiceController extends Controller
             'info_four' => $request->input('info_four'),
             'related_services' => $request->input('related_services'),
             'announcement_id' => $request->input('announcement_id'),
-            'featured' => $request->input('featured') ?? 0,
-            'status' => in_array($request->input('status'), ['draft', 'published']) ? $request->input('status') : $service->status,
-            'meta_title' => $request->input('meta_title'),
-            'meta_description' => $request->input('meta_description'),
-            'meta_keywords' => $request->input('meta_keywords'),
-            'areaServed' => $request->input('areaServed'),
-            'serviceType' => $request->input('serviceType'),
-            'agent_id' => $request->input('agent') ?? null,
-            'inq_officer_name' => $request->input('inq_officer_name'),
+            'featured'          => $request->input('featured') ?? 0,
+            'show_testimonials' => $request->input('show_testimonials') ?? 0,
+            'status'         => in_array($request->input('status'), ['draft', 'published']) ? $request->input('status') : $service->status,
+            'published_date' => $request->input('published_date') ?: $service->published_date?->toDateString(),
+            'updated_date'   => $request->input('updated_date') ?: now()->toDateString(),
+            'meta_title'        => $request->input('meta_title'),
+            'meta_description'  => $request->input('meta_description'),
+            'meta_keywords'     => $request->input('meta_keywords'),
+            'areaServed'        => $request->input('areaServed'),
+            'serviceType'       => $request->input('serviceType'),
+            'agent_id'          => $request->input('agent') ?? null,
+            'inq_officer_name'  => $request->input('inq_officer_name'),
             'inq_officer_phone' => $request->input('inq_officer_phone'),
         ]);
 
@@ -356,12 +363,10 @@ class ServiceController extends Controller
         // Handle multiple service images
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $imageName = time() . '_' . Str::uuid() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('uploads/service_images'), $imageName);
-                ServiceImage::create([
-                    'service_id' => $service->id,
-                    'image' => $imageName,
-                ]);
+                $imageName = ImageProcessor::saveAsJpeg(
+                    $image, public_path('uploads/service_images'), time() . '_' . Str::uuid()
+                );
+                ServiceImage::create(['service_id' => $service->id, 'image' => $imageName]);
             }
         }
 
@@ -427,13 +432,14 @@ class ServiceController extends Controller
                             $magImage = null;
                         }
                         if ($request->hasFile("magazines.$index.image")) {
-                            // Delete old image if exists
                             if ($magImage && file_exists(public_path('uploads/magazines/' . $magImage))) {
                                 unlink(public_path('uploads/magazines/' . $magImage));
                             }
-                            $file = $request->file("magazines.$index.image");
-                            $magImage = time() . '_mag_' . Str::uuid() . '.' . $file->getClientOriginalExtension();
-                            $file->move(public_path('uploads/magazines'), $magImage);
+                            $magImage = ImageProcessor::saveAsJpeg(
+                                $request->file("magazines.$index.image"),
+                                public_path('uploads/magazines'),
+                                time() . '_mag_' . Str::uuid()
+                            );
                         }
 
                         if (!empty($magData['id'])) {
@@ -636,10 +642,11 @@ class ServiceController extends Controller
     private function uploadFile(Request $request, $fieldName)
     {
         if ($request->hasFile($fieldName)) {
-            $file = $request->file($fieldName);
-            $fileName = time() . '_' . $fieldName . '_' . Str::uuid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/service_images'), $fileName);
-            return $fileName;
+            return ImageProcessor::saveAsJpeg(
+                $request->file($fieldName),
+                public_path('uploads/service_images'),
+                time() . '_' . $fieldName . '_' . Str::uuid()
+            );
         }
         return null;
     }

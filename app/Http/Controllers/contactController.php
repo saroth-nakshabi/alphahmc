@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Testimonial;
+use App\Models\Service;
+use App\Models\TestimonialSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ContactController extends Controller
 {
-    // Display all testimonials
     public function index()
     {
-        $Projects = Testimonial::all(); // matches your Blade variable
-        return view('dashboard.contact.testimonial', compact('Projects'));
+        $Projects  = Testimonial::with('service')->latest()->get();
+        $services  = Service::published()->orderBy('name')->get();
+        $settings  = TestimonialSetting::current();
+        return view('dashboard.contact.testimonial', compact('Projects', 'services', 'settings'));
     }
 
     // Store a new testimonial
@@ -25,31 +28,34 @@ class ContactController extends Controller
             'content' => 'required|string',
             'rating' => 'required|integer|min:1|max:5',
             'featured' => 'sometimes|boolean',
-            'author_image' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'author_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'testimonial_date' => 'nullable|date',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-       $data = $request->only([
-    'author_name',
-    'position',
-    'company_name',
-    'content',
-    'rating',    
-]);
+        $data = $request->only(['author_name', 'email', 'position', 'company_name', 'content', 'rating', 'service_id']);
+        $data['featured'] = $request->has('featured') ? 1 : 0;
+        $data['approved'] = 1;
+        $data['source']   = 'admin';
 
-$data['featured'] = $request->has('featured') ? 1 : 0;
+        $data['author_image'] = '';
+        if ($request->hasFile('author_image')) {
+            $file = $request->file('author_image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/testimonials'), $filename);
+            $data['author_image'] = $filename;
+        }
 
-if ($request->hasFile('author_image')) {
-    $file = $request->file('author_image');
-    $filename = time() . '.' . $file->getClientOriginalExtension();
-    $file->move(public_path('uploads/testimonials'), $filename);
-    $data['author_image'] = $filename;
-}
+        $testimonial = Testimonial::create($data);
 
-$testimonial = Testimonial::create($data);
+        if ($request->testimonial_date) {
+            $testimonial->timestamps = false;
+            $testimonial->created_at = \Carbon\Carbon::parse($request->testimonial_date)->startOfDay();
+            $testimonial->save();
+        }
 
         return response()->json([
             'message' => 'Testimonial added successfully',
@@ -79,7 +85,8 @@ $testimonial = Testimonial::create($data);
             'content' => 'required|string',
             'rating' => 'required|integer|min:1|max:5',
             'featured' => 'sometimes|boolean',
-            'author_image' => 'sometimes|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'author_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'testimonial_date' => 'nullable|date',
         ]);
 
         if ($validator->fails()) {
@@ -87,11 +94,18 @@ $testimonial = Testimonial::create($data);
         }
 
         $testimonial->author_name = $request->author_name;
-        $testimonial->position = $request->position;
+        $testimonial->email       = $request->email;
+        $testimonial->position    = $request->position;
         $testimonial->company_name = $request->company_name;
-        $testimonial->content = $request->content;
-        $testimonial->rating = $request->rating;
-        $testimonial->featured = $request->has('featured') ? 1 : 0;
+        $testimonial->content     = $request->content;
+        $testimonial->rating      = $request->rating;
+        $testimonial->service_id  = $request->service_id ?: null;
+        $testimonial->featured    = $request->has('featured') ? 1 : 0;
+
+        if ($request->testimonial_date) {
+            $testimonial->timestamps = false;
+            $testimonial->created_at = \Carbon\Carbon::parse($request->testimonial_date)->startOfDay();
+        }
 
         if ($request->hasFile('author_image')) {
             $file = $request->file('author_image');
@@ -119,16 +133,27 @@ $testimonial = Testimonial::create($data);
         ]);
     }
 
-    // Toggle featured
     public function toggleFeatured(Request $request, $id)
     {
         $testimonial = Testimonial::findOrFail($id);
         $testimonial->featured = !$testimonial->featured;
         $testimonial->save();
+        return response()->json(['message' => 'Featured status updated', 'featured' => $testimonial->featured]);
+    }
 
-        return response()->json([
-            'message' => 'Featured status updated',
-            'featured' => $testimonial->featured
-        ]);
+    public function toggleApproved(Request $request, $id)
+    {
+        $testimonial = Testimonial::findOrFail($id);
+        $testimonial->approved = !$testimonial->approved;
+        $testimonial->save();
+        return response()->json(['message' => 'Approval status updated', 'approved' => $testimonial->approved]);
+    }
+
+    public function saveSettings(Request $request)
+    {
+        $request->validate(['hero_message' => 'required|string|max:500']);
+        $settings = TestimonialSetting::current();
+        $settings->update(['hero_message' => $request->hero_message]);
+        return response()->json(['message' => 'Settings saved']);
     }
 }

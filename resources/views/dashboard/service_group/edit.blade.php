@@ -29,8 +29,6 @@
         label.form-label, .control-label { font-weight: 500; font-size: .85rem; margin-bottom: .3rem; display: block; }
         .item-count-badge { background: #e0f2fe; color: #0369a1; border-radius: 20px; padding: 2px 10px; font-size: .73rem; font-weight: 600; }
         .existing-img-badge { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 4px 10px; font-size: .78rem; color: #166534; display: inline-flex; align-items: center; gap: .4rem; }
-        .gallery-image-wrapper { position: relative; display: inline-block; margin: 4px; }
-        .delete-gallery-img { position: absolute; top: -6px; right: -6px; background: #dc2626; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; font-weight: bold; line-height: 1; }
         .body-wrapper > .container-fluid { padding-left: 0 !important; padding-right: 0 !important; }
         .select2-container { display: block !important; }
         .select2-container--default .select2-selection--multiple { height: auto !important; }
@@ -141,9 +139,16 @@
                                 <div class="field-hint">Choose all services that belong to this group.</div>
                             </div>
                             <div class="col-12">
-                                <label class="control-label">Service Group Description <span class="required-star">*</span></label>
-                                <textarea name="description" rows="5" class="rich-textarea form-control"
-                                    placeholder="Describe this service group...">{{ $service_group->description }}</textarea>
+                                <label class="control-label">Hero Description <span class="required-star">*</span>
+                                    <span class="text-muted fw-normal">(banner)</span></label>
+                                <textarea name="content" rows="6" class="rich-textarea form-control"
+                                    required>{{ $service_group->content }}</textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="control-label">Intro Description <span class="required-star">*</span>
+                                    <span class="text-muted fw-normal">(overview)</span></label>
+                                <textarea name="overview" rows="6" class="rich-textarea form-control"
+                                    required>{{ $service_group->overview }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -161,7 +166,7 @@
                                 <label class="control-label">Hero Section Image</label>
                                 @if($service_group->hero_image)
                                     <div class="mb-2 d-flex align-items-center gap-2">
-                                        <img src="{{ asset($service_group->hero_image) }}" class="image-preview-thumb" alt="Hero">
+                                        <img src="{{ asset('public/' . ltrim($service_group->hero_image, '/')) }}" class="image-preview-thumb" alt="Hero">
                                         <span class="existing-img-badge"><i class="ti ti-check"></i> Current</span>
                                     </div>
                                 @endif
@@ -179,83 +184,15 @@
                                 <input type="file" name="image" class="form-control" accept="image/*" />
                                 <div class="field-hint">Leave blank to keep current.</div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="control-label">Strategy Section Sliding Image</label>
-                                @if($service_group->sliding_image)
-                                    <div class="mb-2 d-flex align-items-center gap-2">
-                                        <img src="{{ asset($service_group->sliding_image) }}" class="image-preview-thumb" alt="Sliding">
-                                        <span class="existing-img-badge"><i class="ti ti-check"></i> Current</span>
-                                    </div>
-                                @endif
-                                <input type="file" name="sliding_image" class="form-control" accept="image/*" />
-                                <div class="field-hint">Leave blank to keep current.</div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="control-label">Strategy Section Gallery Images</label>
-                                @if($service_group->images->count() > 0)
-                                    <div id="gallery-preview" class="d-flex flex-wrap gap-2 mb-2 p-2 bg-light rounded border">
-                                        @foreach($service_group->images as $img)
-                                            <div class="gallery-image-wrapper" id="gallery-img-{{ $img->id }}">
-                                                <img src="{{ asset($img->image) }}" width="75" height="65"
-                                                    class="rounded border" style="object-fit:cover">
-                                                <span class="delete-gallery-img" data-id="{{ $img->id }}" title="Delete">×</span>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                @else
-                                    <div id="gallery-preview" class="d-flex flex-wrap gap-2 mb-2"></div>
-                                @endif
-                                <input type="file" name="images[]" class="form-control" multiple accept="image/*" />
-                                <div class="field-hint">Upload new images to add to gallery.</div>
-                            </div>
                         </div>
                     </div>
                 </div>
 
-                {{-- ── Section 3 · Page Content ── --}}
-                <div class="section-card">
-                    <div class="section-header">
-                        <span class="section-badge bg-success text-white">3</span>
-                        <h6 class="mb-0 fw-semibold">Page Content</h6>
-                    </div>
-                    <div class="section-body">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="control-label">Service Header <span class="required-star">*</span></label>
-                                <input type="text" name="service_header" class="form-control"
-                                    value="{{ $service_group->service_header }}" placeholder="Service header text" required />
-                            </div>
-                            <div class="col-12">
-                                <label class="control-label">Hero Description <span class="required-star">*</span>
-                                    <span class="text-muted fw-normal">(banner)</span></label>
-                                <textarea name="content" rows="6" class="rich-textarea form-control"
-                                    required>{{ $service_group->content }}</textarea>
-                            </div>
-                            <div class="col-12">
-                                <label class="control-label">Intro Description <span class="required-star">*</span>
-                                    <span class="text-muted fw-normal">(overview)</span></label>
-                                <textarea name="overview" rows="6" class="rich-textarea form-control"
-                                    required>{{ $service_group->overview }}</textarea>
-                            </div>
-                            <div class="col-12">
-                                <label class="control-label">CTA Header <span class="text-muted fw-normal">(optional)</span></label>
-                                <textarea name="info_three" rows="4" class="rich-textarea form-control"
-                                    >{{ $service_group->info_three }}</textarea>
-                            </div>
-                            <div class="col-12">
-                                <label class="control-label">CTA Description <span class="text-muted fw-normal">(why choose us)</span></label>
-                                <textarea name="info_four" rows="4" class="rich-textarea form-control"
-                                    >{{ $service_group->info_four }}</textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- ── Section 4 · Core Services ── --}}
+                {{-- ── Section 3 · Core Services ── --}}
                 <div class="section-card">
                     <div class="section-header justify-content-between">
                         <div class="d-flex align-items-center gap-2">
-                            <span class="section-badge text-white" style="background:#059669!important">4</span>
+                            <span class="section-badge text-white" style="background:#059669!important">3</span>
                             <h6 class="mb-0 fw-semibold">Core Services</h6>
                             <span class="item-count-badge" id="core-count">{{ count($coreHeaders) }} {{ count($coreHeaders) == 1 ? 'item' : 'items' }}</span>
                         </div>
@@ -305,6 +242,33 @@
                     </div>
                 </div>
 
+                {{-- ── Section 4 · Page Content ── --}}
+                <div class="section-card">
+                    <div class="section-header">
+                        <span class="section-badge bg-success text-white">4</span>
+                        <h6 class="mb-0 fw-semibold">Page Content</h6>
+                    </div>
+                    <div class="section-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="control-label">Service Header <span class="required-star">*</span></label>
+                                <input type="text" name="service_header" class="form-control"
+                                    value="{{ $service_group->service_header }}" placeholder="Service header text" required />
+                            </div>
+                            <div class="col-12">
+                                <label class="control-label">Service Group Description <span class="required-star">*</span></label>
+                                <textarea name="description" rows="5" class="rich-textarea form-control"
+                                    placeholder="Describe this service group...">{{ $service_group->description }}</textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="control-label">CTA Description <span class="text-muted fw-normal">(why choose us)</span></label>
+                                <textarea name="info_four" rows="4" class="rich-textarea form-control"
+                                    >{{ $service_group->info_four }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 {{-- ── Section 5 · Process Steps ── --}}
                 <div class="section-card">
                     <div class="section-header justify-content-between">
@@ -318,6 +282,13 @@
                         </button>
                     </div>
                     <div class="section-body p-3">
+                        <div class="mb-3">
+                            <label class="control-label">Process Section Introduction
+                                <span class="text-muted fw-normal">(section title &amp; description shown above the steps)</span>
+                            </label>
+                            <textarea name="process_intro" id="process_intro" rows="4" class="form-control"
+                                placeholder="e.g. From first call to license in hand — describe your process approach...">{{ $service_group->process_intro }}</textarea>
+                        </div>
                         <div id="process-accordion" class="accordion cst-accordion">
                             @foreach ($processHeaders as $index => $header)
                                 <div class="accordion-item process-section-item" id="process-item-{{ $index }}">
@@ -359,88 +330,11 @@
                     </div>
                 </div>
 
-                {{-- ── Section 6 · Magazine / Insights ── --}}
+                {{-- ── Section 6 · FAQ ── --}}
                 <div class="section-card">
                     <div class="section-header justify-content-between">
                         <div class="d-flex align-items-center gap-2">
-                            <span class="section-badge text-white" style="background:#7c3aed!important">6</span>
-                            <h6 class="mb-0 fw-semibold">Magazine / Insights</h6>
-                            <span class="item-count-badge" id="mag-count">{{ $service_group->magazines->count() }} {{ $service_group->magazines->count() == 1 ? 'item' : 'items' }}</span>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-outline-primary" id="addMagazineBtn">
-                            <i class="ti ti-plus me-1"></i> Add Item
-                        </button>
-                    </div>
-                    <div class="section-body p-3">
-                        @if($service_group->magazines->count() === 0)
-                            <div id="mag-empty-state" class="empty-state">
-                                <i class="ti ti-news"></i>
-                                <p class="mb-1 fw-semibold">No magazine items yet</p>
-                                <small>Click <strong>Add Item</strong> to add magazine/insights cards.</small>
-                            </div>
-                        @else
-                            <div id="mag-empty-state" class="empty-state d-none"></div>
-                        @endif
-                        <div id="magazine-accordion" class="accordion cst-accordion">
-                            @foreach ($service_group->magazines as $index => $mag)
-                                <div class="accordion-item magazine-section-item" id="mag-item-e{{ $index }}">
-                                    <input type="hidden" name="magazines[{{ $index }}][existing_image]" value="{{ $mag->image }}">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#mag-collapse-e{{ $index }}"
-                                            aria-expanded="false">
-                                            <span class="badge me-2" style="background:#7c3aed;color:#fff;min-width:26px">#{{ $index + 1 }}</span>
-                                            <span class="mag-item-title text-truncate" style="max-width:300px">{{ $mag->title ?: 'Magazine Item' }}</span>
-                                        </button>
-                                    </h2>
-                                    <div id="mag-collapse-e{{ $index }}" class="accordion-collapse collapse">
-                                        <div class="accordion-body">
-                                            <div class="row g-3">
-                                                <div class="col-md-8">
-                                                    <label class="control-label">Title <span class="required-star">*</span></label>
-                                                    <input type="text" name="magazines[{{ $index }}][title]"
-                                                        class="form-control mag-title-input"
-                                                        value="{{ $mag->title }}" placeholder="Magazine title" required />
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label class="control-label">Image</label>
-                                                    @if($mag->image)
-                                                        <div class="mb-2 d-flex align-items-center gap-2">
-                                                            <img src="{{ asset('uploads/service_group_images/' . $mag->image) }}"
-                                                                class="image-preview-thumb" alt="Mag image">
-                                                            <span class="existing-img-badge"><i class="ti ti-check"></i> Current</span>
-                                                        </div>
-                                                    @endif
-                                                    <input type="file" name="magazines[{{ $index }}][image]"
-                                                        class="form-control" accept="image/*" />
-                                                    <div class="field-hint">Leave blank to keep current.</div>
-                                                </div>
-                                                <div class="col-12">
-                                                    <label class="control-label">Description <span class="required-star">*</span></label>
-                                                    <textarea id="mag_desc_e{{ $index }}"
-                                                        name="magazines[{{ $index }}][description]"
-                                                        rows="4" class="form-control"
-                                                        placeholder="Magazine description...">{{ $mag->description }}</textarea>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex justify-content-end mt-3">
-                                                <button type="button" class="btn btn-sm btn-outline-danger remove-magazine-section">
-                                                    <i class="ti ti-trash me-1"></i> Remove this item
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-
-                {{-- ── Section 7 · FAQ ── --}}
-                <div class="section-card">
-                    <div class="section-header justify-content-between">
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="section-badge text-dark" style="background:#fbbf24!important">7</span>
+                            <span class="section-badge text-dark" style="background:#fbbf24!important">6</span>
                             <h6 class="mb-0 fw-semibold">Frequently Asked Questions</h6>
                             <span class="item-count-badge" id="faq-count" style="background:#fef9c3;color:#854d0e">
                                 {{ $service_group->faqs->count() }} {{ $service_group->faqs->count() == 1 ? 'item' : 'items' }}
@@ -499,10 +393,10 @@
                     </div>
                 </div>
 
-                {{-- ── Section 8 · SEO / Meta ── --}}
+                {{-- ── Section 7 · SEO / Meta ── --}}
                 <div class="section-card">
                     <div class="section-header">
-                        <span class="section-badge bg-secondary text-white">8</span>
+                        <span class="section-badge bg-secondary text-white">7</span>
                         <h6 class="mb-0 fw-semibold">SEO / Meta Details</h6>
                         <small class="text-muted ms-1">— all optional</small>
                     </div>
@@ -604,6 +498,17 @@
                                     {{ $service_group->is_featured ? 'checked' : '' }} />
                             </div>
                         </div>
+                        <div class="d-flex align-items-center justify-content-between py-1 mb-3 border-bottom pb-3">
+                            <div>
+                                <div class="fw-semibold" style="font-size:.875rem">Show Testimonials</div>
+                                <div class="field-hint mb-0">Display client reviews on this group page</div>
+                            </div>
+                            <div class="form-check form-switch mb-0 ms-3">
+                                <input type="checkbox" name="show_testimonials" class="form-check-input"
+                                    id="show_testimonials_toggle" role="switch" value="1"
+                                    {{ $service_group->show_testimonials ? 'checked' : '' }} />
+                            </div>
+                        </div>
                         <div class="mb-3">
                             <label class="control-label">Connected Agent <span class="required-star">*</span></label>
                             <select name="agent_id" id="agent_id" class="form-control select2-sidebar"
@@ -648,6 +553,29 @@
                             @endforeach
                         </select>
                         <div class="field-hint mt-1">Shown in the announcement banner.</div>
+                    </div>
+                </div>
+
+                {{-- Dates card --}}
+                <div class="sidebar-card">
+                    <div class="sidebar-card-header">
+                        <i class="ti ti-calendar"></i> Publication Dates
+                    </div>
+                    <div class="sidebar-card-body">
+                        <div class="mb-3">
+                            <label class="control-label mb-1" for="published_date">Published Date <span class="required-star">*</span></label>
+                            <input type="date" id="published_date" name="published_date"
+                                class="form-control form-control-sm"
+                                value="{{ ($service_group->published_date ?? $service_group->created_at)->format('Y-m-d') }}" required />
+                            <small class="field-hint">Date shown as "Published" on the page.</small>
+                        </div>
+                        <div class="mb-1">
+                            <label class="control-label mb-1" for="updated_date">Last Updated Date</label>
+                            <input type="date" id="updated_date" name="updated_date"
+                                class="form-control form-control-sm"
+                                value="{{ ($service_group->updated_date ?? $service_group->updated_at)->format('Y-m-d') }}" />
+                            <small class="field-hint">Date shown as "Updated" on the page.</small>
+                        </div>
                     </div>
                 </div>
 
@@ -698,11 +626,9 @@
 
         /* Init static rich-textareas */
         initTinyMCE('.rich-textarea', { height: 240 });
+        initTinyMCE('#process_intro', { height: 180, menubar: false });
 
         /* Init existing accordion items */
-        @foreach ($service_group->magazines as $index => $mag)
-            initTinyMCE('#mag_desc_e{{ $index }}', { height: 200 });
-        @endforeach
         @foreach ($service_group->faqs as $index => $faq)
             initTinyMCE('#faq_ans_e{{ $index }}', { height: 180, menubar: false });
         @endforeach
@@ -724,44 +650,21 @@
         });
 
         /* ─── Counters ─── */
-        let newMagIdx     = {{ $service_group->magazines->count() }};
         let newFaqIdx     = {{ $service_group->faqs->count() }};
         let newCoreIdx    = {{ count($coreHeaders) }};
         let newProcessIdx = {{ count($processHeaders) }};
 
-        function updateMagCount()     { const n=$('#magazine-accordion .accordion-item').length; $('#mag-count').text(n+' '+(n===1?'item':'items')); n===0?$('#mag-empty-state').removeClass('d-none'):$('#mag-empty-state').addClass('d-none'); }
         function updateFaqCount()     { const n=$('#faq-accordion .accordion-item').length; $('#faq-count').text(n+' '+(n===1?'item':'items')); n===0?$('#faq-empty-state').removeClass('d-none'):$('#faq-empty-state').addClass('d-none'); }
         function updateCoreCount()    { const n=$('#core-accordion .accordion-item').length; $('#core-count').text(n+' '+(n===1?'item':'items')); }
         function updateProcessCount() { const n=$('#process-accordion .accordion-item').length; $('#process-count').text(n+' '+(n===1?'item':'items')); }
 
         /* ─── Live header sync ─── */
-        $(document).on('input', '.mag-title-input',     function () { $(this).closest('.accordion-item').find('.mag-item-title').text($(this).val().trim() || 'Magazine Item'); });
         $(document).on('input', '.faq-question-input',  function () { $(this).closest('.accordion-item').find('.faq-item-question').text(($(this).val().trim() || 'FAQ Question').substring(0, 60)); });
         $(document).on('input', '.core-header-input',   function () { $(this).closest('.accordion-item').find('.core-item-title').text($(this).val().trim() || 'Core Service'); });
         $(document).on('input', '.process-header-input',function () { $(this).closest('.accordion-item').find('.process-item-title').text($(this).val().trim() || 'Process Step'); });
 
         /* ─── Item builders ─── */
-        function buildMagItem(idx) {
-            return `<div class="accordion-item magazine-section-item" id="mag-item-n${idx}">
-                <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#mag-collapse-n${idx}" aria-expanded="true">
-                    <span class="badge me-2" style="background:#7c3aed;color:#fff;min-width:26px">#</span>
-                    <span class="mag-item-title">New Magazine Item</span>
-                </button></h2>
-                <div id="mag-collapse-n${idx}" class="accordion-collapse collapse show"><div class="accordion-body">
-                    <div class="row g-3">
-                        <div class="col-md-8"><label class="control-label">Title <span class="required-star">*</span></label>
-                            <input type="text" name="magazines[${idx}][title]" class="form-control mag-title-input" placeholder="Magazine title" required /></div>
-                        <div class="col-md-4"><label class="control-label">Image</label>
-                            <input type="file" name="magazines[${idx}][image]" class="form-control" accept="image/*" />
-                            <div class="field-hint">Max 4MB</div></div>
-                        <div class="col-12"><label class="control-label">Description <span class="required-star">*</span></label>
-                            <textarea id="mag_desc_n${idx}" name="magazines[${idx}][description]" rows="4" class="form-control" placeholder="Magazine description..." required></textarea></div>
-                    </div>
-                    <div class="d-flex justify-content-end mt-3"><button type="button" class="btn btn-sm btn-outline-danger remove-magazine-section"><i class="ti ti-trash me-1"></i> Remove this item</button></div>
-                </div></div></div>`;
-        }
-
-        function buildFaqItem(idx) {
+function buildFaqItem(idx) {
             return `<div class="accordion-item faq-section" id="faq-item-n${idx}">
                 <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-n${idx}" aria-expanded="true">
                     <span class="badge me-2 text-dark" style="background:#fbbf24;min-width:26px">Q</span>
@@ -811,7 +714,6 @@
         }
 
         /* ─── Add buttons ─── */
-        $('#addMagazineBtn').on('click', function () { $('#magazine-accordion').append(buildMagItem(newMagIdx)); initTinyMCE(`#mag_desc_n${newMagIdx}`, { height: 200 }); newMagIdx++; updateMagCount(); });
         $('#addFaqBtn').on('click', function ()      { $('#faq-accordion').append(buildFaqItem(newFaqIdx)); initTinyMCE(`#faq_ans_n${newFaqIdx}`, { height: 180, menubar: false }); newFaqIdx++; updateFaqCount(); });
         $('#addCoreServiceBtn').on('click', function () { $('#core-accordion').append(buildCoreItem(newCoreIdx)); initTinyMCE(`#core_desc_n${newCoreIdx}`, { height: 180 }); newCoreIdx++; updateCoreCount(); });
         $('#addProcessBtn').on('click', function ()  { $('#process-accordion').append(buildProcessItem(newProcessIdx)); initTinyMCE(`#process_desc_n${newProcessIdx}`, { height: 180 }); newProcessIdx++; updateProcessCount(); });
@@ -832,28 +734,11 @@
             });
         }
 
-        $(document).on('click', '.remove-magazine-section', function () { confirmRemove('Remove magazine item?', $(this).closest('.accordion-item').find('.mag-item-title').text(), $(this).closest('.accordion-item'), updateMagCount); });
         $(document).on('click', '.remove-faq-section',      function () { confirmRemove('Remove FAQ?', $(this).closest('.accordion-item').find('.faq-item-question').text(), $(this).closest('.accordion-item'), updateFaqCount); });
         $(document).on('click', '.remove-process-section',  function () { confirmRemove('Remove process step?', $(this).closest('.accordion-item').find('.process-item-title').text(), $(this).closest('.accordion-item'), updateProcessCount); });
         $(document).on('click', '.remove-core-section', function () {
             if ($('#core-accordion .accordion-item').length <= 1) { Toast.fire({ icon: 'warning', title: 'At least one core service is required.' }); return; }
             confirmRemove('Remove core service?', $(this).closest('.accordion-item').find('.core-item-title').text(), $(this).closest('.accordion-item'), updateCoreCount);
-        });
-
-        /* ─── Delete gallery image ─── */
-        $(document).on('click', '.delete-gallery-img', function () {
-            const id = $(this).data('id');
-            Swal.fire({ title: 'Delete image?', text: 'This cannot be undone.', icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626', confirmButtonText: 'Yes, delete it' })
-            .then(function (r) {
-                if (r.isConfirmed) {
-                    $.ajax({
-                        url: "{{ route('service-group.delete-gallery-image') }}", method: 'POST',
-                        data: { id: id },
-                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                        success: function (res) { if (res.success) { $(`#gallery-img-${id}`).remove(); Toast.fire({ icon: 'success', title: 'Image deleted.' }); } }
-                    });
-                }
-            });
         });
 
         /* ─── AJAX Submit ─── */
@@ -870,10 +755,13 @@
 
             /* Append sidebar fields (outside the form element) */
             if ($('#featured_toggle').is(':checked')) formData.append('featured', '1');
+            if ($('#show_testimonials_toggle').is(':checked')) formData.append('show_testimonials', '1');
             const agentVal = $('#agent_id').val();
             if (agentVal) formData.append('agent_id', agentVal);
             formData.append('inq_officer_name',  $('#inq_officer_name').val()  || '');
             formData.append('inq_officer_phone', $('#inq_officer_phone').val() || '');
+            formData.append('published_date', $('#published_date').val() || '');
+            formData.append('updated_date',   $('#updated_date').val()   || '');
             const annVal = $('#announcement_id').val();
             if (annVal) formData.append('announcement_id', annVal);
 

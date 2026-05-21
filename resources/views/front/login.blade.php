@@ -223,7 +223,6 @@
                 <hr class="divider mt-4 mb-3">
                 <div class="footer-links">
                     <a href="{{ route('home') }}"><i class="bi bi-house me-1"></i>Back to Website</a>
-                    <a href="{{ route('register') }}"><i class="bi bi-person-plus me-1"></i>Create Account</a>
                 </div>
             </div>
         </div>

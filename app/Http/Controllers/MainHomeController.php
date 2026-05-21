@@ -33,6 +33,7 @@ use App\Mail\ServiceInquiryMail;
 use App\Mail\CustomerInquiryConfirmationMail;
 use App\Models\Brand;
 use App\Models\BrandHero;
+use App\Models\TestimonialSetting;
 
 
 
@@ -40,7 +41,7 @@ class MainHomeController extends Controller
 {
     public function index()
     {
-        $categories = MainCategory::with(['categories.services', 'allCategories.services'])->get();
+        $categories = MainCategory::with(['categories.services', 'allCategories.services'])->orderBy('sort_order')->get();
         $homeSliders = HomeSlider::where('status', 'active')->get();
         $blogs = Blog::where('featured', true)->take(3)->get();
         // $featuredServices = Service::where('featured', true)->take(3)->get();
@@ -143,10 +144,10 @@ class MainHomeController extends Controller
     public function blog()
     {
         $blogs = Blog::whereDoesntHave('tags', function($query) {
-            $query->where('name', 'News')->orWhere('name', 'news');
+            $query->where('name', 'AHG Updates');
         })->with('tags')->get();
-        
-        $tags = Tag::where('name', '!=', 'News')->where('name', '!=', 'news')->get();
+
+        $tags = Tag::where('name', '!=', 'AHG Updates')->get();
         $projects = Project::with('projects_images', 'projects_videos', 'projects_documents', 'project_category')->latest()->take(3)->get();
         $all_services = Service::published()->get();
         return view('front.new-blog', compact('blogs', 'tags', 'projects', 'all_services'));
@@ -155,10 +156,10 @@ class MainHomeController extends Controller
     public function newsMedia()
     {
         $blogs = Blog::whereHas('tags', function($query) {
-            $query->where('name', 'News')->orWhere('name', 'news');
+            $query->where('name', 'AHG Updates');
         })->with('tags')->latest()->get();
-        
-        $tags = Tag::where('name', 'News')->orWhere('name', 'news')->get();
+
+        $tags = Tag::where('name', 'AHG Updates')->get();
         $projects = Project::with('projects_images', 'projects_videos', 'projects_documents', 'project_category')->latest()->take(3)->get();
         $all_services = Service::published()->get();
         return view('front.news-media', compact('blogs', 'tags', 'projects', 'all_services'));
@@ -190,7 +191,8 @@ class MainHomeController extends Controller
         $about_quotes = about_quote::latest()->get();
         $eco_systems = about_eco::latest()->take(6)->get();
         $clients = \App\Models\client::latest()->get();
-        return view('front.new-about', compact('about_us', 'about_content', 'about_quotes', 'eco_systems', 'clients'));
+        $brands = Brand::latest()->get();
+        return view('front.new-about', compact('about_us', 'about_content', 'about_quotes', 'eco_systems', 'clients', 'brands'));
 
 
         // return view('front.new-about', compact('about_content'));
@@ -218,8 +220,19 @@ class MainHomeController extends Controller
     public function project()
     {
         $projects = Project::with('projects_images', 'projects_videos', 'projects_documents', 'project_category')->get();
+        $featuredProject = Project::with(['projects_images', 'project_category'])
+            ->where('featured', true)->first()
+            ?? Project::with(['projects_images', 'project_category'])->latest()->first();
+
+        $featuredServices = collect();
+        if ($featuredProject && !empty($featuredProject->service_ids)) {
+            $featuredServices = Service::whereIn('id', $featuredProject->service_ids)->get();
+        }
+
         $all_services = Service::published()->get();
-        return view('front.projects', compact('projects', 'all_services'));
+        $latest_blogs = Blog::latest()->take(3)->get();
+        $clients = \App\Models\client::latest()->get();
+        return view('front.projects', compact('projects', 'featuredProject', 'featuredServices', 'all_services', 'latest_blogs', 'clients'));
     }
 
     public function singleProject($slug)
@@ -231,8 +244,13 @@ class MainHomeController extends Controller
             ->take(3)
             ->get();
 
+        $projectServices = collect();
+        if (!empty($project->service_ids)) {
+            $projectServices = Service::whereIn('id', $project->service_ids)->get();
+        }
+
         $all_services = Service::published()->get();
-        return view('front.project_details', compact('project', 'relatedProjects', 'all_services'));
+        return view('front.project_details', compact('project', 'relatedProjects', 'all_services', 'projectServices'));
     }
 
     // public function allServices(){
@@ -258,9 +276,66 @@ class MainHomeController extends Controller
                     $query->where('name', 'like', '%' . $search . '%');
                 }
             },
-        ])->get();
+        ])->orderBy('sort_order')->get();
 
         return view('front.all-services', ['main_categories' => $categories, 'search' => $search]);
+    }
+
+    public function testimonials()
+    {
+        $testimonials = Testimonial::where('approved', true)->latest()->get();
+        $settings     = TestimonialSetting::current();
+        $avgRating    = $testimonials->avg('rating') ?? 0;
+        $totalCount   = $testimonials->count();
+        $breakdown    = [];
+        for ($i = 5; $i >= 1; $i--) {
+            $count = $testimonials->where('rating', $i)->count();
+            $breakdown[$i] = ['count' => $count, 'pct' => $totalCount ? round($count / $totalCount * 100) : 0];
+        }
+        $all_services = Service::published()->get();
+        return view('front.testimonials', compact('testimonials', 'settings', 'avgRating', 'totalCount', 'breakdown', 'all_services'));
+    }
+
+    public function ourClients()
+    {
+        $clients = \App\Models\client::latest()->get();
+        $all_services = Service::published()->get();
+        return view('front.our-clients', compact('clients', 'all_services'));
+    }
+
+    public function feedbackForm()
+    {
+        $all_services = Service::published()->get();
+        return view('front.share-experience', compact('all_services'));
+    }
+
+    public function submitTestimonial(Request $request)
+    {
+        $request->validate([
+            'author_name' => 'required|string|max:255',
+            'email'       => 'required|email|max:255',
+            'service_id'  => 'nullable|exists:services,id',
+            'rating'      => 'required|integer|min:1|max:5',
+            'content'     => 'required|string|max:2000',
+        ]);
+
+        Testimonial::create([
+            'author_name' => $request->author_name,
+            'email'       => $request->email,
+            'service_id'  => $request->service_id ?: null,
+            'rating'      => $request->rating,
+            'content'     => $request->content,
+            'position'    => $request->position ?? '',
+            'company_name'=> $request->company_name ?? '',
+            'author_image'=> '',
+            'approved'    => false,
+            'source'      => 'customer',
+        ]);
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Thank you! Your review has been submitted and is pending approval.']);
+        }
+        return back()->with('success', 'Thank you! Your review has been submitted and is pending approval.');
     }
 
     public function submitInquiry(Request $request)

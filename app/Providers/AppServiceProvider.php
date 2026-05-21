@@ -38,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
                 $eagerLoads['allCategories.serviceGroups'] = fn($q) => $q->where('status', 'published');
             }
 
-            View::share('main_categories', MainCategory::with($eagerLoads)->get());
+            View::share('main_categories', MainCategory::with($eagerLoads)->orderBy('sort_order')->get());
         }
 
         // Share service groups with all views

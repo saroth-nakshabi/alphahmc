@@ -1,5 +1,24 @@
 @extends('front/layout-2')
 
+@push('page_title', 'Healthcare Management Updates & Insights | Alpha Health Group')
+
+@section('meta_description', 'Explore healthcare management updates, leadership guides, DOH compliance insights, and operational excellence strategies from Alpha Health Group experts in the UAE and GCC.')
+
+@push('meta')
+    <meta name="keywords" content="healthcare management updates, healthcare leaders guide, DOH compliance UAE, healthcare quality assurance, GCC healthcare insights, hospital management, healthcare consulting UAE, patient safety, healthcare operational excellence, Alpha Health Group blog">
+    <meta name="author" content="Alpha Health Group">
+    <meta name="robots" content="index, follow">
+@endpush
+
+@push('og_tags')
+    <meta property="og:title" content="Healthcare Management Updates & Insights | Alpha Health Group" />
+    <meta property="og:description" content="Expert articles and guides on healthcare management, DOH compliance, leadership strategies, and operational excellence for healthcare professionals across the UAE and GCC." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ url('/healthcare-management-update-insights') }}" />
+    <meta name="twitter:title" content="Healthcare Management Updates & Insights | Alpha Health Group" />
+    <meta name="twitter:description" content="Expert articles and guides on healthcare management, DOH compliance, leadership strategies, and operational excellence across the UAE and GCC." />
+@endpush
+
 @section('content')
     <style>
         :root {
@@ -25,10 +44,9 @@
             min-height: 100vh;
             display: flex;
             align-items: center;
-            padding-top: 150px;
+            padding-top: 220px;
             color: white;
             text-align: left;
-            /* Changed to left align to match project page */
         }
 
         .hero-title {
@@ -67,24 +85,31 @@
             color: black;
         }
 
-        .service-nav {
+        /* ── Bottom breadcrumb (shared style) ─────────────────── */
+        .hero-breadcrumb {
             position: absolute;
-            bottom: 50px;
+            bottom: 40px;
             left: 0;
             right: 0;
-            font-size: 0.9rem;
+            font-size: 0.82rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.2px;
+            z-index: 10;
         }
-
-        .service-nav a {
-            color: white !important;
+        .hero-breadcrumb a {
+            color: rgba(255,255,255,0.75) !important;
+            text-decoration: none;
             font-weight: 600;
-            transition: opacity 0.3s;
+            transition: color 0.25s ease;
         }
-
-        .service-nav a:hover {
-            opacity: 0.7;
+        .hero-breadcrumb a:hover { color: #ffffff !important; }
+        .hero-breadcrumb .bc-sep {
+            color: rgba(255,255,255,0.4);
+            margin: 0 8px;
+        }
+        .hero-breadcrumb .bc-current {
+            color: rgba(255,255,255,0.95);
+            font-weight: 700;
         }
 
         @media (max-width: 768px) {
@@ -105,10 +130,7 @@
 
         /* BLOG SUMMARY (MATCHING PROJECT SUMMARY) */
         .blog-page-wrapper {
-            background-image: linear-gradient(rgb(255 255 255 / 10%), rgb(255 255 255 / 17%));
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background-color: #f8fafc;
             padding-bottom: 50px;
         }
 
@@ -321,49 +343,59 @@
 
         /* BLOG GRID CARDS */
         .blog-listing-section {
-            padding: 120px 0;
+            padding: 80px 0 100px;
             background: white;
         }
 
         .listing-header {
             text-align: center;
-            margin-bottom: 80px;
+            margin-bottom: 50px;
         }
 
         .listing-header h2 {
             font-family: 'Outfit', sans-serif;
-            font-size: 3.5rem;
+            font-size: 2.8rem;
             font-weight: 800;
             color: var(--primary-navy);
-            margin-bottom: 20px;
+            margin-bottom: 12px;
         }
 
         .listing-header p {
-            font-size: 1.2rem;
+            font-size: 1.05rem;
             color: var(--text-gray);
-            max-width: 600px;
+            max-width: 520px;
             margin: 0 auto;
         }
 
         .blog-filter-nav {
             display: flex;
-            justify-content: center;
-            gap: 12px;
+            align-items: center;
+            gap: 8px;
             margin-bottom: 60px;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding-bottom: 4px;
+        }
+
+        .blog-filter-nav::-webkit-scrollbar {
+            display: none;
         }
 
         .blog-filter-btn {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            padding: 14px 35px;
+            padding: 9px 22px;
             border-radius: 100px;
             font-weight: 700;
             color: var(--primary-navy);
             transition: var(--transition);
             cursor: pointer;
-            font-size: 0.95rem;
-            letter-spacing: 0.5px;
+            font-size: 0.82rem;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .blog-filter-btn.active,
@@ -371,8 +403,8 @@
             background: var(--primary-navy);
             color: white;
             border-color: var(--primary-navy);
-            box-shadow: 0 15px 30px rgba(0, 51, 88, 0.15);
-            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 51, 88, 0.15);
+            transform: translateY(-1px);
         }
 
         .blog-grid {
@@ -432,7 +464,7 @@
         }
 
         .blog-card-body {
-            padding: 40px;
+            padding: 28px 28px 28px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
@@ -521,17 +553,13 @@
         /* CTA SECTION */
         .conversation-cta-section {
             position: relative;
-            padding: 140px 0;
-            background: #066D77;
-            /* background-image: linear-gradient(rgba(0, 51, 88, 0.85), rgba(0, 51, 88, 0.85)),
-                url('{{ asset('public/front-new/assets/images/service_details/service-details-1.webp') }}'); */
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            padding: 100px 0;
+            background: #ffffff;
+            border-top: 1px solid #f1f5f9;
+            border-bottom: 1px solid #f1f5f9;
             text-align: center;
-            color: #fff;
             overflow: hidden;
-            margin: 80px 0;
+            margin: 0;
         }
 
         .cta-msg {
@@ -539,37 +567,39 @@
             font-size: 2.5rem;
             line-height: 1.4;
             font-weight: 600;
-            max-width: 1100px;
-            margin: 0 auto 50px;
+            max-width: 900px;
+            margin: 0 auto 40px;
+            color: #0f172a;
         }
 
         .cta-msg span {
-            color: #d13b40;
+            color: #066D77;
             font-weight: 800;
         }
 
         .btn-conversation {
-            display: inline-block;
-            padding: 22px 55px;
-            background: #e6e6e6;
-            color: #000000;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 44px;
+            background: #0f172a;
+            color: #ffffff;
             border-radius: 100px;
-            font-weight: 800;
+            font-weight: 700;
             text-decoration: none;
             transition: var(--transition);
-            box-shadow: 0 15px 40px rgba(230, 230, 230, 0.4);
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            font-size: 1.1rem;
-            border: none;
+            font-size: 0.9rem;
+            border: 2px solid #0f172a;
             cursor: pointer;
         }
 
         .btn-conversation:hover {
-            transform: translateY(-8px) scale(1.05);
-            background: #000000;
-            color: #e6e6e6;
-            box-shadow: 0 25px 50px rgba(230, 230, 230, 0.5);
+            background: transparent;
+            color: #0f172a;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
         }
 
         /* RECENT PROJECTS (FOOTER SECTION) */
@@ -778,12 +808,23 @@
                 padding: 40px;
             }
 
-            .featured-card-premium {
-                grid-template-columns: 1fr;
+            .featured-box {
+                flex-direction: column;
+                min-height: unset;
+            }
+
+            .featured-image-side {
+                flex: none;
+                width: 100%;
+                height: 340px;
             }
 
             .featured-content-side {
                 padding: 50px;
+            }
+
+            .featured-title {
+                font-size: 2.2rem;
             }
 
             .projects-split-wrapper {
@@ -817,6 +858,79 @@
                 height: 80px;
                 margin-left: 20px;
             }
+
+            .featured-image-side {
+                height: 260px;
+            }
+
+            .featured-content-side {
+                padding: 32px 24px;
+            }
+
+            .featured-title {
+                font-size: 1.8rem;
+                margin-bottom: 16px;
+            }
+
+            .featured-desc {
+                font-size: 1rem;
+                margin-bottom: 28px;
+            }
+
+            .featured-meta-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                margin-bottom: 30px;
+                padding-top: 24px;
+            }
+
+            .btn-featured-cta {
+                padding: 14px 28px;
+                font-size: 0.9rem;
+                gap: 10px;
+            }
+        }
+        @media (max-width: 479px) {
+            .featured-image-side { height: 220px; }
+            .featured-title      { font-size: 1.55rem; }
+            .featured-badge      { font-size: 0.7rem; padding: 5px 14px; margin-bottom: 18px; }
+        }
+
+        /* ── Blog listing mobile ───────────────────────────────── */
+        @media (max-width: 767px) {
+            .blog-listing-section { padding: 52px 0 60px; }
+            .listing-header { margin-bottom: 32px; }
+            .listing-header h2 { font-size: 1.9rem; }
+            .listing-header p  { font-size: 0.95rem; }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .blog-card-img   { height: 210px; }
+            .blog-card-body  { padding: 22px 20px; }
+            .blog-card-body h3 { font-size: 1.2rem; }
+            .blog-excerpt    { font-size: 0.9rem; }
+
+            .cta-msg { font-size: 1.5rem; }
+            .btn-conversation { padding: 14px 28px; font-size: 0.8rem; }
+
+            /* projects split */
+            .projects-split-wrapper { flex-direction: column; border-radius: 24px; }
+            .projects-info-panel    { padding: 36px 28px; }
+            .projects-info-panel h2 { font-size: 2rem; }
+            .projects-list-panel    { padding: 24px 20px; }
+            .project-row-item h4    { font-size: 1.1rem; }
+            .project-row-thumb      { width: 72px; height: 72px; margin-left: 14px; border-radius: 12px; }
+        }
+
+        /* ── Hero mobile ───────────────────────────────────────── */
+        @media (max-width: 767px) {
+            .blog-hero { padding-top: 140px; margin-top: -85px; min-height: 70vh; }
+            .hero-title { font-size: 2.4rem; letter-spacing: -1px; }
+            .hero-description { font-size: 1rem; }
+            .hero-breadcrumb { bottom: 24px; font-size: 0.75rem; }
         }
     </style>
 
@@ -824,22 +938,19 @@
     <section class="blog-hero">
         <div class="container">
             <div class="banner-text">
-                <h1 class="hero-title">Insights & Blog</h1>
+                <h1 class="hero-title">Healthcare Management Updates & Insights</h1>
                 <p class="hero-description">
-                    Discover a gallery of our most impactful insights and stories. From complex technology transformations
-                    to
-                    industry-leading perspectives, explore how Alpha Innovations delivers excellence across various
-                    sectors worldwide.
+                    Your go-to resource for healthcare leaders — covering management updates, DOH compliance guidance, operational excellence strategies, and industry trends shaping healthcare across the UAE and GCC.
                 </p>
                 <a href="#" class="hero-btn" data-bs-toggle="modal" data-bs-target="#inquiryModal">Contact Us</a>
             </div>
-            <div class="service-nav container">
-                <a class="text-decoration-none" href="{{ route('home') }}">Home</a>
-                <span class="mx-2 text-white-50">></span>
-                <a class="text-decoration-none" href="#">Insights</a>
-                <span class="mx-2 text-white-50">></span>
-                <a class="text-decoration-none" href="#">Blog</a>
-            </div>
+            <nav class="hero-breadcrumb container" aria-label="Breadcrumb">
+                <a href="{{ route('home') }}">Home</a>
+                <span class="bc-sep">›</span>
+                <a href="#">Insights</a>
+                <span class="bc-sep">›</span>
+                <span class="bc-current">Healthcare Management Updates</span>
+            </nav>
         </div>
     </section>
 
@@ -927,8 +1038,8 @@
         <section class="blog-listing-section">
             <div class="container">
                 <div class="listing-header">
-                    <h2>Explore Insights</h2>
-                    <p>Browse our latest blog posts filtered by your areas of interest.</p>
+                    <h2>Healthcare Management Updates</h2>
+                    <p>Browse expert articles, leadership guides, and healthcare management insights filtered by your areas of interest.</p>
                 </div>
 
                 {{-- Filter Navigation --}}

@@ -568,6 +568,31 @@
                     </div>
                 </div>
 
+                {{-- Dates card --}}
+                <div class="sidebar-card">
+                    <div class="sidebar-card-header">
+                        <i class="ti ti-calendar"></i> Publication Dates
+                    </div>
+                    <div class="sidebar-card-body">
+                        <div class="mb-3">
+                            <label class="control-label mb-1" for="published_date">Published Date <span class="required-star">*</span></label>
+                            <input type="date" id="published_date" name="published_date"
+                                class="form-control form-control-sm"
+                                form="edit_form"
+                                value="{{ ($service->published_date ?? $service->created_at)->format('Y-m-d') }}" required />
+                            <small class="field-hint">Date shown as "Published" on the service page.</small>
+                        </div>
+                        <div class="mb-1">
+                            <label class="control-label mb-1" for="updated_date">Last Updated Date</label>
+                            <input type="date" id="updated_date" name="updated_date"
+                                class="form-control form-control-sm"
+                                form="edit_form"
+                                value="{{ ($service->updated_date ?? $service->updated_at)->format('Y-m-d') }}" />
+                            <small class="field-hint">Date shown as "Updated" on the service page.</small>
+                        </div>
+                    </div>
+                </div>
+
                 {{-- Options card --}}
                 <div class="sidebar-card">
                     <div class="sidebar-card-header">
@@ -580,11 +605,22 @@
                                 <div class="field-hint mb-0">Show in featured section on homepage</div>
                             </div>
                             <div class="form-check form-switch mb-0 ms-3">
-                                {{-- This checkbox must be submitted with edit_form --}}
                                 <input type="checkbox" name="featured" class="form-check-input"
                                     value="1" id="featured_toggle" role="switch"
                                     form="edit_form"
                                     {{ $service->featured ? 'checked' : '' }} />
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between py-1 mt-2 pt-2 border-top">
+                            <div>
+                                <div class="fw-semibold" style="font-size:.875rem">Show Testimonials</div>
+                                <div class="field-hint mb-0">Display client reviews on this service page</div>
+                            </div>
+                            <div class="form-check form-switch mb-0 ms-3">
+                                <input type="checkbox" name="show_testimonials" class="form-check-input"
+                                    value="1" id="show_testimonials_toggle" role="switch"
+                                    form="edit_form"
+                                    {{ $service->show_testimonials ? 'checked' : '' }} />
                             </div>
                         </div>
                     </div>
@@ -947,27 +983,54 @@
                 error: function (xhr) {
                     Swal.close();
 
+                    let title    = 'Could not save service';
                     let errorMsg = 'Something went wrong. Please try again.';
                     let listHtml = '';
-                    if (xhr.responseJSON) {
-                        if (xhr.responseJSON.errors) {
-                            $.each(xhr.responseJSON.errors, function (key, msgs) {
-                                const msg = Array.isArray(msgs) ? msgs[0] : msgs;
-                                listHtml += '<li>' + msg + '</li>';
-                                $('[name="' + key + '"], [name="' + key + '[]"]').addClass('is-invalid');
-                            });
-                            errorMsg = 'Please fix the errors below.';
-                        } else if (xhr.responseJSON.message) {
-                            errorMsg = xhr.responseJSON.message;
-                            listHtml = '<li>' + errorMsg + '</li>';
-                        }
+
+                    if (xhr.status === 419) {
+                        title    = 'Session Expired';
+                        errorMsg = 'Your session has expired. Please log in again.';
+                        listHtml = '<li><a href="{{ route('login') }}">Click here to log in again</a>.</li>';
+                    } else if (xhr.status === 403) {
+                        title    = 'Permission Denied';
+                        errorMsg = 'You do not have permission to perform this action.';
+                        listHtml = '<li>' + errorMsg + '</li>';
+                    } else if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                        title    = 'Validation Errors';
+                        errorMsg = 'Please fix the errors below.';
+                        $.each(xhr.responseJSON.errors, function (key, msgs) {
+                            const msg = Array.isArray(msgs) ? msgs[0] : msgs;
+                            listHtml += '<li>' + msg + '</li>';
+                            $('[name="' + key + '"], [name="' + key + '[]"]').addClass('is-invalid');
+                        });
+                    } else if (xhr.status >= 500) {
+                        title    = 'Server Error';
+                        errorMsg = xhr.responseJSON?.message || 'An unexpected server error occurred. Please try again or contact support.';
+                        listHtml = '<li>' + errorMsg + '</li>';
+                    } else if (xhr.status === 0) {
+                        title    = 'Network Error';
+                        errorMsg = 'Could not reach the server. Please check your internet connection and try again.';
+                        listHtml = '<li>' + errorMsg + '</li>';
+                    } else if (xhr.responseJSON?.message) {
+                        errorMsg = xhr.responseJSON.message;
+                        listHtml = '<li>' + errorMsg + '</li>';
+                    } else {
+                        listHtml = '<li>' + errorMsg + '</li>';
                     }
 
-                    /* Inline notification */
+                    /* Inline sidebar notification */
                     $notif.removeClass('d-none alert-success')
                         .addClass('alert alert-danger')
                         .html('<i class="ti ti-alert-circle me-1"></i> ' + errorMsg);
-                    setTimeout(function () { $notif.addClass('d-none'); }, 8000);
+
+                    /* SweetAlert popup */
+                    Swal.fire({
+                        icon: 'error',
+                        title: title,
+                        html: '<ul style="text-align:left;margin:0;padding-left:1.2rem">' + listHtml + '</ul>',
+                        confirmButtonColor: '#dc3545',
+                        customClass: { popup: 'swal-wide' }
+                    });
 
                     if (listHtml) {
                         $('#server-error-list').html(listHtml);

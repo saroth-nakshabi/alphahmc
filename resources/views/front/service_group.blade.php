@@ -116,6 +116,36 @@
             z-index: 10;
         }
 
+        /* ── Bottom breadcrumb (shared style) ─────────────────── */
+        .hero-breadcrumb {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            z-index: 10;
+        }
+        .hero-breadcrumb a {
+            color: rgba(255,255,255,0.75) !important;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.25s ease;
+        }
+        .hero-breadcrumb a:hover { color: #ffffff !important; }
+        .hero-breadcrumb .bc-sep {
+            color: rgba(255,255,255,0.4);
+            margin: 0 8px;
+        }
+        .hero-breadcrumb .bc-current {
+            color: rgba(255,255,255,0.95);
+            font-weight: 700;
+        }
+        @media (max-width: 767px) {
+            .hero-breadcrumb { bottom: 24px; font-size: 0.75rem; }
+        }
+
         .hero-title {
             font-size: 4.5rem !important;
             line-height: 1.05;
@@ -1197,7 +1227,7 @@
                 width: 100%;
                 gap: 30px;
             }
-            .mag-image-container{
+            .mag-image-container {
                 max-height: 400px;
             }
 
@@ -1207,17 +1237,32 @@
             }
 
             .mag-content-side {
-                padding: 60px 25px;
+                padding: 40px 20px 60px;
+                height: auto;
+                min-height: unset;
             }
 
             .mag-swiper-container {
                 overflow: hidden !important;
                 touch-action: pan-y;
+                padding-right: 0;
+            }
+
+            .mag-swiper-container .swiper-wrapper {
+                align-items: stretch;
+            }
+
+            .swiper-slide {
+                height: auto;
             }
 
             .mag-card {
-                min-height: auto;
-                margin-left: 40px;
+                min-height: 320px;
+                margin-left: 0;
+                width: 100%;
+                padding: 32px 24px;
+                border-radius: 20px;
+                transform: none !important;
             }
 
             .mag-card-eyebrow {
@@ -1229,7 +1274,11 @@
                 font-size: 0.95rem;
                 overflow: visible;
             }
+        }
 
+        @media (max-width: 575px) {
+            .mag-card { min-height: 260px; padding: 24px 20px; }
+            .mag-image-side { height: 280px; }
         }
     </style>
 
@@ -1247,6 +1296,10 @@
                         <div class="hero-desc-wrapper">
                             {!! $service->content !!}
                         </div>
+                        <div class="hero-meta mt-4" style="display: flex; gap: 25px; font-size: 0.9rem; color: rgba(255,255,255,0.8); border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; max-width: 500px;">
+                            <span title="Date this service group was listed">Published: {{ ($service->published_date ?? $service->created_at)->format('M d, Y') }}</span>
+                            <span title="Date this service group was last modified">Updated: {{ ($service->updated_date ?? $service->updated_at)->format('M d, Y') }}</span>
+                        </div>
                         <div class="hero-actions">
                             <button type="button"
     class="glass-btn"
@@ -1258,6 +1311,15 @@
                     </div>
                 </div>
             </div>
+            <nav class="hero-breadcrumb" aria-label="Breadcrumb">
+                <div class="container">
+                    <a href="{{ route('home') }}">Home</a>
+                    <span class="bc-sep">›</span>
+                    <a href="{{ url('/services') }}">Services</a>
+                    <span class="bc-sep">›</span>
+                    <span class="bc-current">{{ $service->name }}</span>
+                </div>
+            </nav>
         </section>
 
         <style>
@@ -1393,8 +1455,10 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
         </div> --}}
 
         <div class="cta-group">
-          <a href="#services" class="btn-primary">Explore Services</a>
-          {{-- <a href="/about" class="btn-outline">Our Track Record</a> --}}
+          <a href="#services" class="btn-explore-sg">
+            <span>Explore Services</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
         </div>
       </div>
 
@@ -1497,188 +1561,226 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
 </section>
 
 <style>
-    :root {
-  --primary-teal: #066e78;
-  --accent-red: #cf2732;
-  --bg-light: #e6e6e6;
-  --white: #ffffff;
-  --text-dark: #1a2b2c;
-  --text-muted: #546263;
+/* ── PREMIUM INTRO SECTION ─────────────────────────────────────── */
+.premium-intro.light-theme {
+    background: #ffffff;
+    color: #1a2b2c;
+    padding: 100px 0;
+    font-family: 'Inter', sans-serif;
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+    position: relative;
+    overflow: hidden;
 }
 
-.premium-intro.light-theme {
-  background-color: var(--bg-light);
-  color: var(--text-dark);
-  padding: 100px 0;
-  font-family: 'Inter', sans-serif;
+/* Subtle teal wash blob behind the left content */
+.premium-intro.light-theme::before {
+    content: '';
+    position: absolute;
+    top: -120px; left: -180px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(6,109,119,0.06) 0%, transparent 70%);
+    pointer-events: none;
 }
 
 .intro-layout {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 80px;
-  align-items: center;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 80px;
+    align-items: center;
 }
 
-/* Typography & Colors */
-.eyebrow {
-  color: var(--accent-red);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-size: 0.8rem;
-  font-weight: 800;
-  margin-bottom: 15px;
-  display: block;
+/* Left panel — vertical accent + body copy */
+.intro-content {
+    position: relative;
+    padding-left: 28px;
 }
 
-.display-title {
-  font-size: clamp(2.2rem, 4vw, 3rem);
-  line-height: 1.1;
-  font-weight: 700;
-  margin-bottom: 25px;
-}
-
-.display-title em {
-  font-family: 'Libre Baskerville', serif;
-  font-style: italic;
-  color: var(--primary-teal);
-  font-weight: 400;
-}
-
-.primary-text {
-  color: var(--primary-teal);
+.intro-content::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 4px; bottom: 4px;
+    width: 3px;
+    background: linear-gradient(180deg, #066D77 0%, #cf2732 100%);
+    border-radius: 3px;
 }
 
 .lead-text {
-  font-size: 1.1rem;
-  color: var(--text-muted);
-  line-height: 1.6;
-  margin-bottom: 35px;
-  max-width: 520px;
+    font-size: 1.1rem;
+    color: #374151;
+    line-height: 1.85;
+    margin-bottom: 36px;
+    max-width: 540px;
 }
 
-/* Buttons */
-.btn-primary {
-  background: var(--primary-teal);
-  color: white;
-  padding: 18px 35px;
-  text-decoration: none;
-  font-weight: 600;
-  border-radius: 4px;
-  display: inline-block;
-  transition: transform 0.3s ease, background 0.3s ease;
+.lead-text p  { margin-bottom: 1em; }
+.lead-text p:last-child { margin-bottom: 0; }
+.lead-text strong { color: #066D77; font-weight: 700; }
+.lead-text ul { padding-left: 20px; margin-bottom: 1em; }
+.lead-text li { margin-bottom: 6px; }
+
+/* CTA button — compact pill with arrow */
+.btn-explore-sg {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #066D77;
+    color: #ffffff;
+    padding: 11px 22px;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    border: 2px solid #066D77;
+    transition: all 0.3s ease;
+    width: fit-content;
 }
 
-.btn-primary:hover {
-  background: #04525a; /* Darker Teal */
-  color:white;
-  transform: translateY(-2px);
+.btn-explore-sg i {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
 }
 
-.btn-outline {
-  color: var(--primary-teal);
-  text-decoration: none;
-  font-weight: 600;
-  margin-left: 25px;
-  border-bottom: 2px solid transparent;
-  transition: 0.3s;
+.btn-explore-sg:hover {
+    background: transparent;
+    color: #066D77;
+    box-shadow: 0 6px 20px rgba(6,109,119,0.22);
+    transform: translateY(-2px);
 }
 
-.btn-outline:hover {
-  border-color: var(--accent-red);
-}
+.btn-explore-sg:hover i { transform: translateX(5px); }
 
-/* Auto-Scroll Customization */
+/* ── RIGHT PANEL: Feature cards ───────────────────────────────── */
+.intro-visual { position: relative; }
+
 .scroll-wrapper {
-  height: 450px;
-  overflow: hidden;
-  position: relative;
-  mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+    height: 420px;
+    overflow: hidden;
+    position: relative;
+    mask-image: linear-gradient(to bottom, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 8%, black 92%, transparent);
 }
 
 .scroll-track {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  animation: scrollVertical 50s linear infinite;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    animation: scrollVertical 45s linear infinite;
 }
 
-.scroll-track.no-scroll {
-  animation: none;
-}
-
-.scroll-track:hover {
-  animation-play-state: paused;
-}
+.scroll-track.no-scroll { animation: none; }
+.scroll-track:hover     { animation-play-state: paused; }
 
 @keyframes scrollVertical {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-50%); }
+    0%   { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
 }
 
-/* Cards */
+/* Individual card */
 .feature-card {
-  /* background: var(--white); */
-  padding: 20px;
-  /* border-left: 4px solid var(--primary-teal); */
-  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-  transition: 0.3s ease;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-left: 3px solid #066D77;
+    border-radius: 12px;
+    padding: 18px 22px;
+    transition: all 0.3s ease;
+    cursor: default;
 }
 
 .feature-card:hover {
-  border-left-color: var(--accent-red);
-  transform: translateX(10px);
+    background: #ffffff;
+    border-left-color: #cf2732;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.07);
+    transform: translateX(6px);
 }
 
 .card-header {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
 }
 
 .card-num {
-  font-weight: 800;
-  color: #066D77;
-  /* color: var(--accent-red); */
-  font-size: 0.9rem;
-  /* background: rgba(207, 39, 50, 0.1); */
-  padding: 4px 8px;
-  border-radius: 4px;
+    font-weight: 800;
+    color: #066D77;
+    font-size: 0.72rem;
+    background: #e0f2f1;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
 }
 
 .feature-card h4 {
-  margin: 0;
-  color: black;
-  /* color: var(--primary-teal); */
-  font-size: 1.1rem;
+    margin: 0;
+    color: #111827;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.35;
 }
 
 .feature-card p {
-  font-size: 0.95rem;
-  color: var(--text-muted);
-  margin: 10px 0 0 50px;
+    font-size: 0.855rem;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.6;
 }
 
-/* Stats Section */
-.stats-mini {
-  display: flex;
-  gap: 40px;
-  margin-bottom: 40px;
+/* ── MOBILE: horizontal swipe carousel ───────────────────────── */
+@media (max-width: 767px) {
+    .premium-intro.light-theme { padding: 60px 0; }
+
+    .intro-layout {
+        grid-template-columns: 1fr;
+        gap: 36px;
+    }
+
+    .intro-content { padding-left: 20px; }
+
+    .lead-text { font-size: 1rem; margin-bottom: 28px; }
+
+    /* Disable vertical scroll, switch to horizontal swipe */
+    .scroll-wrapper {
+        height: auto;
+        overflow: visible;
+        mask-image: none;
+        -webkit-mask-image: none;
+    }
+
+    .scroll-track {
+        animation: none !important;
+        flex-direction: row;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 12px;
+        padding-bottom: 4px;
+    }
+
+    .scroll-track::-webkit-scrollbar { display: none; }
+
+    .feature-card {
+        flex: 0 0 80%;
+        scroll-snap-align: start;
+        transform: none !important;
+        min-height: 120px;
+    }
 }
 
-.stat-num {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--primary-teal);
-  display: block;
+@media (max-width: 767px) {
+    .hero-title { font-size: 2.4rem !important; line-height: 1.15; }
+    .hero-desc-wrapper { font-size: 1rem; margin-bottom: 30px; }
 }
 
-.stat-divider {
-  width: 1px;
-  background: #ccc;
-  height: 40px;
-}
+/* Stats (kept for compatibility) */
+.stats-mini { display: flex; gap: 40px; margin-bottom: 40px; }
+.stat-num   { font-size: 1.5rem; font-weight: 800; color: #066D77; display: block; }
+.stat-divider { width: 1px; background: #ccc; height: 40px; }
+.eyebrow    { color: #cf2732; text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; font-weight: 800; margin-bottom: 15px; display: block; }
+.primary-text { color: #066D77; }
 </style>
 
 
@@ -1686,11 +1788,14 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
 
 <section class="services-section" id="services">
   <div class="container">
-    <h2 class="section-title">All Services in {{ $service->name ?? 'Service Group' }}</h2>
-    <p>28 specialist services — select a filter or browse all</p>
+    <h2 class="section-title">{{ $service->service_header ?? $service->name ?? 'Service Group' }}</h2>
+    @if(!empty($service->description))
+        <p>{!! strip_tags($service->description) !!}</p>
+    @endif
   </div>
 
-<div class="services-grid">
+<div class="services-carousel-wrapper">
+  <div class="services-grid">
     @php
         $selectedServices = $service->services ?? collect();
         $groupBgImage = $service->image ? asset('public/uploads/service_groups/' . $service->image) : '';
@@ -1734,11 +1839,15 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
     @endforelse
 
     @if($totalServices > $displayLimit)
-        <div class="text-center mt-4">
-            <a href="{{ route('service-group.all-services', $service->slug) }}" class="btn btn-primary">View All Services</a>
+        <div class="text-center mt-4 view-all-services-btn">
+            <a href="{{ route('service-group.all-services', $service->slug) }}" class="sg-view-all-btn">
+                View All Services <i class="fa-solid fa-arrow-right" style="font-size:0.7rem"></i>
+            </a>
         </div>
     @endif
   </div>
+  <div class="services-dots"></div>
+</div>
 </section>
 
 <style>
@@ -1901,6 +2010,83 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
 /* Featured always shows its bg image at low opacity, full on hover */
 .service-card.featured .service-card-bg { opacity: .35; }
 .service-card.featured:hover .service-card-bg { opacity: 1; }
+
+/* ── Mobile carousel ─────────────────────────────────────────── */
+@media (max-width: 767px) {
+    .services-section { padding: 60px 0 40px; }
+
+    .services-carousel-wrapper { position: relative; }
+
+    .services-grid {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 14px;
+        padding: 0 20px 4px;
+        margin-top: 32px;
+    }
+    .services-grid::-webkit-scrollbar { display: none; }
+
+    .service-card {
+        flex: 0 0 82%;
+        scroll-snap-align: start;
+        min-height: 230px;
+    }
+    .service-card.featured {
+        flex: 0 0 88%;
+        grid-column: unset !important;
+    }
+    .view-all-services-btn { display: none; }
+
+    /* Pagination dots */
+    .services-dots {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin-top: 18px;
+        padding: 0 20px;
+    }
+    .services-dot {
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: #d1d5db;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+    }
+    .services-dot.active {
+        width: 24px;
+        border-radius: 4px;
+        background: var(--teal, #0a7a6e);
+    }
+}
+@media (min-width: 768px) {
+    .services-dots { display: none; }
+}
+
+.sg-view-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 22px;
+    background: #066D77;
+    color: #fff;
+    border: none;
+    border-radius: 100px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+.sg-view-all-btn:hover {
+    background: #088a95;
+    color: #fff;
+    transform: translateY(-1px);
+}
 </style>
 
 
@@ -2174,8 +2360,12 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
     <div class="container">
       <div class="process-header" data-aos="fade-up">
         <span class="process-eyebrow">Our Process</span>
-        <h2 class="process-title">From first call to <em>license</em> in hand</h2>
-        <p class="process-subtitle">A meticulously structured {{ $processCount }}-phase engagement model designed for absolute precision and regulatory speed.</p>
+        @if(!empty($service->process_intro))
+            {!! $service->process_intro !!}
+        @else
+            <h2 class="process-title">From first call to <em>license</em> in hand</h2>
+            <p class="process-subtitle">A meticulously structured {{ $processCount }}-phase engagement model designed for absolute precision and regulatory speed.</p>
+        @endif
       </div>
 
       <div class="process-grid">
@@ -2446,12 +2636,8 @@ function toggleTransformationDesc() {
 
                         <div class="help-text-block">
                             {{-- <h4>{{ $service->name }} solution</h4> --}}
-                            @if($service->info_three && trim($service->info_three) != '')
-                                {!! $service->info_three !!}
-                            @else
                                 <p>Our multidisciplinary team combines architectural excellence with deep clinical insights to
                                     deliver projects that are not just buildings, but platforms for healing.</p>
-                            @endif
 
                             @if($service->info_four && trim($service->info_four) != '')
                                 <div class="mt-4">
@@ -2621,6 +2807,11 @@ function toggleTransformationDesc() {
 
 
 
+        {{-- ── Testimonials (conditional) ────────────────────── --}}
+        @if($service->show_testimonials)
+            @include('front.partials.testimonial-pills')
+        @endif
+
         <!-- Bottom Interests -->
         <section class="bottom-interests" id="related-services">
             <div class="container">
@@ -2781,6 +2972,41 @@ function toggleTransformationDesc() {
         </div>
 
     </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var grid = document.querySelector('.services-grid');
+        var dotsContainer = document.querySelector('.services-dots');
+        if (!grid || !dotsContainer) return;
+
+        function buildDots() {
+            if (window.innerWidth >= 768) { dotsContainer.innerHTML = ''; return; }
+            var cards = Array.from(grid.querySelectorAll('.service-card'));
+            dotsContainer.innerHTML = '';
+            cards.forEach(function (_, i) {
+                var dot = document.createElement('span');
+                dot.className = 'services-dot' + (i === 0 ? ' active' : '');
+                dot.addEventListener('click', function () {
+                    grid.scrollTo({ left: cards[i].offsetLeft - 20, behavior: 'smooth' });
+                });
+                dotsContainer.appendChild(dot);
+            });
+
+            grid.addEventListener('scroll', function () {
+                var cards = Array.from(grid.querySelectorAll('.service-card'));
+                var scrollLeft = grid.scrollLeft;
+                var cardWidth = (cards[0] ? cards[0].offsetWidth : 1) + 14;
+                var active = Math.min(Math.round(scrollLeft / cardWidth), cards.length - 1);
+                dotsContainer.querySelectorAll('.services-dot').forEach(function (d, i) {
+                    d.classList.toggle('active', i === active);
+                });
+            }, { passive: true });
+        }
+
+        buildDots();
+        window.addEventListener('resize', buildDots);
+    });
+    </script>
 
     @push('scripts')
         <script>

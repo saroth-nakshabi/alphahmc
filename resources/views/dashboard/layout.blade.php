@@ -424,36 +424,6 @@
                             </ul>
                         </li>
 
-                        <!-- ============== Conduct testimonials =============== -->
-
-                        <li class="sidebar-item">
-                            <a class="sidebar-link has-arrow" href="#" aria-expanded="false">
-                                <span class="d-flex">
-                                    <i class="ti ti-phone"></i>
-                                </span>
-                                <span class="hide-menu">Conduct</span>
-                            </a>
-                            <ul aria-expanded="false" class="collapse first-level">
-                                <li class="sidebar-item">
-                                    <a class="sidebar-link" href="{{ route('testimonial.index') }}" aria-expanded="false">
-                                        <span>
-                                            <i class="ti ti-circle"></i>
-                                        </span>
-                                        <span class="hide-menu">Testimonials</span>
-                                    </a>
-                                </li>
-
-                                {{-- <li class="sidebar-item">
-                                    <a class="sidebar-link" href="{{ route('project.category.index') }}"
-                                        aria-expanded="false">
-                                        <span>
-                                            <i class="ti ti-circle"></i>
-                                        </span>
-                                        <span class="hide-menu">Projects Category</span>
-                                    </a>
-                                </li> --}}
-                            </ul>
-                        </li>
 
 
                         <!-- ============== Our Client =============== -->
@@ -495,6 +465,15 @@
                                     </a>
                                 </li>
                             </ul>
+                        </li>
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('testimonial.index') }}" aria-expanded="false">
+                                <span class="d-flex">
+                                    <i class="ti ti-message-star"></i>
+                                </span>
+                                <span class="hide-menu">Testimonials</span>
+                            </a>
                         </li>
 
 

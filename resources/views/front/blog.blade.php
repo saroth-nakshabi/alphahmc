@@ -359,18 +359,20 @@
                                         <div class="card-meta-top">
                                             <div class="card-user">
                                                 <i class="far fa-user" style="color: var(--accent-red); margin-right: 8px;"></i>
-                                                By {{ $blog->tags->first()->name ?? 'Alpha Team' }}
+                                                By {{ $blog->author_name ?? $blog->tags->first()->name ?? 'Alpha Team' }}
                                             </div>
                                             <div style="width: 4px; height: 4px; background: #cbd5e1; border-radius: 50%;"></div>
                                             <div class="card-time" title="Published Date">
                                                 <i class="far fa-calendar-alt" style="color: var(--accent-red); margin-right: 8px;"></i>
-                                                Published: {{ $blog->created_at->format('M d, Y') }}
+                                                {{ ($blog->published_date ?? $blog->created_at)->format('M d, Y') }}
                                             </div>
+                                            @if($blog->read_time)
                                             <div style="width: 4px; height: 4px; background: #cbd5e1; border-radius: 50%;"></div>
-                                            <div class="card-time" title="Last Updated">
-                                                <i class="fas fa-history" style="color: var(--accent-red); margin-right: 8px;"></i>
-                                                Updated: {{ $blog->updated_at->format('M d, Y') }}
+                                            <div class="card-time" title="Estimated read time">
+                                                <i class="far fa-clock" style="color: var(--accent-red); margin-right: 8px;"></i>
+                                                {{ $blog->read_time }} min read
                                             </div>
+                                            @endif
                                         </div>
                                         <h2 class="card-title-premium">
                                             <a href="{{ route('view_blog', $blog->slug) }}" style="color: inherit; text-decoration: none;">

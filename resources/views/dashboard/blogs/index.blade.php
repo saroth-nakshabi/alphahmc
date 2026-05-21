@@ -1,10 +1,21 @@
 @extends('dashboard/layout')
 
 @section('custom_css')
-    <!-- --------------------------------------------------- -->
-    <!-- Prism Js -->
-    <!-- --------------------------------------------------- -->
     <link rel="stylesheet" href="{{ asset('public/dashboard/dist/libs/prismjs/themes/prism-okaidia.min.css') }}">
+    <style>
+        /* Allow multi-select tags container to grow beyond the layout's fixed 36px */
+        .select2-multi-tags.select2 {
+            height: auto !important;
+            min-height: 36px;
+        }
+        .select2-multi-tags .select2-selection--multiple {
+            min-height: 34px;
+        }
+        /* Give CKEditor a decent height inside the modal */
+        .ck-editor__editable_inline {
+            min-height: 280px;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -46,22 +57,26 @@
                             @endcan
                         </div>
                         <div class="table-responsive">
-                            <table id="items-table" class="table border table-striped table-bordered display text-nowrap">
+                            <table id="items-table" class="table border table-striped table-bordered display">
                                 <thead>
-                                    <!-- start row -->
                                     <tr>
-                                        <th>Name</th>
-                                        {{-- <th>Featured</th> --}}
+                                        <th>Title</th>
+                                        <th>Tags</th>
                                         <th>Action</th>
                                     </tr>
-                                    <!-- end row -->
                                 </thead>
                                 <tbody>
                                     @if (isset($blogs) && count($blogs) > 0)
                                         @foreach ($blogs as $blog)
-                                            <!-- start row -->
                                             <tr data-id="{{ $blog->id }}">
                                                 <td>{{ $blog->title }}</td>
+                                                <td>
+                                                    @forelse ($blog->tags as $tag)
+                                                        <span class="badge bg-light-primary text-primary me-1">{{ $tag->name }}</span>
+                                                    @empty
+                                                        <span class="text-muted small">—</span>
+                                                    @endforelse
+                                                </td>
                                                 <td>
                                                     <div class="btn-group">
                                                         <button class="dropdown-toggle btn btn-primary btn-sm"
@@ -82,18 +97,15 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <!-- end row -->
                                         @endforeach
                                     @endif
                                 </tbody>
                                 <tfoot>
-                                    <!-- start row -->
                                     <tr>
-                                        <th>Name</th>
-                                        {{-- <th>Featured</th> --}}
+                                        <th>Title</th>
+                                        <th>Tags</th>
                                         <th>Action</th>
                                     </tr>
-                                    <!-- end row -->
                                 </tfoot>
                             </table>
                         </div>
@@ -104,239 +116,181 @@
     </section>
 
     <!-- add new modal -->
-    <div class="modal fade" id="addNewModal" tabindex="-1" aria-labelledby="addNewModal" aria-hidden="true">
+    <div class="modal fade" id="addNewModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
             <form class="modal-content" action="{{ route('blogs.store') }}" method="POST" id="add_form"
                 enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header d-flex align-items-center">
-                    <h4 class="modal-title" id="addNewModal">
-                        Add New Blog
-                    </h4>
+                    <h4 class="modal-title">Add New Blog</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row pt-3">
+                    <div class="row g-3 pt-2">
                         <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="control-label mb-1">Blog Title<span class="text-danger">*</span></label>
-                                <input type="text" name="title" class="form-control" placeholder="Enter Blog Title"
-                                    required />
-                            </div>
-                        </div>
-                        <!--/span-->
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="control-label mb-1">Blog Image <span class="text-danger">*</span></label>
-                                <input type="file" name="image" class="form-control" placeholder="12n" required />
-                            </div>
-                        </div>
-                        <!--/span-->
-                    </div>
-                    <div class="row pt-3">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="control-label mb-1">Slug<span class="text-danger">*</span></label>
-                                <input type="text" name="slug" class="form-control" placeholder="Enter slug"
-                                    required />
-                            </div>
+                            <label class="control-label mb-1">Blog Title <span class="text-danger">*</span></label>
+                            <input type="text" name="title" id="add_title" class="form-control" placeholder="Enter blog title" required />
                         </div>
                         <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="control-label mb-1">Author Name<span class="text-danger">*</span></label>
-                                <select name="tags[]" class="form-control select2" data-placeholder="Select Category"
-                                    required multiple>
-                                    <option></option>
-                                    @if (isset($tags) && count($tags) > 0)
-                                        @foreach ($tags as $tag)
-                                            <option value="{{ $tag->id }}">{{ $tag->name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                            <label class="control-label mb-1">URL Slug <span class="text-danger">*</span></label>
+                            <input type="text" name="slug" id="add_slug" class="form-control" placeholder="auto-generated" required />
                         </div>
-                    </div>
-
-                    <div class="row pt-3">
+                        <div class="col-md-6">
+                            <label class="control-label mb-1">Author Name</label>
+                            <input type="text" name="author_name" class="form-control" placeholder="e.g. Dr. Sarah Ahmed" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="control-label mb-1">Tags</label>
+                            <select name="tags[]" class="form-control select2-add" multiple data-placeholder="Select tags">
+                                @foreach ($tags as $tag)
+                                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="control-label mb-1">Read Time (min)</label>
+                            <input type="number" name="read_time" class="form-control" placeholder="5" min="1" max="999" />
+                        </div>
                         <div class="col-md-12">
-                            <div class="mb-3">
-                                <label class="control-label mb-1">Blog Short Description</label>
-                                <textarea type="textarea" name="description" rows="5" class="form-control" placeholder="type here..."></textarea>
-                            </div>
+                            <label class="control-label mb-1">Blog Image <span class="text-danger">*</span></label>
+                            <input type="file" name="image" class="form-control" accept="image/*" required />
                         </div>
-                    </div>
-
-
-                    <div class="row pt-3">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-check-label mb-1" for="featured">Set as Featured
-                                    Blog</label>
-                                <div class="form-check">
-                                    <input type="checkbox" name="featured" class="form-check-input" value="1" />
-                                    <label class="form-check-label" for="featured">Yes</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--/row-->
-                    <div class="row pt-3">
                         <div class="col-md-12">
-                            <div class="mb-3">
-                                <label class="control-label mb-1">Content<span class="text-danger">*</span></label>
-                                <textarea id="editor" type="textarea" name="content" rows="5" class="rich-textarea form-control"
-                                    placeholder="Write a brief content..." required></textarea>
+                            <label class="control-label mb-1">Short Description</label>
+                            <textarea name="description" rows="3" class="form-control" placeholder="Brief summary shown on listing page..."></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-check-label mb-1">Featured Blog</label>
+                            <div class="form-check">
+                                <input type="checkbox" name="featured" class="form-check-input" value="1" />
+                                <label class="form-check-label">Set as featured</label>
                             </div>
                         </div>
-                        <!--/span-->
+                        <div class="col-md-6">
+                            <label class="control-label mb-1">Published Date</label>
+                            <input type="date" name="published_date" class="form-control" value="{{ date('Y-m-d') }}" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="control-label mb-1">Updated Date</label>
+                            <input type="date" name="updated_date" class="form-control" />
+                        </div>
                     </div>
-                    <!--/row-->
-                    <hr>
-                    <h5>Meta Details</h6>
-                        <div class="row pt-2">
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label class="control-label mb-1">Meta Title</label>
-                                    <input type="text" name="meta_title" rows="5" class="form-control"
-                                        placeholder="type here..." />
-                                </div>
-                                <div class="mb-3">
-                                    <label class="control-label mb-1">Meta Description</label>
-                                    <textarea type="textarea" name="meta_description" rows="5" class="form-control" placeholder="type here..."></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="control-label mb-1">Meta Keywords</label>
-                                    <textarea type="textarea" name="meta_keywords" rows="5" class="form-control" placeholder="type here..."></textarea>
-                                </div>
-                            </div>
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-12">
+                            <label class="control-label mb-1">Content <span class="text-danger">*</span></label>
+                            <textarea id="editor" name="content" rows="8" class="form-control" placeholder="Write blog content..." required></textarea>
                         </div>
+                    </div>
+                    <hr class="mt-4">
+                    <h6 class="fw-semibold mb-3">Meta Details</h6>
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="control-label mb-1">Meta Title</label>
+                            <input type="text" name="meta_title" class="form-control" placeholder="Page title for search engines" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="control-label mb-1">Meta Description</label>
+                            <textarea name="meta_description" rows="3" class="form-control" placeholder="150–160 chars"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="control-label mb-1">Meta Keywords</label>
+                            <textarea name="meta_keywords" rows="3" class="form-control" placeholder="Comma-separated keywords"></textarea>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light-danger text-danger font-medium" data-bs-dismiss="modal">
-                        Close
-                    </button>
-                    <button type="submit" class="btn btn-success">
-                        Add
-                    </button>
+                    <button type="button" class="btn btn-light-danger text-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Add Blog</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- edit modal -->
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModal" aria-hidden="true">
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
-            <form class="modal-content" action="#" method="POST" id="edit_form">
+            <form class="modal-content" action="#" method="POST" id="edit_form" enctype="multipart/form-data">
+                @csrf
                 <div class="modal-header d-flex align-items-center">
-                    <h4 class="modal-title">
-                        Edit Service
-                    </h4>
+                    <h4 class="modal-title">Edit Blog</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row pt-3">
+                    <div class="row g-3 pt-2">
                         <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="control-label mb-1">Blog Title<span class="text-danger">*</span></label>
-                                <input type="text" id="title" name="title" class="form-control"
-                                    placeholder="Enter Blog Title" required />
-                            </div>
-                        </div>
-                        <!--/span-->
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="control-label mb-1">Blog Image <span class="text-danger">*</span></label>
-                                <input type="file" id="image" name="image" class="form-control"
-                                    placeholder="Blog Image" />
-                            </div>
-                        </div>
-                        <!--/span-->
-                    </div>
-                    <div class="row pt-3">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="control-label mb-1">Slug<span class="text-danger">*</span></label>
-                                <input type="text" name="slug" class="form-control" placeholder="Enter slug"
-                                    required />
-                            </div>
+                            <label class="control-label mb-1">Blog Title <span class="text-danger">*</span></label>
+                            <input type="text" name="title" id="edit_title" class="form-control" placeholder="Enter blog title" required />
                         </div>
                         <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="control-label mb-1">Author Name<span class="text-danger">*</span></label>
-                                <select name="tags[]" class="form-control select2" data-placeholder="Select Category"
-                                    required multiple>
-                                    <option></option>
-                                    @if (isset($tags) && count($tags) > 0)
-                                        @foreach ($tags as $tag)
-                                            <option value="{{ $tag->id }}">{{ $tag->name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                            <label class="control-label mb-1">URL Slug <span class="text-danger">*</span></label>
+                            <input type="text" name="slug" id="edit_slug" class="form-control" required />
                         </div>
-                    </div>
-
-                    <div class="row pt-3">
+                        <div class="col-md-6">
+                            <label class="control-label mb-1">Author Name</label>
+                            <input type="text" name="author_name" id="edit_author" class="form-control" placeholder="e.g. Dr. Sarah Ahmed" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="control-label mb-1">Tags</label>
+                            <select name="tags[]" id="edit_tags" class="form-control select2-edit" multiple data-placeholder="Select tags">
+                                @foreach ($tags as $tag)
+                                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="control-label mb-1">Read Time (min)</label>
+                            <input type="number" name="read_time" id="edit_read_time" class="form-control" placeholder="5" min="1" max="999" />
+                        </div>
                         <div class="col-md-12">
-                            <div class="mb-3">
-                                <label class="control-label mb-1">Blog Short Description</label>
-                                <textarea type="textarea" name="description" rows="5" class="form-control" placeholder="type here..."></textarea>
-                            </div>
+                            <label class="control-label mb-1">Blog Image <span class="text-muted fw-normal">(leave blank to keep current)</span></label>
+                            <input type="file" name="image" class="form-control" accept="image/*" />
                         </div>
-                    </div>
-
-                    <div class="row pt-3">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-check-label mb-1" for="featured">Set as Featured
-                                    Blog</label>
-                                <div class="form-check">
-                                    <input type="checkbox" name="featured" class="form-check-input" value="1" />
-                                    <label class="form-check-label" for="featured">Yes</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--/row-->
-                    <div class="row pt-3">
                         <div class="col-md-12">
-                            <div class="mb-3">
-                                <label class="control-label mb-1">Content<span class="text-danger">*</span></label>
-                                <textarea id="editor-edit" type="textarea" name="content" rows="5" class="rich-textarea form-control"
-                                    placeholder="Write a brief content..." required></textarea>
+                            <label class="control-label mb-1">Short Description</label>
+                            <textarea name="description" id="edit_description" rows="3" class="form-control" placeholder="Brief summary..."></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-check-label mb-1">Featured Blog</label>
+                            <div class="form-check">
+                                <input type="checkbox" name="featured" id="edit_featured" class="form-check-input" value="1" />
+                                <label class="form-check-label">Set as featured</label>
                             </div>
                         </div>
-                        <!--/span-->
+                        <div class="col-md-6">
+                            <label class="control-label mb-1">Published Date</label>
+                            <input type="date" name="published_date" id="edit_published_date" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="control-label mb-1">Updated Date</label>
+                            <input type="date" name="updated_date" id="edit_updated_date" class="form-control" />
+                        </div>
                     </div>
-                    <!--/row-->
-                    <hr>
-                    <h5>Meta Details</h6>
-                        <div class="row pt-2">
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label class="control-label mb-1">Meta Title</label>
-                                    <input type="text" name="meta_title" rows="5" class="form-control"
-                                        placeholder="type here..." />
-                                </div>
-                                <div class="mb-3">
-                                    <label class="control-label mb-1">Meta Description</label>
-                                    <textarea type="textarea" name="meta_description" rows="5" class="form-control" placeholder="type here..."></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="control-label mb-1">Meta Keywords</label>
-                                    <textarea type="textarea" name="meta_keywords" rows="5" class="form-control" placeholder="type here..."></textarea>
-                                </div>
-                            </div>
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-12">
+                            <label class="control-label mb-1">Content <span class="text-danger">*</span></label>
+                            <textarea id="editor-edit" name="content" rows="8" class="form-control" placeholder="Write blog content..." required></textarea>
                         </div>
+                    </div>
+                    <hr class="mt-4">
+                    <h6 class="fw-semibold mb-3">Meta Details</h6>
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="control-label mb-1">Meta Title</label>
+                            <input type="text" name="meta_title" id="edit_meta_title" class="form-control" placeholder="Page title for search engines" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="control-label mb-1">Meta Description</label>
+                            <textarea name="meta_description" id="edit_meta_desc" rows="3" class="form-control" placeholder="150–160 chars"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="control-label mb-1">Meta Keywords</label>
+                            <textarea name="meta_keywords" id="edit_meta_kw" rows="3" class="form-control" placeholder="Comma-separated keywords"></textarea>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light-danger text-danger font-medium" data-bs-dismiss="modal">
-                        Close
-                    </button>
-                    <button type="submit" class="btn btn-success">
-                        Update
-                    </button>
+                    <button type="button" class="btn btn-light-danger text-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Update Blog</button>
                 </div>
             </form>
         </div>
@@ -344,691 +298,198 @@
 @endsection
 
 @section('custom_js')
-    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
-
-    <!-- ---------------------------------------------- -->
-    <!-- core files -->
-    <!-- ---------------------------------------------- -->
+    <script src="{{ asset('public/dashboard/dist/libs/ckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('public/dashboard/dist/libs/prismjs/prism.js') }}"></script>
-
-    <!-- ---------------------------------------------- -->
-    <!-- current page js files -->
-    <!-- ---------------------------------------------- -->
-    <script src="public/dashboard/dist/libs/tinymce/tinymce.min.js"></script>
     <script>
+        var pendingContent = null;
+
+        var ckConfig = {
+            height: 380,
+            uploadUrl: '{{ route("ckeditor.upload") }}?_token={{ csrf_token() }}',
+            toolbar: [
+                { name: 'document',    items: ['Source', '-', 'Undo', 'Redo'] },
+                { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat'] },
+                { name: 'paragraph',   items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'Blockquote'] },
+                { name: 'links',       items: ['Link', 'Unlink'] },
+                { name: 'insert',      items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar'] },
+                '/',
+                { name: 'styles',      items: ['Format', 'Font', 'FontSize'] },
+                { name: 'colors',      items: ['TextColor', 'BGColor'] },
+            ],
+            removePlugins: 'elementspath',
+            resize_enabled: true,
+        };
+
+        function ckGet(id)  { return CKEDITOR.instances[id] ? CKEDITOR.instances[id].getData() : ''; }
+        function ckSet(id, html) { if (CKEDITOR.instances[id]) CKEDITOR.instances[id].setData(html); }
+
+        /* ── Init Add editor when modal becomes visible ── */
+        document.getElementById('addNewModal').addEventListener('shown.bs.modal', function() {
+            if (!CKEDITOR.instances['editor']) {
+                CKEDITOR.replace('editor', ckConfig);
+            }
+        });
+
+        /* ── Init Edit editor when modal becomes visible, then load pending content ── */
+        document.getElementById('editModal').addEventListener('shown.bs.modal', function() {
+            if (!CKEDITOR.instances['editor-edit']) {
+                var ed = CKEDITOR.replace('editor-edit', ckConfig);
+                ed.on('instanceReady', function() {
+                    if (pendingContent !== null) { ed.setData(pendingContent); pendingContent = null; }
+                });
+            } else if (pendingContent !== null) {
+                CKEDITOR.instances['editor-edit'].setData(pendingContent);
+                pendingContent = null;
+            }
+        });
+
         $(document).ready(function() {
             var items_table = $("#items-table").DataTable({
                 dom: "Bfrtip",
                 buttons: ["copy", "csv", "excel", "pdf", "print"],
             });
-            $(
-                ".buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel"
-            ).addClass("btn btn-primary mr-1");
+            $(".buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel").addClass("btn btn-primary mr-1");
 
-            // tinymce.init({
-            //     selector: '.rich-textarea', // Target textareas by their class
-            //     plugins: 'code searchreplace autolink directionality visualblocks visualchars image link media codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap emoticons autosave fullscreen',
-            //     toolbar: "code undo redo print spellcheckdialog | blocks fontfamily fontsize | bold italic underline forecolor backcolor | link image | alignleft aligncenter alignright alignjustify | code",
-            //     image_title: true,
-            //     automatic_uploads: true,
-            //     images_upload_url: '/upload-image',
+            /* ── Select2 ── */
+            $('.select2-add').select2({ dropdownParent: $('#addNewModal'), placeholder: 'Select tags', allowClear: true, containerCssClass: 'select2-multi-tags', width: '100%' });
+            $('.select2-edit').select2({ dropdownParent: $('#editModal'), placeholder: 'Select tags', allowClear: true, containerCssClass: 'select2-multi-tags', width: '100%' });
 
-            //     // Custom file picker for images
-            //     file_picker_types: 'image',
-            //     file_picker_callback: function(callback, value, meta) {
-            //         var input = document.createElement('input');
-            //         input.setAttribute('type', 'file');
-            //         input.setAttribute('accept', 'image/*');
-
-            //         input.onchange = function() {
-            //             var file = this.files[0];
-            //             var reader = new FileReader();
-
-            //             reader.onload = function() {
-            //                 var id = 'blobid' + (new Date()).getTime();
-            //                 var blobCache = tinymce.activeEditor.editorUpload.blobCache;
-            //                 var base64 = reader.result.split(',')[1];
-            //                 var blobInfo = blobCache.create(id, file, base64);
-            //                 blobCache.add(blobInfo);
-
-            //                 // Call the callback with the image URL
-            //                 callback(blobInfo.blobUri(), {
-            //                     title: file.name
-            //                 });
-            //             };
-
-            //             reader.readAsDataURL(file);
-            //         };
-
-            //         input.click();
-            //     },
-
-            //     // Image Upload Handler
-            //     images_upload_handler: function(blobInfo, success, failure) {
-            //         var formData = new FormData();
-            //         formData.append('file', blobInfo.blob(), blobInfo.filename());
-
-            //         // Use fetch to send the file to your backend
-            //         fetch('/upload-image', {
-            //                 method: 'POST',
-            //                 body: formData
-            //             })
-
-            //             .then(response => {
-            //                 if (!response.ok) {
-            //                     throw new Error(
-            //                         'Network response was not ok'); // Handle network errors
-            //                 }
-            //                 return response.json(); // Ensure that we get a JSON response
-
-            //                 console.log(response);
-            //             })
-            //             .then(json => {
-            //                 if (json.location) {
-            //                     success(json.location); // Pass the image URL back to TinyMCE
-            //                 } else {
-            //                     failure(
-            //                         'Invalid JSON response: No location field found'
-            //                     ); // Handle missing 'location'
-            //                 }
-            //             })
-            //             .catch(error => {
-            //                 failure('Image upload failed: ' + error
-            //                     .message); // Handle errors and display message
-            //             });
-            //     }
-            // });
-
-            // ck editor
-
-            // class MyUploadAdapter {
-            //     constructor(loader) {
-            //         this.loader = loader;
-            //     }
-
-            //     upload() {
-            //         return this.loader.file.then(file => {
-            //             return new Promise((resolve, reject) => {
-            //                 const data = new FormData();
-            //                 data.append('upload', file);
-            //                 data.append('_token', '{{ csrf_token() }}');
-
-            //                 fetch('{{ route('ckeditor.upload') }}', {
-            //                         method: 'POST',
-            //                         body: data
-            //                     })
-            //                     .then(response => response.json())
-            //                     .then(result => {
-            //                         resolve({
-            //                             default: result.url
-            //                         });
-            //                     })
-            //                     .catch(error => {
-            //                         reject(error.message);
-            //                     });
-            //             });
-            //         });
-            //     }
-
-
-            //     abort() {
-            //         // abort logic if needed
-            //     }
-            // }
-
-            // function MyCustomUploadAdapterPlugin(editor) {
-            //     editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-            //         return new MyUploadAdapter(loader);
-            //     };
-            // }
-
-            // ClassicEditor.create(document.querySelector("#editor"), {
-            //     extraPlugins: [MyCustomUploadAdapterPlugin],
-            //     toolbar: [
-            //         "heading",
-            //         "|",
-            //         "bold",
-            //         "italic",
-            //         "link",
-            //         "bulletedList",
-            //         "numberedList",
-            //         "blockQuote",
-            //         "|",
-            //         "insertTable",
-            //         "undo",
-            //         "redo",
-            //         "imageUpload",
-            //     ],
-            // }).catch(error => {
-            //     console.error(error);
-            // });
-
-
-            class MyUploadAdapter {
-                constructor(loader) {
-                    this.loader = loader;
-                }
-
-                upload() {
-                    return this.loader.file.then(file => new Promise((resolve, reject) => {
-                        const data = new FormData();
-                        data.append('upload', file);
-                        data.append('_token', '{{ csrf_token() }}');
-
-                        fetch('{{ route('ckeditor.upload') }}', {
-                                method: 'POST',
-                                body: data
-                            })
-                            .then(response => {
-                                if (!response.ok) {
-                                    return response.json().then(error => {
-                                        throw error;
-                                    });
-                                }
-                                return response.json();
-                            })
-                            .then(result => {
-                                if (result.uploaded) {
-                                    resolve({
-                                        default: result.url
-                                    });
-                                } else {
-                                    throw new Error(result.error?.message || 'Upload failed');
-                                }
-                            })
-                            .catch(error => {
-                                reject(error.message);
-                            });
-                    }));
-                }
-
-                abort() {
-                    // Reject the promise if the upload is aborted
-                    return Promise.reject('Upload aborted');
-                }
+            /* ── Slug auto-fill ── */
+            function generateSlug(t) {
+                return t.toLowerCase().trim().replace(/[^a-z0-9\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-');
             }
+            $('#add_title').on('input', function() { $('#add_slug').val(generateSlug($(this).val())); });
+            $('#edit_title').on('input', function() { $('#edit_slug').val(generateSlug($(this).val())); });
 
-            function MyCustomUploadAdapterPlugin(editor) {
-                editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-                    return new MyUploadAdapter(loader);
-                };
-            }
-
-            // Initialize the editor
-            ClassicEditor
-                .create(document.querySelector("#editor"), {
-                    extraPlugins: [MyCustomUploadAdapterPlugin],
-                    // Your toolbar configuration
-                    toolbar: [
-                        'heading', '|',
-                        'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|',
-                        'insertTable', 'undo', 'redo', 'imageUpload'
-                    ],
-                    // Image configuration
-                    image: {
-                        toolbar: [
-                            'imageTextAlternative',
-                            'imageStyle:inline',
-                            'imageStyle:block',
-                            'imageStyle:side'
-                        ],
-                        // This is important for the upload adapter to work
-                        upload: {
-                            types: ['jpeg', 'png', 'jpg', 'gif', 'webp']
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('There was a problem initializing the editor.', error);
-                });
-
-            // Initialize the editor for the edit modal
-
-            let editorInstance; // Global reference
-
-            ClassicEditor
-                .create(document.querySelector("#editor-edit"), {
-                    extraPlugins: [MyCustomUploadAdapterPlugin],
-                    toolbar: [
-                        'heading', '|',
-                        'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|',
-                        'insertTable', 'undo', 'redo', 'imageUpload'
-                    ],
-                    image: {
-                        toolbar: [
-                            'imageTextAlternative',
-                            'imageStyle:inline',
-                            'imageStyle:block',
-                            'imageStyle:side'
-                        ],
-                        upload: {
-                            types: ['jpeg', 'png', 'jpg', 'gif', 'webp']
-                        }
-                    }
-                })
-                .then(editor => {
-                    editorInstance = editor; // Save the instance for later
-                })
-                .catch(error => {
-                    console.error('There was a problem initializing the editor.', error);
-                });
-
-            // end ck editor
-
-            // select2 init
-            $('#addNewModal .select2').select2({
-                dropdownParent: '#addNewModal',
-                minimumResultsForSearch: 8,
-            });
-            // select2 init
-            $('#editModal .select2').select2({
-                dropdownParent: '#editModal',
-                minimumResultsForSearch: 8,
-            });
-
-            // add form handle
-            $("#add_form").validate({
-                rules: {
-                    title: {
-                        required: true,
-                    },
-                    content: {
-                        required: true, // Content is required
-                    },
-                    image: {
-                        required: true, // Image is required
-                    },
-                },
-                messages: {
-                    title: {
-                        required: "Service name is required", // Message for name
-                    },
-                    content: {
-                        required: "Content is required", // Message for content
-                    },
-                    image: {
-                        required: "Image is required", // Message for image
-                    },
-                },
-
-                submitHandler: function(form) {
-                    // Collect the form data
-                    let formData = new FormData(form);
-                    // Send AJAX request
-                    $.ajax({
-                        url: form.action, // Replace with your server-side endpoint
-                        method: form.method,
-                        data: formData,
-                        processData: false, // Prevent jQuery from automatically processing the data
-                        contentType: false, // Let the browser set the content type (required for FormData)
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                                'content') // Send CSRF token via header
-                        },
-                        beforeSend: function() {
-                            // Show loading animation using SweetAlert
-                            Swal.fire({
-                                title: 'Processing...',
-                                text: 'Please wait while we add',
-                                allowOutsideClick: false,
-                                didOpen: () => {
-                                    Swal.showLoading();
-                                }
-                            });
-                        },
-                        success: function(response) {
-                            // Close the loading Swal
-                            Swal.close();
-
-                            // Show success message using SweetAlert mixin
-                            Toast.fire({
-                                icon: 'success',
-                                title: `${response.message}`
-                            });
-                            const newRow = `<tr data-id='${response.data.id}'>
-                                            <td>${response.data.title}</td>
-                                            <td><div class="btn-group">
-                                                        <button class="dropdown-toggle btn btn-primary btn-sm"
-                                                            data-bs-toggle="dropdown" data-bs-auto-close="true"
-                                                            aria-expanded="false">
-                                                            <i class="bi bi-three-dots"></i>
-                                                        </button>
-                                                        <ul class="dropdown-menu">
-                                                            <li><a class="dropdown-item edit" href="javascript:void(0);"
-                                                                    data-id="${response.data.id}">Edit</a></li>
-                                                            <li><a class="dropdown-item delete" href="javascript:void(0);"
-                                                                    data-id="${response.data.id}">Delete</a></li>
-                                                        </ul>
-                                                    </div></td>
-                                            </tr>`;
-                            // Add new row to DataTable
-                            items_table.row.add($(newRow)).draw();
-
-                            // Close the modal
-                            $('#addNewModal').modal(
-                                'hide'); // Replace #addNewModal with your modal ID
-
-                            // Optionally, clear the form
-                            $('#add_form')[0].reset();
-                        },
-                        error: function(xhr) {
-                            // Close the loading Swal
-                            Swal.close();
-
-                            // Extract and display validation errors from the server
-                            let errorMessages = '';
-                            if (xhr.responseJSON && xhr.responseJSON.errors) {
-                                $.each(xhr.responseJSON.errors, function(key, value) {
-                                    errorMessages +=
-                                        `<p class='text-danger'>${value}</p>`;
-                                });
-                            } else {
-                                errorMessages = 'Something went wrong. Please try again.';
-                            }
-
-                            // Show error message with custom SweetAlert template
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Failed to add',
-                                html: `<div>${errorMessages}</div>`, // Display multiple error messages
-                                customClass: {
-                                    popup: 'swal-wide'
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-
-            // add form handle
-            $("#edit_form").validate({
-                rules: {
-                    title: {
-                        required: true,
-                    },
-                    content: {
-                        required: true, // Content is required
-                    },
-                    // image: {
-                    //     required: true, // Image is required
-                    // },
-                },
-                messages: {
-                    title: {
-                        required: "Service name is required", // Message for name
-                    },
-                    content: {
-                        required: "Content is required", // Message for content
-                    },
-                    // image: {
-                    //     required: "Image is required", // Message for image
-                    // },
-                },
-
-                submitHandler: function(form) {
-                    // Collect the form data
-                    let formData = new FormData(form);
-                    // Send AJAX request
-                    $.ajax({
-                        url: form.action, // Replace with your server-side endpoint
-                        method: form.method,
-                        data: formData,
-                        processData: false, // Prevent jQuery from automatically processing the data
-                        contentType: false, // Let the browser set the content type (required for FormData)
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                                'content') // Send CSRF token via header
-                        },
-                        beforeSend: function() {
-                            // Show loading animation using SweetAlert
-                            Swal.fire({
-                                title: 'Processing...',
-                                text: 'Please wait while we add',
-                                allowOutsideClick: false,
-                                didOpen: () => {
-                                    Swal.showLoading();
-                                }
-                            });
-                        },
-                        success: function(response) {
-                            // Close the loading Swal
-                            Swal.close();
-
-                            // Show success message using SweetAlert mixin
-                            Toast.fire({
-                                icon: 'success',
-                                title: `${response.message}`
-                            });
-
-                            let row = $('#items-table').find(
-                                `tr[data-id='${response.data.id}']`);
-                            row.html(`
-                            <td>${response.data.title}</td>
-                            <td><div class="btn-group">
-                                                        <button class="dropdown-toggle btn btn-primary btn-sm"
-                                                            data-bs-toggle="dropdown" data-bs-auto-close="true"
-                                                            aria-expanded="false">
-                                                            <i class="bi bi-three-dots"></i>
-                                                        </button>
-                                                        <ul class="dropdown-menu">
-                                                            <li><a class="dropdown-item edit" href="javascript:void(0);"
-                                                                    data-id="${response.data.id}">Edit</a></li>
-                                                            <li><a class="dropdown-item delete" href="javascript:void(0);"
-                                                                    data-id="${response.data.id}">Delete</a></li>
-                                                        </ul>
-                                                    </div></td>
-                            `);
-                            // destroy the table to reinitialize
-                            items_table.destroy();
-                            // re initialize the table
-                            items_table = $("#items-table").DataTable({
-                                dom: "Bfrtip",
-                                buttons: ["copy", "csv", "excel", "pdf", "print"],
-                            });
-                            $(
-                                ".buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel"
-                            ).addClass("btn btn-primary mr-1");
-
-                            // Close the modal
-                            $('#editModal').modal('toggle');
-                        },
-                        error: function(xhr) {
-                            // Close the loading Swal
-                            Swal.close();
-
-                            // Extract and display validation errors from the server
-                            let errorMessages = '';
-                            if (xhr.responseJSON && xhr.responseJSON.errors) {
-                                $.each(xhr.responseJSON.errors, function(key, value) {
-                                    errorMessages +=
-                                        `<p class='text-danger'>${value}</p>`;
-                                });
-                            } else {
-                                errorMessages = 'Something went wrong. Please try again.';
-                            }
-
-                            // Show error message with custom SweetAlert template
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Failed to add',
-                                html: `<div>${errorMessages}</div>`, // Display multiple error messages
-                                customClass: {
-                                    popup: 'swal-wide'
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-
-            $(document).on('click', '.edit', function() {
-                const id = $(this).data('id');
-                const udpateUrl = `{{ route('blogs.update', '') }}/${id}`;
-                $('#edit_form').attr('action', udpateUrl);
-
+            /* ── Add Form ── */
+            $('#add_form').on('submit', function(e) {
+                e.preventDefault();
+                document.querySelector('#editor').value = ckGet('editor');
+                var formData = new FormData(this);
+                Swal.fire({ title: 'Saving...', allowOutsideClick: false, didOpen: function() { Swal.showLoading(); } });
                 $.ajax({
-                    url: `{{ route('blogs.get') }}`,
-                    method: 'POST',
-                    data: {
-                        'id': id,
-                    },
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                            'content') // Send CSRF token via header
-                    },
+                    url: this.action, method: 'POST', data: formData,
+                    processData: false, contentType: false,
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     success: function(response) {
-                        console.log(response);
-                        $('#edit_form').find('[name="title"]').val(response.data.title);
-                        $('#edit_form').find('[name="slug"]').val(response.data.slug);
-
-                        $('#edit_form').find('[name="description"]').val(response.data
-                            .description);
-
-
-                        //CKEditor
-                        if (editorInstance) {
-                            editorInstance.setData(response.data.content); // Set new content
-                        }
-
-                        // tinymce.get('content').setContent(response.data
-                        //     .content); // Set content for the content editor
-                        if (response.data.featured) {
-                            $('#edit_form').find('[name="featured"]').prop('checked', true);
-                        } else {
-                            $('#edit_form').find('[name="featured"]').prop('checked', false);
-                        }
-
-                        // meta details
-                        $('#edit_form').find('[name="meta_title"]').val(response.data
-                            .meta_title);
-
-                        $('#edit_form').find('[name="meta_description"]').val(response.data
-                            .meta_description);
-                        $('#edit_form').find('[name="meta_keywords"]').val(response.data
-                            .meta_keywords);
-
-                        // Clear existing selections
-                        $('#edit_form').find('[name="tags[]"]').val(null).trigger(
-                            'change');
-
-                        // // Handle categories
-                        var selectedTags = response.data.tags.map(tag => tag.id);
-                        // Set the selected categories in the select2 dropdown
-                        $('#edit_form').find('[name="tags[]"]').val(selectedTags)
-                            .trigger('change'); // Trigger change for select2
-
-                        $('#editModal .select2').select2({
-                            dropdownParent: '#editModal',
-                            minimumResultsForSearch: 8,
-                        });
-                        $('#editModal').modal('toggle');
+                        Swal.close();
+                        Toast.fire({ icon: 'success', title: response.message });
+                        var tagHtml = (response.data.tags || []).map(function(t) {
+                            return '<span class="badge bg-light-primary text-primary me-1">' + t.name + '</span>';
+                        }).join('') || '<span class="text-muted small">—</span>';
+                        var newRow = `<tr data-id="${response.data.id}"><td>${response.data.title}</td><td>${tagHtml}</td><td><div class="btn-group"><button class="dropdown-toggle btn btn-primary btn-sm" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></button><ul class="dropdown-menu"><li><a class="dropdown-item edit" href="javascript:void(0);" data-id="${response.data.id}">Edit</a></li><li><a class="dropdown-item delete" href="javascript:void(0);" data-id="${response.data.id}">Delete</a></li></ul></div></td></tr>`;
+                        items_table.row.add($(newRow)).draw();
+                        $('#addNewModal').modal('hide');
+                        $('#add_form')[0].reset();
+                        ckSet('editor', '');
+                        $('[name="tags[]"].select2-add').val(null).trigger('change');
                     },
                     error: function(xhr) {
                         Swal.close();
-                        // Show error message
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Failed to delete',
-                            text: 'An error occurred while trying to delete the item. Please try again.',
-                        });
+                        var msgs = '';
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            $.each(xhr.responseJSON.errors, function(k, v) { msgs += '<p class="text-danger">' + v + '</p>'; });
+                        } else { msgs = 'Something went wrong. Please try again.'; }
+                        Swal.fire({ icon: 'error', title: 'Failed to save', html: msgs });
                     }
                 });
             });
 
-            $(document).on('click', '.delete', function() {
-                const id = $(this).data('id');
-                const deleteUrl = `{{ route('blogs.destroy', '') }}/${id}`;
-                const row = $(this).closest('tr'); // Get the closest table row
-
-                handleDelete(deleteUrl, items_table, row);
+            /* ── Edit Form ── */
+            $('#edit_form').on('submit', function(e) {
+                e.preventDefault();
+                document.querySelector('#editor-edit').value = ckGet('editor-edit');
+                var formData = new FormData(this);
+                Swal.fire({ title: 'Updating...', allowOutsideClick: false, didOpen: function() { Swal.showLoading(); } });
+                $.ajax({
+                    url: this.action, method: 'POST', data: formData,
+                    processData: false, contentType: false,
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    success: function(response) {
+                        Swal.close();
+                        Toast.fire({ icon: 'success', title: response.message });
+                        var row = $('#items-table').find('tr[data-id="' + response.data.id + '"]');
+                        row.find('td:eq(0)').text(response.data.title);
+                        var tagHtml = (response.data.tags || []).map(function(t) {
+                            return '<span class="badge bg-light-primary text-primary me-1">' + t.name + '</span>';
+                        }).join('') || '<span class="text-muted small">—</span>';
+                        row.find('td:eq(1)').html(tagHtml);
+                        $('#editModal').modal('hide');
+                    },
+                    error: function(xhr) {
+                        Swal.close();
+                        var msgs = '';
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            $.each(xhr.responseJSON.errors, function(k, v) { msgs += '<p class="text-danger">' + v + '</p>'; });
+                        } else { msgs = 'Something went wrong.'; }
+                        Swal.fire({ icon: 'error', title: 'Failed to update', html: msgs });
+                    }
+                });
             });
 
-            // Function to handle deletion
-            function handleDelete(delete_url, table, row) {
+            /* ── Edit click: populate form ── */
+            $(document).on('click', '.edit', function() {
+                var id = $(this).data('id');
+                $('#edit_form').attr('action', '{{ route("blogs.update", "") }}/' + id);
+                $.ajax({
+                    url: '{{ route("blogs.get") }}', method: 'POST',
+                    data: { id: id },
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    success: function(response) {
+                        var d = response.data;
+                        $('#edit_title').val(d.title);
+                        $('#edit_slug').val(d.slug);
+                        $('#edit_author').val(d.author_name || '');
+                        $('#edit_read_time').val(d.read_time || '');
+                        $('#edit_description').val(d.description || '');
+                        $('#edit_featured').prop('checked', !!d.featured);
+                        $('#edit_meta_title').val(d.meta_title || '');
+                        $('#edit_meta_desc').val(d.meta_description || '');
+                        $('#edit_meta_kw').val(d.meta_keywords || '');
+                        // Tags
+                        var tagIds = d.tags ? d.tags.map(function(t) { return String(t.id); }) : [];
+                        $('#edit_tags').val(tagIds).trigger('change');
+                        // Dates
+                        $('#edit_published_date').val(d.published_date || '');
+                        $('#edit_updated_date').val(d.updated_date || '');
+                        // CKEditor — store content, applied once modal is shown
+                        pendingContent = d.content || '';
+                        if (CKEDITOR.instances['editor-edit']) { CKEDITOR.instances['editor-edit'].setData(pendingContent); pendingContent = null; }
+                        $('#editModal').modal('show');
+                    },
+                    error: function() {
+                        Swal.fire({ icon: 'error', title: 'Could not load blog data.' });
+                    }
+                });
+            });
+
+            /* ── Delete ── */
+            $(document).on('click', '.delete', function() {
+                var id = $(this).data('id');
+                var deleteUrl = '{{ route("blogs.destroy", "") }}/' + id;
+                var row = $(this).closest('tr');
                 Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to recover this item!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'Cancel'
-                }).then((result) => {
+                    title: 'Are you sure?', text: "This blog will be deleted permanently.",
+                    icon: 'warning', showCancelButton: true,
+                    confirmButtonColor: '#dc2626', cancelButtonColor: '#6b7280',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then(function(result) {
                     if (result.isConfirmed) {
-                        // If confirmed, proceed with deletion
                         $.ajax({
-                            url: delete_url,
-                            method: 'DELETE',
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                                    'content') // Send CSRF token via header
-                            },
-                            beforeSend: function() {
-                                Swal.fire({
-                                    title: 'Deleting...',
-                                    text: 'Please wait while we delete the item',
-                                    allowOutsideClick: false,
-                                    didOpen: () => {
-                                        Swal.showLoading();
-                                    }
-                                });
-                            },
+                            url: deleteUrl, method: 'DELETE',
+                            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                             success: function(response) {
-                                Swal.close();
-                                // Show success message
-                                Toast.fire({
-                                    icon: 'success',
-                                    title: `${response.message}`
-                                });
-                                // Remove the row from the DataTable
-                                table.row(row).remove().draw();
+                                Toast.fire({ icon: 'success', title: response.message });
+                                items_table.row(row).remove().draw();
                             },
-                            error: function(xhr) {
-                                Swal.close();
-                                // Show error message
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Failed to delete',
-                                    text: 'An error occurred while trying to delete the item. Please try again.',
-                                });
+                            error: function() {
+                                Swal.fire({ icon: 'error', title: 'Failed to delete.' });
                             }
                         });
                     }
                 });
-            }
-        });
-    </script>
-
-
-    <script>
-        $(document).ready(function() {
-            // Slug auto-generation for Add Modal
-            var $addTitleInput = $("#addNewModal input[name='title']");
-            var $addSlugInput = $("#addNewModal input[name='slug']");
-
-            function generateSlug(text) {
-                return text
-                    .toLowerCase()
-                    .trim()
-                    .replace(/[^a-z0-9\s-]/g, '') // remove invalid chars
-                    .replace(/\s+/g, '-') // replace spaces with -
-                    .replace(/-+/g, '-'); // collapse multiple -
-            }
-
-            $addTitleInput.on("input", function() {
-                var slug = generateSlug($addTitleInput.val());
-                $addSlugInput.val(slug);
             });
 
-            // Slug auto-generation for Edit Modal
-            var $editTitleInput = $("#editModal input[name='title']");
-            var $editSlugInput = $("#editModal input[name='slug']");
-
-            $editTitleInput.on("input", function() {
-                var slug = generateSlug($editTitleInput.val());
-                $editSlugInput.val(slug);
-            });
         });
     </script>
 @endsection

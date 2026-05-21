@@ -631,7 +631,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <h6 class="cookie-title">We use cookies</h6>
             <p class="cookie-text">
                 We use cookies to analyse traffic, personalise content, and improve your experience. You can manage your preferences at any time.
-                <a href="{{ route('contact') }}#privacy" class="cookie-policy-link">Cookie Policy</a>
+                <a href="{{ route('front.cookie-policy') }}" class="cookie-policy-link">Cookie Policy</a>
             </p>
         </div>
         <div class="cookie-actions">
@@ -783,11 +783,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     <div class="menu-group mt-5">
                         <h6 class="sidebar-menu-heading">OUR GROUP</h6>
                         <div class="service-content"><a href="{{ route('front.new-about') }}">About Alpha Health</a></div>
-                        <div class="service-content"><a href="{{ route('front.new_blog') }}">Blog</a></div>
-                        <div class="service-content"><a href="{{ route('front.project') }}">Projects</a></div>
-                        <div class="service-content"><a href="{{ route('contact') }}">Contact Us</a></div>
                         <div class="service-content"><a href="{{ route('front.brands') }}">Our Brands</a></div>
-                        <div class="service-content"><a href="{{ route('front.news-media') }}">News & Media</a></div>
+                        <div class="service-content"><a href="{{ route('front.new_blog') }}">Knowledge Base</a></div>
+                        <div class="service-content"><a href="{{ route('front.project') }}">Case Studies</a></div>
+                        <div class="service-content"><a href="{{ route('contact') }}">Contact Us</a></div>
+                        <div class="service-content"><a href="{{ route('front.ahg-updates') }}">AHG Updates</a></div>
                     </div>
                 </div>
 
@@ -1590,22 +1590,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     <div class="links-column">
                         <h4>Quick Links</h4>
                         <ul class="footer-links">
-                            <li><a href="{{ route('front.new-about') }}"><i class="fas fa-chevron-right"></i> About Our Company</a></li>
-                            <li><a href="{{ route('front.all-services') }}"><i class="fas fa-chevron-right"></i> Healthcare Services</a></li>
-                            <li><a href="#"><i class="fas fa-chevron-right"></i> Medical Consulting</a></li>
-                            <li><a href="#"><i class="fas fa-chevron-right"></i> Patient Care</a></li>
-                            <li><a href="{{ route('contact') }}"><i class="fas fa-chevron-right"></i> Contact Our Team</a></li>
+                            <li><a href="{{ route('front.new-about') }}"><i class="fas fa-chevron-right"></i> About Alpha Health Group</a></li>
+                            <li><a href="{{ route('front.all-services') }}"><i class="fas fa-chevron-right"></i> All Services</a></li>
+                            <li><a href="{{ route('contact') }}"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                            <li><a href="{{ route('front.ahg-updates') }}"><i class="fas fa-chevron-right"></i> AHG Updates</a></li>
+                            <li><a href="{{ route('front.our-clients') }}"><i class="fas fa-chevron-right"></i> Our Clients</a></li>
                         </ul>
                     </div>
 
                     <div class="links-column">
                         <h4>Resources</h4>
                         <ul class="footer-links">
-                            <li><a href="{{ route('front.new_blog') }}"><i class="fas fa-chevron-right"></i> Healthcare Insights</a></li>
-                            <li><a href="#"><i class="fas fa-chevron-right"></i> Medical Research</a></li>
-                            <li><a href="#"><i class="fas fa-chevron-right"></i> Industry Reports</a></li>
+                            <li><a href="{{ route('front.new_blog') }}"><i class="fas fa-chevron-right"></i> Knowledge Base</a></li>
                             <li><a href="{{ route('front.project') }}"><i class="fas fa-chevron-right"></i> Case Studies</a></li>
-                            <li><a href="{{ route('front.new_blog') }}"><i class="fas fa-chevron-right"></i> Healthcare News</a></li>
+                            <li><a href="{{ route('front.all-services') }}"><i class="fas fa-chevron-right"></i> Services by Facility Type</a></li>
                         </ul>
                     </div>
                 </div>
@@ -1624,11 +1622,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                 <!-- Policies -->
                 <div class="footer-policies" style="text-align: center">
-                    <a href="#" class="policy-link">Privacy Policy</a>
-                    <a href="#" class="policy-link">Terms of Service</a>
-                    <a href="#" class="policy-link">Cookie Policy</a>
-                    <a href="#" class="policy-link">Healthcare Compliance</a>
-                    <a href="#" class="policy-link">Ethical Standards</a>
+                    <a href="{{ url('/alpha-privacy-policy') }}" class="policy-link">Privacy Policy</a>
+                    <a href="{{ route('front.terms-of-service') }}" class="policy-link">Terms of Service</a>
+                    <a href="{{ route('front.cookie-policy') }}" class="policy-link">Cookie Policy</a>
+                    <a href="{{ route('front.gdpr-terms') }}" class="policy-link">GDPR &amp; Data Protection</a>
                 </div>
 
 
@@ -1636,17 +1633,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <div class="social-section">
                     <span class="social-label">Connect With Us:</span>
                     <div class="social-icons">
-                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/company/alphatsm" class="social-icon" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://x.com/alphatsm_" class="social-icon" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.facebook.com/alphatsm" class="social-icon" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/alphahealthgroup/" class="social-icon" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
                 <div class="contact-info">
-                    <a href="mailto:info@alphahealth.com" class="contact-email">
+                    <a href="mailto:info@alphatsm.com" class="contact-email">
                         <i class="fas fa-envelope"></i>
-                        info@alphahealth.com
+                        info@alphatsm.com
                     </a>
                     <div class="contact-phone">
                         <i class="fas fa-phone"></i>
@@ -1663,18 +1659,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <!-- Bottom Section -->
         <div class="footer-bottom" style="font-family: sans-serif">
             <div class="legal-text">
-                Alpha Healthcare Group is an Equal Opportunity Employer.
-                All qualified applicants
-                receive consideration without regard to race, color, religion, sex, or national origin.
-                <a href="#" class="legal-link">View our compliance documents</a> or
-                <a href="#" class="legal-link">access transparency reports</a>.
-                <div style="text-align: center0"> <br>© 2025 Alpha Healthcare Group. All rights reserved.</div>
+                Alpha Health Group provides healthcare management consultancy, accreditation support, and advisory services to healthcare organisations across the GCC and Middle East.
+                All consultancy services are provided for organisational and management purposes only and do not constitute clinical medical advice or treatment.
+                <a href="{{ route('front.terms-of-service') }}" class="legal-link">Terms of Service</a> &middot;
+                <a href="{{ route('front.gdpr-terms') }}" class="legal-link">Data Protection Policy</a>.
+                <div style="text-align: center"> <br>© {{ date('Y') }} Alpha Health Group. All rights reserved.</div>
             </div>
 
             {{-- <div class="contact-info">
-                <a href="mailto:info@alphahealth.com" class="contact-email">
+                <a href="mailto:info@alphatsm.com" class="contact-email">
                     <i class="fas fa-envelope"></i>
-                    info@alphahealth.com
+                    info@alphatsm.com
                 </a>
                 <div class="contact-phone">
                     <i class="fas fa-phone"></i>
@@ -2111,27 +2106,22 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             background: #0077b5;
         }
 
-        /* LinkedIn */
+        /* X / Twitter */
         .social-icon:nth-child(2):hover {
             background: #1da1f2;
         }
 
-        /* Twitter */
+        /* Facebook */
         .social-icon:nth-child(3):hover {
             background: #4267B2;
         }
 
-        /* Facebook */
+        /* Instagram */
         .social-icon:nth-child(4):hover {
-            background: #FF0000;
-        }
-
-        /* YouTube */
-        .social-icon:nth-child(5):hover {
             background: #E4405F;
         }
 
-        /* Instagram */
+        /*
 
         /* Bottom Section */
         .footer-bottom {

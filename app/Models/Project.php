@@ -7,23 +7,32 @@ use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
-   use HasFactory;
-     protected $fillable = [
+    use HasFactory;
+
+    protected $fillable = [
         'project_category_id',
         'name',
         'description',
         'slug',
+        'client_name',
+        'project_duration',
+        'project_location',
+        'regulatory_authority',
+        'client_website',
+        'project_scope',
+        'service_ids',
+        'featured',
+        'challenge_heading',
         'challenge_title',
         'challenge',
         'resolution',
         'challenges',
-        // 'meta_title',
-        // 'meta_description',
-        // 'meta_keywords'
     ];
 
     protected $casts = [
-        'challenges' => 'array',
+        'featured'    => 'boolean',
+        'challenges'  => 'array',
+        'service_ids' => 'array',
     ];
 
     public function projects_images()
@@ -42,7 +51,6 @@ class Project extends Model
     }
 
     public function project_category()
-
     {
         return $this->belongsTo(ProjectCategory::class);
     }

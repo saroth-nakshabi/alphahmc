@@ -295,7 +295,9 @@
     <article class="article-main">
         <div class="container">
             <header class="article-header">
-                @if($blog->tags->first())
+                @if($blog->category)
+                    <span class="article-badge">{{ $blog->category->name }}</span>
+                @elseif($blog->tags->first())
                     <span class="article-badge">{{ $blog->tags->first()->name }}</span>
                 @endif
                 <h1 class="article-title-centered">{{ $blog->title }}</h1>
@@ -304,16 +306,24 @@
                 <div class="article-meta-modern mt-5">
                     <div class="meta-part">
                         <i class="far fa-user me-2" style="color: var(--accent-red);"></i>
-                        <span>{{ $blog->tags->first()->name ?? 'Alpha Team' }}</span>
+                        <span>{{ $blog->author_name ?? $blog->tags->first()->name ?? 'Alpha Team' }}</span>
                     </div>
                     <div class="meta-part">
                         <i class="far fa-calendar-alt me-2" style="color: var(--accent-red);"></i>
-                        <span>Published: {{ $blog->created_at->format('M d, Y') }}</span>
+                        <span>{{ ($blog->published_date ?? $blog->created_at)->format('M d, Y') }}</span>
                     </div>
+                    @if($blog->updated_date)
                     <div class="meta-part">
-                        <i class="fas fa-history me-2" style="color: var(--accent-red);"></i>
-                        <span>Updated: {{ $blog->updated_at->format('M d, Y') }}</span>
+                        <i class="far fa-edit me-2" style="color: var(--accent-red);"></i>
+                        <span>Updated: {{ $blog->updated_date->format('M d, Y') }}</span>
                     </div>
+                    @endif
+                    @if($blog->read_time)
+                    <div class="meta-part">
+                        <i class="far fa-clock me-2" style="color: var(--accent-red);"></i>
+                        <span>{{ $blog->read_time }} min read</span>
+                    </div>
+                    @endif
                 </div>
 
                 <div class="mt-4 d-flex justify-content-center">

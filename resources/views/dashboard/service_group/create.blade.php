@@ -116,9 +116,16 @@
                                 <div class="field-hint">Choose all services that belong to this group.</div>
                             </div>
                             <div class="col-12">
-                                <label class="control-label">Service Group Description <span class="required-star">*</span></label>
-                                <textarea name="description" rows="5" class="rich-textarea form-control"
-                                    placeholder="Describe this service group..." required></textarea>
+                                <label class="control-label">Hero Description <span class="required-star">*</span>
+                                    <span class="text-muted fw-normal">(shown in banner)</span></label>
+                                <textarea name="content" rows="6" class="rich-textarea form-control"
+                                    placeholder="Short description shown in the hero/banner area..." required></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="control-label">Intro Description <span class="required-star">*</span>
+                                    <span class="text-muted fw-normal">(overview section)</span></label>
+                                <textarea name="overview" rows="6" class="rich-textarea form-control"
+                                    placeholder="Introduction paragraph shown below the hero..." required></textarea>
                             </div>
                         </div>
                     </div>
@@ -142,73 +149,15 @@
                                 <input type="file" name="image" class="form-control" accept="image/*" required />
                                 <div class="field-hint">Card thumbnail image.</div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="control-label">Strategy Section Sliding Image</label>
-                                <input type="file" name="sliding_image" class="form-control" accept="image/*" />
-                                <div class="field-hint">Optional side-sliding image.</div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="control-label">Strategy Section Gallery Images</label>
-                                <div id="service-images-container">
-                                    <div class="carousel-img-row">
-                                        <input type="file" name="images[]" class="form-control" accept="image/*" />
-                                        <button type="button" class="btn btn-outline-success btn-sm add-image-btn flex-shrink-0" title="Add another image">
-                                            <i class="ti ti-plus"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="field-hint">Left-side carousel images (optional, multiple allowed).</div>
-                            </div>
                         </div>
                     </div>
                 </div>
 
-                {{-- ── Section 3 · Page Content ── --}}
-                <div class="section-card">
-                    <div class="section-header">
-                        <span class="section-badge bg-success text-white">3</span>
-                        <h6 class="mb-0 fw-semibold">Page Content</h6>
-                    </div>
-                    <div class="section-body">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="control-label">Service Header <span class="required-star">*</span></label>
-                                <input type="text" name="service_header" class="form-control"
-                                    placeholder="e.g. Our Healthcare Services" required />
-                            </div>
-                            <div class="col-12">
-                                <label class="control-label">Hero Description <span class="required-star">*</span>
-                                    <span class="text-muted fw-normal">(shown in banner)</span></label>
-                                <textarea name="content" rows="6" class="rich-textarea form-control"
-                                    placeholder="Short description shown in the hero/banner area..." required></textarea>
-                            </div>
-                            <div class="col-12">
-                                <label class="control-label">Intro Description <span class="required-star">*</span>
-                                    <span class="text-muted fw-normal">(overview section)</span></label>
-                                <textarea name="overview" rows="6" class="rich-textarea form-control"
-                                    placeholder="Introduction paragraph shown below the hero..." required></textarea>
-                            </div>
-                            <div class="col-12">
-                                <label class="control-label">CTA Header
-                                    <span class="text-muted fw-normal">(optional)</span></label>
-                                <textarea name="info_three" rows="4" class="rich-textarea form-control"
-                                    placeholder="Call-to-action heading (e.g. How Alpha Can Help)..."></textarea>
-                            </div>
-                            <div class="col-12">
-                                <label class="control-label">CTA Description
-                                    <span class="text-muted fw-normal">(why choose us)</span></label>
-                                <textarea name="info_four" rows="4" class="rich-textarea form-control"
-                                    placeholder="Why choose us / benefits description..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- ── Section 4 · Core Services ── --}}
+                {{-- ── Section 3 · Core Services ── --}}
                 <div class="section-card">
                     <div class="section-header justify-content-between">
                         <div class="d-flex align-items-center gap-2">
-                            <span class="section-badge text-white" style="background:#059669!important">4</span>
+                            <span class="section-badge text-white" style="background:#059669!important">3</span>
                             <h6 class="mb-0 fw-semibold">Core Services</h6>
                             <span class="item-count-badge" id="core-count">1 item</span>
                         </div>
@@ -255,6 +204,34 @@
                     </div>
                 </div>
 
+                {{-- ── Section 4 · Page Content ── --}}
+                <div class="section-card">
+                    <div class="section-header">
+                        <span class="section-badge bg-success text-white">4</span>
+                        <h6 class="mb-0 fw-semibold">Page Content</h6>
+                    </div>
+                    <div class="section-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="control-label">Service Header <span class="required-star">*</span></label>
+                                <input type="text" name="service_header" class="form-control"
+                                    placeholder="e.g. Our Healthcare Services" required />
+                            </div>
+                            <div class="col-12">
+                                <label class="control-label">Service Group Description <span class="required-star">*</span></label>
+                                <textarea name="description" rows="5" class="rich-textarea form-control"
+                                    placeholder="Describe this service group..."></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="control-label">CTA Description
+                                    <span class="text-muted fw-normal">(why choose us)</span></label>
+                                <textarea name="info_four" rows="4" class="rich-textarea form-control"
+                                    placeholder="Why choose us / benefits description..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 {{-- ── Section 5 · Process Steps ── --}}
                 <div class="section-card">
                     <div class="section-header justify-content-between">
@@ -268,6 +245,13 @@
                         </button>
                     </div>
                     <div class="section-body p-3">
+                        <div class="mb-3">
+                            <label class="control-label">Process Section Introduction
+                                <span class="text-muted fw-normal">(section title &amp; description shown above the steps)</span>
+                            </label>
+                            <textarea name="process_intro" id="process_intro" rows="4" class="form-control"
+                                placeholder="e.g. From first call to license in hand — describe your process approach..."></textarea>
+                        </div>
                         <div id="process-empty-state" class="empty-state">
                             <i class="ti ti-list-numbers"></i>
                             <p class="mb-1 fw-semibold">No process steps yet</p>
@@ -277,33 +261,11 @@
                     </div>
                 </div>
 
-                {{-- ── Section 6 · Magazine / Insights ── --}}
+                {{-- ── Section 6 · FAQ ── --}}
                 <div class="section-card">
                     <div class="section-header justify-content-between">
                         <div class="d-flex align-items-center gap-2">
-                            <span class="section-badge text-white" style="background:#7c3aed!important">6</span>
-                            <h6 class="mb-0 fw-semibold">Magazine / Insights</h6>
-                            <span class="item-count-badge" id="mag-count">0 items</span>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-outline-primary" id="addMagazineBtn">
-                            <i class="ti ti-plus me-1"></i> Add Item
-                        </button>
-                    </div>
-                    <div class="section-body p-3">
-                        <div id="mag-empty-state" class="empty-state">
-                            <i class="ti ti-news"></i>
-                            <p class="mb-1 fw-semibold">No magazine items yet</p>
-                            <small>Click <strong>Add Item</strong> to add magazine/insights cards.</small>
-                        </div>
-                        <div id="magazine-accordion" class="accordion cst-accordion"></div>
-                    </div>
-                </div>
-
-                {{-- ── Section 7 · FAQ ── --}}
-                <div class="section-card">
-                    <div class="section-header justify-content-between">
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="section-badge text-dark" style="background:#fbbf24!important">7</span>
+                            <span class="section-badge text-dark" style="background:#fbbf24!important">6</span>
                             <h6 class="mb-0 fw-semibold">Frequently Asked Questions</h6>
                             <span class="item-count-badge" id="faq-count" style="background:#fef9c3;color:#854d0e">0 items</span>
                         </div>
@@ -321,10 +283,10 @@
                     </div>
                 </div>
 
-                {{-- ── Section 8 · SEO / Meta ── --}}
+                {{-- ── Section 7 · SEO / Meta ── --}}
                 <div class="section-card">
                     <div class="section-header">
-                        <span class="section-badge bg-secondary text-white">8</span>
+                        <span class="section-badge bg-secondary text-white">7</span>
                         <h6 class="mb-0 fw-semibold">SEO / Meta Details</h6>
                         <small class="text-muted ms-1">— all optional</small>
                     </div>
@@ -411,6 +373,16 @@
                                     id="featured_toggle" role="switch" value="1" />
                             </div>
                         </div>
+                        <div class="d-flex align-items-center justify-content-between py-1 mb-3 border-bottom pb-3">
+                            <div>
+                                <div class="fw-semibold" style="font-size:.875rem">Show Testimonials</div>
+                                <div class="field-hint mb-0">Display client reviews on this group page</div>
+                            </div>
+                            <div class="form-check form-switch mb-0 ms-3">
+                                <input type="checkbox" name="show_testimonials" class="form-check-input"
+                                    id="show_testimonials_toggle" role="switch" value="1" />
+                            </div>
+                        </div>
                         <div class="mb-3">
                             <label class="control-label">Connected Agent <span class="required-star">*</span></label>
                             <select name="agent_id" id="agent_id" class="form-control select2-sidebar"
@@ -451,6 +423,29 @@
                             @endforeach
                         </select>
                         <div class="field-hint mt-1">Shown in the announcement banner.</div>
+                    </div>
+                </div>
+
+                {{-- Dates card --}}
+                <div class="sidebar-card">
+                    <div class="sidebar-card-header">
+                        <i class="ti ti-calendar"></i> Publication Dates
+                    </div>
+                    <div class="sidebar-card-body">
+                        <div class="mb-3">
+                            <label class="control-label mb-1" for="published_date">Published Date <span class="required-star">*</span></label>
+                            <input type="date" id="published_date" name="published_date"
+                                class="form-control form-control-sm"
+                                value="{{ now()->toDateString() }}" required />
+                            <small class="field-hint">Date shown as "Published" on the page.</small>
+                        </div>
+                        <div class="mb-1">
+                            <label class="control-label mb-1" for="updated_date">Last Updated Date</label>
+                            <input type="date" id="updated_date" name="updated_date"
+                                class="form-control form-control-sm"
+                                value="{{ now()->toDateString() }}" />
+                            <small class="field-hint">Date shown as "Updated" on the page.</small>
+                        </div>
                     </div>
                 </div>
 
@@ -500,6 +495,7 @@
         }
 
         initTinyMCE('.rich-textarea', { height: 240 });
+        initTinyMCE('#process_intro', { height: 180, menubar: false });
         initTinyMCE('#core_desc_0', { height: 180 });
 
         /* ─── Select2 ─── */
@@ -512,28 +508,16 @@
                 .replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-'));
         });
 
-        /* ─── Carousel images ─── */
-        $(document).on('click', '.add-image-btn', function () {
-            $('#service-images-container').append(
-                `<div class="carousel-img-row">
-                    <input type="file" name="images[]" class="form-control" accept="image/*" />
-                    <button type="button" class="btn btn-outline-danger btn-sm remove-image-btn flex-shrink-0"><i class="ti ti-minus"></i></button>
-                </div>`);
-        });
-        $(document).on('click', '.remove-image-btn', function () { $(this).closest('.carousel-img-row').remove(); });
-
         /* ─── Counters ─── */
-        let magIdx = 0, faqIdx = 0, coreIdx = 1, processIdx = 0;
+        let faqIdx = 0, coreIdx = 1, processIdx = 0;
 
         function updateCoreCount()    { const n=$('#core-accordion .accordion-item').length; $('#core-count').text(n+' '+(n===1?'item':'items')); }
         function updateProcessCount() { const n=$('#process-accordion .accordion-item').length; $('#process-count').text(n+' '+(n===1?'item':'items')); n===0?$('#process-empty-state').removeClass('d-none'):$('#process-empty-state').addClass('d-none'); }
-        function updateMagCount()     { const n=$('#magazine-accordion .accordion-item').length; $('#mag-count').text(n+' '+(n===1?'item':'items')); n===0?$('#mag-empty-state').removeClass('d-none'):$('#mag-empty-state').addClass('d-none'); }
         function updateFaqCount()     { const n=$('#faq-accordion .accordion-item').length; $('#faq-count').text(n+' '+(n===1?'item':'items')); n===0?$('#faq-empty-state').removeClass('d-none'):$('#faq-empty-state').addClass('d-none'); }
 
         /* ─── Live header sync ─── */
         $(document).on('input', '.core-header-input',    function () { $(this).closest('.accordion-item').find('.core-item-title').text($(this).val().trim() || 'Core Service'); });
         $(document).on('input', '.process-header-input', function () { $(this).closest('.accordion-item').find('.process-item-title').text($(this).val().trim() || 'Process Step'); });
-        $(document).on('input', '.mag-title-input',      function () { $(this).closest('.accordion-item').find('.mag-item-title').text($(this).val().trim() || 'Magazine Item'); });
         $(document).on('input', '.faq-question-input',   function () { $(this).closest('.accordion-item').find('.faq-item-question').text(($(this).val().trim() || 'FAQ Question').substring(0, 60)); });
 
         /* ─── Item builders ─── */
@@ -571,28 +555,7 @@
                 </div></div></div>`;
         }
 
-        function buildMagItem(idx) {
-            const num = $('#magazine-accordion .accordion-item').length + 1;
-            return `<div class="accordion-item magazine-section-item" id="mag-item-${idx}">
-                <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#mag-collapse-${idx}" aria-expanded="true">
-                    <span class="badge me-2" style="background:#7c3aed;color:#fff;min-width:26px">#${num}</span>
-                    <span class="mag-item-title text-truncate" style="max-width:300px">New Magazine Item</span>
-                </button></h2>
-                <div id="mag-collapse-${idx}" class="accordion-collapse collapse show"><div class="accordion-body">
-                    <div class="row g-3">
-                        <div class="col-md-8"><label class="control-label">Title <span class="required-star">*</span></label>
-                            <input type="text" name="magazines[${idx}][title]" class="form-control mag-title-input" placeholder="Magazine title" required /></div>
-                        <div class="col-md-4"><label class="control-label">Image <span class="required-star">*</span></label>
-                            <input type="file" name="magazines[${idx}][image]" class="form-control" accept="image/*" required />
-                            <div class="field-hint">Max 4MB</div></div>
-                        <div class="col-12"><label class="control-label">Description <span class="required-star">*</span></label>
-                            <textarea id="mag_desc_${idx}" name="magazines[${idx}][description]" rows="4" class="form-control" placeholder="Magazine description..." required></textarea></div>
-                    </div>
-                    <div class="d-flex justify-content-end mt-3"><button type="button" class="btn btn-sm btn-outline-danger remove-magazine-section"><i class="ti ti-trash me-1"></i> Remove this item</button></div>
-                </div></div></div>`;
-        }
-
-        function buildFaqItem(idx) {
+function buildFaqItem(idx) {
             const num = $('#faq-accordion .accordion-item').length + 1;
             return `<div class="accordion-item faq-section" id="faq-item-${idx}">
                 <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-${idx}" aria-expanded="true">
@@ -627,14 +590,7 @@
             updateProcessCount();
         });
 
-        $('#addMagazineBtn').on('click', function () {
-            $('#magazine-accordion').append(buildMagItem(magIdx));
-            initTinyMCE(`#mag_desc_${magIdx}`, { height: 200 });
-            magIdx++;
-            updateMagCount();
-        });
-
-        $('#addFaqBtn').on('click', function () {
+$('#addFaqBtn').on('click', function () {
             $('#faq-accordion').append(buildFaqItem(faqIdx));
             initTinyMCE(`#faq_ans_${faqIdx}`, { height: 180, menubar: false });
             faqIdx++;
@@ -667,7 +623,6 @@
         });
 
         $(document).on('click', '.remove-process-section', function () { confirmRemove('Remove process step?', $(this).closest('.accordion-item').find('.process-item-title').text(), $(this).closest('.accordion-item'), updateProcessCount); });
-        $(document).on('click', '.remove-magazine-section', function () { confirmRemove('Remove magazine item?', $(this).closest('.accordion-item').find('.mag-item-title').text(), $(this).closest('.accordion-item'), updateMagCount); });
         $(document).on('click', '.remove-faq-section',      function () { confirmRemove('Remove FAQ?', $(this).closest('.accordion-item').find('.faq-item-question').text(), $(this).closest('.accordion-item'), updateFaqCount); });
 
         /* ─── AJAX Submit ─── */
@@ -681,10 +636,13 @@
             /* Sidebar fields outside the form element */
             formData.append('status', $('input[name="sg_status_radio"]:checked').val() || 'published');
             if ($('#featured_toggle').is(':checked')) formData.append('featured', '1');
+            if ($('#show_testimonials_toggle').is(':checked')) formData.append('show_testimonials', '1');
             const agentVal = $('#agent_id').val();
             if (agentVal) formData.append('agent_id', agentVal);
             formData.append('inq_officer_name',  $('#inq_officer_name').val()  || '');
             formData.append('inq_officer_phone', $('#inq_officer_phone').val() || '');
+            formData.append('published_date', $('#published_date').val() || '');
+            formData.append('updated_date',   $('#updated_date').val()   || '');
             const annVal = $('#announcement_id').val();
             if (annVal) formData.append('announcement_id', annVal);
 
@@ -726,22 +684,15 @@
                             initTinyMCE('#core_desc_0', { height: 180 });
 
                             /* Clear dynamic sections */
-                            ['#process-accordion', '#magazine-accordion', '#faq-accordion'].forEach(function (sel) {
+                            ['#process-accordion', '#faq-accordion'].forEach(function (sel) {
                                 $(sel + ' .accordion-item').each(function () {
                                     const tid = $(this).find('textarea[id]').attr('id');
                                     if (tid && tinymce.get(tid)) { try { tinymce.get(tid).destroy(); } catch(e){} }
                                 });
                                 $(sel).empty();
                             });
-                            processIdx = 0; magIdx = 0; faqIdx = 0;
-                            updateCoreCount(); updateProcessCount(); updateMagCount(); updateFaqCount();
-
-                            /* Reset gallery */
-                            $('#service-images-container').html(
-                                `<div class="carousel-img-row">
-                                    <input type="file" name="images[]" class="form-control" accept="image/*" />
-                                    <button type="button" class="btn btn-outline-success btn-sm add-image-btn flex-shrink-0"><i class="ti ti-plus"></i></button>
-                                </div>`);
+                            processIdx = 0; faqIdx = 0;
+                            updateCoreCount(); updateProcessCount(); updateFaqCount();
 
                             $('#server-error-box').addClass('d-none');
                             window.scrollTo({ top: 0, behavior: 'smooth' });

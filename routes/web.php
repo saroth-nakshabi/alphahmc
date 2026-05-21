@@ -96,19 +96,37 @@ Route::get('/service-category/{slug}', [MainHomeController::class, 'serviceCateg
 Route::get('/all_services', [MainHomeController::class, 'allServices'])->name('front.all-services');
 Route::redirect('/services', '/all_services', 301);
 Route::post('/inquiry/submit', [MainHomeController::class, 'submitInquiry'])->name('front.inquiry.submit');
-Route::get('/new_blog', [MainHomeController::class, 'blog'])->name('front.new_blog');
+Route::get('/healthcare-management-update-insights', [MainHomeController::class, 'blog'])->name('front.new_blog');
+Route::redirect('/new_blog', '/healthcare-management-update-insights', 301);
 // Route::get('/blog_single/{slug}', [MainHomeController::class, 'singleBlog'])->name('front.singleBlog');
 Route::get('/blog_single/{slug}', [MainHomeController::class, 'singleBlog'])->name('front.singleBlog');
 Route::get('/project', [MainHomeController::class, 'project'])->name('front.project');
 Route::get('/project_details/{slug}', [MainHomeController::class, 'singleProject'])->name('front.project_details');
-Route::get('/news-media', [MainHomeController::class, 'newsMedia'])->name('front.news-media');
-Route::get('/brands', [MainHomeController::class, 'brands'])->name('front.brands');
+Route::get('/ahg-updates', [MainHomeController::class, 'newsMedia'])->name('front.ahg-updates');
+Route::redirect('/news-media', '/ahg-updates', 301);
+Route::get('/Alpha-Health-Group-Branches', [MainHomeController::class, 'brands'])->name('front.brands');
 Route::get('/brand/{slug}', [MainHomeController::class, 'singleBrand'])->name('front.singleBrand');
+Route::get('/our-clients', [MainHomeController::class, 'ourClients'])->name('front.our-clients');
+Route::get('/client-reviews', [MainHomeController::class, 'testimonials'])->name('front.testimonials');
+Route::get('/share-your-experience', [MainHomeController::class, 'feedbackForm'])->name('front.feedback');
+Route::get('/gdpr-data-protection', function () {
+    return view('front.gdpr-terms');
+})->name('front.gdpr-terms');
+
+Route::get('/terms-of-service', function () {
+    return view('front.terms-of-service');
+})->name('front.terms-of-service');
+
+Route::get('/cookie-policy', function () {
+    return view('front.cookie-policy');
+})->name('front.cookie-policy');
+Route::post('/share-your-experience/submit', [MainHomeController::class, 'submitTestimonial'])->name('front.testimonial.submit');
 
 // Route::post('/ckeditor/upload', [TinyMCEUploadController::class, 'upload'])->name('ckeditor.upload');
 Route::post('/ckeditor/upload', [CkEditorUploadController::class, 'upload'])->name('ckeditor.upload');
 
-Route::get('/new-about', [MainHomeController::class, 'about'])->name('front.new-about');
+Route::get('/about-alpha-health-group', [MainHomeController::class, 'about'])->name('front.new-about');
+Route::redirect('/new-about', '/about-alpha-health-group', 301);
 
 // Route::post('/chat', [ChatWidgetController::class, 'reply'])
 //     ->middleware('throttle:30,1');   // 30 requests per minute per IP
@@ -185,6 +203,7 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::delete('/main-categories/delete/{id}', [MainCategoryController::class, 'destroy'])->name('main_categories.destroy')->middleware('permission:delete main categories');
     Route::post('/main-categories/update/{id}', [MainCategoryController::class, 'update'])->name('main_categories.update')->middleware('permission:edit main categories');
     Route::post('/main-categories/get', [MainCategoryController::class, 'getCategory'])->name('main_categories.get');
+    Route::post('/main-categories/reorder', [MainCategoryController::class, 'reorder'])->name('main_categories.reorder');
     // category routes
     Route::get('/all-categories', [CategoryController::class, 'index'])->name('categories.index')->middleware('permission:view categories');
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create')->middleware('permission:create categories');
@@ -204,7 +223,6 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::put('/service-group/{id}', [ServiceGroupController::class, 'update'])->name('service-group.update');
     Route::post('/service-group/{id}', [ServiceGroupController::class, 'update'])->name('service-group.update.post');
     Route::delete('/service-group/{id}', [ServiceGroupController::class, 'destroy'])->name('service-group.destroy');
-    Route::post('/service-group/delete-gallery-image', [ServiceGroupController::class, 'deleteGalleryImage'])->name('service-group.delete-gallery-image');
 
 
     
@@ -343,6 +361,8 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
         Route::post('/update/{id}', [ContactController::class, 'update'])->name('testimonial.update');
         Route::delete('/delete/{id}', [ContactController::class, 'destroy'])->name('testimonial.destroy');
         Route::post('/toggle-featured/{id}', [ContactController::class, 'toggleFeatured'])->name('testimonial.toggleFeatured');
+        Route::post('/toggle-approved/{id}', [ContactController::class, 'toggleApproved'])->name('testimonial.toggleApproved');
+        Route::post('/settings', [ContactController::class, 'saveSettings'])->name('testimonial.saveSettings');
     });
 
    

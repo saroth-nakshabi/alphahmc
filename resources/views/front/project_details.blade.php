@@ -1,8 +1,10 @@
 ﻿@extends('front/layout-2')
 
 @section('custom_css')
-<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
 /* ─── DESIGN TOKENS ────────────────────────────────────────────────── */
 :root {
@@ -47,10 +49,10 @@
 .modal-backdrop { z-index: 999998 !important; }
 
 /* ─── BASE ──────────────────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+.pdl *, .pdl *::before, .pdl *::after { box-sizing: border-box; }
 
 .pdl {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 400;
   background: var(--bg);
   color: var(--slate);
@@ -62,7 +64,7 @@
 }
 
 .pdl h1, .pdl h2, .pdl h3, .pdl h4 {
-  font-family: 'Libre Baskerville', serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 700;
   line-height: 1.08;
   color: var(--slate);
@@ -70,6 +72,7 @@
 }
 
 .pdl-wrap { max-width: 1360px; margin: 0 auto; padding: 0 48px; }
+.pd-container { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
 
 /* ─── REVEAL ANIMATIONS ─────────────────────────────────────────────── */
 @keyframes rise {
@@ -110,7 +113,7 @@
   animation: expandLine 0.6s var(--ease-expo) 0.4s both;
 }
 .pdl-eyebrow__text {
-  font-family: 'Roboto Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.68rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -213,59 +216,164 @@
         .pd-btn {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 14px 28px;
-            border-radius: var(--pd-radius);
+            gap: 10px;
+            padding: 14px 32px;
+            border-radius: 100px;
             font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.01em;
             text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             cursor: pointer;
             border: none;
+            position: relative;
+            overflow: hidden;
         }
 
         .pd-btn-primary {
-            background: #054B59;
-            color: white;
-            box-shadow: 0 4px 14px 0 rgba(0,0,0,0.8);
+            background: linear-gradient(135deg, #009095 0%, #054B59 100%);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(0, 144, 149, 0.35), 0 1px 3px rgba(0,0,0,0.12);
+        }
+
+        .pd-btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #00b0b6 0%, #076778 100%);
+            opacity: 0;
+            transition: opacity 0.35s;
+            border-radius: inherit;
         }
 
         .pd-btn-primary:hover {
-            background: #03313bff;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.8);
-            color: white;
+            color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 32px rgba(0, 144, 149, 0.45), 0 2px 8px rgba(0,0,0,0.15);
         }
 
-        .pd-btn-outline {
-            background: white;
-            border: 1px solid #054B59;
-            color: #054B59;
-        }
-
-        .pd-btn-outline:hover {
-            border-color: #054B59;
-            color: #054B59;
-            background: rgba(0,0,0,0.08);
-            transform: translateY(-2px);
-        }
+        .pd-btn-primary:hover::after { opacity: 1; }
+        .pd-btn-primary i,
+        .pd-btn-primary span { position: relative; z-index: 1; }
+        .pd-btn-primary svg { position: relative; z-index: 1; transition: transform 0.35s cubic-bezier(0.16,1,0.3,1); }
+        .pd-btn-primary:hover svg { transform: scale(1.15) rotate(-8deg); }
 
         .pd-hero-image-container {
             position: relative;
             border-radius: 20px;
             overflow: hidden;
             box-shadow: var(--pd-shadow-lg);
+            height: 500px;
         }
 
-        .pd-hero-image-container img {
+        /* single static image */
+        .pd-hero-image-container > img {
             width: 100%;
-            height: 500px;
+            height: 100%;
             object-fit: cover;
             display: block;
-            transition: transform 0.8s;
+            transition: transform 8s ease;
+        }
+        .pd-hero-image-container:hover > img { transform: scale(1.04); }
+
+        /* ── Hero Slider ── */
+        .pd-hero-slider { width: 100%; height: 100%; position: relative; }
+
+        .pd-hero-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.75s ease;
+            pointer-events: none;
+        }
+        .pd-hero-slide.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .pd-hero-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 8s ease;
+            transform: scale(1);
+        }
+        .pd-hero-slide.active img { transform: scale(1.04); }
+
+        .pd-hslider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--slate);
+            transition: all 0.25s var(--ease-expo);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.14);
+        }
+        .pd-hslider-btn:hover {
+            background: #fff;
+            color: var(--cr);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+        }
+        .pd-hslider-prev { left: 14px; }
+        .pd-hslider-next { right: 14px; }
+
+        .pd-hslider-dots {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .pd-hslider-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.35s var(--ease-expo);
+            border: none;
+            padding: 0;
+        }
+        .pd-hslider-dot.active {
+            background: #fff;
+            width: 22px;
+            border-radius: 4px;
         }
 
-        .pd-hero-image-container:hover img {
-            transform: scale(1.02);
+        .pd-hslider-counter {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            z-index: 10;
+            background: rgba(0,0,0,0.38);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            padding: 4px 11px;
+            border-radius: 100px;
+        }
+
+        @media (max-width: 768px) {
+            .pd-hero-image-container { height: 320px; }
+            .pd-hslider-btn { width: 34px; height: 34px; }
         }
 
         .pd-play-button {
@@ -361,7 +469,7 @@
 
 .pdl-readmore {
   background: none; border: none;
-  font-family: 'Roboto Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.65rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -391,7 +499,7 @@
   gap: 9px;
   padding: 14px 28px;
   border-radius: var(--r-sm);
-  font-family: 'Roboto Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.68rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -463,7 +571,7 @@
 
 .pdl-hero__meta-item {}
 .pdl-meta-lbl {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.6rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -561,7 +669,7 @@
 .pdl-stat-row:hover .pdl-stat-row__icon { transform: scale(1.1) rotate(-5deg); }
 
 .pdl-stat-row__label {
-  font-family: 'Roboto Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.6rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -569,6 +677,52 @@
   margin-bottom: 3px;
 }
 .pdl-stat-row__val { font-size: 0.92rem; font-weight: 500; color: var(--slate); }
+
+/* ─── SERVICES DELIVERED ──────────────────────────────────────────── */
+.pdl-svc-block {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.pdl-svc-block__lbl {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.59rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.pdl-svc-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pdl-svc-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 15px;
+  border-radius: 100px;
+  background: var(--white);
+  border: 1px solid var(--border-md);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--slate-3);
+  text-decoration: none;
+  transition: all 0.25s var(--ease-expo);
+  white-space: nowrap;
+}
+.pdl-svc-pill svg { transition: transform 0.25s var(--ease-expo); flex-shrink: 0; }
+.pdl-svc-pill:hover {
+  background: var(--cr-light);
+  border-color: rgba(0,144,149,0.3);
+  color: var(--cr);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,144,149,0.1);
+}
+.pdl-svc-pill:hover svg { transform: translateX(3px); }
 
 /* ─── FEATURES ──────────────────────────────────────────────────────── */
 .pdl-features {
@@ -618,7 +772,7 @@
 }
 
 .pdl-feat__num {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.62rem;
   letter-spacing: 0.2em;
   color: var(--ghost);
@@ -658,7 +812,7 @@
 }
 
 .pdl-tech__lbl {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.62rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -704,7 +858,7 @@
 }
 
 .pdl-tech__name {
-  font-family: 'Roboto Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.58rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -744,7 +898,7 @@
   background: transparent;
   border: none;
   color: var(--muted);
-  font-family: 'Roboto Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.63rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -815,7 +969,7 @@
   padding: 4px 12px;
   border-radius: 4px;
   background: rgba(255,255,255,0.9);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.58rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -862,7 +1016,7 @@
 }
 .pdl-doc-thumb i { color: var(--cr); opacity: 0.5; width: 64px; height: 64px; }
 .pdl-doc-thumb span {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.6rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -890,10 +1044,13 @@
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
-  padding: 48px;
+  padding: 40px 44px;
   position: relative;
   overflow: hidden;
   transition: box-shadow 0.4s, border-color 0.4s;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .pdl-ccard:hover { box-shadow: var(--shadow-md); border-color: rgba(232,80,58,0.15); }
 
@@ -911,7 +1068,7 @@
   gap: 7px;
   padding: 5px 14px;
   border-radius: 4px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.6rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -920,13 +1077,23 @@
 .pdl-cpill--problem { background: rgba(232,80,58,0.08); color: var(--cr); }
 .pdl-cpill--solution { background: rgba(39,176,116,0.08); color: #1a9060; }
 
-.pdl-ccard h3 { font-size: 1.65rem; margin-bottom: 14px; }
-.pdl-ccard p { font-size: 0.93rem; color: var(--slate-3); line-height: 1.8; }
+.pdl-ccard h3 { font-size: 1.45rem; margin-bottom: 12px; line-height: 1.3; }
+.pdl-ccard p {
+  font-size: 0.92rem;
+  color: var(--slate-3);
+  line-height: 1.8;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  flex: 1;
+}
 
 .pdl-ccard__rule {
   height: 1px;
   background: var(--border);
-  margin: 28px 0;
+  margin: 20px 0;
+  flex-shrink: 0;
 }
 
 .pdl-carousel-wrap {
@@ -950,6 +1117,7 @@
 .pdl-ccard-slider {
   flex: 0 0 calc(50% - 12px);
   min-width: calc(50% - 12px);
+  height: 440px;
 }
 
 .pdl-carousel-btn {
@@ -1011,22 +1179,24 @@
 }
 
 @media (max-width: 768px) {
+  .pdl-carousel { overflow: visible; }
+  .pdl-carousel-inner {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+    gap: 16px;
+  }
+  .pdl-carousel-inner::-webkit-scrollbar { display: none; }
   .pdl-ccard-slider {
-    flex: 0 0 100%;
-    min-width: 100%;
+    flex: 0 0 85%;
+    min-width: 85%;
+    height: 480px;
+    scroll-snap-align: start;
   }
-  .pdl-carousel-btn--prev {
-    left: 0;
-    bottom: -60px;
-    top: auto;
-    transform: none;
-  }
-  .pdl-carousel-btn--next {
-    right: 0;
-    bottom: -60px;
-    top: auto;
-    transform: none;
-  }
+  .pdl-carousel-btn { display: none; }
+  .pdl-carousel-indicators { margin-top: 20px; }
 }
 
 /* ─── RESULTS ───────────────────────────────────────────────────────── */
@@ -1097,7 +1267,7 @@
 .pdl-rstat:hover { background: var(--slate-2); }
 
 .pdl-rstat__num {
-  font-family: 'Libre Baskerville', serif;
+  font-family: 'Inter', sans-serif;
   font-size: 4.5rem;
   font-weight: 700;
   letter-spacing: -0.04em;
@@ -1108,7 +1278,7 @@
 }
 
 .pdl-rstat__lbl {
-  font-family: 'Roboto Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.62rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1168,7 +1338,7 @@
 }
 
 .pdl-rcard__cat {
-  font-family: 'Roboto Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.58rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1177,7 +1347,7 @@
 }
 
 .pdl-rcard__name {
-  font-family: 'Libre Baskerville', serif;
+  font-family: 'Inter', sans-serif;
   font-size: 1.25rem;
   color: #fff;
   line-height: 1.2;
@@ -1222,7 +1392,7 @@
 }
 
 .pdl-modal .modal-title {
-  font-family: 'Libre Baskerville', serif;
+  font-family: 'Inter', sans-serif;
   font-size: 1.4rem;
   color: var(--slate);
   font-weight: 700;
@@ -1272,7 +1442,7 @@
 .pdl-pdf-loading .spinner-border { color: var(--cr) !important; }
 
 .pdl-pdf-loading p {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.65rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1288,7 +1458,7 @@
   border: 1px solid var(--border-md);
   border-radius: var(--r-sm);
   color: var(--slate-3);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.62rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1302,7 +1472,7 @@
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 100px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.68rem;
   color: var(--muted);
 }
@@ -1375,6 +1545,156 @@
 }
 
 .page { background: white; overflow: hidden; }
+
+/* ─── PROJECT DETAILS MODAL ─────────────────────────────────── */
+.pdl-details-modal .modal-content {
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border-md);
+  overflow: hidden;
+}
+.pdl-details-modal .modal-header {
+  background: var(--slate);
+  padding: 24px 32px;
+  border-bottom: none;
+}
+.pdl-details-modal .modal-title {
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+.pdl-details-modal .btn-close { filter: invert(1); opacity: 0.7; }
+.pdl-details-modal .btn-close:hover { opacity: 1; }
+.pdl-details-modal .modal-body { padding: 32px; background: var(--bg); }
+
+.pdl-dm-cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 14px;
+  border-radius: 100px;
+  background: var(--cr-mid);
+  color: var(--cr);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.63rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.pdl-dm-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+@media (max-width: 600px) { .pdl-dm-grid { grid-template-columns: 1fr; } }
+
+.pdl-dm-item {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 16px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.pdl-dm-item__icon {
+  width: 36px; height: 36px;
+  background: var(--cr-light);
+  border-radius: var(--r-xs);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--cr);
+  flex-shrink: 0;
+}
+.pdl-dm-item__lbl {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.pdl-dm-item__val {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--slate);
+  line-height: 1.4;
+  word-break: break-word;
+}
+.pdl-dm-item__val a {
+  color: var(--cr);
+  text-decoration: none;
+}
+.pdl-dm-item__val a:hover { text-decoration: underline; }
+
+.pdl-dm-full {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 16px 20px;
+  margin-bottom: 12px;
+}
+.pdl-dm-full__lbl {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pdl-dm-full__lbl svg { color: var(--cr); }
+.pdl-dm-full__body {
+  font-size: 0.9rem;
+  color: var(--slate-3);
+  line-height: 1.7;
+}
+
+.pdl-dm-services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+.pdl-dm-svc-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 100px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--slate-3);
+  text-decoration: none;
+  transition: all 0.25s;
+}
+.pdl-dm-svc-pill:hover {
+  background: var(--cr-light);
+  border-color: var(--cr);
+  color: var(--cr);
+}
+
+.pdl-dm-assets {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.pdl-dm-asset-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 16px;
+  border-radius: var(--r-xs);
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  font-size: 0.82rem;
+  color: var(--slate-3);
+}
+.pdl-dm-asset-badge svg { color: var(--cr); }
 </style>
 @endsection
 
@@ -1395,26 +1715,64 @@
                                     <span>Read More</span> <i data-lucide="chevron-down"></i>
                                 </button>
                             </div>
-                            <div class="pd-hero-ctas" style="display: flex; gap: 15px; margin-top: 25px;">
-                                <a href="#gallery" class="pd-btn pd-btn-primary">
-                                    <i data-lucide="external-link"></i> view Assets
+                            @if($project->client_name || $project->client_website)
+                            <div class="pd-hero-client" style="display:flex; align-items:center; gap:16px; margin-bottom:28px; flex-wrap:wrap;">
+                                @if($project->client_name)
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <i data-lucide="building-2" style="width:16px;height:16px;color:var(--cr);flex-shrink:0;"></i>
+                                    <span style="font-size:0.92rem; font-weight:600; color:var(--slate);">{{ $project->client_name }}</span>
+                                </div>
+                                @endif
+                                @if($project->client_name && $project->client_website)
+                                <span style="width:1px;height:18px;background:var(--border-md);display:inline-block;"></span>
+                                @endif
+                                @if($project->client_website)
+                                <a href="{{ $project->client_website }}" target="_blank" rel="noopener" style="display:flex; align-items:center; gap:6px; font-size:0.88rem; color:var(--cr); text-decoration:none; font-weight:500;">
+                                    <i data-lucide="external-link" style="width:14px;height:14px;flex-shrink:0;"></i>
+                                    {{ preg_replace('#^https?://(www\.)?#i', '', rtrim($project->client_website, '/')) }}
                                 </a>
-                                <a href="#" class="pd-btn pd-btn-outline">
-                                    <i data-lucide="file-text"></i> Case Study PDF
+                                @endif
+                            </div>
+                            @endif
+                            @if($project->projects_images->count() > 0 || $project->projects_videos->count() > 0 || $project->projects_documents->count() > 0)
+                            <div class="pd-hero-ctas" style="display: flex; gap: 15px; margin-top: 0; flex-wrap: wrap;">
+                                <a href="#gallery" class="pd-btn pd-btn-primary">
+                                    <i data-lucide="layout-grid" style="width:17px;height:17px;"></i>
+                                    <span>View Assets</span>
                                 </a>
                             </div>
+                            @endif
                         </div>
                         <div class="pd-hero-image-container pd-reveal pd-active pd-reveal-delay-1">
-                            @if (isset($project->projects_images[0]))
-                                <img src="{{ asset('public/' . $project->projects_images[0]->image) }}"
-                                    alt="{{ $project->name }}">
+                            @php $heroImages = $project->projects_images; @endphp
+                            @if($heroImages->count() > 1)
+                                {{-- Multi-image slider --}}
+                                <div class="pd-hero-slider" id="heroSlider">
+                                    @foreach($heroImages as $i => $img)
+                                    <div class="pd-hero-slide {{ $i === 0 ? 'active' : '' }}" data-index="{{ $i }}">
+                                        <img src="{{ asset('public/' . $img->image) }}" alt="{{ $project->name }} — {{ $i + 1 }}">
+                                    </div>
+                                    @endforeach
+                                </div>
+                                <button class="pd-hslider-btn pd-hslider-prev" id="heroPrev" aria-label="Previous image">
+                                    <i data-lucide="chevron-left" style="width:18px;height:18px;"></i>
+                                </button>
+                                <button class="pd-hslider-btn pd-hslider-next" id="heroNext" aria-label="Next image">
+                                    <i data-lucide="chevron-right" style="width:18px;height:18px;"></i>
+                                </button>
+                                <div class="pd-hslider-dots" id="heroDots">
+                                    @foreach($heroImages as $i => $img)
+                                    <button class="pd-hslider-dot {{ $i === 0 ? 'active' : '' }}" data-index="{{ $i }}" aria-label="Go to image {{ $i + 1 }}"></button>
+                                    @endforeach
+                                </div>
+                                <div class="pd-hslider-counter">
+                                    <span id="heroSliderCurrent">1</span>&thinsp;/&thinsp;{{ $heroImages->count() }}
+                                </div>
+                            @elseif($heroImages->count() === 1)
+                                <img src="{{ asset('public/' . $heroImages[0]->image) }}" alt="{{ $project->name }}">
                             @else
-                                <img src="{{ asset('public/front-new/assets/images/section-3-1st-image.jpg') }}"
-                                    alt="Default Project Image">
+                                <img src="{{ asset('public/front-new/assets/images/section-3-1st-image.jpg') }}" alt="{{ $project->name }}">
                             @endif
-                            <!-- <button class="pd-play-button" aria-label="Play Project Video">
-                                                <i data-lucide="play"></i>
-                                            </button> -->
                         </div>
                     </div>
                 </div>
@@ -1487,7 +1845,7 @@
             <span class="pdl-eyebrow__tick"></span>
             <span class="pdl-eyebrow__text">01 — Overview</span>
           </div>
-          <h2 class="pdl-overview__title">The<br><em>Mission</em></h2>
+          <h2 class="pdl-overview__title">{{ $project->name }}</h2>
           <div class="pdl-overview__body">{!! $project->description !!}</div>
         </div>
         <div class="pdl-reveal d2">
@@ -1496,104 +1854,71 @@
               <div class="pdl-stat-row__icon"><i data-lucide="target" style="width:18px;"></i></div>
               <div>
                 <div class="pdl-stat-row__label">Sector</div>
-                <div class="pdl-stat-row__val">{{ $project->project_category->name }} Healthcare</div>
+                <div class="pdl-stat-row__val">{{ $project->project_category->name }}</div>
               </div>
             </div>
+            @if($project->client_name)
             <div class="pdl-stat-row">
-              <div class="pdl-stat-row__icon"><i data-lucide="users" style="width:18px;"></i></div>
+              <div class="pdl-stat-row__icon"><i data-lucide="building-2" style="width:18px;"></i></div>
               <div>
-                <div class="pdl-stat-row__label">Target Group</div>
-                <div class="pdl-stat-row__val">Hospitals, Labs &amp; Research Centers</div>
+                <div class="pdl-stat-row__label">Client</div>
+                <div class="pdl-stat-row__val">{{ $project->client_name }}</div>
               </div>
             </div>
+            @endif
+            @if($project->project_location)
             <div class="pdl-stat-row">
-              <div class="pdl-stat-row__icon"><i data-lucide="zap" style="width:18px;"></i></div>
+              <div class="pdl-stat-row__icon"><i data-lucide="map-pin" style="width:18px;"></i></div>
               <div>
-                <div class="pdl-stat-row__label">Status</div>
-                <div class="pdl-stat-row__val">Successfully Implemented &amp; Scaled</div>
+                <div class="pdl-stat-row__label">Location</div>
+                <div class="pdl-stat-row__val">{{ $project->project_location }}</div>
               </div>
             </div>
+            @endif
+            @if($project->project_duration)
             <div class="pdl-stat-row">
               <div class="pdl-stat-row__icon"><i data-lucide="clock" style="width:18px;"></i></div>
               <div>
-                <div class="pdl-stat-row__label">Timeline</div>
-                <div class="pdl-stat-row__val">18-Month Delivery Cycle</div>
+                <div class="pdl-stat-row__label">Duration</div>
+                <div class="pdl-stat-row__val">{{ $project->project_duration }}</div>
               </div>
             </div>
+            @endif
+            @if($project->regulatory_authority)
+            <div class="pdl-stat-row">
+              <div class="pdl-stat-row__icon"><i data-lucide="shield-check" style="width:18px;"></i></div>
+              <div>
+                <div class="pdl-stat-row__label">Regulatory Authority</div>
+                <div class="pdl-stat-row__val">{{ $project->regulatory_authority }}</div>
+              </div>
+            </div>
+            @endif
           </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  {{-- ═══════════════════════════════════════════════ FEATURES --}}
-  <section id="features" class="pdl-features">
-    <div class="pdl-wrap">
-      <div class="pdl-features__head">
-        <div class="pdl-reveal">
-          <div class="pdl-eyebrow">
-            <span class="pdl-eyebrow__tick"></span>
-            <span class="pdl-eyebrow__text">02 — Solutions</span>
+          @if(isset($projectServices) && $projectServices->count() > 0)
+          <div class="pdl-svc-block">
+            <div class="pdl-svc-block__lbl">
+              <i data-lucide="briefcase" style="width:13px;height:13px;"></i>
+              Services Delivered
+            </div>
+            <div class="pdl-svc-pills">
+              @foreach($projectServices as $svc)
+              <a href="{{ route('front.service', $svc->slug) }}" class="pdl-svc-pill">
+                <i data-lucide="arrow-right" style="width:12px;height:12px;"></i>
+                {{ $svc->name }}
+              </a>
+              @endforeach
+            </div>
           </div>
-          <h2 class="pdl-features__title">Key<br><em>Solutions</em></h2>
-        </div>
-        <p class="pdl-features__sub pdl-reveal d1">Technological excellence applied to real-world healthcare challenges — from regulatory compliance to clinical intelligence.</p>
-      </div>
-      <div class="pdl-features__grid">
-        <div class="pdl-feat pdl-reveal">
-          <span class="pdl-feat__num">— 01</span>
-          <div class="pdl-feat__corner"></div>
-          <div class="pdl-feat__icon"><i data-lucide="shield-check" style="width:22px;"></i></div>
-          <h3 class="pdl-feat__title">Data Compliance</h3>
-          <p class="pdl-feat__body">Ensuring ISO 27001 and local regulatory standards for patient record security across distributed facilities.</p>
-        </div>
-        <div class="pdl-feat pdl-reveal d1">
-          <span class="pdl-feat__num">— 02</span>
-          <div class="pdl-feat__corner"></div>
-          <div class="pdl-feat__icon"><i data-lucide="message-square" style="width:22px;"></i></div>
-          <h3 class="pdl-feat__title">Smart Triage</h3>
-          <p class="pdl-feat__body">Intelligent scheduling modules that optimize clinical waiting times by 35% through predictive queue management.</p>
-        </div>
-        <div class="pdl-feat pdl-reveal d2">
-          <span class="pdl-feat__num">— 03</span>
-          <div class="pdl-feat__corner"></div>
-          <div class="pdl-feat__icon"><i data-lucide="bar-chart-3" style="width:22px;"></i></div>
-          <h3 class="pdl-feat__title">Clinical BI</h3>
-          <p class="pdl-feat__body">Real-time analytics for hospital occupancy, equipment utilization mapping, and predictive resource allocation.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+          @endif
 
-  {{-- ════════════════════════════════════════════ TECH STACK --}}
-  <section class="pdl-tech">
-    <div class="pdl-wrap">
-      <div class="pdl-tech__row">
-        <span class="pdl-tech__lbl">Built with</span>
-        <div class="pdl-tech__sep"></div>
-        <div class="pdl-tech__items">
-          <div class="pdl-tech__item">
-            <div class="pdl-tech__bubble"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg" width="26" alt="Laravel"></div>
-            <span class="pdl-tech__name">Laravel</span>
-          </div>
-          <div class="pdl-tech__item">
-            <div class="pdl-tech__bubble"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" width="26" alt="Vue"></div>
-            <span class="pdl-tech__name">Vue.js</span>
-          </div>
-          <div class="pdl-tech__item">
-            <div class="pdl-tech__bubble"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" width="26" alt="AWS"></div>
-            <span class="pdl-tech__name">AWS</span>
-          </div>
-          <div class="pdl-tech__item">
-            <div class="pdl-tech__bubble"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" width="26" alt="PostgreSQL"></div>
-            <span class="pdl-tech__name">PostgreSQL</span>
-          </div>
         </div>
       </div>
     </div>
   </section>
 
   {{-- ════════════════════════════════════════════════ GALLERY --}}
+  @if($project->projects_images->count() > 0 || $project->projects_videos->count() > 0 || $project->projects_documents->count() > 0)
   <section id="gallery" class="pdl-gallery">
     <div class="pdl-wrap">
       <div class="pdl-gallery__head">
@@ -1731,44 +2056,45 @@
       </div>
     </div>
 
-    {{-- Project Description Modal --}}
-    <div class="modal fade" id="descriptionModal" tabindex="-1">
-      <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content pdl-modal">
-          <div class="modal-header">
-            <div style="display:flex;align-items:center;gap:14px;">
-              <div class="pdl-modal-icon"><i data-lucide="file-text" style="width:17px;"></i></div>
-              <h5 class="modal-title">Project Overview</h5>
-            </div>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+  </section>
+  @endif
+
+  {{-- Project Description Modal (always in DOM for Read More button) --}}
+  <div class="modal fade" id="descriptionModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content pdl-modal">
+        <div class="modal-header">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <div class="pdl-modal-icon"><i data-lucide="file-text" style="width:17px;"></i></div>
+            <h5 class="modal-title">Project Overview</h5>
           </div>
-          <div class="modal-body p-4">
-            <div class="pdl-overview__body" style="font-size: 1rem; line-height: 1.8;">
-                {!! $project->description !!}
-            </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="pdl-overview__body" style="font-size: 1rem; line-height: 1.8;">
+            {!! $project->description !!}
           </div>
         </div>
       </div>
     </div>
-
-  </section>
+  </div>
 
   {{-- ═══════════════════════════════════════════ CHALLENGES --}}
+  @php
+    $challengeItems = $project->challenges ?? [];
+    if (!is_array($challengeItems) && $challengeItems) {
+        $challengeItems = json_decode($challengeItems, true) ?: [];
+    }
+    $hasChallenges = $project->challenge_heading || !empty($challengeItems) || $project->challenge_title || $project->challenge || $project->resolution;
+  @endphp
+  @if($hasChallenges)
   <section class="pdl-challenges">
     <div class="pdl-wrap">
       <div class="pdl-reveal">
-        <!-- <div class="pdl-eyebrow">
-          <span class="pdl-eyebrow__tick"></span>
-          <span class="pdl-eyebrow__text">04 — Engineering</span>
-        </div> -->
-        <h2 class="pdl-challenges__title">Challenges &amp;<br><em>Solutions</em></h2>
+        @if($project->challenge_heading)
+        <h2 class="pdl-challenges__title">{!! nl2br(e($project->challenge_heading)) !!}</h2>
+        @endif
       </div>
-      @php
-        $challengeItems = $project->challenges ?? [];
-        if (!is_array($challengeItems) && $challengeItems) {
-            $challengeItems = json_decode($challengeItems, true) ?: [];
-        }
-      @endphp
 
       @if (!empty($challengeItems))
         <div class="pdl-carousel-wrap">
@@ -1781,16 +2107,10 @@
                 <div class="pdl-ccard-slider">
                   <div class="pdl-ccard pdl-ccard--problem pdl-reveal">
                     <div class="pdl-ccard__top-bar"></div>
-                    <div class="pdl-cpill pdl-cpill--problem">
-                      <i data-lucide="alert-triangle" style="width:11px;"></i> Challenge
-                    </div>
                     <h3>{{ $item['challenge_title'] ?? 'Project Challenge' }}</h3>
-                    <p>{!! $item['challenge'] ?? 'No challenge description provided yet.' !!}</p>
+                    <p>{!! $item['challenge'] ?? '' !!}</p>
                     <div class="pdl-ccard__rule"></div>
-                    <div class="pdl-cpill pdl-cpill--solution">
-                      <i data-lucide="check-circle" style="width:11px;"></i> Resolution
-                    </div>
-                    <p style="margin-top:14px;">{!! $item['resolution'] ?? 'No resolution details provided yet.' !!}</p>
+                    <p>{!! $item['resolution'] ?? '' !!}</p>
                   </div>
                 </div>
               @endforeach
@@ -1811,71 +2131,16 @@
         <div class="pdl-challenges__grid">
           <div class="pdl-ccard pdl-ccard--problem pdl-reveal">
             <div class="pdl-ccard__top-bar"></div>
-            <div class="pdl-cpill pdl-cpill--problem">
-              <i data-lucide="alert-triangle" style="width:11px;"></i> Challenge
-            </div>
             <h3>{{ $project->challenge_title ?? 'Project Challenge' }}</h3>
-            <p>{!! $project->challenge ?? 'No challenge description provided yet.' !!}</p>
+            <p>{!! $project->challenge ?? '' !!}</p>
             <div class="pdl-ccard__rule"></div>
-            <div class="pdl-cpill pdl-cpill--solution">
-              <i data-lucide="check-circle" style="width:11px;"></i> Resolution
-            </div>
-            <p style="margin-top:14px;">{!! $project->resolution ?? 'No resolution details provided yet.' !!}</p>
-          </div>
-        </div>
-      @else
-        <div class="pdl-challenges__grid">
-          <div class="pdl-ccard pdl-ccard--problem pdl-reveal">
-            <div class="pdl-ccard__top-bar"></div>
-            <div class="pdl-cpill pdl-cpill--problem">
-              <i data-lucide="alert-triangle" style="width:11px;"></i> Challenge
-            </div>
-            <h3>Challenge content unavailable</h3>
-            <p>This project does not have challenge details entered yet.</p>
-            <div class="pdl-ccard__rule"></div>
-            <div class="pdl-cpill pdl-cpill--solution">
-              <i data-lucide="check-circle" style="width:11px;"></i> Resolution
-            </div>
-            <p style="margin-top:14px;">Please check back once the project content has been updated.</p>
+            <p>{!! $project->resolution ?? '' !!}</p>
           </div>
         </div>
       @endif
     </div>
   </section>
-
-  {{-- ══════════════════════════════════════════════ RESULTS --}}
-  <section class="pdl-results">
-    <div class="pdl-wrap">
-      <div class="pdl-results__head">
-        <div class="pdl-reveal">
-          <div class="pdl-eyebrow" style="margin-bottom:16px;">
-            <span class="pdl-eyebrow__tick"></span>
-            <span class="pdl-eyebrow__text" style="color:rgba(255,255,255,0.5);">05 — Outcomes</span>
-          </div>
-          <h2 class="pdl-results__title">Impact &amp;<br><em>Results</em></h2>
-        </div>
-        <p class="pdl-results__sub pdl-reveal d1">Measurable outcomes delivered across every integrated facility, tracked in real-time.</p>
-      </div>
-      <div class="pdl-results__grid pdl-reveal">
-        <div class="pdl-rstat">
-          <div class="pdl-rstat__num">99.9%</div>
-          <div class="pdl-rstat__lbl">System Uptime</div>
-        </div>
-        <div class="pdl-rstat">
-          <div class="pdl-rstat__num">40%</div>
-          <div class="pdl-rstat__lbl">Faster Operations</div>
-        </div>
-        <div class="pdl-rstat">
-          <div class="pdl-rstat__num">12+</div>
-          <div class="pdl-rstat__lbl">Integrated Facilities</div>
-        </div>
-        <div class="pdl-rstat">
-          <div class="pdl-rstat__num">22s</div>
-          <div class="pdl-rstat__lbl">Avg. Patient Check-in</div>
-        </div>
-      </div>
-    </div>
-  </section>
+  @endif
 
   {{-- ══════════════════════════════════════════════ RELATED --}}
   @if($relatedProjects->count() > 0)
@@ -1892,7 +2157,7 @@
       </div>
       <div class="pdl-related__grid">
         @foreach($relatedProjects as $rp)
-        <a href="{{ route('front.project_details', $rp->id) }}" class="pdl-rcard pdl-reveal">
+        <a href="{{ route('front.project_details', $rp->slug) }}" class="pdl-rcard pdl-reveal">
           @if(isset($rp->projects_images[0]))
             <img src="{{ asset('public/'.$rp->projects_images[0]->image) }}" alt="{{ $rp->name }}">
           @else
@@ -1910,31 +2175,218 @@
   </section>
   @endif
 
+  {{-- ══════════════════════════════════════ PROJECT DETAILS MODAL --}}
+  <div class="modal fade pdl-details-modal" id="projectDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <h5 class="modal-title">Project Details</h5>
+            <div style="font-family:'Roboto Mono',monospace;font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-top:4px;">
+              {{ $project->name }}
+            </div>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+
+          {{-- Category tag --}}
+          <div class="pdl-dm-cat">
+            <i data-lucide="tag" style="width:11px;"></i>
+            {{ $project->project_category->name }}
+          </div>
+
+          {{-- 2-column meta grid --}}
+          <div class="pdl-dm-grid">
+            @if($project->client_name)
+            <div class="pdl-dm-item">
+              <div class="pdl-dm-item__icon"><i data-lucide="building-2" style="width:16px;"></i></div>
+              <div>
+                <div class="pdl-dm-item__lbl">Client</div>
+                <div class="pdl-dm-item__val">{{ $project->client_name }}</div>
+              </div>
+            </div>
+            @endif
+
+            @if($project->project_location)
+            <div class="pdl-dm-item">
+              <div class="pdl-dm-item__icon"><i data-lucide="map-pin" style="width:16px;"></i></div>
+              <div>
+                <div class="pdl-dm-item__lbl">Location</div>
+                <div class="pdl-dm-item__val">{{ $project->project_location }}</div>
+              </div>
+            </div>
+            @endif
+
+            @if($project->project_duration)
+            <div class="pdl-dm-item">
+              <div class="pdl-dm-item__icon"><i data-lucide="clock" style="width:16px;"></i></div>
+              <div>
+                <div class="pdl-dm-item__lbl">Duration</div>
+                <div class="pdl-dm-item__val">{{ $project->project_duration }}</div>
+              </div>
+            </div>
+            @endif
+
+            @if($project->regulatory_authority)
+            <div class="pdl-dm-item">
+              <div class="pdl-dm-item__icon"><i data-lucide="shield-check" style="width:16px;"></i></div>
+              <div>
+                <div class="pdl-dm-item__lbl">Regulatory Authority</div>
+                <div class="pdl-dm-item__val">{{ $project->regulatory_authority }}</div>
+              </div>
+            </div>
+            @endif
+
+            @if($project->client_website)
+            <div class="pdl-dm-item">
+              <div class="pdl-dm-item__icon"><i data-lucide="globe" style="width:16px;"></i></div>
+              <div>
+                <div class="pdl-dm-item__lbl">Client Website</div>
+                <div class="pdl-dm-item__val">
+                  <a href="{{ $project->client_website }}" target="_blank" rel="noopener">
+                    {{ preg_replace('#^https?://#', '', $project->client_website) }}
+                    <i data-lucide="external-link" style="width:11px;vertical-align:middle;"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            @endif
+
+            {{-- Assets summary --}}
+            @php $totalAssets = $project->projects_images->count() + $project->projects_videos->count() + $project->projects_documents->count(); @endphp
+            @if($totalAssets > 0)
+            <div class="pdl-dm-item">
+              <div class="pdl-dm-item__icon"><i data-lucide="folder-open" style="width:16px;"></i></div>
+              <div>
+                <div class="pdl-dm-item__lbl">Project Assets</div>
+                <div class="pdl-dm-item__val">
+                  <div class="pdl-dm-assets">
+                    @if($project->projects_images->count() > 0)
+                    <span class="pdl-dm-asset-badge">
+                      <i data-lucide="image" style="width:13px;"></i>
+                      {{ $project->projects_images->count() }} Image{{ $project->projects_images->count() > 1 ? 's' : '' }}
+                    </span>
+                    @endif
+                    @if($project->projects_videos->count() > 0)
+                    <span class="pdl-dm-asset-badge">
+                      <i data-lucide="video" style="width:13px;"></i>
+                      {{ $project->projects_videos->count() }} Video{{ $project->projects_videos->count() > 1 ? 's' : '' }}
+                    </span>
+                    @endif
+                    @if($project->projects_documents->count() > 0)
+                    <span class="pdl-dm-asset-badge">
+                      <i data-lucide="file-text" style="width:13px;"></i>
+                      {{ $project->projects_documents->count() }} Document{{ $project->projects_documents->count() > 1 ? 's' : '' }}
+                    </span>
+                    @endif
+                  </div>
+                </div>
+              </div>
+            </div>
+            @endif
+          </div>
+
+          {{-- Project Scope (full-width) --}}
+          @if($project->project_scope)
+          <div class="pdl-dm-full">
+            <div class="pdl-dm-full__lbl">
+              <i data-lucide="layout-list" style="width:13px;"></i> Project Scope
+            </div>
+            <div class="pdl-dm-full__body">{{ $project->project_scope }}</div>
+          </div>
+          @endif
+
+          {{-- Related Services --}}
+          @if($projectServices->count() > 0)
+          <div class="pdl-dm-full">
+            <div class="pdl-dm-full__lbl">
+              <i data-lucide="layers" style="width:13px;"></i> Services Involved
+            </div>
+            <div class="pdl-dm-services">
+              @foreach($projectServices as $svc)
+              <a href="{{ route('front.service', $svc->slug) }}" class="pdl-dm-svc-pill">
+                <i data-lucide="arrow-right" style="width:11px;"></i>
+                {{ $svc->name }}
+              </a>
+              @endforeach
+            </div>
+          </div>
+          @endif
+
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div><!-- /pdl -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-<script src="https://unpkg.com/page-flip/dist/js/page-flip.browser.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  lucide.createIcons();
+  /* ── Icons ─────────────────────────────────────── */
+  if (typeof lucide !== 'undefined') lucide.createIcons();
 
   /* ── Scroll reveal ─────────────────────────────── */
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
-  }, { threshold: 0.08 });
+  }, { threshold: 0, rootMargin: '0px 0px -40px 0px' });
   document.querySelectorAll('.pdl-reveal').forEach(el => io.observe(el));
 
   /* ── Read More ─────────────────────────────────── */
   const desc = document.getElementById('heroDesc');
   const btn  = document.getElementById('heroReadMore');
-  const descModal = new bootstrap.Modal(document.getElementById('descriptionModal'));
-  if (desc && btn) {
+  const descModalEl = document.getElementById('descriptionModal');
+  const descModal = descModalEl ? new bootstrap.Modal(descModalEl) : null;
+  if (desc && btn && descModal) {
     const check = () => btn.style.display = desc.scrollHeight > desc.clientHeight + 2 ? 'inline-flex' : 'none';
     check(); window.addEventListener('resize', check);
-    btn.addEventListener('click', function() {
-        descModal.show();
-    });
+    btn.addEventListener('click', () => descModal.show());
+  }
+
+  /* ── Hero Image Slider ─────────────────────────── */
+  const heroSlider = document.getElementById('heroSlider');
+  if (heroSlider) {
+    const hSlides = heroSlider.querySelectorAll('.pd-hero-slide');
+    const hDots   = document.querySelectorAll('#heroDots .pd-hslider-dot');
+    const hCount  = document.getElementById('heroSliderCurrent');
+    const hPrev   = document.getElementById('heroPrev');
+    const hNext   = document.getElementById('heroNext');
+    let hCurrent = 0, hTimer;
+
+    const hGoTo = (idx) => {
+      hSlides[hCurrent].classList.remove('active');
+      hDots[hCurrent].classList.remove('active');
+      hCurrent = (idx + hSlides.length) % hSlides.length;
+      hSlides[hCurrent].classList.add('active');
+      hDots[hCurrent].classList.add('active');
+      if (hCount) hCount.textContent = hCurrent + 1;
+    };
+
+    const hStartAuto = () => {
+      clearInterval(hTimer);
+      hTimer = setInterval(() => hGoTo(hCurrent + 1), 5000);
+    };
+
+    hPrev?.addEventListener('click', () => { hGoTo(hCurrent - 1); hStartAuto(); });
+    hNext?.addEventListener('click', () => { hGoTo(hCurrent + 1); hStartAuto(); });
+    hDots.forEach((dot, i) => dot.addEventListener('click', () => { hGoTo(i); hStartAuto(); }));
+
+    /* pause on hover, resume on leave */
+    heroSlider.closest('.pd-hero-image-container')?.addEventListener('mouseenter', () => clearInterval(hTimer));
+    heroSlider.closest('.pd-hero-image-container')?.addEventListener('mouseleave', hStartAuto);
+
+    /* touch swipe support */
+    let hTouchX = 0;
+    heroSlider.addEventListener('touchstart', e => { hTouchX = e.touches[0].clientX; }, { passive: true });
+    heroSlider.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - hTouchX;
+      if (Math.abs(dx) > 40) { dx < 0 ? hGoTo(hCurrent + 1) : hGoTo(hCurrent - 1); hStartAuto(); }
+    }, { passive: true });
+
+    hStartAuto();
   }
 
   /* ── Gallery Filter ────────────────────────────── */
@@ -1965,82 +2417,88 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSlide = 0;
     const slides = document.querySelectorAll('.pdl-ccard-slider');
     const totalSlides = slides.length;
-    const visibleSlides = window.innerWidth <= 768 ? 1 : 2;
-    const maxSlide = Math.max(0, totalSlides - visibleSlides);
+    const isMobile = () => window.innerWidth <= 768;
 
     const updateCarousel = () => {
-      const translateX = -currentSlide * (50 + 1.2); // 50% + gap equivalent
-      slider.style.transform = `translateX(${translateX}%)`;
+      if (isMobile()) {
+        slider.style.transform = 'none';
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        return;
+      }
+      const maxSlide = Math.max(0, totalSlides - 2);
+      if (currentSlide > maxSlide) currentSlide = maxSlide;
+      slider.style.transform = `translateX(${-currentSlide * (50 + 1.2)}%)`;
       prevBtn.disabled = currentSlide === 0;
       nextBtn.disabled = currentSlide >= maxSlide;
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === currentSlide);
-      });
+      dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
     };
 
     prevBtn.addEventListener('click', () => {
-      if (currentSlide > 0) {
-        currentSlide--;
-        updateCarousel();
-      }
+      if (!isMobile() && currentSlide > 0) { currentSlide--; updateCarousel(); }
     });
-
     nextBtn.addEventListener('click', () => {
-      if (currentSlide < maxSlide) {
-        currentSlide++;
-        updateCarousel();
-      }
+      const maxSlide = Math.max(0, totalSlides - 2);
+      if (!isMobile() && currentSlide < maxSlide) { currentSlide++; updateCarousel(); }
+    });
+    dots.forEach((dot, i) => dot.addEventListener('click', () => {
+      if (!isMobile()) { currentSlide = i; updateCarousel(); }
+    }));
+
+    /* sync dots with native mobile scroll */
+    slider.addEventListener('scroll', () => {
+      if (!isMobile()) return;
+      const slideW = slides[0] ? slides[0].offsetWidth + 16 : 1;
+      const idx = Math.round(slider.scrollLeft / slideW);
+      dots.forEach((dot, i) => dot.classList.toggle('active', i === idx));
     });
 
-    dots.forEach((dot, i) => {
-      dot.addEventListener('click', () => {
-        currentSlide = i;
-        updateCarousel();
-      });
-    });
-
-    window.addEventListener('resize', () => {
-      currentSlide = 0;
-      updateCarousel();
-    });
-
+    window.addEventListener('resize', () => { currentSlide = 0; updateCarousel(); });
     updateCarousel();
   }
 });
 
-/* ── Modals ──────────────────────────────────────── */
+/* ── Gallery Modal ───────────────────────────────── */
 let galleryModal = null, pdfModalInst = null;
 
 function openGalleryModal(type, url, title) {
   const el = document.getElementById('galleryModal');
+  if (!el) return;
   if (!galleryModal) galleryModal = new bootstrap.Modal(el);
   $('#modalImage,#modalVideo').addClass('d-none');
   $('#galleryTitle').text(title);
   const wrap = document.getElementById('modalTypeIconWrap');
   if (type === 'image') {
     $('#modalImage').attr('src', url).removeClass('d-none');
-    wrap.innerHTML = '<i data-lucide="image" style="width:17px;"></i>';
+    if (wrap) wrap.innerHTML = '<i data-lucide="image" style="width:17px;"></i>';
   } else {
-    $('#modalVideoSource').attr('src', url);
-    document.getElementById('modalVideo').load();
+    const vs = document.getElementById('modalVideoSource');
+    const vv = document.getElementById('modalVideo');
+    if (vs) vs.src = url;
+    if (vv) vv.load();
     $('#modalVideo').removeClass('d-none');
-    wrap.innerHTML = '<i data-lucide="play-circle" style="width:17px;"></i>';
+    if (wrap) wrap.innerHTML = '<i data-lucide="play-circle" style="width:17px;"></i>';
   }
-  lucide.createIcons(); galleryModal.show();
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+  galleryModal.show();
 }
 
 $('#galleryModal').on('hidden.bs.modal', () => {
-  const v = document.getElementById('modalVideo'); v.pause(); v.currentTime = 0;
+  const v = document.getElementById('modalVideo');
+  if (v) { v.pause(); v.currentTime = 0; }
 });
 
 /* ── PDF Flipbook ────────────────────────────────── */
 let pageFlip = null, loadId = 0;
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+if (typeof pdfjsLib !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+}
 
 async function openFlipbook(url, title) {
   loadId++;
   const lid = loadId;
   const el = document.getElementById('pdfModal');
+  if (!el) return;
   if (!pdfModalInst) pdfModalInst = new bootstrap.Modal(el);
   $('#pdfTitle').text(title);
   $('#pdfLoading').show(); $('#pdfPageCounter').text('Preparing…');
@@ -2065,7 +2523,9 @@ async function openFlipbook(url, title) {
     $(el).one('shown.bs.modal', () => {
       if (lid !== loadId) return;
       if (pageFlip) pageFlip.destroy();
-      pageFlip = new St.PageFlip(fb, {
+      const PageFlipClass = (typeof St !== 'undefined') ? St.PageFlip : null;
+      if (!PageFlipClass) { $('#pdfPageCounter').text('Viewer unavailable'); $('#pdfLoading').hide(); return; }
+      pageFlip = new PageFlipClass(fb, {
         width: 450, height: 600, size: 'stretch',
         minWidth: 200, maxWidth: 1000, minHeight: 300, maxHeight: 1200,
         maxShadowOpacity: 0.3, showCover: true, mobileScrollSupport: false,
@@ -2073,7 +2533,7 @@ async function openFlipbook(url, title) {
       });
       pageFlip.loadFromHTML(fb.querySelectorAll('.page'));
       pageFlip.on('flip', e => $('#currentPage').text(e.data + 1));
-      lucide.createIcons();
+      if (typeof lucide !== 'undefined') lucide.createIcons();
       $('#pdfLoading').fadeOut(300); $('#pdfPageCounter').text(total + ' pages');
     });
     if ($(el).hasClass('show')) $(el).trigger('shown.bs.modal');

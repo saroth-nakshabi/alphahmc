@@ -390,6 +390,29 @@
                         </div>
                     </div>
 
+                    {{-- Dates card --}}
+                    <div class="sidebar-card">
+                        <div class="sidebar-card-header">
+                            <i class="ti ti-calendar"></i> Publication Dates
+                        </div>
+                        <div class="sidebar-card-body">
+                            <div class="mb-3">
+                                <label class="control-label mb-1" for="published_date">Published Date <span class="required-star">*</span></label>
+                                <input type="date" id="published_date" name="published_date"
+                                    class="form-control form-control-sm"
+                                    value="{{ now()->toDateString() }}" required />
+                                <small class="field-hint">Date shown as "Published" on the service page.</small>
+                            </div>
+                            <div class="mb-1">
+                                <label class="control-label mb-1" for="updated_date">Last Updated Date</label>
+                                <input type="date" id="updated_date" name="updated_date"
+                                    class="form-control form-control-sm"
+                                    value="{{ now()->toDateString() }}" />
+                                <small class="field-hint">Date shown as "Updated" on the service page.</small>
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- Options card --}}
                     <div class="sidebar-card">
                         <div class="sidebar-card-header">
@@ -815,12 +838,11 @@
             },
 
             submitHandler: function (form) {
-                // Sync all TinyMCE editors before submitting
+                // Sync all TinyMCE 6 editors before submitting
                 if (typeof tinymce !== 'undefined') {
-                    try { tinymce.triggerSave(); } catch(e) {}
-                    tinymce.editors.forEach(ed => {
-                        const ta = document.getElementById(ed.id);
-                        if (ta) ta.value = ed.getContent();
+                    document.querySelectorAll('textarea[id]').forEach(function (ta) {
+                        const ed = tinymce.get(ta.id);
+                        if (ed) ta.value = ed.getContent();
                     });
                 }
 
@@ -859,7 +881,10 @@
                                 // Full page reset
                                 form.reset();
                                 if (typeof tinymce !== 'undefined') {
-                                    tinymce.editors.forEach(ed => ed.setContent(''));
+                                    document.querySelectorAll('textarea[id]').forEach(function (ta) {
+                                        const ed = tinymce.get(ta.id);
+                                        if (ed) ed.setContent('');
+                                    });
                                 }
                                 $('.select2').val(null).trigger('change');
                                 $('#slug').val('');
@@ -900,27 +925,42 @@
                         $('#server-error-list').empty();
                         $('#server-error-box').addClass('d-none');
 
-                        let errorMessages = '';
-                        if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                        let title   = 'Could not save service';
+                        let listHtml = '';
+
+                        if (xhr.status === 419) {
+                            title    = 'Session Expired';
+                            listHtml = '<li>Your session has expired. Please <a href="{{ route('login') }}">log in again</a>.</li>';
+                        } else if (xhr.status === 403) {
+                            title    = 'Permission Denied';
+                            listHtml = '<li>You do not have permission to perform this action.</li>';
+                        } else if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                            title = 'Validation Errors';
                             $.each(xhr.responseJSON.errors, function (key, value) {
                                 const msg = Array.isArray(value) ? value[0] : value;
-                                errorMessages += `<li>${msg}</li>`;
+                                listHtml += '<li>' + msg + '</li>';
                                 const fieldName = key.replace(/\.[0-9]+/g, '');
-                                $(`[name='${fieldName}'], [name='${fieldName}[]']`).addClass('is-invalid');
+                                $('[name="' + fieldName + '"], [name="' + fieldName + '[]"]').addClass('is-invalid');
                             });
-                            $('#server-error-list').html(errorMessages);
-                            $('#server-error-box').removeClass('d-none');
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        } else if (xhr.status >= 500) {
+                            title    = 'Server Error';
+                            listHtml = '<li>' + (xhr.responseJSON?.message || 'An unexpected server error occurred. Please try again or contact support.') + '</li>';
+                        } else if (xhr.status === 0) {
+                            title    = 'Network Error';
+                            listHtml = '<li>Could not reach the server. Please check your internet connection and try again.</li>';
                         } else {
-                            errorMessages = xhr.responseJSON?.message || 'Something went wrong. Please try again.';
-                            $('#server-error-list').html(`<li>${errorMessages}</li>`);
-                            $('#server-error-box').removeClass('d-none');
+                            listHtml = '<li>' + (xhr.responseJSON?.message || 'Something went wrong. Please try again.') + '</li>';
                         }
+
+                        $('#server-error-list').html(listHtml);
+                        $('#server-error-box').removeClass('d-none');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
 
                         Swal.fire({
                             icon: 'error',
-                            title: 'Could not save service',
-                            html: `<div style="text-align:left">${errorMessages}</div>`,
+                            title: title,
+                            html: '<ul style="text-align:left;margin:0;padding-left:1.2rem">' + listHtml + '</ul>',
+                            confirmButtonColor: '#dc3545',
                             customClass: { popup: 'swal-wide' }
                         });
                     }

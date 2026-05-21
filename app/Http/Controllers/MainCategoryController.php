@@ -16,8 +16,22 @@ class MainCategoryController extends Controller
             'categories.serviceGroups',
             'allCategories.services',
             'allCategories.serviceGroups',
-        ])->get();
+        ])->orderBy('sort_order')->get();
         return view('dashboard.categories.main', $data);
+    }
+
+    public function reorder(Request $request)
+    {
+        $request->validate([
+            'order'   => 'required|array',
+            'order.*' => 'integer|exists:main_categories,id',
+        ]);
+
+        foreach ($request->order as $position => $id) {
+            MainCategory::where('id', $id)->update(['sort_order' => $position + 1]);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Order saved!']);
     }
 
     public function store(Request $request)
