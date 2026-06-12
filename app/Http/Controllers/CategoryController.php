@@ -7,8 +7,6 @@ use App\Models\Category;
 use App\Models\MainCategory;
 use App\Models\Agent;
 use App\Models\Announcement;
-use App\Models\Faq;
-use App\Models\ServiceMagazine;
 use App\Models\Service;
 use App\Models\ServiceImage;
 use Illuminate\Http\Request;
@@ -67,7 +65,7 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $data = [];
-        $data['category'] = Category::with(['mainCategories', 'faqs', 'magazines', 'images'])->findOrFail($id);
+        $data['category'] = Category::with(['mainCategories'])->findOrFail($id);
         $data['main_categories'] = MainCategory::all();
         $data['agents'] = Agent::all();
         $data['announcements'] = Announcement::all();
@@ -88,7 +86,6 @@ class CategoryController extends Controller
             'description'                => 'required',
             'agent_id'                   => 'required|exists:agents,id',
             'overview'                   => 'nullable|string',
-            'service_header'             => 'nullable|max:255',
             'core_service_header'        => 'nullable|array',
             'core_service_header.*'      => 'nullable|string',
             'core_service_description'   => 'nullable|array',
@@ -97,6 +94,8 @@ class CategoryController extends Controller
             'process_header.*'           => 'nullable|string',
             'process_description'        => 'nullable|array',
             'process_description.*'      => 'nullable|string',
+            'process_service_ids'        => 'nullable|array',
+            'process_service_ids.*'      => 'nullable|exists:services,id',
         ]);
 
         $image_name = null;
@@ -125,12 +124,22 @@ class CategoryController extends Controller
         $mainCategoryIds = $request->input('main_category_ids');
         $primaryCategoryId = $mainCategoryIds[0];
 
-        $processHeaders = array_values(array_filter($request->input('process_header', []), function ($value) {
-            return !is_null($value) && trim(strip_tags((string) $value)) !== '';
-        }));
-        $processDescriptions = array_values(array_filter($request->input('process_description', []), function ($value) {
-            return !is_null($value) && trim(strip_tags((string) $value)) !== '';
-        }));
+        // Build process steps as aligned triplets (header / description / linked service)
+        $rawHeaders  = $request->input('process_header', []);
+        $rawDescs    = $request->input('process_description', []);
+        $rawServices = $request->input('process_service_ids', []);
+        $processHeaders = $processDescriptions = $processServiceIds = [];
+        $stepCount = max(count($rawHeaders), count($rawDescs), count($rawServices));
+        for ($i = 0; $i < $stepCount; $i++) {
+            $h = trim((string) ($rawHeaders[$i] ?? ''));
+            $d = $rawDescs[$i] ?? '';
+            if ($h === '' && trim(strip_tags((string) $d)) === '') {
+                continue;
+            }
+            $processHeaders[]      = $h;
+            $processDescriptions[] = $d;
+            $processServiceIds[]   = !empty($rawServices[$i]) ? (int) $rawServices[$i] : null;
+        }
 
         $item = Category::create([
             'main_category_id' => $primaryCategoryId,
@@ -144,12 +153,11 @@ class CategoryController extends Controller
             'agent_id' => $request->input('agent_id'),
             'inq_officer_name' => $request->input('inq_officer_name'),
             'inq_officer_phone' => $request->input('inq_officer_phone'),
-            'service_header' => $request->input('service_header'),
             'core_service_header' => $request->input('core_service_header'),
             'core_service_description' => $request->input('core_service_description'),
             'process_header' => $processHeaders,
             'process_description' => $processDescriptions,
-            'info_three' => $request->input('info_three'),
+            'process_service_ids' => $processServiceIds,
             'info_four' => $request->input('info_four'),
             'announcement_id' => !empty($request->input('announcement_id')) ? $request->input('announcement_id') : null,
             'related_services' => $request->input('related_services'),
@@ -169,41 +177,6 @@ class CategoryController extends Controller
                 $gallery_image_name = time() . '_gallery_' . Str::uuid() . '.' . $image_file->getClientOriginalExtension();
                 $image_file->move(public_path('uploads/category_images'), $gallery_image_name);
                 $item->images()->create(['image' => 'uploads/category_images/' . $gallery_image_name]);
-            }
-        }
-
-        // Handle FAQs
-        if ($request->has('faqs')) {
-            foreach ($request->input('faqs') as $faq) {
-                if (!empty($faq['question']) && !empty($faq['answer'])) {
-                    $item->faqs()->create([
-                        'faq_question' => $faq['question'],
-                        'faq_answer' => $faq['answer'],
-                    ]);
-                }
-            }
-        }
-
-        // Handle Magazines
-        if ($request->has('magazines')) {
-            foreach ($request->file('magazines') as $index => $magazine_data) {
-                $title = $request->input("magazines.$index.title");
-                $description = $request->input("magazines.$index.description");
-                $image_file = $magazine_data['image'] ?? null;
-
-                if ($title && $description) {
-                    $mag_image_name = null;
-                    if ($image_file) {
-                        $mag_image_name = time() . '_mag_' . Str::uuid() . '.' . $image_file->getClientOriginalExtension();
-                        $image_file->move(public_path('uploads/category_images'), $mag_image_name);
-                    }
-
-                    $item->magazines()->create([
-                        'title' => $title,
-                        'description' => $description,
-                        'image' => $mag_image_name,
-                    ]);
-                }
             }
         }
 
@@ -229,7 +202,6 @@ class CategoryController extends Controller
             'description'                => 'required',
             'agent_id'                   => 'required|exists:agents,id',
             'overview'                   => 'nullable|string',
-            'service_header'             => 'nullable|max:255',
             'core_service_header'        => 'nullable|array',
             'core_service_header.*'      => 'nullable|string',
             'core_service_description'   => 'nullable|array',
@@ -238,6 +210,8 @@ class CategoryController extends Controller
             'process_header.*'           => 'nullable|string',
             'process_description'        => 'nullable|array',
             'process_description.*'      => 'nullable|string',
+            'process_service_ids'        => 'nullable|array',
+            'process_service_ids.*'      => 'nullable|exists:services,id',
         ]);
 
         $imagePath = $item->image;
@@ -276,12 +250,22 @@ class CategoryController extends Controller
         $mainCategoryIds = $request->input('main_category_ids');
         $primaryCategoryId = $mainCategoryIds[0];
 
-        $processHeaders = array_values(array_filter($request->input('process_header', []), function ($value) {
-            return !is_null($value) && trim(strip_tags((string) $value)) !== '';
-        }));
-        $processDescriptions = array_values(array_filter($request->input('process_description', []), function ($value) {
-            return !is_null($value) && trim(strip_tags((string) $value)) !== '';
-        }));
+        // Build process steps as aligned triplets (header / description / linked service)
+        $rawHeaders  = $request->input('process_header', []);
+        $rawDescs    = $request->input('process_description', []);
+        $rawServices = $request->input('process_service_ids', []);
+        $processHeaders = $processDescriptions = $processServiceIds = [];
+        $stepCount = max(count($rawHeaders), count($rawDescs), count($rawServices));
+        for ($i = 0; $i < $stepCount; $i++) {
+            $h = trim((string) ($rawHeaders[$i] ?? ''));
+            $d = $rawDescs[$i] ?? '';
+            if ($h === '' && trim(strip_tags((string) $d)) === '') {
+                continue;
+            }
+            $processHeaders[]      = $h;
+            $processDescriptions[] = $d;
+            $processServiceIds[]   = !empty($rawServices[$i]) ? (int) $rawServices[$i] : null;
+        }
 
         $item->update([
             'main_category_id' => $primaryCategoryId,
@@ -295,12 +279,11 @@ class CategoryController extends Controller
             'agent_id' => $request->input('agent_id'),
             'inq_officer_name' => $request->input('inq_officer_name'),
             'inq_officer_phone' => $request->input('inq_officer_phone'),
-            'service_header' => $request->input('service_header'),
             'core_service_header' => $request->input('core_service_header'),
             'core_service_description' => $request->input('core_service_description'),
             'process_header' => $processHeaders,
             'process_description' => $processDescriptions,
-            'info_three' => $request->input('info_three'),
+            'process_service_ids' => $processServiceIds,
             'info_four' => $request->input('info_four'),
             'announcement_id' => !empty($request->input('announcement_id')) ? $request->input('announcement_id') : null,
             'related_services' => $request->input('related_services'),
@@ -320,52 +303,6 @@ class CategoryController extends Controller
                 $gallery_image_name = time() . '_gallery_' . Str::uuid() . '.' . $image_file->getClientOriginalExtension();
                 $image_file->move(public_path('uploads/category_images'), $gallery_image_name);
                 $item->images()->create(['image' => 'uploads/category_images/' . $gallery_image_name]);
-            }
-        }
-
-        // Handle FAQs (Delete and Recreate)
-        $item->faqs()->delete();
-        if ($request->has('faqs')) {
-            foreach ($request->input('faqs') as $faq) {
-                if (!empty($faq['question']) && !empty($faq['answer'])) {
-                    $item->faqs()->create([
-                        'faq_question' => $faq['question'],
-                        'faq_answer' => $faq['answer'],
-                    ]);
-                }
-            }
-        }
-
-        // Handle Magazines
-        $existingMagazines = $item->magazines;
-        foreach ($existingMagazines as $mag) {
-            if ($mag->image && file_exists(public_path('uploads/category_images/' . $mag->image))) {
-                unlink(public_path('uploads/category_images/' . $mag->image));
-            }
-        }
-        $item->magazines()->delete();
-
-        if ($request->has('magazines')) {
-            foreach ($request->input('magazines') as $index => $mag_data) {
-                $title = $mag_data['title'] ?? null;
-                $description = $mag_data['description'] ?? null;
-                
-                if ($title && $description) {
-                    $mag_image_name = null;
-                    if ($request->hasFile("magazines.$index.image")) {
-                        $image_file = $request->file("magazines.$index.image");
-                        $mag_image_name = time() . '_mag_' . Str::uuid() . '.' . $image_file->getClientOriginalExtension();
-                        $image_file->move(public_path('uploads/category_images'), $mag_image_name);
-                    } elseif (isset($mag_data['existing_image'])) {
-                        $mag_image_name = $mag_data['existing_image'];
-                    }
-
-                    $item->magazines()->create([
-                        'title' => $title,
-                        'description' => $description,
-                        'image' => $mag_image_name,
-                    ]);
-                }
             }
         }
 

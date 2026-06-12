@@ -1,7 +1,7 @@
 @extends('front/layout-2')
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.css') }}?v=1">
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-category.css') }}?v=1">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-category.css') }}?v=2">
 @endsection
 @push('page_title')
     {!! $service->name !!}
@@ -124,9 +124,6 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
       <div class="intro-content">
         <!-- <span class="eyebrow">About {{ $service->categories->first()->name ?? 'This Category' }}</span> -->
          {{-- <span class="eyebrow">ABOUT THIS CATEGORY</span> --}}
-         @if (!empty(trim($service->service_header ?? '')))
-             <h2 class="intro-header">{{ $service->service_header }}</h2>
-         @endif
         {{-- <h2 class="display-title">
           UAE regulations are <em>precise</em>. <br>
           <span class="primary-text">Preparation is everything.</span>
@@ -394,6 +391,16 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
   }
 
   $processCount = max(count($processHeaders), count($processDescriptions));
+
+  $processServiceIds = $service->process_service_ids ?? [];
+  if (!is_array($processServiceIds)) {
+    $decodedIds = json_decode($processServiceIds, true);
+    $processServiceIds = is_array($decodedIds) ? $decodedIds : [];
+  }
+  $linkedIds = array_values(array_filter($processServiceIds));
+  $processServiceMap = count($linkedIds)
+    ? \App\Models\Service::whereIn('id', $linkedIds)->get()->keyBy('id')
+    : collect();
 @endphp
 
 @if ($processCount > 0)
@@ -421,6 +428,15 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
             </div>
             <h4>{{ $processHeaders[$i] ?? 'Process Step' }}</h4>
             <p>{!! $processDescriptions[$i] ?? '' !!}</p>
+            @php $stepService = !empty($processServiceIds[$i]) ? ($processServiceMap[$processServiceIds[$i]] ?? null) : null; @endphp
+            @if ($stepService)
+              <a href="{{ route('front.service', $stepService->slug) }}" class="process-svc">
+                <span class="process-svc-name">{{ $stepService->name }} →</span>
+                @if (trim(strip_tags((string) $stepService->overview)) !== '')
+                  <span class="process-svc-desc">{{ Str::limit(strip_tags($stepService->overview), 140) }}</span>
+                @endif
+              </a>
+            @endif
           </div>
         @endfor
       </div>
@@ -670,13 +686,6 @@ function toggleTransformationDesc() {
 
                         <div class="help-text-block">
                             {{-- <h4>{{ $service->name }} solution</h4> --}}
-                            @if($service->info_three && trim($service->info_three) != '')
-                                {!! $service->info_three !!}
-                            @else
-                                <p>Our multidisciplinary team combines architectural excellence with deep clinical insights to
-                                    deliver projects that are not just buildings, but platforms for healing.</p>
-                            @endif
-
                             @if($service->info_four && trim($service->info_four) != '')
                                 <div class="mt-4">
                                     {!! $service->info_four !!}

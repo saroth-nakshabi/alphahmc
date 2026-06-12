@@ -37,7 +37,7 @@
 @section('content')
 
     @php
-        // Core Services
+        // Service Pillars
         $coreHeaders = $category->core_service_header ?? [];
         $coreDescs   = $category->core_service_description ?? [];
         if (!is_array($coreHeaders)) {
@@ -76,14 +76,23 @@
                 $procDescs = is_array($decoded) ? $decoded : [$procDescs];
             } else { $procDescs = []; }
         }
+        $procServiceIds = $category->process_service_ids ?? [];
+        if (!is_array($procServiceIds)) {
+            $decoded = json_decode($procServiceIds, true);
+            $procServiceIds = is_array($decoded) ? $decoded : [];
+        }
         $processItems = [];
         $maxProc = max(count($procHeaders), count($procDescs), 0);
         for ($i = 0; $i < $maxProc; $i++) {
             $h = $procHeaders[$i] ?? ''; $d = $procDescs[$i] ?? '';
             if ($h !== '' || trim(strip_tags((string)$d)) !== '') {
-                $processItems[] = ['header' => $h, 'desc' => $d];
+                $processItems[] = ['header' => $h, 'desc' => $d, 'service_id' => $procServiceIds[$i] ?? null];
             }
         }
+
+        // Services selectable per process step: this category's own services,
+        // falling back to all services when the category has none linked yet.
+        $stepServices = $category->services->count() ? $category->services : $services;
     @endphp
 
     {{-- Breadcrumb --}}
@@ -218,48 +227,38 @@
                     <div class="section-body">
                         <div class="row g-3">
                             <div class="col-12">
-                                <label class="control-label">Service Header <span class="text-muted fw-normal">(shown after the hero, above the intro description)</span></label>
-                                <input type="text" name="service_header" class="form-control"
-                                    placeholder="e.g. Our Healthcare Services"
-                                    value="{{ $category->service_header }}" />
-                                <div class="field-hint">If left empty, no header is shown and the intro description starts directly.</div>
-                            </div>
-                            <div class="col-12">
-                                <label class="control-label">Intro Description <span class="text-muted fw-normal">(overview section)</span></label>
+                                <label class="control-label">Main Content <span class="text-muted fw-normal">(overview section)</span></label>
                                 <textarea name="overview" rows="6" class="rich-textarea form-control"
-                                    placeholder="Introduction paragraph shown below the hero...">{{ $category->overview }}</textarea>
+                                    placeholder="Main content shown below the hero...">{{ $category->overview }}</textarea>
+                                <div class="field-hint">To add a header, type it in the editor and apply a heading style from the <strong>Paragraph ▾</strong> (blocks) dropdown in the toolbar.</div>
                             </div>
                             <div class="col-12">
-                                <label class="control-label">CTA Header <span class="text-muted fw-normal">(optional)</span></label>
-                                <textarea name="info_three" rows="4" class="rich-textarea form-control"
-                                    placeholder="Call-to-action heading...">{{ $category->info_three }}</textarea>
-                            </div>
-                            <div class="col-12">
-                                <label class="control-label">CTA Description <span class="text-muted fw-normal">(why choose us)</span></label>
+                                <label class="control-label">CTA Content <span class="text-muted fw-normal">(why choose us)</span></label>
                                 <textarea name="info_four" rows="4" class="rich-textarea form-control"
-                                    placeholder="Why choose us / benefits description...">{{ $category->info_four }}</textarea>
+                                    placeholder="Why choose us / benefits content...">{{ $category->info_four }}</textarea>
+                                <div class="field-hint">To add a header, type it in the editor and apply a heading style from the <strong>Paragraph ▾</strong> (blocks) dropdown in the toolbar.</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {{-- ── Section 4 · Core Services ── --}}
+                {{-- ── Section 4 · Service Pillars ── --}}
                 <div class="section-card">
                     <div class="section-header justify-content-between">
                         <div class="d-flex align-items-center gap-2">
                             <span class="section-badge text-white" style="background:#059669!important">4</span>
-                            <h6 class="mb-0 fw-semibold">Core Services</h6>
+                            <h6 class="mb-0 fw-semibold">Service Pillars</h6>
                             <span class="item-count-badge" id="core-count">{{ count($coreItems) }} {{ count($coreItems) === 1 ? 'item' : 'items' }}</span>
                         </div>
                         <button type="button" class="btn btn-sm btn-outline-success" id="addCoreServiceBtn">
-                            <i class="ti ti-plus me-1"></i> Add Core Service
+                            <i class="ti ti-plus me-1"></i> Add Service Pillar
                         </button>
                     </div>
                     <div class="section-body p-3">
                         <div id="core-empty-state" class="empty-state {{ count($coreItems) > 0 ? 'd-none' : '' }}">
                             <i class="ti ti-layout-grid"></i>
-                            <p class="mb-1 fw-semibold">No core services added yet</p>
-                            <small>Click <strong>Add Core Service</strong> to highlight your key offerings.</small>
+                            <p class="mb-1 fw-semibold">No service pillars added yet</p>
+                            <small>Click <strong>Add Service Pillar</strong> to highlight your key offerings.</small>
                         </div>
                         <div id="core-accordion" class="accordion cst-accordion">
                             @foreach ($coreItems as $idx => $item)
@@ -269,24 +268,24 @@
                                             data-bs-toggle="collapse" data-bs-target="#core-collapse-p{{ $idx }}"
                                             aria-expanded="{{ $idx === 0 ? 'true' : 'false' }}">
                                             <span class="badge me-2 text-white" style="background:#059669;min-width:26px">{{ $idx + 1 }}</span>
-                                            <span class="core-item-title">{{ $item['header'] ?: 'Core Service' }}</span>
+                                            <span class="core-item-title">{{ $item['header'] ?: 'Service Pillar' }}</span>
                                         </button>
                                     </h2>
                                     <div id="core-collapse-p{{ $idx }}" class="accordion-collapse collapse {{ $idx === 0 ? 'show' : '' }}">
                                         <div class="accordion-body">
                                             <div class="row g-3">
                                                 <div class="col-12">
-                                                    <label class="control-label">Core Service Header</label>
+                                                    <label class="control-label">Service Pillar Header</label>
                                                     <input type="text" name="core_service_header[]"
                                                         class="form-control core-header-input"
                                                         placeholder="e.g. Quality Management"
                                                         value="{{ $item['header'] }}" />
                                                 </div>
                                                 <div class="col-12">
-                                                    <label class="control-label">Core Service Description</label>
+                                                    <label class="control-label">Service Pillar Description</label>
                                                     <textarea id="core_desc_p{{ $idx }}" name="core_service_description[]"
                                                         rows="4" class="rich-textarea form-control"
-                                                        placeholder="Core service description...">{{ $item['desc'] }}</textarea>
+                                                        placeholder="Service pillar description...">{{ $item['desc'] }}</textarea>
                                                 </div>
                                             </div>
                                             <div class="d-flex justify-content-end mt-3">
@@ -347,6 +346,23 @@
                                                         rows="4" class="rich-textarea form-control"
                                                         placeholder="Process step description...">{{ $item['desc'] }}</textarea>
                                                 </div>
+                                                <div class="col-12">
+                                                    <label class="control-label">Related Service <span class="text-muted fw-normal">(optional)</span></label>
+                                                    @php
+                                                        $stepOpts = $stepServices;
+                                                        if (!empty($item['service_id']) && !$stepOpts->contains('id', $item['service_id'])) {
+                                                            $extra = $services->firstWhere('id', $item['service_id']);
+                                                            if ($extra) $stepOpts = $stepOpts->concat([$extra]);
+                                                        }
+                                                    @endphp
+                                                    <select name="process_service_ids[]" class="form-control">
+                                                        <option value="">— No service —</option>
+                                                        @foreach ($stepOpts as $svc)
+                                                            <option value="{{ $svc->id }}" {{ (string)($item['service_id'] ?? '') === (string)$svc->id ? 'selected' : '' }}>{{ $svc->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <div class="field-hint">The service name and its short description are shown under this step on the website.</div>
+                                                </div>
                                             </div>
                                             <div class="d-flex justify-content-end mt-3">
                                                 <button type="button" class="btn btn-sm btn-outline-danger remove-process-section">
@@ -361,137 +377,10 @@
                     </div>
                 </div>
 
-                {{-- ── Section 6 · Magazine / Insights ── --}}
-                <div class="section-card">
-                    <div class="section-header justify-content-between">
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="section-badge text-white" style="background:#7c3aed!important">6</span>
-                            <h6 class="mb-0 fw-semibold">Magazine / Insights</h6>
-                            <span class="item-count-badge" id="mag-count">{{ $category->magazines->count() }} {{ $category->magazines->count() === 1 ? 'item' : 'items' }}</span>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-outline-primary" id="addMagazineBtn">
-                            <i class="ti ti-plus me-1"></i> Add Item
-                        </button>
-                    </div>
-                    <div class="section-body p-3">
-                        <div id="mag-empty-state" class="empty-state {{ $category->magazines->count() > 0 ? 'd-none' : '' }}">
-                            <i class="ti ti-news"></i>
-                            <p class="mb-1 fw-semibold">No magazine items yet</p>
-                            <small>Click <strong>Add Item</strong> to add magazine/insights cards.</small>
-                        </div>
-                        <div id="magazine-accordion" class="accordion cst-accordion">
-                            @foreach ($category->magazines as $idx => $magazine)
-                                <div class="accordion-item magazine-section-item" id="mag-item-p{{ $idx }}">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button {{ $idx > 0 ? 'collapsed' : '' }}" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#mag-collapse-p{{ $idx }}"
-                                            aria-expanded="{{ $idx === 0 ? 'true' : 'false' }}">
-                                            <span class="badge me-2" style="background:#7c3aed;color:#fff;min-width:26px">{{ $idx + 1 }}</span>
-                                            <span class="mag-item-title text-truncate" style="max-width:300px">{{ $magazine->title ?: 'Magazine Item' }}</span>
-                                        </button>
-                                    </h2>
-                                    <div id="mag-collapse-p{{ $idx }}" class="accordion-collapse collapse {{ $idx === 0 ? 'show' : '' }}">
-                                        <div class="accordion-body">
-                                            <div class="row g-3">
-                                                <div class="col-md-8">
-                                                    <label class="control-label">Title <span class="required-star">*</span></label>
-                                                    <input type="text" name="magazines[{{ $idx }}][title]"
-                                                        class="form-control mag-title-input"
-                                                        placeholder="Magazine title"
-                                                        value="{{ $magazine->title }}" required />
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label class="control-label">Image</label>
-                                                    <input type="file" name="magazines[{{ $idx }}][image]" class="form-control" accept="image/*" />
-                                                    @if ($magazine->image)
-                                                        <input type="hidden" name="magazines[{{ $idx }}][existing_image]" value="{{ $magazine->image }}">
-                                                        <div class="mt-1">
-                                                            <img src="{{ asset('uploads/category_images/' . $magazine->image) }}" alt="Magazine Image" width="80" class="rounded">
-                                                        </div>
-                                                    @endif
-                                                    <div class="field-hint">Max 4MB</div>
-                                                </div>
-                                                <div class="col-12">
-                                                    <label class="control-label">Description <span class="required-star">*</span></label>
-                                                    <textarea id="mag_desc_p{{ $idx }}" name="magazines[{{ $idx }}][description]"
-                                                        rows="4" class="rich-textarea form-control"
-                                                        placeholder="Magazine description..." required>{{ $magazine->description }}</textarea>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex justify-content-end mt-3">
-                                                <button type="button" class="btn btn-sm btn-outline-danger remove-magazine-section">
-                                                    <i class="ti ti-trash me-1"></i> Remove this item
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-
-                {{-- ── Section 7 · FAQ ── --}}
-                <div class="section-card">
-                    <div class="section-header justify-content-between">
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="section-badge text-dark" style="background:#fbbf24!important">7</span>
-                            <h6 class="mb-0 fw-semibold">Frequently Asked Questions</h6>
-                            <span class="item-count-badge" id="faq-count" style="background:#fef9c3;color:#854d0e">{{ $category->faqs->count() }} {{ $category->faqs->count() === 1 ? 'item' : 'items' }}</span>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-outline-warning" id="addFaqBtn">
-                            <i class="ti ti-plus me-1"></i> Add FAQ
-                        </button>
-                    </div>
-                    <div class="section-body p-3">
-                        <div id="faq-empty-state" class="empty-state {{ $category->faqs->count() > 0 ? 'd-none' : '' }}">
-                            <i class="ti ti-help-circle"></i>
-                            <p class="mb-1 fw-semibold">No FAQs added yet</p>
-                            <small>Click <strong>Add FAQ</strong> to add questions &amp; answers.</small>
-                        </div>
-                        <div id="faq-accordion" class="accordion cst-accordion">
-                            @foreach ($category->faqs as $idx => $faq)
-                                <div class="accordion-item faq-section" id="faq-item-p{{ $idx }}">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button {{ $idx > 0 ? 'collapsed' : '' }}" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#faq-collapse-p{{ $idx }}"
-                                            aria-expanded="{{ $idx === 0 ? 'true' : 'false' }}">
-                                            <span class="badge me-2 text-dark" style="background:#fbbf24;min-width:26px">Q{{ $idx + 1 }}</span>
-                                            <span class="faq-item-question text-truncate" style="max-width:300px">{{ Str::limit($faq->faq_question, 60) }}</span>
-                                        </button>
-                                    </h2>
-                                    <div id="faq-collapse-p{{ $idx }}" class="accordion-collapse collapse {{ $idx === 0 ? 'show' : '' }}">
-                                        <div class="accordion-body">
-                                            <div class="mb-3">
-                                                <label class="control-label">Question <span class="required-star">*</span></label>
-                                                <input type="text" name="faqs[{{ $idx }}][question]"
-                                                    class="form-control faq-question-input"
-                                                    placeholder="FAQ question..."
-                                                    value="{{ $faq->faq_question }}" required />
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="control-label">Answer</label>
-                                                <textarea id="faq_ans_p{{ $idx }}" name="faqs[{{ $idx }}][answer]"
-                                                    rows="4" class="rich-textarea form-control"
-                                                    placeholder="FAQ answer...">{{ $faq->faq_answer }}</textarea>
-                                            </div>
-                                            <div class="d-flex justify-content-end">
-                                                <button type="button" class="btn btn-sm btn-outline-danger remove-faq-section">
-                                                    <i class="ti ti-trash me-1"></i> Remove this FAQ
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-
-                {{-- ── Section 8 · SEO / Meta ── --}}
+                {{-- ── Section 6 · SEO / Meta ── --}}
                 <div class="section-card">
                     <div class="section-header">
-                        <span class="section-badge bg-secondary text-white">8</span>
+                        <span class="section-badge bg-secondary text-white">6</span>
                         <h6 class="mb-0 fw-semibold">SEO / Meta Details</h6>
                         <small class="text-muted ms-1">— all optional</small>
                     </div>
@@ -678,37 +567,43 @@
         });
 
         /* ─── Live accordion header sync ─── */
-        $(document).on('input', '.core-header-input',    function () { $(this).closest('.accordion-item').find('.core-item-title').text($(this).val().trim() || 'Core Service'); });
+        $(document).on('input', '.core-header-input',    function () { $(this).closest('.accordion-item').find('.core-item-title').text($(this).val().trim() || 'Service Pillar'); });
         $(document).on('input', '.process-header-input', function () { $(this).closest('.accordion-item').find('.process-item-title').text($(this).val().trim() || 'Process Step'); });
-        $(document).on('input', '.mag-title-input',      function () { $(this).closest('.accordion-item').find('.mag-item-title').text($(this).val().trim() || 'Magazine Item'); });
-        $(document).on('input', '.faq-question-input',   function () { $(this).closest('.accordion-item').find('.faq-item-question').text(($(this).val().trim() || 'FAQ Question').substring(0, 60)); });
 
         /* ─── Counters (start after pre-loaded items) ─── */
         let coreIdx    = {{ count($coreItems) }};
         let processIdx = {{ count($processItems) }};
-        let magIdx     = {{ $category->magazines->count() }};
-        let faqIdx     = {{ $category->faqs->count() }};
 
         function updateCoreCount()    { const n=$('#core-accordion .accordion-item').length;     $('#core-count').text(n+' '+(n===1?'item':'items')); n===0?$('#core-empty-state').removeClass('d-none'):$('#core-empty-state').addClass('d-none'); }
         function updateProcessCount() { const n=$('#process-accordion .accordion-item').length;  $('#process-count').text(n+' '+(n===1?'item':'items')); n===0?$('#process-empty-state').removeClass('d-none'):$('#process-empty-state').addClass('d-none'); }
-        function updateMagCount()     { const n=$('#magazine-accordion .accordion-item').length; $('#mag-count').text(n+' '+(n===1?'item':'items')); n===0?$('#mag-empty-state').removeClass('d-none'):$('#mag-empty-state').addClass('d-none'); }
-        function updateFaqCount()     { const n=$('#faq-accordion .accordion-item').length;      $('#faq-count').text(n+' '+(n===1?'item':'items')); n===0?$('#faq-empty-state').removeClass('d-none'):$('#faq-empty-state').addClass('d-none'); }
 
         /* ─── Item builders (for newly added items only) ─── */
         function buildCoreItem(idx) {
             return '<div class="accordion-item core-service-section-item" id="core-item-' + idx + '">' +
                 '<h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#core-collapse-' + idx + '" aria-expanded="true">' +
                 '<span class="badge me-2 text-white" style="background:#059669;min-width:26px">#</span>' +
-                '<span class="core-item-title">New Core Service</span></button></h2>' +
+                '<span class="core-item-title">New Service Pillar</span></button></h2>' +
                 '<div id="core-collapse-' + idx + '" class="accordion-collapse collapse show"><div class="accordion-body">' +
                 '<div class="row g-3">' +
-                '<div class="col-12"><label class="control-label">Core Service Header</label>' +
+                '<div class="col-12"><label class="control-label">Service Pillar Header</label>' +
                 '<input type="text" name="core_service_header[]" class="form-control core-header-input" placeholder="e.g. Quality Management" /></div>' +
-                '<div class="col-12"><label class="control-label">Core Service Description</label>' +
-                '<textarea id="core_desc_' + idx + '" name="core_service_description[]" rows="4" class="form-control" placeholder="Core service description..."></textarea></div>' +
+                '<div class="col-12"><label class="control-label">Service Pillar Description</label>' +
+                '<textarea id="core_desc_' + idx + '" name="core_service_description[]" rows="4" class="form-control" placeholder="Service pillar description..."></textarea></div>' +
                 '</div><div class="d-flex justify-content-end mt-3">' +
                 '<button type="button" class="btn btn-sm btn-outline-danger remove-core-section"><i class="ti ti-trash me-1"></i> Remove</button>' +
                 '</div></div></div></div>';
+        }
+
+        const PROCESS_SERVICES = @json($stepServices->map(fn($s) => ['id' => $s->id, 'name' => $s->name])->values());
+        function escAttr(str) {
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+        function processServiceOptions(selectedId) {
+            let html = '<option value="">— No service —</option>';
+            PROCESS_SERVICES.forEach(function (s) {
+                html += '<option value="' + s.id + '"' + (String(selectedId) === String(s.id) ? ' selected' : '') + '>' + escAttr(s.name) + '</option>';
+            });
+            return html;
         }
 
         function buildProcessItem(idx) {
@@ -722,44 +617,12 @@
                 '<input type="text" name="process_header[]" class="form-control process-header-input" placeholder="e.g. Initial Assessment" /></div>' +
                 '<div class="col-12"><label class="control-label">Process Description</label>' +
                 '<textarea id="process_desc_' + idx + '" name="process_description[]" rows="4" class="form-control" placeholder="Process step description..."></textarea></div>' +
+                '<div class="col-12"><label class="control-label">Related Service <span class="text-muted fw-normal">(optional)</span></label>' +
+                '<select name="process_service_ids[]" class="form-control">' + processServiceOptions('') + '</select>' +
+                '<div class="field-hint">The service name and its short description are shown under this step on the website.</div></div>' +
                 '</div><div class="d-flex justify-content-end mt-3">' +
                 '<button type="button" class="btn btn-sm btn-outline-danger remove-process-section"><i class="ti ti-trash me-1"></i> Remove</button>' +
                 '</div></div></div></div>';
-        }
-
-        function buildMagItem(idx) {
-            const num = $('#magazine-accordion .accordion-item').length + 1;
-            return '<div class="accordion-item magazine-section-item" id="mag-item-' + idx + '">' +
-                '<h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#mag-collapse-' + idx + '" aria-expanded="true">' +
-                '<span class="badge me-2" style="background:#7c3aed;color:#fff;min-width:26px">#' + num + '</span>' +
-                '<span class="mag-item-title text-truncate" style="max-width:300px">New Magazine Item</span></button></h2>' +
-                '<div id="mag-collapse-' + idx + '" class="accordion-collapse collapse show"><div class="accordion-body">' +
-                '<div class="row g-3">' +
-                '<div class="col-md-8"><label class="control-label">Title <span class="required-star">*</span></label>' +
-                '<input type="text" name="magazines[' + idx + '][title]" class="form-control mag-title-input" placeholder="Magazine title" required /></div>' +
-                '<div class="col-md-4"><label class="control-label">Image</label>' +
-                '<input type="file" name="magazines[' + idx + '][image]" class="form-control" accept="image/*" />' +
-                '<div class="field-hint">Max 4MB</div></div>' +
-                '<div class="col-12"><label class="control-label">Description <span class="required-star">*</span></label>' +
-                '<textarea id="mag_desc_' + idx + '" name="magazines[' + idx + '][description]" rows="4" class="form-control" placeholder="Magazine description..." required></textarea></div>' +
-                '</div><div class="d-flex justify-content-end mt-3">' +
-                '<button type="button" class="btn btn-sm btn-outline-danger remove-magazine-section"><i class="ti ti-trash me-1"></i> Remove this item</button>' +
-                '</div></div></div></div>';
-        }
-
-        function buildFaqItem(idx) {
-            const num = $('#faq-accordion .accordion-item').length + 1;
-            return '<div class="accordion-item faq-section" id="faq-item-' + idx + '">' +
-                '<h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-' + idx + '" aria-expanded="true">' +
-                '<span class="badge me-2 text-dark" style="background:#fbbf24;min-width:26px">Q' + num + '</span>' +
-                '<span class="faq-item-question text-truncate" style="max-width:300px">New FAQ</span></button></h2>' +
-                '<div id="faq-collapse-' + idx + '" class="accordion-collapse collapse show"><div class="accordion-body">' +
-                '<div class="mb-3"><label class="control-label">Question <span class="required-star">*</span></label>' +
-                '<input type="text" name="faqs[' + idx + '][question]" class="form-control faq-question-input" placeholder="FAQ question..." required /></div>' +
-                '<div class="mb-3"><label class="control-label">Answer</label>' +
-                '<textarea id="faq_ans_' + idx + '" name="faqs[' + idx + '][answer]" rows="4" class="form-control" placeholder="FAQ answer..."></textarea></div>' +
-                '<div class="d-flex justify-content-end"><button type="button" class="btn btn-sm btn-outline-danger remove-faq-section"><i class="ti ti-trash me-1"></i> Remove this FAQ</button></div>' +
-                '</div></div></div>';
         }
 
         /* ─── Add buttons ─── */
@@ -775,20 +638,6 @@
             initTinyMCE('#process_desc_' + processIdx, { height: 180 });
             processIdx++;
             updateProcessCount();
-        });
-
-        $('#addMagazineBtn').on('click', function () {
-            $('#magazine-accordion').append(buildMagItem(magIdx));
-            initTinyMCE('#mag_desc_' + magIdx, { height: 200 });
-            magIdx++;
-            updateMagCount();
-        });
-
-        $('#addFaqBtn').on('click', function () {
-            $('#faq-accordion').append(buildFaqItem(faqIdx));
-            initTinyMCE('#faq_ans_' + faqIdx, { height: 180, menubar: false });
-            faqIdx++;
-            updateFaqCount();
         });
 
         /* ─── Remove helpers ─── */
@@ -812,10 +661,8 @@
             });
         }
 
-        $(document).on('click', '.remove-core-section',     function () { confirmRemove('Remove core service?',  $(this).closest('.accordion-item').find('.core-item-title').text(),    $(this).closest('.accordion-item'), updateCoreCount); });
+        $(document).on('click', '.remove-core-section',     function () { confirmRemove('Remove service pillar?',  $(this).closest('.accordion-item').find('.core-item-title').text(),    $(this).closest('.accordion-item'), updateCoreCount); });
         $(document).on('click', '.remove-process-section',  function () { confirmRemove('Remove process step?',  $(this).closest('.accordion-item').find('.process-item-title').text(), $(this).closest('.accordion-item'), updateProcessCount); });
-        $(document).on('click', '.remove-magazine-section', function () { confirmRemove('Remove magazine item?', $(this).closest('.accordion-item').find('.mag-item-title').text(),     $(this).closest('.accordion-item'), updateMagCount); });
-        $(document).on('click', '.remove-faq-section',      function () { confirmRemove('Remove FAQ?',           $(this).closest('.accordion-item').find('.faq-item-question').text(),  $(this).closest('.accordion-item'), updateFaqCount); });
 
         /* ─── Prevent native submit ─── */
         $('#edit_form').on('submit', function (e) { e.preventDefault(); });

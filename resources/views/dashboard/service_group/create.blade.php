@@ -538,6 +538,18 @@
                 </div></div></div>`;
         }
 
+        const PROCESS_SERVICES = @json($services->map(fn($s) => ['id' => $s->id, 'name' => $s->name])->values());
+        function escAttrPS(str) {
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+        function processServiceOptions(selectedId) {
+            let html = '<option value="">— No service —</option>';
+            PROCESS_SERVICES.forEach(function (s) {
+                html += '<option value="' + s.id + '"' + (String(selectedId) === String(s.id) ? ' selected' : '') + '>' + escAttrPS(s.name) + '</option>';
+            });
+            return html;
+        }
+
         function buildProcessItem(idx) {
             return `<div class="accordion-item process-section-item" id="process-item-${idx}">
                 <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#process-collapse-${idx}" aria-expanded="true">
@@ -550,6 +562,9 @@
                             <input type="text" name="process_header[]" class="form-control process-header-input" placeholder="e.g. Initial Assessment" /></div>
                         <div class="col-12"><label class="control-label">Process Description</label>
                             <textarea id="process_desc_${idx}" name="process_description[]" rows="4" class="form-control" placeholder="Process step description..."></textarea></div>
+                        <div class="col-12"><label class="control-label">Related Service <span class="text-muted fw-normal">(optional)</span></label>
+                            <select name="process_service_ids[]" class="form-control">${processServiceOptions('')}</select>
+                            <div class="field-hint">The service name and its short description are shown under this step on the website.</div></div>
                     </div>
                     <div class="d-flex justify-content-end mt-3"><button type="button" class="btn btn-sm btn-outline-danger remove-process-section"><i class="ti ti-trash me-1"></i> Remove</button></div>
                 </div></div></div>`;

@@ -99,6 +99,8 @@ class ServiceGroupController extends Controller
             'process_header.*' => 'nullable|string|max:255',
             'process_description' => 'nullable|array',
             'process_description.*' => 'nullable|string',
+            'process_service_ids' => 'nullable|array',
+            'process_service_ids.*' => 'nullable|exists:services,id',
         ]);
 
         $coreHeaders = array_values(array_filter($request->input('core_service_header', []), function ($value) {
@@ -109,13 +111,22 @@ class ServiceGroupController extends Controller
             return !is_null($value) && trim(strip_tags((string) $value)) !== '';
         }));
 
-        $processHeaders = array_values(array_filter($request->input('process_header', []), function ($value) {
-            return !is_null($value) && trim(strip_tags((string) $value)) !== '';
-        }));
-
-        $processDescriptions = array_values(array_filter($request->input('process_description', []), function ($value) {
-            return !is_null($value) && trim(strip_tags((string) $value)) !== '';
-        }));
+        // Build process steps as aligned triplets (header / description / linked service)
+        $rawHeaders  = $request->input('process_header', []);
+        $rawDescs    = $request->input('process_description', []);
+        $rawServices = $request->input('process_service_ids', []);
+        $processHeaders = $processDescriptions = $processServiceIds = [];
+        $stepCount = max(count($rawHeaders), count($rawDescs), count($rawServices));
+        for ($i = 0; $i < $stepCount; $i++) {
+            $h = trim((string) ($rawHeaders[$i] ?? ''));
+            $d = $rawDescs[$i] ?? '';
+            if ($h === '' && trim(strip_tags((string) $d)) === '') {
+                continue;
+            }
+            $processHeaders[]      = $h;
+            $processDescriptions[] = $d;
+            $processServiceIds[]   = !empty($rawServices[$i]) ? (int) $rawServices[$i] : null;
+        }
 
         $imageName = null;
         if ($request->hasFile('image')) {
@@ -152,6 +163,7 @@ class ServiceGroupController extends Controller
             'core_service_description' => $coreDescriptions,
             'process_header'           => $processHeaders,
             'process_description'      => $processDescriptions,
+            'process_service_ids'      => $processServiceIds,
             'process_intro'            => $request->input('process_intro'),
             'info_four'                => $request->input('info_four'),
             'announcement_id'          => $request->input('announcement_id'),
@@ -217,6 +229,8 @@ class ServiceGroupController extends Controller
             'process_header.*'           => 'nullable|string',
             'process_description'        => 'nullable|array',
             'process_description.*'      => 'nullable|string',
+            'process_service_ids'        => 'nullable|array',
+            'process_service_ids.*'      => 'nullable|exists:services,id',
         ]);
 
         $coreHeaders = array_values(array_filter($request->input('core_service_header', []), function ($value) {
@@ -227,13 +241,22 @@ class ServiceGroupController extends Controller
             return !is_null($value) && trim(strip_tags((string) $value)) !== '';
         }));
 
-        $processHeaders = array_values(array_filter($request->input('process_header', []), function ($value) {
-            return !is_null($value) && trim(strip_tags((string) $value)) !== '';
-        }));
-
-        $processDescriptions = array_values(array_filter($request->input('process_description', []), function ($value) {
-            return !is_null($value) && trim(strip_tags((string) $value)) !== '';
-        }));
+        // Build process steps as aligned triplets (header / description / linked service)
+        $rawHeaders  = $request->input('process_header', []);
+        $rawDescs    = $request->input('process_description', []);
+        $rawServices = $request->input('process_service_ids', []);
+        $processHeaders = $processDescriptions = $processServiceIds = [];
+        $stepCount = max(count($rawHeaders), count($rawDescs), count($rawServices));
+        for ($i = 0; $i < $stepCount; $i++) {
+            $h = trim((string) ($rawHeaders[$i] ?? ''));
+            $d = $rawDescs[$i] ?? '';
+            if ($h === '' && trim(strip_tags((string) $d)) === '') {
+                continue;
+            }
+            $processHeaders[]      = $h;
+            $processDescriptions[] = $d;
+            $processServiceIds[]   = !empty($rawServices[$i]) ? (int) $rawServices[$i] : null;
+        }
 
         $imageName = $serviceGroup->image;
         if ($request->hasFile('image')) {
@@ -276,6 +299,7 @@ class ServiceGroupController extends Controller
             'core_service_description' => $coreDescriptions,
             'process_header'           => $processHeaders,
             'process_description'      => $processDescriptions,
+            'process_service_ids'      => $processServiceIds,
             'process_intro'            => $request->input('process_intro'),
             'info_four'                => $request->input('info_four'),
             'announcement_id'          => $request->input('announcement_id'),

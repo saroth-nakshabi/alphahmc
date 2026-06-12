@@ -1,7 +1,7 @@
 @extends('front/layout-2')
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.css') }}?v=1">
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-group.css') }}?v=1">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-group.css') }}?v=2">
 @endsection
 @push('page_title')
     {!! $service->name !!}
@@ -343,6 +343,16 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
   }
 
   $processCount = max(count($processHeaders), count($processDescriptions));
+
+  $processServiceIds = $service->process_service_ids ?? [];
+  if (!is_array($processServiceIds)) {
+    $decodedIds = json_decode($processServiceIds, true);
+    $processServiceIds = is_array($decodedIds) ? $decodedIds : [];
+  }
+  $linkedIds = array_values(array_filter($processServiceIds));
+  $processServiceMap = count($linkedIds)
+    ? \App\Models\Service::whereIn('id', $linkedIds)->get()->keyBy('id')
+    : collect();
 @endphp
 
 @if ($processCount > 0)
@@ -374,6 +384,15 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
             </div>
             <h4>{{ $processHeaders[$i] ?? 'Process Step' }}</h4>
             <p>{!! $processDescriptions[$i] ?? '' !!}</p>
+            @php $stepService = !empty($processServiceIds[$i]) ? ($processServiceMap[$processServiceIds[$i]] ?? null) : null; @endphp
+            @if ($stepService)
+              <a href="{{ route('front.service', $stepService->slug) }}" class="process-svc">
+                <span class="process-svc-name">{{ $stepService->name }} →</span>
+                @if (trim(strip_tags((string) $stepService->overview)) !== '')
+                  <span class="process-svc-desc">{{ Str::limit(strip_tags($stepService->overview), 140) }}</span>
+                @endif
+              </a>
+            @endif
           </div>
         @endfor
       </div>

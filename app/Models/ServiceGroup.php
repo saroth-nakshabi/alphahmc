@@ -23,6 +23,7 @@ class ServiceGroup extends Model
         'core_service_description',
         'process_header',
         'process_description',
+        'process_service_ids',
         'process_intro',
         'info_four',
         'announcement_id',
@@ -147,6 +148,27 @@ class ServiceGroup extends Model
         } else {
             $this->attributes['process_description'] = $value;
         }
+    }
+
+    public function getProcessServiceIdsAttribute($value)
+    {
+        if (is_array($value)) {
+            return $value;
+        }
+
+        $decoded = json_decode($value ?? '', true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+            return $decoded;
+        }
+
+        return [];
+    }
+
+    public function setProcessServiceIdsAttribute($value)
+    {
+        $this->attributes['process_service_ids'] = is_array($value)
+            ? json_encode(array_values($value))
+            : $value;
     }
 
     public function scopePublished($query)

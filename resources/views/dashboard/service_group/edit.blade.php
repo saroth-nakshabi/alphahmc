@@ -42,10 +42,19 @@
         $coreDescriptions = is_array($service_group->core_service_description) ? $service_group->core_service_description : (json_decode($service_group->core_service_description, true) ?: []);
         $processHeaders   = is_array($service_group->process_header)           ? $service_group->process_header           : (json_decode($service_group->process_header, true)           ?: []);
         $processDescs     = is_array($service_group->process_description)      ? $service_group->process_description      : (json_decode($service_group->process_description, true)      ?: []);
+        $processServiceIdsArr = $service_group->process_service_ids ?? [];
+        if (!is_array($processServiceIdsArr)) {
+            $decoded = json_decode($processServiceIdsArr, true);
+            $processServiceIdsArr = is_array($decoded) ? $decoded : [];
+        }
         if (!count($coreHeaders))    $coreHeaders      = [''];
         if (!count($coreDescriptions)) $coreDescriptions = [''];
         if (!count($processHeaders)) $processHeaders   = [''];
         if (!count($processDescs))   $processDescs     = [''];
+
+        // Services selectable per process step: the group's own services,
+        // falling back to all services when none are linked yet.
+        $stepServices = $service_group->services->count() ? $service_group->services : $services;
     @endphp
 
     {{-- Breadcrumb --}}
@@ -315,6 +324,24 @@
                                                     <textarea id="process_desc_{{ $index }}" name="process_description[]"
                                                         rows="4" class="form-control"
                                                         placeholder="Process step description...">{{ $processDescs[$index] ?? '' }}</textarea>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="control-label">Related Service <span class="text-muted fw-normal">(optional)</span></label>
+                                                    @php
+                                                        $stepSvcId = $processServiceIdsArr[$index] ?? null;
+                                                        $stepOpts = $stepServices;
+                                                        if (!empty($stepSvcId) && !$stepOpts->contains('id', $stepSvcId)) {
+                                                            $extra = $services->firstWhere('id', $stepSvcId);
+                                                            if ($extra) $stepOpts = $stepOpts->concat([$extra]);
+                                                        }
+                                                    @endphp
+                                                    <select name="process_service_ids[]" class="form-control">
+                                                        <option value="">— No service —</option>
+                                                        @foreach ($stepOpts as $svc)
+                                                            <option value="{{ $svc->id }}" {{ (string)($stepSvcId ?? '') === (string)$svc->id ? 'selected' : '' }}>{{ $svc->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <div class="field-hint">The service name and its short description are shown under this step on the website.</div>
                                                 </div>
                                             </div>
                                             <div class="d-flex justify-content-end mt-3">
@@ -708,9 +735,24 @@ function buildFaqItem(idx) {
                             <input type="text" name="process_header[]" class="form-control process-header-input" placeholder="e.g. Initial Assessment" /></div>
                         <div class="col-12"><label class="control-label">Process Description</label>
                             <textarea id="process_desc_n${idx}" name="process_description[]" rows="4" class="form-control" placeholder="Process step description..."></textarea></div>
+                        <div class="col-12"><label class="control-label">Related Service <span class="text-muted fw-normal">(optional)</span></label>
+                            <select name="process_service_ids[]" class="form-control">${processServiceOptions('')}</select>
+                            <div class="field-hint">The service name and its short description are shown under this step on the website.</div></div>
                     </div>
                     <div class="d-flex justify-content-end mt-3"><button type="button" class="btn btn-sm btn-outline-danger remove-process-section"><i class="ti ti-trash me-1"></i> Remove</button></div>
                 </div></div></div>`;
+        }
+
+        const PROCESS_SERVICES = @json($stepServices->map(fn($s) => ['id' => $s->id, 'name' => $s->name])->values());
+        function escAttrPS(str) {
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+        function processServiceOptions(selectedId) {
+            let html = '<option value="">— No service —</option>';
+            PROCESS_SERVICES.forEach(function (s) {
+                html += '<option value="' + s.id + '"' + (String(selectedId) === String(s.id) ? ' selected' : '') + '>' + escAttrPS(s.name) + '</option>';
+            });
+            return html;
         }
 
         /* ─── Add buttons ─── */

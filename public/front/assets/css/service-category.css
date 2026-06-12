@@ -418,13 +418,6 @@
 }
 
 /* Typography & Colors */
-.intro-header {
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
-  font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: 15px;
-}
-
 .display-title {
   font-size: clamp(2.2rem, 4vw, 3rem);
   line-height: 1.1;
@@ -1295,4 +1288,30 @@
 .mag-swiper-container .swiper-slide {
     width: 100% !important;   /* force full width per slide */
     flex-shrink: 0;
+}
+
+/* Linked service shown under a process step */
+.process-svc {
+  display: block;
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: rgba(6, 109, 119, 0.06);
+  border-left: 3px solid #066D77;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background .2s ease;
+}
+.process-svc:hover { background: rgba(6, 109, 119, 0.13); }
+.process-svc-name {
+  display: block;
+  font-weight: 700;
+  color: #066D77;
+  font-size: .9rem;
+  margin-bottom: 4px;
+}
+.process-svc-desc {
+  display: block;
+  color: #475569;
+  font-size: .8rem;
+  line-height: 1.55;
 }
