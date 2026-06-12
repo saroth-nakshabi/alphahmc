@@ -45,10 +45,24 @@ class MainHomeController extends Controller
         $homeSliders = HomeSlider::where('status', 'active')->get();
         $blogs = Blog::where('featured', true)->take(3)->get();
         // $featuredServices = Service::where('featured', true)->take(3)->get();
-        $categories_carts = Category::where('featured', true)->take(8)->get();
+        $categories_carts = Category::where('featured', true)->orderBy('sort_order')->orderBy('id')->take(8)->get();
+        $featured_categories_total = Category::where('featured', true)->count();
         $announcements = Announcement::where('status', 1)->latest()->get();
         $projects = Project::with(['project_category', 'projects_images', 'projects_videos', 'projects_documents'])->latest()->take(2)->get();
-        return view('front.index-2', compact('categories', 'homeSliders', 'blogs', 'categories_carts', 'announcements', 'projects'));
+        return view('front.index-2', compact('categories', 'homeSliders', 'blogs', 'categories_carts', 'announcements', 'projects', 'featured_categories_total'));
+    }
+
+    public function loadMoreCategories(Request $request)
+    {
+        $offset = max(0, (int) $request->query('offset', 0));
+        $categories = Category::where('featured', true)->orderBy('sort_order')->orderBy('id')->skip($offset)->take(8)->get();
+        $total = Category::where('featured', true)->count();
+
+        return response()->json([
+            'html' => view('front.partials.category_cards', ['categories' => $categories])->render(),
+            'count' => $categories->count(),
+            'remaining' => max(0, $total - ($offset + $categories->count())),
+        ]);
     }
 
     public function sendContact(Request $request)

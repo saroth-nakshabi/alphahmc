@@ -1,0 +1,455 @@
+/* ============================================================
+   Page-specific styles: service-detail
+   Extracted from inline <style> blocks. Loads AFTER
+   service-pages-shared.css - order preserved from the original page.
+   ============================================================ */
+
+:root {
+            --brand-primary: #066D77;
+            --brand-primary-rgb: 6, 109, 119;
+            --brand-dark: #066D77;
+            --brand-soft: #f4fcfc;
+            --text-title: #1a1a1a;
+            --text-body: #4a4a4a;
+            --text-light: #6b7280;
+            --white: #ffffff;
+            --bg-gray: #f9fafb;
+            --border-ui: #e5e7eb;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 40px -4px rgba(0, 0, 0, 0.12);
+            --radius-md: 16px;
+            --radius-lg: 32px;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+@media (max-width: 768px) {
+            .hero-background { animation: none; transform: scale(1); filter: brightness(0.8); }
+        }
+
+.hero-breadcrumb a:hover { color: #ffffff !important; }
+
+@media (max-width: 767px) {
+            .hero-breadcrumb { bottom: 24px; font-size: 0.75rem; }
+        }
+
+.hero-title {
+            font-size: clamp(3.2rem, 8vw, 5.2rem) !important;
+            line-height: 1.05;
+            margin-bottom: 25px;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            letter-spacing: -0.03em;
+        }
+
+.hero-desc-wrapper {
+            font-size: 1.25rem;
+            color: #ffffff !important;
+            max-width: 800px;
+            font-weight: 500;
+        }
+
+/* Right Content Box */
+.transformation-desc-wrapper {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 25px;
+    max-height: 260px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.4s ease;
+}
+
+/* Button */
+.transformation-read-more {
+    margin-top: 20px;
+    background: transparent;
+    border: 1px solid #ffffff40;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.transformation-read-more:hover {
+    background: #ffffff;
+    color: #2e2e2e;
+}
+
+.transformation-read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #ffffff;
+            font-weight: 700;
+            text-decoration: none;
+            margin-top: 30px;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            border-bottom: 2px solid #ffffff;
+            border-left: none;
+            border-right: none;
+            border-top: none;
+            padding-bottom: 5px;
+            background: none;
+            cursor: pointer;
+        }
+
+.transformation-read-more:hover {
+            color: #009095;
+            gap: 15px;
+            border-bottom-color: #066D77;
+        }
+
+/* Collapsible desc wrapper */
+        .transformation-desc-wrapper {
+            overflow: hidden;
+            max-height: 130px;
+            transition: max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+/* 4. IMAGE + STRATEGY SECTION STRUCTURE (NEW) */
+        :root {
+            --primary-teal: #066D77;
+            --light-teal-badge: #e6f3f3;
+            --text-badge: #4c9696;
+            --text-main: #6b6b6b;
+            --text-heading: #2d2d2d;
+            --card-bg: #ffffff;
+            --transition: all 0.4s ease-in-out;
+        }
+
+.leader-name-bold {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+        }
+
+.leader-contact-links {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+.contact-link-icon {
+            color: #1a1a1a;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f3f4f6;
+        }
+
+.contact-link-icon:hover {
+            background: #2e2e2e;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+.contact-link-icon.whatsapp-color:hover {
+            background: #25D366;
+        }
+
+@media (max-width: 991px) {
+            .help-flex {
+                flex-direction: column;
+                gap: 50px;
+            }
+
+            .leader-sidebar {
+                width: 100%;
+                padding-top: 0;
+            }
+            .service-hero{
+                padding: 120px 0 80px;
+
+            }
+
+        }
+
+.faq-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #009095;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+.faq-item.active .faq-icon {
+            background: #009095;
+            color: #ffffff;
+            transform: rotate(180deg);
+        }
+
+@media (max-width: 768px) {
+            .faq-question {
+                font-size: 1.2rem;
+            }
+        }
+
+.ey-related-card .rc-desc {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.2rem;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+.rc-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+.rc-meta i {
+            color: #009095;
+        }
+
+.rc-divider {
+            width: 1px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+@media (max-width: 991px) {
+            .related-content-block {
+                padding-left: 0;
+                margin-top: 80px;
+            }
+
+            .ey-related-card {
+                height: 500px;
+            }
+        }
+
+.leader-name-bold {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+        }
+
+@media (max-width: 768px) {
+            .bottom-interests {
+                padding: 80px 0;
+            }
+        }
+
+@media (max-width: 991px) {
+            .help-list-section h2 {
+                font-size: 2.5rem;
+            }
+
+            .transformation-section {
+                padding: 30px 0;
+                
+            }
+            .transformation-section h2 {
+                font-size: 2.2rem;
+            }
+        }
+
+/* Swiper Container */
+        .mag-swiper-container {
+            padding-right: 60px;
+            /* visible lets the next-card peek on desktop; clipped on mobile via media query */
+            overflow: visible !important;
+        }
+
+/* Continuous sliding effect */
+        .mag-swiper-container .swiper-wrapper {
+            transition-timing-function: ease-in-out !important;
+            align-items: stretch; /* all slides same height */
+        }
+
+.mag-swiper-container .swiper-slide {
+            height: auto !important; /* stretch to tallest card */
+        }
+
+/* Only lift on real pointer/mouse devices — tap on mobile triggers hover
+           which moves the card up into the overflow:hidden parent and clips it */
+        @media (hover: hover) and (pointer: fine) {
+            .mag-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            }
+        }
+
+/* Card Eyebrow */
+        .mag-card-eyebrow {
+            display: block;
+            background: transparent;
+            color: #00796b;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: lowercase;
+            letter-spacing: 0;
+            padding: 0 0 14px 0;
+            border-radius: 0;
+            margin-bottom: 20px;
+            width: 100%;
+            border-bottom: 2px solid #00796b;
+        }
+
+.mag-card-eyebrow::first-letter {
+            text-transform: uppercase;
+        }
+
+/* --- Responsive --- */
+        @media (max-width: 1200px) {
+            .mag-image-side {
+                flex: 0 0 38%;
+            }
+
+            .mag-card {
+                padding: 40px 30px;
+            }
+        }
+
+@media (max-width: 991px) {
+            .mag-container {
+                flex-direction: column;
+                width: 100%;
+                gap: 30px;
+            }
+
+            .mag-image-container {
+                max-height: 400px;
+            }
+
+            .mag-image-side {
+                width: 100%;
+                height: 450px;
+            }
+
+            .mag-content-side {
+                /* Let height be driven by the tallest card so nothing gets clipped */
+                height: auto;
+                min-height: unset;
+                padding: 40px 20px 50px 20px;
+                /* overflow:hidden is kept so the teal rounded corners work, but
+                   because we removed the translateY on touch the card never moves
+                   up into the clipping boundary */
+                overflow: hidden;
+            }
+
+            .mag-swiper-container {
+                overflow: hidden !important;
+                /* pan-y lets the browser handle vertical page scroll;
+                   Swiper handles horizontal swipe — prevents touch-event block */
+                touch-action: pan-y;
+                /* Remove desktop peek-through padding — no room on mobile */
+                padding-right: 0;
+            }
+
+            .mag-card {
+                /* Uniform height across all slides so the teal container
+                   doesn't collapse/expand as you swipe */
+                min-height: 380px;
+                /* Remove the desktop left-margin that shifts cards off-screen */
+                margin-left: 0;
+                width: 100%;
+                border-radius: 20px;
+                padding: 32px 24px;
+                /* Prevent any residual translate on tap */
+                transform: none !important;
+                transition: box-shadow 0.3s ease;
+            }
+
+            .mag-card-eyebrow {
+                font-size: 1rem;
+                padding: 0 0 12px 0;
+                margin-bottom: 16px;
+            }
+
+            .mag-card .mag-desc {
+                font-size: 0.95rem;
+                line-height: 1.75;
+                overflow: visible;
+            }
+        }
+
+@media (max-width: 575px) {
+            .mag-card {
+                min-height: 320px;
+                padding: 28px 20px;
+            }
+        }
+
+.glass-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 14px 30px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50px;
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+
+    top:25px;
+
+    transition: all 0.35s ease;
+}
+
+.mag-swiper-container {
+    overflow: hidden;    /* clips any peeking clone slides */
+}
+
+.mag-swiper-container .swiper-slide {
+    width: 100% !important;   /* force full width per slide */
+    flex-shrink: 0;
+}
+
+/* Pagination dots */
+.mag-pagination {
+    margin-top: 20px;
+    text-align: center;
+    position: static !important;
+    bottom: auto !important;
+}
+
+.mag-pagination .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.4);
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+
+.mag-pagination .swiper-pagination-bullet-active {
+    background: #ffffff;
+    width: 24px;
+    border-radius: 4px;
+}

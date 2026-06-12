@@ -19,9 +19,39 @@ class CategoryController extends Controller
     public function index()
     {
         $data = [];
-        $data['categories'] = Category::with(['mainCategory', 'services', 'serviceGroups'])->get();
+        $data['categories'] = Category::with(['mainCategory', 'services', 'serviceGroups'])
+            ->orderBy('sort_order')->orderBy('id')->get();
         $data['main_categories'] = MainCategory::all();
         return view('dashboard.categories.index', $data);
+    }
+
+    public function reorder(Request $request)
+    {
+        $request->validate([
+            'order'   => 'required|array',
+            'order.*' => 'integer|exists:categories,id',
+        ]);
+
+        foreach ($request->order as $position => $id) {
+            Category::where('id', $id)->update(['sort_order' => $position + 1]);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Order saved!']);
+    }
+
+    public function toggleFeatured($id)
+    {
+        $category = Category::findOrFail($id);
+        $category->featured = !$category->featured;
+        $category->save();
+
+        return response()->json([
+            'success'  => true,
+            'featured' => (bool) $category->featured,
+            'message'  => $category->featured
+                ? $category->name . ' is now featured on the home page.'
+                : $category->name . ' removed from the home page.',
+        ]);
     }
 
     public function create()
@@ -57,7 +87,6 @@ class CategoryController extends Controller
             'sliding_image'              => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
             'description'                => 'required',
             'agent_id'                   => 'required|exists:agents,id',
-            'content'                    => 'nullable|string',
             'overview'                   => 'nullable|string',
             'service_header'             => 'nullable|max:255',
             'core_service_header'        => 'nullable|array',
@@ -111,7 +140,6 @@ class CategoryController extends Controller
             'hero_image' => $hero_image_path,
             'sliding_image' => $sliding_image_path,
             'description' => $request->input('description'),
-            'content' => $request->input('content'),
             'overview' => $request->input('overview'),
             'agent_id' => $request->input('agent_id'),
             'inq_officer_name' => $request->input('inq_officer_name'),
@@ -200,7 +228,6 @@ class CategoryController extends Controller
             'sliding_image'              => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
             'description'                => 'required',
             'agent_id'                   => 'required|exists:agents,id',
-            'content'                    => 'nullable|string',
             'overview'                   => 'nullable|string',
             'service_header'             => 'nullable|max:255',
             'core_service_header'        => 'nullable|array',
@@ -264,7 +291,6 @@ class CategoryController extends Controller
             'hero_image' => $heroImagePath,
             'sliding_image' => $slidingImagePath,
             'description' => $request->input('description'),
-            'content' => $request->input('content'),
             'overview' => $request->input('overview'),
             'agent_id' => $request->input('agent_id'),
             'inq_officer_name' => $request->input('inq_officer_name'),

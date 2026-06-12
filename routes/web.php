@@ -88,6 +88,7 @@ Route::get('/service-group/{slug}/all-services', [ServiceGroupController::class,
 
 // Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/', [MainHomeController::class, 'index'])->name('home');
+Route::get('/load-more-categories', [MainHomeController::class, 'loadMoreCategories'])->name('front.load-more-categories');
 Route::get('/services/{slug}', [MainHomeController::class, 'Service'])->name('front.service');
 Route::get('/new_service/{slug}', function ($slug) {
     return redirect()->route('front.service', $slug, 301);
@@ -212,6 +213,15 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::delete('/categories/delete/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy')->middleware('permission:delete categories');
     Route::post('/categories/update/{id}', [CategoryController::class, 'update'])->name('categories.update')->middleware('permission:edit categories');
     Route::post('/categories/get', [CategoryController::class, 'getCategory'])->name('categories.get');
+    Route::post('/categories/reorder', [CategoryController::class, 'reorder'])->name('categories.reorder')->middleware('permission:edit categories');
+    Route::post('/categories/toggle-featured/{id}', [CategoryController::class, 'toggleFeatured'])->name('categories.toggle-featured')->middleware('permission:edit categories');
+
+    // Stub: the live dashboard layout links to route('strategy.index'), but the
+    // strategy routes only ever existed in the host's old route cache. Redirects
+    // to the dashboard until the real Strategies module routes are restored.
+    Route::get('/strategies', function () {
+        return redirect()->route('dashboard');
+    })->name('strategy.index');
     Route::post('/categories/delete-gallery-image', [CategoryController::class, 'deleteGalleryImage'])->name('categories.delete-gallery-image');
 
     // service-group routes

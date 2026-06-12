@@ -21,11 +21,16 @@
         .required-star { color: #ef4444; }
         label.form-label, .control-label { font-weight: 500; font-size: .85rem; margin-bottom: .3rem; display: block; }
         .item-count-badge { background: #e0f2fe; color: #0369a1; border-radius: 20px; padding: 2px 10px; font-size: .73rem; font-weight: 600; }
-        .carousel-img-row { display: flex; align-items: center; gap: .5rem; margin-bottom: .5rem; }
         .select2-container { display: block !important; }
+        .img-preview { width: 120px; height: 80px; object-fit: cover; }
+        .no-img-placeholder {
+            width: 120px; height: 80px;
+            border: 1px dashed #cbd5e1; border-radius: 8px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: #94a3b8; font-size: .7rem; gap: 2px; background: #f8fafc;
+        }
+        .no-img-placeholder i { font-size: 1.2rem; }
         .select2-container--default .select2-selection--multiple { height: auto !important; }
-        .gallery-image-wrapper { position: relative; display: inline-block; margin: 5px; }
-        .delete-gallery-img { position: absolute; top: -5px; right: -5px; background: red; color: white; border-radius: 50%; padding: 2px 6px; cursor: pointer; font-size: 10px; line-height: 1.4; }
     </style>
 @endsection
 
@@ -156,7 +161,7 @@
                                 <label class="control-label">Category Short Description <span class="required-star">*</span></label>
                                 <textarea name="description" rows="4" class="rich-textarea form-control"
                                     placeholder="Brief description of this category..." required>{{ $category->description }}</textarea>
-                                <div class="field-hint">Shown on listing cards and search results.</div>
+                                <div class="field-hint">Visible under the slider on the category page and on the home page cards.</div>
                             </div>
                         </div>
                     </div>
@@ -172,62 +177,32 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="control-label">Hero Section Image</label>
-                                <input type="file" name="hero_image" class="form-control" accept="image/*" />
-                                @if ($category->hero_image)
-                                    <div class="mt-2">
-                                        <img src="{{ asset($category->hero_image) }}" alt="Hero Image" width="120" class="rounded shadow-sm">
-                                        <div class="field-hint">Upload a new file to replace the current image.</div>
+                                <input type="file" name="hero_image" class="form-control img-preview-input" accept="image/*" data-preview="hero-preview" />
+                                <div class="mt-2">
+                                    <img id="hero-preview" alt="Hero Image"
+                                        src="{{ $category->hero_image ? asset('public/' . ltrim($category->hero_image, '/')) : '' }}"
+                                        class="img-preview rounded shadow-sm {{ $category->hero_image ? '' : 'd-none' }}">
+                                    <div id="hero-preview-ph" class="no-img-placeholder {{ $category->hero_image ? 'd-none' : '' }}">
+                                        <i class="ti ti-photo-off"></i> No image
                                     </div>
-                                @else
-                                    <div class="field-hint">Main banner image for the category page.</div>
-                                @endif
+                                </div>
+                                <div class="field-hint">Main banner image for the category page. Upload a new file to replace.</div>
                             </div>
                             <div class="col-md-6">
                                 <label class="control-label">Category Image</label>
-                                <input type="file" name="image" class="form-control" accept="image/*" />
-                                @if ($category->image)
-                                    <div class="mt-2">
-                                        <img src="{{ asset('uploads/category_images/' . $category->image) }}" alt="Category Image" width="120" class="rounded shadow-sm">
-                                        <div class="field-hint">Upload a new file to replace the current thumbnail.</div>
+                                <input type="file" name="image" class="form-control img-preview-input" accept="image/*" data-preview="card-preview" />
+                                <div class="mt-2">
+                                    <img id="card-preview" alt="Category Image"
+                                        src="{{ $category->card_image ? asset('public/' . ltrim($category->card_image, '/')) : '' }}"
+                                        class="img-preview rounded shadow-sm {{ $category->card_image ? '' : 'd-none' }}">
+                                    <div id="card-preview-ph" class="no-img-placeholder {{ $category->card_image ? 'd-none' : '' }}">
+                                        <i class="ti ti-photo-off"></i> No image
                                     </div>
-                                @else
-                                    <div class="field-hint">Card thumbnail shown in listings.</div>
-                                @endif
-                            </div>
-                            <div class="col-md-6">
-                                <label class="control-label">Strategy Section Sliding Image</label>
-                                <input type="file" name="sliding_image" class="form-control" accept="image/*" />
-                                @if ($category->sliding_image)
-                                    <div class="mt-2">
-                                        <img src="{{ asset($category->sliding_image) }}" alt="Sliding Image" width="120" class="rounded shadow-sm">
-                                        <div class="field-hint">Upload a new file to replace.</div>
-                                    </div>
-                                @else
-                                    <div class="field-hint">Optional side-sliding image.</div>
-                                @endif
-                            </div>
-                            <div class="col-md-6">
-                                <label class="control-label">Strategy Section Gallery Images</label>
-                                @if ($category->images->count() > 0)
-                                    <div class="d-flex flex-wrap mb-2" id="existing-gallery">
-                                        @foreach ($category->images as $img)
-                                            <div class="gallery-image-wrapper" id="gallery-img-{{ $img->id }}">
-                                                <img src="{{ asset($img->image) }}" width="80" height="80"
-                                                    class="rounded shadow-sm" style="object-fit:cover">
-                                                <span class="delete-gallery-img" data-id="{{ $img->id }}">×</span>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                @endif
-                                <div id="service-images-container">
-                                    <div class="carousel-img-row">
-                                        <input type="file" name="images[]" class="form-control" accept="image/*" />
-                                        <button type="button" class="btn btn-outline-success btn-sm add-image-btn flex-shrink-0" title="Add another image">
-                                            <i class="ti ti-plus"></i>
-                                        </button>
-                                    </div>
+                                    @if (!$category->image && $category->hero_image)
+                                        <div class="field-hint" id="card-fallback-note"><i class="ti ti-info-circle"></i> Currently using the Hero Section Image.</div>
+                                    @endif
                                 </div>
-                                <div class="field-hint">Left-side carousel images (multiple allowed).</div>
+                                <div class="field-hint">Shows on the home page (Our Latest Thinking) if the category is featured. If not uploaded, the Hero Section Image is used instead.</div>
                             </div>
                         </div>
                     </div>
@@ -243,15 +218,11 @@
                     <div class="section-body">
                         <div class="row g-3">
                             <div class="col-12">
-                                <label class="control-label">Service Header <span class="text-muted fw-normal">(optional)</span></label>
+                                <label class="control-label">Service Header <span class="text-muted fw-normal">(shown after the hero, above the intro description)</span></label>
                                 <input type="text" name="service_header" class="form-control"
                                     placeholder="e.g. Our Healthcare Services"
                                     value="{{ $category->service_header }}" />
-                            </div>
-                            <div class="col-12">
-                                <label class="control-label">Hero Description <span class="text-muted fw-normal">(shown in banner)</span></label>
-                                <textarea name="content" rows="6" class="rich-textarea form-control"
-                                    placeholder="Short description shown in the hero/banner area...">{{ $category->content }}</textarea>
+                                <div class="field-hint">If left empty, no header is shown and the intro description starts directly.</div>
                             </div>
                             <div class="col-12">
                                 <label class="control-label">Intro Description <span class="text-muted fw-normal">(overview section)</span></label>
@@ -696,40 +667,14 @@
         $('.select2').select2({ minimumResultsForSearch: 8 });
         $('.select2-sidebar').select2({ minimumResultsForSearch: 8, dropdownParent: $('body') });
 
-        /* ─── Carousel images ─── */
-        $(document).on('click', '.add-image-btn', function () {
-            $('#service-images-container').append(
-                '<div class="carousel-img-row">' +
-                '<input type="file" name="images[]" class="form-control" accept="image/*" />' +
-                '<button type="button" class="btn btn-outline-danger btn-sm remove-image-btn flex-shrink-0"><i class="ti ti-minus"></i></button>' +
-                '</div>');
-        });
-        $(document).on('click', '.remove-image-btn', function () { $(this).closest('.carousel-img-row').remove(); });
-
-        /* ─── Gallery image delete ─── */
-        $(document).on('click', '.delete-gallery-img', function () {
-            const id = $(this).data('id');
-            Swal.fire({
-                title: 'Delete image?', text: 'This cannot be undone.',
-                icon: 'warning', showCancelButton: true,
-                confirmButtonColor: '#dc2626', cancelButtonColor: '#6b7280',
-                confirmButtonText: 'Yes, delete it', reverseButtons: true,
-            }).then(function (result) {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: '{{ route('categories.delete-gallery-image') }}',
-                        method: 'POST',
-                        data: { id: id },
-                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                        success: function (response) {
-                            if (response.success) {
-                                $('#gallery-img-' + id).remove();
-                                Toast.fire({ icon: 'success', title: 'Image deleted.' });
-                            }
-                        }
-                    });
-                }
-            });
+        /* ─── Image previews ─── */
+        $(document).on('change', '.img-preview-input', function () {
+            const file = this.files && this.files[0];
+            if (!file) return;
+            const id = $(this).data('preview');
+            $('#' + id).attr('src', URL.createObjectURL(file)).removeClass('d-none');
+            $('#' + id + '-ph').addClass('d-none');
+            if (id === 'card-preview') $('#card-fallback-note').addClass('d-none');
         });
 
         /* ─── Live accordion header sync ─── */

@@ -37,12 +37,28 @@ class Category extends Model
         'meta_keywords',
         'areaServed',
         'serviceType',
-        'featured',
+        'sort_order',
     ];
 
     protected $casts = [
         'related_services' => 'array',
     ];
+
+    /**
+     * Path (relative to public/) of the home page card image.
+     * Normalizes the mixed `image` formats (full path vs bare filename)
+     * and falls back to the hero image when no card image is set.
+     */
+    public function getCardImageAttribute()
+    {
+        if ($this->image) {
+            return str_starts_with($this->image, 'uploads/')
+                ? $this->image
+                : 'uploads/category_images/' . $this->image;
+        }
+
+        return $this->hero_image ?: null;
+    }
 
     public function getCoreServiceHeaderAttribute($value)
     {

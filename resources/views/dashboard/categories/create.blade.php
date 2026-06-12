@@ -21,7 +21,6 @@
         .required-star { color: #ef4444; }
         label.form-label, .control-label { font-weight: 500; font-size: .85rem; margin-bottom: .3rem; display: block; }
         .item-count-badge { background: #e0f2fe; color: #0369a1; border-radius: 20px; padding: 2px 10px; font-size: .73rem; font-weight: 600; }
-        .carousel-img-row { display: flex; align-items: center; gap: .5rem; margin-bottom: .5rem; }
         .body-wrapper > .container-fluid { padding-left: 0 !important; padding-right: 0 !important; }
         .select2-container { display: block !important; }
         .select2-container--default .select2-selection--multiple { height: auto !important; }
@@ -101,7 +100,7 @@
                                 <label class="control-label">Category Short Description <span class="required-star">*</span></label>
                                 <textarea name="description" rows="4" class="rich-textarea form-control"
                                     placeholder="Brief description of this category..." required></textarea>
-                                <div class="field-hint">Shown on listing cards and search results.</div>
+                                <div class="field-hint">Visible under the slider on the category page and on the home page cards.</div>
                             </div>
                         </div>
                     </div>
@@ -123,24 +122,7 @@
                             <div class="col-md-6">
                                 <label class="control-label">Category Image <span class="required-star">*</span></label>
                                 <input type="file" name="image" class="form-control" accept="image/*" required />
-                                <div class="field-hint">Card thumbnail shown in listings.</div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="control-label">Strategy Section Sliding Image</label>
-                                <input type="file" name="sliding_image" class="form-control" accept="image/*" />
-                                <div class="field-hint">Optional side-sliding image.</div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="control-label">Strategy Section Gallery Images</label>
-                                <div id="service-images-container">
-                                    <div class="carousel-img-row">
-                                        <input type="file" name="images[]" class="form-control" accept="image/*" />
-                                        <button type="button" class="btn btn-outline-success btn-sm add-image-btn flex-shrink-0" title="Add another image">
-                                            <i class="ti ti-plus"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="field-hint">Left-side carousel images (optional, multiple allowed).</div>
+                                <div class="field-hint">Shows on the home page (Our Latest Thinking) if the category is featured. If not uploaded, the Hero Section Image is used instead.</div>
                             </div>
                         </div>
                     </div>
@@ -157,15 +139,10 @@
                         <div class="row g-3">
                             <div class="col-12">
                                 <label class="control-label">Service Header
-                                    <span class="text-muted fw-normal">(optional)</span></label>
+                                    <span class="text-muted fw-normal">(shown after the hero, above the intro description)</span></label>
                                 <input type="text" name="service_header" class="form-control"
                                     placeholder="e.g. Our Healthcare Services" />
-                            </div>
-                            <div class="col-12">
-                                <label class="control-label">Hero Description
-                                    <span class="text-muted fw-normal">(shown in banner)</span></label>
-                                <textarea name="content" rows="6" class="rich-textarea form-control"
-                                    placeholder="Short description shown in the hero/banner area..."></textarea>
+                                <div class="field-hint">If left empty, no header is shown and the intro description starts directly.</div>
                             </div>
                             <div class="col-12">
                                 <label class="control-label">Intro Description
@@ -447,16 +424,6 @@
                 .replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-'));
         });
 
-        /* ─── Carousel images ─── */
-        $(document).on('click', '.add-image-btn', function () {
-            $('#service-images-container').append(
-                `<div class="carousel-img-row">
-                    <input type="file" name="images[]" class="form-control" accept="image/*" />
-                    <button type="button" class="btn btn-outline-danger btn-sm remove-image-btn flex-shrink-0"><i class="ti ti-minus"></i></button>
-                </div>`);
-        });
-        $(document).on('click', '.remove-image-btn', function () { $(this).closest('.carousel-img-row').remove(); });
-
         /* ─── Counters ─── */
         let magIdx = 0, faqIdx = 0, coreIdx = 0, processIdx = 0;
 
@@ -672,13 +639,6 @@
                             });
                             coreIdx = 0; processIdx = 0; magIdx = 0; faqIdx = 0;
                             updateCoreCount(); updateProcessCount(); updateMagCount(); updateFaqCount();
-
-                            /* Reset gallery row */
-                            $('#service-images-container').html(
-                                '<div class="carousel-img-row">' +
-                                '<input type="file" name="images[]" class="form-control" accept="image/*" />' +
-                                '<button type="button" class="btn btn-outline-success btn-sm add-image-btn flex-shrink-0"><i class="ti ti-plus"></i></button>' +
-                                '</div>');
 
                             $notif.removeClass('d-none alert-danger')
                                 .addClass('alert alert-success')

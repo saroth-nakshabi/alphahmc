@@ -677,6 +677,7 @@
             <div class="header-line"></div>
         </div>
 
+        <div id="articleGrids">
         <div class="parent">
             @foreach ($categories_carts as $index => $category)
                 @php
@@ -684,10 +685,9 @@
                 @endphp
 
                 <div class="article-card {{ $gridClass }}"
-                    style="background-image: url('{{ asset('public/' . $category->image) }}')" data-aos="fade-up"
+                    style="background-image: url('{{ $category->card_image ? asset('public/' . ltrim($category->card_image, '/')) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}')" data-aos="fade-up"
                     data-aos-delay="{{ $index * 50 }}">
                     <div class="article-content">
-                        <span class="article-category-tag">INSIGHT</span>
                         <h4>{{ $category->name }}</h4>
                         <p>{{ Str::limit(strip_tags($category->description), 100) }}</p>
                         <a href="{{ route('front.service-category', $category->slug) }}" class="btn-premium-read-more" aria-label="Read more about {{ $category->name }}">
@@ -697,13 +697,16 @@
                 </div>
             @endforeach
         </div>
+        </div>{{-- /articleGrids --}}
 
-        <div class="text-center mt-5">
-            <button class="view-more-button-outline" id="loadMoreArticles" data-aos="fade-up" data-aos-delay="100">
-                <span>Load More Thinking</span>
-                <i class="fa-solid fa-plus ms-2"></i>
-            </button>
-        </div>
+        @if (($featured_categories_total ?? 0) > 8)
+            <div class="text-center mt-5">
+                <button class="view-more-button-outline" id="loadMoreArticles" data-aos="fade-up" data-aos-delay="100">
+                    <span>Load More</span>
+                    <i class="fa-solid fa-plus ms-2"></i>
+                </button>
+            </div>
+        @endif
     </section>
 
     <style>
@@ -1780,6 +1783,21 @@
             grid-row-start: 5;
         }
 
+        /* Appended "Load More" batches */
+        #articleGrids .parent + .parent {
+            margin-top: 5px;
+        }
+
+        .parent.parent-auto {
+            grid-template-rows: none;
+            grid-auto-rows: 285px;
+            min-height: auto;
+        }
+
+        .parent.parent-auto .article-card {
+            min-height: 250px;
+        }
+
         @media (max-width: 992px) {
             .parent {
                 grid-template-columns: repeat(2, 1fr);
@@ -1904,30 +1922,6 @@
             z-index: 2;
         }
 
-        .article-category-tag {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            background: rgba(255, 255, 255, 0.95);
-            color: #015353;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            backdrop-filter: blur(8px);
-            opacity: 0;
-            transform: translateY(-5px);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 5;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .article-card:hover .article-category-tag {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
         .article-card:hover .article-content {
             background: linear-gradient(180deg,
                     rgba(12, 47, 47, 0) 0%,
@@ -1946,7 +1940,8 @@
         }
 
         .article-card:hover .article-content h4 {
-            color: #1ea7a1;
+            color: #066d77;
+            opacity: 1;
         }
 
         .article-content p {
@@ -3422,40 +3417,38 @@
         });
 
         const articleSection = {
+            offset: {{ $categories_carts->count() }},
+            loading: false,
             init() {
-                this.cards = document.querySelectorAll('.article-card');
                 this.loadMoreBtn = document.getElementById('loadMoreArticles');
-                this.initialCount = 8;
-                if (this.cards.length === 0) return;
-                this.setupLoadMore();
+                this.gridsWrap = document.getElementById('articleGrids');
+                if (!this.loadMoreBtn || !this.gridsWrap) return;
+                this.loadMoreBtn.addEventListener('click', () => this.loadMore());
             },
-            setupLoadMore() {
-                if (!this.loadMoreBtn) return;
-                const allCards = Array.from(this.cards);
-                if (allCards.length <= this.initialCount) {
-                    // this.loadMoreBtn.style.display = 'none';
-                    return;
-                }
-                allCards.forEach((card, idx) => {
-                    if (idx >= this.initialCount) card.classList.add('is-hidden');
-                });
-                this.loadMoreBtn.addEventListener('click', () => {
-                    const hiddenCards = allCards.filter(c => c.classList.contains('is-hidden'));
-                    const batch = hiddenCards.slice(0, 4);
-                    this.loadMoreBtn.innerHTML = '<span>Synchronizing Thought...</span> <i class="fa-solid fa-spinner fa-spin ms-2"></i>';
-                    setTimeout(() => {
-                        batch.forEach((card, i) => {
-                            card.classList.remove('is-hidden');
-                            card.style.opacity = '1';
-                        });
-                        const remaining = allCards.filter(c => c.classList.contains('is-hidden')).length;
-                        if (remaining === 0) {
+            loadMore() {
+                if (this.loading) return;
+                this.loading = true;
+                this.loadMoreBtn.innerHTML = '<span>Loading...</span> <i class="fa-solid fa-spinner fa-spin ms-2"></i>';
+
+                fetch('{{ route('front.load-more-categories') }}?offset=' + this.offset, {
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.html && data.count > 0) {
+                            this.gridsWrap.insertAdjacentHTML('beforeend', data.html);
+                            this.offset += data.count;
+                        }
+                        if (!data.remaining) {
                             this.loadMoreBtn.style.display = 'none';
                         } else {
-                            this.loadMoreBtn.innerHTML = '<span>Load More Thinking</span> <i class="fa-solid fa-plus ms-2"></i>';
+                            this.loadMoreBtn.innerHTML = '<span>Load More</span> <i class="fa-solid fa-plus ms-2"></i>';
                         }
-                    }, 800);
-                });
+                    })
+                    .catch(() => {
+                        this.loadMoreBtn.innerHTML = '<span>Load More</span> <i class="fa-solid fa-plus ms-2"></i>';
+                    })
+                    .finally(() => { this.loading = false; });
             }
         };
         articleSection.init();
