@@ -2,20 +2,47 @@
 
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('public/dashboard/dist/libs/prismjs/themes/prism-okaidia.min.css') }}">
+    <style>
+        .status-badge   { font-size: .75rem; padding: 4px 10px; border-radius: 20px; font-weight: 600; letter-spacing: .3px; }
+        .badge-published { background: #e6f9f0; color: #1a8a4a; border: 1px solid #a3e6c3; }
+        .badge-draft     { background: #fff8e1; color: #b07d00; border: 1px solid #ffe082; }
+        .action-btn { border-radius: 8px; }
+        #items-table td, #items-table th { vertical-align: middle; }
+
+        /* Category tags */
+        .cat-tag {
+            display: inline-block;
+            font-size: .72rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin: 2px 2px 2px 0;
+            white-space: nowrap;
+        }
+        .cat-tag-sub  { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+        .cat-tag-none { background: #f1f5f9; color: #94a3b8; border: 1px solid #e2e8f0; }
+        .svc-count-badge { background: #dcfce7; color: #15803d; border-radius: 20px; padding: 2px 10px; font-size: .75rem; font-weight: 600; }
+        .svc-count-zero  { background: #f1f5f9; color: #94a3b8; border-radius: 20px; padding: 2px 10px; font-size: .75rem; font-weight: 600; }
+    </style>
 @endsection
 
 @section('content')
-    <div class="card bg-light-info shadow-none position-relative overflow-hidden">
+    <div class="card bg-light-info shadow-none position-relative overflow-hidden mb-4">
         <div class="card-body px-4 py-3">
             <div class="row align-items-center">
                 <div class="col-9">
-                    <h4 class="fw-semibold mb-8">Service Groups</h4>
+                    <h4 class="fw-semibold mb-1"><i class="ti ti-collection me-2"></i>Service Groups</h4>
                     <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
+                        <ol class="breadcrumb mb-0">
                             <li class="breadcrumb-item"><a class="text-muted" href="{{ route('dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item" aria-current="page">Service Groups</li>
+                            <li class="breadcrumb-item active">Service Groups</li>
                         </ol>
                     </nav>
+                </div>
+                <div class="col-3 text-end">
+                    <a href="{{ route('service-group.create') }}" class="btn btn-success action-btn">
+                        <i class="ti ti-plus me-1"></i> Add New Group
+                    </a>
                 </div>
             </div>
         </div>
@@ -24,84 +51,128 @@
     <section class="datatables">
         <div class="row">
             <div class="col-12">
-                <div class="card">
+                <div class="card shadow-sm border-0">
                     <div class="card-body">
-                        <div class="mb-3 d-flex align-items-center">
-                            <h5 class="mb-0">Service Groups List</h5>
-                            <a href="{{ route('service-group.create') }}" class="btn btn-success ms-auto">
-                                <i class="ti ti-plus me-1"></i> Add New
-                            </a>
+                        <div class="d-flex align-items-center mb-3 gap-2 flex-wrap">
+                            <h5 class="mb-0 fw-semibold">Service Groups List</h5>
+                            <span class="badge bg-light-primary text-primary ms-2">{{ count($service_groups) }} total</span>
+                            <div class="ms-auto d-flex align-items-center gap-2">
+                                <div class="input-group" style="width:280px">
+                                    <span class="input-group-text bg-white border-end-0">
+                                        <i class="ti ti-search text-muted" style="font-size:.95rem"></i>
+                                    </span>
+                                    <input type="text" id="group-search" class="form-control border-start-0 ps-0"
+                                        placeholder="Search by name, category…" style="font-size:.875rem">
+                                    <button class="btn btn-outline-secondary border-start-0" id="search-clear"
+                                        title="Clear" style="display:none">
+                                        <i class="ti ti-x" style="font-size:.85rem"></i>
+                                    </button>
+                                </div>
+                                <select id="status-filter" class="form-select" style="width:130px;font-size:.875rem">
+                                    <option value="">All Status</option>
+                                    <option value="published">Published</option>
+                                    <option value="draft">Draft</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="table-responsive">
-                            <table id="items-table" class="table border table-striped table-bordered display text-nowrap">
-                                <thead>
+                            <table id="items-table" class="table table-hover border table-bordered display">
+                                <thead class="table-light">
                                     <tr>
-                                        {{-- <th>#</th>
-                                        <th>Image</th> --}}
                                         <th>Name</th>
-                                        <th>Featured</th>
-                                        <th>Description</th>
-                                        <th>Action</th>
+                                        <th>Categories</th>
+                                        <th style="width:110px;text-align:center">Services</th>
+                                        <th style="width:130px">Status</th>
+                                        <th style="width:100px;text-align:center">Featured</th>
+                                        <th style="width:120px">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (isset($service_groups) && count($service_groups) > 0)
-                                        @foreach ($service_groups as $index => $service_group)
-                                            <tr data-id="{{ $service_group->id }}">
-                                                {{-- <td>{{ $index + 1 }}</td>
-                                                <td>
-                                                    @if ($service_group->image)
-                                                        <img src="{{ asset('public/uploads/service_group_images/' . $service_group->image) }}"
-                                                            alt="{{ $service_group->name }}"
-                                                            style="width:60px;height:50px;object-fit:cover;border-radius:6px;">
+                                    @foreach ($service_groups as $group)
+                                        <tr data-id="{{ $group->id }}">
+                                            <td class="fw-semibold" style="color:#2d3a4a;min-width:200px">
+                                                {{ $group->name }}
+                                            </td>
+
+                                            <td style="min-width:160px">
+                                                @forelse ($group->categories as $cat)
+                                                    <span class="cat-tag cat-tag-sub">{{ $cat->name }}</span>
+                                                @empty
+                                                    <span class="cat-tag cat-tag-none">—</span>
+                                                @endforelse
+                                            </td>
+
+                                            <td style="text-align:center">
+                                                <span class="{{ $group->services_count > 0 ? 'svc-count-badge' : 'svc-count-zero' }}">{{ $group->services_count }}</span>
+                                            </td>
+
+                                            <td>
+                                                <span class="status-badge {{ $group->status === 'published' ? 'badge-published' : 'badge-draft' }} status-label"
+                                                      data-id="{{ $group->id }}">
+                                                    @if ($group->status === 'published')
+                                                        <i class="ti ti-circle-check me-1"></i>Published
                                                     @else
-                                                        <span class="text-muted">—</span>
+                                                        <i class="ti ti-pencil me-1"></i>Draft
                                                     @endif
-                                                </td> --}}
-                                                <td>{{ $service_group->name }}</td>
-                                                <td>
-                                                    @if($service_group->is_featured)
-                                                        <span class="badge bg-success">Featured</span>
-                                                    @else
-                                                        <span class="badge bg-light-secondary text-secondary">No</span>
-                                                    @endif
-                                                </td>
-                                                <td>{!! Str::limit($service_group->description, 80) !!}</td>
-                                                <td>
-                                                    <div class="btn-group">
-                                                        <button class="dropdown-toggle btn btn-primary btn-sm"
-                                                            data-bs-toggle="dropdown" data-bs-auto-close="true"
-                                                            aria-expanded="false">
-                                                            <i class="bi bi-three-dots"></i>
-                                                        </button>
-                                                        <ul class="dropdown-menu">
-                                                            <li>
-                                                                <a class="dropdown-item"
-                                                                    href="{{ route('service-group.edit', $service_group->id) }}">
-                                                                    <i class="ti ti-pencil me-1"></i>Edit
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a class="dropdown-item delete text-danger"
-                                                                    href="javascript:void(0);"
-                                                                    data-id="{{ $service_group->id }}">
-                                                                    <i class="ti ti-trash me-1"></i>Delete
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    @endif
+                                                </span>
+                                            </td>
+
+                                            <td style="text-align:center">
+                                                <div class="form-check form-switch d-inline-block mb-0">
+                                                    <input class="form-check-input featured-input" type="checkbox" role="switch"
+                                                        data-id="{{ $group->id }}" value="1"
+                                                        {{ $group->is_featured ? 'checked' : '' }}>
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button class="dropdown-toggle btn btn-primary btn-sm action-btn"
+                                                        data-bs-toggle="dropdown" data-bs-auto-close="true"
+                                                        aria-expanded="false">
+                                                        <i class="ti ti-dots me-1"></i> Actions
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-end shadow">
+                                                        <li>
+                                                            <a class="dropdown-item" href="{{ route('service-packages', $group->slug) }}" target="_blank">
+                                                                <i class="ti ti-external-link me-2 text-info"></i>Open Page
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" href="{{ route('service-group.edit', $group->id) }}">
+                                                                <i class="ti ti-edit me-2 text-primary"></i>Edit
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item toggle-status" href="javascript:void(0);"
+                                                               data-id="{{ $group->id }}" data-status="{{ $group->status }}">
+                                                                @if ($group->status === 'published')
+                                                                    <i class="ti ti-eye-off me-2 text-warning"></i>Move to Draft
+                                                                @else
+                                                                    <i class="ti ti-world-upload me-2 text-success"></i>Publish
+                                                                @endif
+                                                            </a>
+                                                        </li>
+                                                        <li><hr class="dropdown-divider"></li>
+                                                        <li>
+                                                            <a class="dropdown-item delete" href="javascript:void(0);"
+                                                                data-id="{{ $group->id }}">
+                                                                <i class="ti ti-trash me-2 text-danger"></i>Delete
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        {{-- <th>#</th>
-                                        <th>Image</th> --}}
                                         <th>Name</th>
-                                        <th>Featured</th>
-                                        <th>Description</th>
+                                        <th>Categories</th>
+                                        <th style="text-align:center">Services</th>
+                                        <th>Status</th>
+                                        <th style="text-align:center">Featured</th>
                                         <th>Action</th>
                                     </tr>
                                 </tfoot>
@@ -112,84 +183,140 @@
             </div>
         </div>
     </section>
-
-
-
 @endsection
 
 @section('custom_js')
     <script src="{{ asset('public/dashboard/dist/libs/prismjs/prism.js') }}"></script>
     <script>
-        $(document).ready(function () {
+    $(document).ready(function () {
 
-            // ── DataTable ──────────────────────────────────────────────────────
-            var items_table = $("#items-table").DataTable({
-                dom: "Bfrtip",
-                buttons: ["copy", "csv", "excel", "pdf", "print"],
-            });
-            $(".buttons-copy,.buttons-csv,.buttons-print,.buttons-pdf,.buttons-excel")
-                .addClass("btn btn-primary mr-1");
+        var items_table = $("#items-table").DataTable({
+            dom: "lrtip",
+            order: [[0, 'asc']],
+            pageLength: 25,
+            columnDefs: [
+                { orderable: false, targets: [4, 5] },
+                { searchable: false, targets: [4, 5] },
+            ],
+        });
 
-            // ══════════════════════════════════════════════════════════════════
-            // DELETE handler
-            // ══════════════════════════════════════════════════════════════════
-            $(document).on('click', '.delete', function () {
-                const id  = $(this).data('id');
-                const url = `{{ route('service-group.destroy', '') }}/${id}`;
-                const row = $(this).closest('tr');
+        /* ─── Custom search ─── */
+        $('#group-search').on('input', function () {
+            items_table.search(this.value).draw();
+            $('#search-clear').toggle(this.value.length > 0);
+        });
 
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to recover this item!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'Cancel'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: url,
-                            method: 'DELETE',
-                            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                            beforeSend: () => Swal.fire({ title: 'Deleting...', allowOutsideClick: false, didOpen: () => Swal.showLoading() }),
-                            success: function (response) {
-                                Swal.close();
-                                Toast.fire({ icon: 'success', title: response.message });
-                                items_table.row(row).remove().draw();
-                            },
-                            error: function () {
-                                Swal.close();
-                                Swal.fire({ icon: 'error', title: 'Failed to delete', text: 'Please try again.' });
-                            }
-                        });
+        $('#search-clear').on('click', function () {
+            $('#group-search').val('');
+            items_table.search('').draw();
+            $(this).hide();
+        });
+
+        /* ─── Status filter ─── */
+        $.fn.dataTable.ext.search.push(function (settings, data) {
+            if (settings.nTable.id !== 'items-table') return true;
+            var val = $('#status-filter').val();
+            if (!val) return true;
+            return data[3].toLowerCase().indexOf(val) !== -1;
+        });
+
+        $('#status-filter').on('change', function () {
+            items_table.draw();
+        });
+
+        /* ─── Toggle publish/draft ─── */
+        $(document).on('click', '.toggle-status', function () {
+            const id            = $(this).data('id');
+            const currentStatus = $(this).data('status');
+            const $btn          = $(this);
+            const $row          = $btn.closest('tr');
+            const newStatus     = currentStatus === 'published' ? 'draft' : 'published';
+            const actionLabel   = newStatus === 'published' ? 'Publish' : 'Move to Draft';
+
+            Swal.fire({
+                title: actionLabel + ' this service group?',
+                icon: 'question', showCancelButton: true,
+                confirmButtonColor: newStatus === 'published' ? '#1a8a4a' : '#b07d00',
+                confirmButtonText: actionLabel, cancelButtonText: 'Cancel'
+            }).then(function (result) {
+                if (!result.isConfirmed) return;
+                $.ajax({
+                    url: '{{ url('/service-group') }}/' + id + '/toggle-status',
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    success: function (response) {
+                        Toast.fire({ icon: 'success', title: response.message });
+                        const $badge = $row.find('.status-label');
+                        if (response.status === 'published') {
+                            $badge.removeClass('badge-draft').addClass('badge-published')
+                                .html('<i class="ti ti-circle-check me-1"></i>Published');
+                            $btn.data('status', 'published')
+                                .html('<i class="ti ti-eye-off me-2 text-warning"></i>Move to Draft');
+                        } else {
+                            $badge.removeClass('badge-published').addClass('badge-draft')
+                                .html('<i class="ti ti-pencil me-1"></i>Draft');
+                            $btn.data('status', 'draft')
+                                .html('<i class="ti ti-world-upload me-2 text-success"></i>Publish');
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to update status. Please try again.' });
                     }
                 });
             });
-
-            // ── Helper: action column HTML ─────────────────────────────────
-            function actionHtml(id) {
-                return `<div class="btn-group">
-                    <button class="dropdown-toggle btn btn-primary btn-sm"
-                        data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
-                        <i class="bi bi-three-dots"></i>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" href="{{ route('service-group.edit', '') }}/${id}">
-                                <i class="ti ti-pencil me-1"></i>Edit
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item delete text-danger" href="javascript:void(0);" data-id="${id}">
-                                <i class="ti ti-trash me-1"></i>Delete
-                            </a>
-                        </li>
-                    </ul>
-                </div>`;
-            }
-
         });
+
+        /* ─── Featured toggle ─── */
+        $(document).on('change', '.featured-input', function () {
+            const id      = $(this).data('id');
+            const $toggle = $(this);
+            $toggle.prop('disabled', true);
+            $.ajax({
+                url: '{{ url('/service-group') }}/' + id + '/toggle-featured',
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                success: function (response) {
+                    $toggle.prop('disabled', false).prop('checked', response.featured);
+                    Toast.fire({ icon: 'success', title: response.message });
+                },
+                error: function () {
+                    $toggle.prop('disabled', false).prop('checked', !$toggle.prop('checked'));
+                    Swal.fire({ icon: 'error', title: 'Failed to update featured status.' });
+                }
+            });
+        });
+
+        /* ─── Delete ─── */
+        $(document).on('click', '.delete', function () {
+            const id  = $(this).data('id');
+            const url = `{{ route('service-group.destroy', '') }}/${id}`;
+            const row = $(this).closest('tr');
+            Swal.fire({
+                title: 'Are you sure?', text: "You won't be able to recover this item!",
+                icon: 'warning', showCancelButton: true,
+                confirmButtonColor: '#d33', cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes, delete it!'
+            }).then(function (result) {
+                if (!result.isConfirmed) return;
+                $.ajax({
+                    url: url, method: 'DELETE',
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    beforeSend: function () {
+                        Swal.fire({ title: 'Deleting...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                    },
+                    success: function (response) {
+                        Swal.close();
+                        Toast.fire({ icon: 'success', title: response.message });
+                        items_table.row(row).remove().draw();
+                    },
+                    error: function () {
+                        Swal.close();
+                        Swal.fire({ icon: 'error', title: 'Failed to delete', text: 'An error occurred. Please try again.' });
+                    }
+                });
+            });
+        });
+
+    });
     </script>
 @endsection

@@ -7,6 +7,8 @@ use Illuminate\Support\Str;
 use App\Models\Service;
 use App\Models\Blog;
 use App\Models\Project;
+use App\Models\Category;
+use App\Models\ServiceGroup;
 
 class SearchController extends Controller
 {
@@ -30,6 +32,38 @@ class SearchController extends Controller
                         'title'   => $item->name,
                         'url'     => route('front.service', $item->slug),
                         'excerpt' => Str::limit(strip_tags($item->overview ?? $item->content ?? ''), 120),
+                    ];
+                });
+
+            // Categories
+            $categories = Category::whereNotNull('slug')->where(function ($q) use ($query) {
+                $q->where('name', 'LIKE', "%{$query}%")
+                  ->orWhere('description', 'LIKE', "%{$query}%")
+                  ->orWhere('overview', 'LIKE', "%{$query}%");
+            })
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'type'    => 'Category',
+                        'title'   => $item->name,
+                        'url'     => route('front.service-category', $item->slug),
+                        'excerpt' => Str::limit(strip_tags($item->description ?? $item->overview ?? ''), 120),
+                    ];
+                });
+
+            // Service groups (packages)
+            $groups = ServiceGroup::published()->whereNotNull('slug')->where(function ($q) use ($query) {
+                $q->where('name', 'LIKE', "%{$query}%")
+                  ->orWhere('description', 'LIKE', "%{$query}%")
+                  ->orWhere('overview', 'LIKE', "%{$query}%");
+            })
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'type'    => 'Service Package',
+                        'title'   => $item->name,
+                        'url'     => route('service-packages', $item->slug),
+                        'excerpt' => Str::limit(strip_tags($item->description ?? $item->overview ?? ''), 120),
                     ];
                 });
 
@@ -57,7 +91,7 @@ class SearchController extends Controller
                     ];
                 });
 
-            $results = $services->merge($blogs)->merge($projects);
+            $results = $services->merge($groups)->merge($categories)->merge($blogs)->merge($projects);
         }
 
         return view('front.search', compact('results', 'query'));
@@ -82,6 +116,38 @@ class SearchController extends Controller
                         'url'   => route('front.service', $item->slug),
                         'icon'  => 'fa-stethoscope',
                         'color' => '#009095',
+                    ];
+                });
+
+            $groups = ServiceGroup::published()->whereNotNull('slug')->where(function ($q) use ($query) {
+                $q->where('name', 'LIKE', "%{$query}%")
+                  ->orWhere('overview', 'LIKE', "%{$query}%");
+            })->limit(3)
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'type'        => 'Service Package',
+                        'type_plural' => 'Service Packages',
+                        'title'       => $item->name,
+                        'url'         => route('service-packages', $item->slug),
+                        'icon'        => 'fa-layer-group',
+                        'color'       => '#066D77',
+                    ];
+                });
+
+            $categories = Category::whereNotNull('slug')->where(function ($q) use ($query) {
+                $q->where('name', 'LIKE', "%{$query}%")
+                  ->orWhere('description', 'LIKE', "%{$query}%");
+            })->limit(3)
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'type'        => 'Category',
+                        'type_plural' => 'Categories',
+                        'title'       => $item->name,
+                        'url'         => route('front.service-category', $item->slug),
+                        'icon'        => 'fa-folder-open',
+                        'color'       => '#6d28d9',
                     ];
                 });
 
@@ -111,7 +177,7 @@ class SearchController extends Controller
                     ];
                 });
 
-            $results = $services->merge($blogs)->merge($projects)->values()->all();
+            $results = $services->merge($groups)->merge($categories)->merge($blogs)->merge($projects)->values()->all();
         }
 
         return response()->json($results);

@@ -65,12 +65,14 @@
             @foreach($results as $result)
 
                 @php
-                    $color  = $result['type'] === 'Service' ? '#009095'
-                            : ($result['type'] === 'Blog'    ? '#4CAF50' : '#0056a6');
-                    $bgColor = $result['type'] === 'Service' ? '#e0f7f7'
-                            : ($result['type'] === 'Blog'    ? '#e8f5e9' : '#e3f0ff');
-                    $icon   = $result['type'] === 'Service' ? 'fa-stethoscope'
-                            : ($result['type'] === 'Blog'    ? 'fa-newspaper' : 'fa-diagram-project');
+                    $palette = [
+                        'Service'         => ['#009095', '#e0f7f7'],
+                        'Service Package' => ['#066D77', '#e0f2f2'],
+                        'Category'        => ['#6d28d9', '#f3f0ff'],
+                        'Blog'            => ['#4CAF50', '#e8f5e9'],
+                        'Project'         => ['#0056a6', '#e3f0ff'],
+                    ];
+                    [$color, $bgColor] = $palette[$result['type']] ?? ['#0056a6', '#e3f0ff'];
                 @endphp
 
                 <a href="{{ $result['url'] }}" style="text-decoration: none; color: inherit;">
@@ -101,7 +103,6 @@
                             gap: 6px;
                             margin-bottom: 14px;
                         ">
-                            <i class="fas {{ $icon }}"></i>
                             {{ $result['type'] }}
                         </span>
 

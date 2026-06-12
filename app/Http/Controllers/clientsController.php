@@ -11,8 +11,52 @@ class clientsController extends Controller
     // Display all clients
     public function index()
     {
-        $clients = client::latest()->get();
+        $clients = client::orderBy('sort_order')->orderBy('id')->get();
         return view('dashboard.Clients.index', compact('clients'));
+    }
+
+    public function reorder(Request $request)
+    {
+        $request->validate([
+            'order'   => 'required|array',
+            'order.*' => 'integer|exists:clients,id',
+        ]);
+
+        foreach ($request->order as $position => $id) {
+            client::where('id', $id)->update(['sort_order' => $position + 1]);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Order saved!']);
+    }
+
+    public function toggleFeatured($id)
+    {
+        $client = client::findOrFail($id);
+        $client->is_featured = !$client->is_featured;
+        $client->save();
+
+        return response()->json([
+            'success'  => true,
+            'featured' => (bool) $client->is_featured,
+            'message'  => $client->is_featured
+                ? $client->name . ' is now featured (shown in the home page carousel).'
+                : $client->name . ' removed from featured.',
+        ]);
+    }
+
+    public function toggleStatus($id)
+    {
+        $client = client::findOrFail($id);
+        $client->status = $client->status ? 0 : 1;
+        $client->save();
+
+        return response()->json([
+            'success' => true,
+            'status'  => (bool) $client->status,
+            'message' => $client->status
+                ? $client->name . ' is now visible on the website.'
+                : $client->name . ' is now hidden from the website.',
+        ]);
     }
 
     // Store a new client
@@ -30,6 +74,9 @@ class clientsController extends Controller
         }
 
         $data = $request->only(['name', 'short_description', 'description']);
+        $data['is_featured'] = $request->has('is_featured') ? 1 : 0;
+        $data['status'] = $request->has('status') ? 1 : 0;
+        $data['sort_order'] = (int) client::max('sort_order') + 1;
 
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
@@ -75,6 +122,8 @@ class clientsController extends Controller
         $client->name              = $request->name;
         $client->short_description = $request->short_description;
         $client->description       = $request->description;
+        $client->is_featured       = $request->has('is_featured') ? 1 : 0;
+        $client->status            = $request->has('status') ? 1 : 0;
 
         if ($request->hasFile('logo')) {
             // Delete old logo if exists

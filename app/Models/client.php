@@ -14,5 +14,14 @@ class client extends Model
         'logo',
         'short_description',
         'description',
+        'sort_order',
+        'is_featured',
+        'status',
     ];
+
+    /** Clients allowed to appear on the website, in display order. */
+    public function scopeVisible($query)
+    {
+        return $query->where('status', 1)->orderBy('sort_order')->orderBy('id');
+    }
 }

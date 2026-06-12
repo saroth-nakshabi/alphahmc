@@ -314,6 +314,14 @@
                         </button>
                     </div>
                     <div class="section-body p-3">
+                        <div class="mb-3">
+                            <label class="control-label">Process Section Introduction
+                                <span class="text-muted fw-normal">(section title &amp; description shown above the steps)</span>
+                            </label>
+                            <textarea name="process_intro" id="process_intro" rows="4" class="form-control"
+                                placeholder="e.g. From first call to license in hand — describe your process approach...">{{ $category->process_intro }}</textarea>
+                            <div class="field-hint">If left empty, the default section title is shown.</div>
+                        </div>
                         <div id="process-empty-state" class="empty-state {{ count($processItems) > 0 ? 'd-none' : '' }}">
                             <i class="ti ti-list-numbers"></i>
                             <p class="mb-1 fw-semibold">No process steps yet</p>
@@ -551,6 +559,7 @@
         }
 
         initTinyMCE('.rich-textarea', { height: 240 });
+        initTinyMCE('#process_intro', { height: 180, menubar: false });
 
         /* ─── Select2 ─── */
         $('.select2').select2({ minimumResultsForSearch: 8 });

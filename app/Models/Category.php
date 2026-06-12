@@ -28,6 +28,7 @@ class Category extends Model
         'process_header',
         'process_description',
         'process_service_ids',
+        'process_intro',
         'info_three',
         'info_four',
         'announcement_id',

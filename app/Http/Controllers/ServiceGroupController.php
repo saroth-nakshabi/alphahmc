@@ -69,8 +69,38 @@ class ServiceGroupController extends Controller
 
     public function index()
     {
-        $data['service_groups'] = ServiceGroup::all();
+        $data['service_groups'] = ServiceGroup::with('categories')->withCount('services')->orderBy('name')->get();
         return view('dashboard.service_group.index', $data);
+    }
+
+    public function toggleStatus($id)
+    {
+        $group = ServiceGroup::findOrFail($id);
+        $group->status = $group->status === 'published' ? 'draft' : 'published';
+        $group->save();
+
+        return response()->json([
+            'success' => true,
+            'status'  => $group->status,
+            'message' => $group->status === 'published'
+                ? $group->name . ' is now published.'
+                : $group->name . ' moved to draft.',
+        ]);
+    }
+
+    public function toggleFeatured($id)
+    {
+        $group = ServiceGroup::findOrFail($id);
+        $group->is_featured = !$group->is_featured;
+        $group->save();
+
+        return response()->json([
+            'success'  => true,
+            'featured' => (bool) $group->is_featured,
+            'message'  => $group->is_featured
+                ? $group->name . ' is now featured.'
+                : $group->name . ' removed from featured.',
+        ]);
     }
 
     public function create()

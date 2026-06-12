@@ -802,7 +802,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                             '<div style="padding: 8px 16px 4px; font-size:0.7rem; font-weight:700; ' +
                             'text-transform:uppercase; letter-spacing:1px; color:#94a3b8; ' +
                             'background:#f8fafc; border-top: 1px solid #f1f5f9;">' +
-                            item.type + 's' +
+                            (item.type_plural || item.type + 's') +
                             '</div>'
                         );
                     }

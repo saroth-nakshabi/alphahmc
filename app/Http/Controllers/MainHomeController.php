@@ -49,7 +49,8 @@ class MainHomeController extends Controller
         $featured_categories_total = Category::where('featured', true)->count();
         $announcements = Announcement::where('status', 1)->latest()->get();
         $projects = Project::with(['project_category', 'projects_images', 'projects_videos', 'projects_documents'])->latest()->take(2)->get();
-        return view('front.index-2', compact('categories', 'homeSliders', 'blogs', 'categories_carts', 'announcements', 'projects', 'featured_categories_total'));
+        $clients = \App\Models\client::visible()->where('is_featured', 1)->get();
+        return view('front.index-2', compact('categories', 'homeSliders', 'blogs', 'categories_carts', 'announcements', 'projects', 'featured_categories_total', 'clients'));
     }
 
     public function loadMoreCategories(Request $request)
@@ -204,7 +205,7 @@ class MainHomeController extends Controller
         $about_content = about_content::latest()->get();
         $about_quotes = about_quote::latest()->get();
         $eco_systems = about_eco::latest()->take(6)->get();
-        $clients = \App\Models\client::latest()->get();
+        $clients = \App\Models\client::visible()->get();
         $brands = Brand::latest()->get();
         return view('front.new-about', compact('about_us', 'about_content', 'about_quotes', 'eco_systems', 'clients', 'brands'));
 
@@ -245,7 +246,7 @@ class MainHomeController extends Controller
 
         $all_services = Service::published()->get();
         $latest_blogs = Blog::latest()->take(3)->get();
-        $clients = \App\Models\client::latest()->get();
+        $clients = \App\Models\client::visible()->get();
         return view('front.projects', compact('projects', 'featuredProject', 'featuredServices', 'all_services', 'latest_blogs', 'clients'));
     }
 
@@ -312,7 +313,7 @@ class MainHomeController extends Controller
 
     public function ourClients()
     {
-        $clients = \App\Models\client::latest()->get();
+        $clients = \App\Models\client::visible()->get();
         $all_services = Service::published()->get();
         return view('front.our-clients', compact('clients', 'all_services'));
     }

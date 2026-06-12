@@ -96,6 +96,7 @@ class CategoryController extends Controller
             'process_description.*'      => 'nullable|string',
             'process_service_ids'        => 'nullable|array',
             'process_service_ids.*'      => 'nullable|exists:services,id',
+            'process_intro'              => 'nullable|string',
         ]);
 
         $image_name = null;
@@ -158,6 +159,7 @@ class CategoryController extends Controller
             'process_header' => $processHeaders,
             'process_description' => $processDescriptions,
             'process_service_ids' => $processServiceIds,
+            'process_intro' => $request->input('process_intro'),
             'info_four' => $request->input('info_four'),
             'announcement_id' => !empty($request->input('announcement_id')) ? $request->input('announcement_id') : null,
             'related_services' => $request->input('related_services'),
@@ -212,6 +214,7 @@ class CategoryController extends Controller
             'process_description.*'      => 'nullable|string',
             'process_service_ids'        => 'nullable|array',
             'process_service_ids.*'      => 'nullable|exists:services,id',
+            'process_intro'              => 'nullable|string',
         ]);
 
         $imagePath = $item->image;
@@ -284,6 +287,7 @@ class CategoryController extends Controller
             'process_header' => $processHeaders,
             'process_description' => $processDescriptions,
             'process_service_ids' => $processServiceIds,
+            'process_intro' => $request->input('process_intro'),
             'info_four' => $request->input('info_four'),
             'announcement_id' => !empty($request->input('announcement_id')) ? $request->input('announcement_id') : null,
             'related_services' => $request->input('related_services'),

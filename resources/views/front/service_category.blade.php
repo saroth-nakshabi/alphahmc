@@ -414,8 +414,12 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
     <div class="container">
       <div class="process-header" data-aos="fade-up">
         <span class="process-eyebrow">Our Process</span>
-        <h2 class="process-title">From first call to <em>license</em> in hand</h2>
-        <p class="process-subtitle">A meticulously structured {{ $processCount }}-phase engagement model designed for absolute precision and regulatory speed.</p>
+        @if(!empty($service->process_intro))
+            {!! $service->process_intro !!}
+        @else
+            <h2 class="process-title">From first call to <em>license</em> in hand</h2>
+            <p class="process-subtitle">A meticulously structured {{ $processCount }}-phase engagement model designed for absolute precision and regulatory speed.</p>
+        @endif
       </div>
 
       <div class="process-grid">

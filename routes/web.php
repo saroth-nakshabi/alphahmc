@@ -233,6 +233,8 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::put('/service-group/{id}', [ServiceGroupController::class, 'update'])->name('service-group.update');
     Route::post('/service-group/{id}', [ServiceGroupController::class, 'update'])->name('service-group.update.post');
     Route::delete('/service-group/{id}', [ServiceGroupController::class, 'destroy'])->name('service-group.destroy');
+    Route::post('/service-group/{id}/toggle-status', [ServiceGroupController::class, 'toggleStatus'])->name('service-group.toggle-status');
+    Route::post('/service-group/{id}/toggle-featured', [ServiceGroupController::class, 'toggleFeatured'])->name('service-group.toggle-featured');
 
 
     
@@ -385,6 +387,9 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
         Route::get('/get',[clientsController::class, 'getClient'])->name('dashboard.clients.get');
         Route::post('/update/{id}',[clientsController::class, 'update'])->name('dashboard.clients.update');
         Route::delete('/destroy/{id}',[clientsController::class, 'destroy'])->name('dashboard.clients.destroy');
+        Route::post('/reorder',[clientsController::class, 'reorder'])->name('dashboard.clients.reorder');
+        Route::post('/toggle-featured/{id}',[clientsController::class, 'toggleFeatured'])->name('dashboard.clients.toggle-featured');
+        Route::post('/toggle-status/{id}',[clientsController::class, 'toggleStatus'])->name('dashboard.clients.toggle-status');
     });
 
     //brands route
