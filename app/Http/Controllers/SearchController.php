@@ -91,7 +91,14 @@ class SearchController extends Controller
                     ];
                 });
 
-            $results = $services->merge($groups)->merge($categories)->merge($blogs)->merge($projects);
+            // concat on a base collection: merge() on an (empty) Eloquent collection
+            // calls getKey() on the array items and crashes
+            $results = collect()
+                ->concat($services)
+                ->concat($groups)
+                ->concat($categories)
+                ->concat($blogs)
+                ->concat($projects);
         }
 
         return view('front.search', compact('results', 'query'));
@@ -177,7 +184,13 @@ class SearchController extends Controller
                     ];
                 });
 
-            $results = $services->merge($groups)->merge($categories)->merge($blogs)->merge($projects)->values()->all();
+            $results = collect()
+                ->concat($services)
+                ->concat($groups)
+                ->concat($categories)
+                ->concat($blogs)
+                ->concat($projects)
+                ->values()->all();
         }
 
         return response()->json($results);
