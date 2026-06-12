@@ -40,6 +40,8 @@ class ServiceGroup extends Model
 
     protected $casts = [
         'related_services' => 'array',
+        'published_date'   => 'date',
+        'updated_date'     => 'date',
     ];
 
     public function getCoreServiceHeaderAttribute($value)
