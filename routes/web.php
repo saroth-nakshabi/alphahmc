@@ -241,6 +241,7 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
 
     // inquiry routes
     Route::get('/dashboard/inquiries', [AdminInquiryController::class, 'index'])->name('admin.inquiries.index');
+    Route::get('/dashboard/inquiries/{id}', [AdminInquiryController::class, 'show'])->name('admin.inquiries.show');
     Route::post('/dashboard/inquiries/update/{id}', [AdminInquiryController::class, 'update'])->name('admin.inquiries.update');
     Route::post('/dashboard/inquiries/reply/{id}', [AdminInquiryController::class, 'reply'])->name('admin.inquiries.reply');
     Route::delete('/dashboard/inquiries/delete/{id}', [AdminInquiryController::class, 'destroy'])->name('admin.inquiries.destroy');

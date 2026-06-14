@@ -23,7 +23,7 @@ class ServiceInquiryMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New Service Inquiry: ' . $this->inquiry->service->name,
+            subject: 'New Service Inquiry: ' . ($this->inquiry->service->name ?? 'General Enquiry'),
         );
     }
 

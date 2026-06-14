@@ -14,6 +14,12 @@ class AdminInquiryController extends Controller
         return view('dashboard.inquiries.index', compact('inquiries'));
     }
 
+    public function show($id)
+    {
+        $inquiry = Inquiry::with('service')->findOrFail($id);
+        return view('dashboard.inquiries.show', compact('inquiry'));
+    }
+
     public function update(Request $request, $id)
     {
         $inquiry = Inquiry::findOrFail($id);

@@ -272,10 +272,10 @@
 
     <!-- Fonts — non-render-blocking, reduced weights (300/500/700 dropped — not used in critical path) -->
     <link rel="preload" as="style"
-          href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
           onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap">
     </noscript>
 
     <!-- Bootstrap CSS — blocking (needed for above-fold grid layout) -->
@@ -331,7 +331,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         @endif
     @endforeach
 
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/front-global.css') }}?v=1">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/front-global.css') }}?v=5">
 
 {{-- Consent update functions (called by banner buttons) --}}
     <script>
@@ -1137,25 +1137,23 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="footer-top">
                 <!-- Mission Statement -->
                 <div class="mission-statement">
-                    <h3>Our Healthcare Mission</h3>
+                    <h3>Our Mission</h3>
                     <p class="mission-text">
                         We provide world-class healthcare management consultancy with a focus on
                         safety, compassion, and excellence. Partnering with facilities, health systems,
                         and government entities across the UAE to deliver exceptional care.
                     </p>
                     <div class="mission-highlight">
-                        <i class="fas fa-heartbeat"></i>
-                        <span>Committed to healthcare excellence since 2010</span>
+                        <span>Committed to innovating healthcare excellence since 2015</span>
                     </div>
                 </div>
 
                 <!-- Quick Links -->
                 <div class="quick-links-grid">
                     <div class="links-column">
-                        <h4>Quick Links</h4>
+                        <h4>About AHG</h4>
                         <ul class="footer-links">
                             <li><a href="{{ route('front.new-about') }}"><i class="fas fa-chevron-right"></i> About Alpha Health Group</a></li>
-                            <li><a href="{{ route('front.all-services') }}"><i class="fas fa-chevron-right"></i> All Services</a></li>
                             <li><a href="{{ route('contact') }}"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
                             <li><a href="{{ route('front.ahg-updates') }}"><i class="fas fa-chevron-right"></i> AHG Updates</a></li>
                             <li><a href="{{ route('front.our-clients') }}"><i class="fas fa-chevron-right"></i> Our Clients</a></li>
@@ -1165,6 +1163,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     <div class="links-column">
                         <h4>Resources</h4>
                         <ul class="footer-links">
+                            <li><a href="{{ route('front.all-services') }}"><i class="fas fa-chevron-right"></i> All Services</a></li>
                             <li><a href="{{ route('front.new_blog') }}"><i class="fas fa-chevron-right"></i> Knowledge Base</a></li>
                             <li><a href="{{ route('front.project') }}"><i class="fas fa-chevron-right"></i> Case Studies</a></li>
                             <li><a href="{{ route('front.all-services') }}"><i class="fas fa-chevron-right"></i> Services by Facility Type</a></li>
@@ -1208,10 +1207,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         <i class="fas fa-envelope"></i>
                         info@alphatsm.com
                     </a>
-                    <div class="contact-phone">
+                    <a href="tel:+97142724064" class="contact-phone">
                         <i class="fas fa-phone"></i>
                         +971 4 272 4064
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -1222,11 +1221,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
         <!-- Bottom Section -->
         <div class="footer-bottom" style="font-family: sans-serif">
-            <div class="legal-text">
+            <div class="legal-text" style="max-width: 90%; margin-left: auto; margin-right: auto;">
                 Alpha Health Group provides healthcare management consultancy, accreditation support, and advisory services to healthcare organisations across the GCC and Middle East.
                 All consultancy services are provided for organisational and management purposes only and do not constitute clinical medical advice or treatment.
-                <a href="{{ route('front.terms-of-service') }}" class="legal-link">Terms of Service</a> &middot;
-                <a href="{{ route('front.gdpr-terms') }}" class="legal-link">Data Protection Policy</a>.
                 <div style="text-align: center"> <br>© {{ date('Y') }} Alpha Health Group. All rights reserved.</div>
             </div>
 
@@ -1784,6 +1781,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </script>
 
     @include('front.partials.ai-assistant')
+
+    {{-- Reusable global inquiry modal: pages opt in via @push('inquiry_modal') --}}
+    @stack('inquiry_modal')
 </body>
 
 <script>

@@ -159,7 +159,7 @@
             <div class="greeting">Dear {{ $inquiry->name }},</div>
             
             <p class="intro-text">
-                We acknowledge receipt of your inquiry regarding <strong>{{ $inquiry->service->name }}</strong>. Alpha HMC maintains a rigorous standard for all advisory partnerships; your request has been prioritized for executive review.
+                We acknowledge receipt of your inquiry regarding <strong>{{ $inquiry->service->name ?? 'General enquiry' }}</strong>. Alpha HMC maintains a rigorous standard for all advisory partnerships; your request has been prioritized for executive review.
             </p>
 
             <div class="info-ledger">
@@ -169,7 +169,7 @@
                 </div>
                 <div class="ledger-row">
                     <span class="ledger-label">Advisory Sector : </span>
-                    <span class="ledger-value">{{ $inquiry->service->name }}</span>
+                    <span class="ledger-value">{{ $inquiry->service->name ?? 'General enquiry' }}</span>
                 </div>
                 <div class="ledger-row">
                     <span class="ledger-label">Date Recorded : </span>

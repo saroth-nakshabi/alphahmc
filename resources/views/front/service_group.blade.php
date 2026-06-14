@@ -370,8 +370,8 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
             {!! $service->process_intro !!}
         @else
             <h2 class="process-title">From first call to <em>license</em> in hand</h2>
-            <p class="process-subtitle">A meticulously structured {{ $processCount }}-phase engagement model designed for absolute precision and regulatory speed.</p>
         @endif
+        <p class="process-subtitle">A meticulously structured {{ $processCount }}-phase service engagement model designed for absolute precision and hassle-free experience.</p>
       </div>
 
       <div class="process-grid">

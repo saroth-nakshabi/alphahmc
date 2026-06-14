@@ -156,7 +156,7 @@
 
         <span class="section-label">Requested Service : </span>
         <div class="main-service">
-            {{ $inquiry->service->name }}
+            {{ $inquiry->service->name ?? 'General enquiry' }}
         </div>
 
         <div class="info-grid">

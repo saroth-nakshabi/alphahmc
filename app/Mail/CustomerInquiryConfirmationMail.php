@@ -23,7 +23,7 @@ class CustomerInquiryConfirmationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'We have received your inquiry: ' . $this->inquiry->service->name,
+            subject: 'We have received your inquiry: ' . ($this->inquiry->service->name ?? 'General Enquiry'),
         );
     }
 

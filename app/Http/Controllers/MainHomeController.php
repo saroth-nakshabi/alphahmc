@@ -50,7 +50,11 @@ class MainHomeController extends Controller
         $announcements = Announcement::where('status', 1)->latest()->get();
         $projects = Project::with(['project_category', 'projects_images', 'projects_videos', 'projects_documents'])->latest()->take(2)->get();
         $clients = \App\Models\client::visible()->where('is_featured', 1)->get();
-        return view('front.index-2', compact('categories', 'homeSliders', 'blogs', 'categories_carts', 'announcements', 'projects', 'featured_categories_total', 'clients'));
+        $insightBlogs = Blog::where('featured', true)->latest()->take(8)->get();
+        $alphaUpdates = Blog::whereHas('tags', function ($q) {
+            $q->where('name', 'AHG Updates');
+        })->latest()->take(4)->get();
+        return view('front.index-2', compact('categories', 'homeSliders', 'blogs', 'categories_carts', 'announcements', 'projects', 'featured_categories_total', 'clients', 'insightBlogs', 'alphaUpdates'));
     }
 
     public function loadMoreCategories(Request $request)
@@ -359,7 +363,7 @@ class MainHomeController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:20',
-            'service_id' => 'required|exists:services,id',
+            'service_id' => 'nullable|exists:services,id',
             'message' => 'nullable|string',
         ]);
 

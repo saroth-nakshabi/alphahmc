@@ -69,9 +69,9 @@
                                             </td>
                                             <td>
                                                 <div class="btn-group" role="group">
-                                                    <button class="btn btn-sm btn-info fw-semibold" data-bs-toggle="modal" data-bs-target="#viewInquiry-{{ $inquiry->id }}" style="border-radius: 6px; transition: all 0.3s ease; border: none; padding: 0.5rem 1rem; box-shadow: 0 2px 6px rgba(13, 110, 253, 0.15);" onmouseover="this.style.boxShadow='0 4px 12px rgba(13, 110, 253, 0.3)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.boxShadow='0 2px 6px rgba(13, 110, 253, 0.15)'; this.style.transform='translateY(0)';">
+                                                    <a href="{{ route('admin.inquiries.show', $inquiry->id) }}" class="btn btn-sm btn-info fw-semibold" style="border-radius: 6px; transition: all 0.3s ease; border: none; padding: 0.5rem 1rem; box-shadow: 0 2px 6px rgba(13, 110, 253, 0.15);" onmouseover="this.style.boxShadow='0 4px 12px rgba(13, 110, 253, 0.3)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.boxShadow='0 2px 6px rgba(13, 110, 253, 0.15)'; this.style.transform='translateY(0)';">
                                                         <i class="bi bi-eye-fill"></i> View
-                                                    </button>
+                                                    </a>
                                                     <button class="btn btn-sm btn-primary fw-semibold" data-bs-toggle="modal" data-bs-target="#replyInquiry-{{ $inquiry->id }}" style="border-radius: 6px; transition: all 0.3s ease; border: none; padding: 0.5rem 1rem; box-shadow: 0 2px 6px rgba(13, 110, 253, 0.15); margin: 0 5px;" onmouseover="this.style.boxShadow='0 4px 12px rgba(13, 110, 253, 0.3)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.boxShadow='0 2px 6px rgba(13, 110, 253, 0.15)'; this.style.transform='translateY(0)';">
                                                         <i class="bi bi-reply-fill"></i> Reply
                                                     </button>

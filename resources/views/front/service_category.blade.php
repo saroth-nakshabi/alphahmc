@@ -1,7 +1,7 @@
 @extends('front/layout-2')
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.css') }}?v=1">
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-category.css') }}?v=2">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-category.css') }}?v=3">
 @endsection
 @push('page_title')
     {!! $service->name !!}
@@ -288,7 +288,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
               aria-label="{{ $categoryService->name }}">
               <div class="browse-card-left">
                 <div class="browse-card-text">
-                  <div class="browse-card-title">{{ $categoryService->name }}</div>
+                  <h3 class="browse-card-title">{{ $categoryService->name }}</h3>
                   <div class="browse-card-count">{{ Str::limit(strip_tags($categoryService->description), 120) }}</div>
                 </div>
               </div>
@@ -303,10 +303,10 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
               style="border-left:3px solid #009095">
               <div class="browse-card-left">
                 <div class="browse-card-text">
-                  <div class="browse-card-title" style="display:flex;align-items:center;gap:.45rem">
+                  <h3 class="browse-card-title" style="display:flex;align-items:center;gap:.45rem">
                     <i class="bi bi-collection-fill" style="color:#009095;font-size:.85rem;flex-shrink:0"></i>
                     {{ $group->name }}
-                  </div>
+                  </h3>
                   <div class="browse-card-count" style="color:#009095;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.4px">
                     Service Package
                   </div>
