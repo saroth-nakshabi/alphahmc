@@ -285,11 +285,27 @@
                 @endif
                 <h1 class="article-title-centered">{{ $blog->title }}</h1>
                 <p class="article-desc-centered">{{ $blog->description }}</p>
-                
+
+                @php
+                    $focusItems = collect(explode(',', $blog->news_focus ?? ''))
+                        ->map(fn ($x) => trim($x))->filter()->take(3);
+                @endphp
+                @if($focusItems->isNotEmpty())
+                    <div class="article-focus-area"
+                        style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;margin:18px 0 6px;">
+                        <span style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94a3b8;">Focus Area</span>
+                        @foreach($focusItems as $focus)
+                            <span style="display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:600;color:#0056a6;background:#eff6ff;border:1px solid #bfdbfe;border-radius:20px;padding:4px 12px;">
+                                <i class="fas fa-check-circle" style="font-size:.75rem;"></i> {{ $focus }}
+                            </span>
+                        @endforeach
+                    </div>
+                @endif
+
                 <div class="article-meta-editorial">
                     <div class="meta-item-box">
                         <span class="meta-label">Author</span>
-                        <span>{{ $blog->tags->first()->name ?? 'Alpha Team' }}</span>
+                        <span>{{ $blog->author_name ?? 'Alpha Team' }}</span>
                     </div>
                     <div class="meta-divider-vertical"></div>
                     <div class="meta-item-box">

@@ -43,17 +43,17 @@ class MainHomeController extends Controller
     {
         $categories = MainCategory::with(['categories.services', 'allCategories.services'])->orderBy('sort_order')->get();
         $homeSliders = HomeSlider::where('status', 'active')->get();
-        $blogs = Blog::where('featured', true)->take(3)->get();
+        $blogs = Blog::where('featured', true)->orderBy('sort_order')->orderBy('id')->take(3)->get();
         // $featuredServices = Service::where('featured', true)->take(3)->get();
         $categories_carts = Category::where('featured', true)->orderBy('sort_order')->orderBy('id')->take(8)->get();
         $featured_categories_total = Category::where('featured', true)->count();
         $announcements = Announcement::where('status', 1)->latest()->get();
         $projects = Project::with(['project_category', 'projects_images', 'projects_videos', 'projects_documents'])->latest()->take(2)->get();
         $clients = \App\Models\client::visible()->where('is_featured', 1)->get();
-        $insightBlogs = Blog::where('featured', true)->latest()->take(8)->get();
+        $insightBlogs = Blog::where('featured', true)->orderBy('sort_order')->orderBy('id')->take(8)->get();
         $alphaUpdates = Blog::whereHas('tags', function ($q) {
             $q->where('name', 'AHG Updates');
-        })->latest()->take(4)->get();
+        })->orderBy('sort_order')->orderBy('id')->take(4)->get();
         return view('front.index-2', compact('categories', 'homeSliders', 'blogs', 'categories_carts', 'announcements', 'projects', 'featured_categories_total', 'clients', 'insightBlogs', 'alphaUpdates'));
     }
 
@@ -164,7 +164,7 @@ class MainHomeController extends Controller
     {
         $blogs = Blog::whereDoesntHave('tags', function($query) {
             $query->where('name', 'AHG Updates');
-        })->with('tags')->get();
+        })->with('tags')->orderBy('sort_order')->orderBy('id')->get();
 
         $tags = Tag::where('name', '!=', 'AHG Updates')->get();
         $projects = Project::with('projects_images', 'projects_videos', 'projects_documents', 'project_category')->latest()->take(3)->get();
@@ -176,7 +176,7 @@ class MainHomeController extends Controller
     {
         $blogs = Blog::whereHas('tags', function($query) {
             $query->where('name', 'AHG Updates');
-        })->with('tags')->latest()->get();
+        })->with('tags')->orderBy('sort_order')->orderBy('id')->get();
 
         $tags = Tag::where('name', 'AHG Updates')->get();
         $projects = Project::with('projects_images', 'projects_videos', 'projects_documents', 'project_category')->latest()->take(3)->get();

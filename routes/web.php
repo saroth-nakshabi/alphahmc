@@ -296,6 +296,7 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::post('/blogs/update/{id}', [BlogController::class, 'update'])->name('blogs.update')->middleware('permission:edit blogs');
     Route::post('/blogs/get', [BlogController::class, 'getBlog'])->name('blogs.get');
     Route::post('/blogs/featured', [BlogController::class, 'featuredHandle'])->name('blogs.featured.change');
+    Route::post('/blogs/reorder', [BlogController::class, 'reorder'])->name('blogs.reorder')->middleware('permission:edit blogs');
 
     // tags Routes (blog)
     Route::get('/tags', [TagController::class, 'index'])->name('blog.tags.index')->middleware('permission:view tags');

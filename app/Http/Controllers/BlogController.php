@@ -19,9 +19,26 @@ class BlogController extends Controller
 
         $data = [];
         $data['tags'] = Tag::all();
-        $data['blogs'] = Blog::with('tags')->get();
+        $data['blogs'] = Blog::with('tags')->orderBy('sort_order')->orderBy('id')->get();
 
         return view('dashboard.blogs.index', $data);
+    }
+
+    /**
+     * Persist the drag-and-drop order from the listing page.
+     */
+    public function reorder(Request $request)
+    {
+        $request->validate([
+            'order'   => 'required|array',
+            'order.*' => 'integer|exists:blogs,id',
+        ]);
+
+        foreach ($request->order as $position => $id) {
+            Blog::where('id', $id)->update(['sort_order' => $position + 1]);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Order saved!']);
     }
 
     /**
@@ -36,6 +53,7 @@ class BlogController extends Controller
             'image'       => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
             'content'     => 'required|string',
             'description' => 'nullable|string',
+            'news_focus'  => 'nullable|string|max:255',
             'author_name' => 'nullable|string|max:255',
             'read_time'   => 'nullable|integer|min:1|max:999',
         ]);
@@ -52,6 +70,7 @@ class BlogController extends Controller
             'featured'         => $request->has('featured') ? 1 : 0,
             'content'          => $request->input('content'),
             'description'      => $request->input('description'),
+            'news_focus'       => $this->normalizeNewsFocus($request->input('news_focus')),
             'author_name'      => $request->input('author_name'),
             'read_time'        => $request->input('read_time'),
             'published_date'   => $request->input('published_date') ?: now()->toDateString(),
@@ -84,6 +103,7 @@ class BlogController extends Controller
             'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
             'content'     => 'required|string',
             'description' => 'nullable|string',
+            'news_focus'  => 'nullable|string|max:255',
             'author_name' => 'nullable|string|max:255',
             'read_time'   => 'nullable|integer|min:1|max:999',
         ]);
@@ -96,6 +116,7 @@ class BlogController extends Controller
             'featured'         => $request->has('featured') ? 1 : 0,
             'content'          => $request->input('content'),
             'description'      => $request->input('description'),
+            'news_focus'       => $this->normalizeNewsFocus($request->input('news_focus')),
             'author_name'      => $request->input('author_name'),
             'read_time'        => $request->input('read_time'),
             'published_date'   => $request->input('published_date') ?: null,
@@ -153,6 +174,45 @@ class BlogController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Deleted successfully!',
+        ], 201);
+    }
+
+    /**
+     * Normalise the comma-separated News Focus input: trim, drop blanks,
+     * cap at 3 values, and re-join as a clean comma-separated string.
+     */
+    private function normalizeNewsFocus(?string $value): ?string
+    {
+        if (!$value) {
+            return null;
+        }
+
+        $items = collect(explode(',', $value))
+            ->map(fn ($v) => trim($v))
+            ->filter()
+            ->take(3)
+            ->values();
+
+        return $items->isEmpty() ? null : $items->implode(', ');
+    }
+
+    /**
+     * Toggle the "featured" flag from the listing (no edit page needed).
+     */
+    public function featuredHandle(Request $request)
+    {
+        $id = $request->input('id');
+        $featured = $request->input('featured');
+
+        $blog = Blog::findOrFail($id);
+        $blog->update([
+            'featured' => $featured,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Updated successfully!',
+            'data' => $blog,
         ], 201);
     }
 

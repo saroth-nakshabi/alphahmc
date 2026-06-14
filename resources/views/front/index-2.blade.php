@@ -2,7 +2,7 @@
 
 @push('page_title', 'Healthcare Consultancy in Dubai | Alpha Health Group')
 
-@section('meta_description')Alpha Health Group — trusted healthcare consultancy in the UAE. We deliver DOH compliance, accreditation support, quality assurance, and operational excellence for hospitals and clinics.@endsection
+@section('meta_description')Alpha Health Group is a trusted healthcare consultancy in the UAE. We deliver DOH compliance, accreditation support, quality assurance, and operational excellence for hospitals and clinics.@endsection
 
 @push('meta')
 <script type="application/ld+json">
@@ -569,7 +569,7 @@
             <span class="ibc-eyebrow">Knowledge Base</span>
             <h2 class="ibc-title" id="ibc-heading">Insights Beyond <span class="ibc-title-accent">Compliance</span></h2>
             <p class="ibc-sub">Practical perspectives on healthcare licensing, accreditation and operational
-                excellence — turning regulatory complexity into measurable outcomes for facilities across the UAE.</p>
+                excellence, turning regulatory complexity into measurable outcomes for facilities across the UAE.</p>
         </div>
 
         <div class="ibc-viewport" id="ibcViewport" tabindex="0" aria-label="Featured insights, scrollable">
@@ -640,46 +640,56 @@
             viewport.addEventListener('touchend',   pause,  { passive: true });
             viewport.addEventListener('focusin',    function () { paused = true; clearTimeout(idleTimer); });
 
-            // ── Pointer drag-to-scroll (desktop tactile feel) ──
-            var down = false, startX = 0, startScroll = 0, moved = 0, activeId = null;
+            // ── Pointer drag-to-scroll (desktop tactile feel); a real click still navigates ──
+            // Key fix: do NOT capture the pointer or preventDefault on pointerdown — that
+            // redirects events to the viewport and swallows the card's click. Only engage
+            // drag mode once the pointer actually moves past a small threshold.
+            var DRAG_THRESHOLD = 6;
+            var down = false, dragging = false, startX = 0, startScroll = 0, moved = 0, activeId = null;
 
-            function endDrag(e) {
+            function endDrag() {
                 if (!down) return;
-                down = false; activeId = null;
+                down = false; dragging = false; activeId = null;
                 viewport.classList.remove('is-dragging');
-                try { viewport.releasePointerCapture(e.pointerId); } catch (_) {}
                 pause();
             }
 
             viewport.addEventListener('pointerdown', function (e) {
                 if (e.pointerType === 'touch') return;     // native touch handles itself
-                down = true; moved = 0; startX = e.clientX; startScroll = viewport.scrollLeft;
+                if (e.button !== 0) return;                // left button only
+                down = true; dragging = false; moved = 0;
+                startX = e.clientX; startScroll = viewport.scrollLeft;
                 activeId = e.pointerId;
                 paused = true; clearTimeout(idleTimer);
-                viewport.classList.add('is-dragging');
-                // capture so move/up always reach the viewport (prevents "stuck to cursor")
-                try { viewport.setPointerCapture(e.pointerId); } catch (_) {}
-                e.preventDefault();   // stop native link/text drag
+                // no preventDefault / no setPointerCapture here — would break the click
             });
             viewport.addEventListener('pointermove', function (e) {
                 if (!down || e.pointerId !== activeId) return;
-                var dx = e.clientX - startX; moved += Math.abs(dx);
+                var dx = e.clientX - startX; moved = Math.abs(dx);
+                if (!dragging) {
+                    if (moved <= DRAG_THRESHOLD) return;   // still a click, not a drag
+                    dragging = true;
+                    viewport.classList.add('is-dragging');
+                    // now that it's a confirmed drag, capture so move/up reach the viewport
+                    try { viewport.setPointerCapture(e.pointerId); } catch (_) {}
+                }
                 viewport.scrollLeft = startScroll - dx; wrap();
+                e.preventDefault();   // stop text/native selection while dragging
             });
             viewport.addEventListener('pointerup', endDrag);
             viewport.addEventListener('pointercancel', endDrag);
             viewport.addEventListener('lostpointercapture', function () {
-                down = false; activeId = null; viewport.classList.remove('is-dragging');
+                down = false; dragging = false; activeId = null; viewport.classList.remove('is-dragging');
             });
             // belt-and-braces: any mouseup anywhere ends a stuck drag
             window.addEventListener('mouseup', function () {
-                if (down) { down = false; activeId = null; viewport.classList.remove('is-dragging'); pause(); }
+                if (down) { down = false; dragging = false; activeId = null; viewport.classList.remove('is-dragging'); pause(); }
             });
             // kill native HTML5 drag of links/images entirely
             track.addEventListener('dragstart', function (e) { e.preventDefault(); });
-            // Suppress click navigation if it was actually a drag
+            // Suppress navigation ONLY if it was actually a drag
             track.addEventListener('click', function (e) {
-                if (moved > 8) { e.preventDefault(); }
+                if (moved > DRAG_THRESHOLD) { e.preventDefault(); }
             }, true);
         })();
     </script>
@@ -692,7 +702,7 @@
                 <!-- Case Studies Column -->
                 <div class="col-lg-7">
                     <h2 class="section-heading-minimal mb-2">Case Studies</h2>
-                    <p class="case-related-desc">Real projects and the problems we solved — explore the details and
+                    <p class="case-related-desc">Real projects and the problems we solved. Explore the details and
                         measurable results behind our healthcare facility engagements.</p>
                     <div class="row g-4">
                         @if(isset($projects) && $projects->count() > 0)
@@ -744,7 +754,7 @@
                     @else
                         <div class="alpha-updates-empty">
                             <i class="fa-regular fa-newspaper"></i>
-                            <p>No updates yet — check back soon for the latest from Alpha Health Group.</p>
+                            <p>No updates yet. Check back soon for the latest from Alpha Health Group.</p>
                         </div>
                     @endif
                 </div>
@@ -755,9 +765,10 @@
     {{-- ═══════════ BOOK A CONSULTATION (post-proof conversion band) ═══════════ --}}
     <section class="book-consult-cta">
         <div class="container">
-            <h2 class="bcc-title">Ready to elevate your healthcare facility?</h2>
-            <p class="bcc-sub">Talk to our consulting team about licensing, accreditation, and operational excellence —
-                we'll respond with clear, practical next steps.</p>
+            <h2 class="bcc-title">Let's talk about what your facility needs</h2>
+            <p class="bcc-sub">Whether it's licensing, accreditation, quality assurance, staffing, or day-to-day
+                operations, our consultants will help you find the right place to start. Tell us a little about your
+                facility and we'll reply with clear, practical next steps.</p>
             <button type="button" class="bcc-btn" data-bs-toggle="modal" data-bs-target="#inquiryModal">
                 Book a Consultation <i class="fa-solid fa-arrow-right"></i>
             </button>
@@ -777,7 +788,7 @@
     <section class="oc-section">
         <div class="oc-head">
             <h2 class="oc-title">Our Clients</h2>
-            <p class="oc-sub">Trusted by leading healthcare providers and professionals across the UAE and GCC —
+            <p class="oc-sub">Trusted by leading healthcare providers and professionals across the UAE and GCC,
                 partnering with ambitious organisations to realise their full clinical and operational potential.</p>
         </div>
 

@@ -344,7 +344,7 @@
                                         <span>
                                             <i class="ti ti-circle"></i>
                                         </span>
-                                        <span class="hide-menu">New Blogs</span>
+                                        <span class="hide-menu">All Blogs</span>
                                     </a>
                                 </li>
 

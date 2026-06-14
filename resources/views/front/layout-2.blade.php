@@ -331,7 +331,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         @endif
     @endforeach
 
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/front-global.css') }}?v=5">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/front-global.css') }}?v=6">
 
 {{-- Consent update functions (called by banner buttons) --}}
     <script>
