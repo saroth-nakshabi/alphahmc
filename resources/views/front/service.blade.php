@@ -1,6 +1,6 @@
 @extends('front/layout-2')
 @section('custom_css')
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.css') }}?v=1">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.css') }}?v=2">
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-detail.css') }}?v=3">
 @endsection
 @push('page_title')
@@ -782,6 +782,7 @@ function toggleTransformationDesc() {
                     fadeEffect: {
                         crossFade: true
                     },
+                    allowTouchMove: false,   /* use arrows/autoplay; never capture vertical scroll on mobile */
                     loop: true,
                     autoplay: {
                         delay: 3000,

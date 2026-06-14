@@ -217,7 +217,7 @@
         </div>
     </section>
 
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/home.css') }}?v=1">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/home.css') }}?v=2">
 
 
     <script>

@@ -62,11 +62,23 @@
 </div>
 
 <style>
+    /* sit above the floating navbar (z-index:9999) so the dialog/close are never covered */
+    .ahg-inquiry-modal { z-index: 10600; }
+    .ahg-inquiry-modal .modal-dialog { max-width: 560px; }
     .ahg-inquiry-modal .modal-content {
-        border: none; border-radius: 18px; overflow: hidden; position: relative;
-        padding: 38px 38px 34px; box-shadow: 0 30px 80px rgba(6,38,42,0.28);
+        border: none; border-radius: 18px; position: relative;
+        padding: 30px 34px 30px; box-shadow: 0 30px 80px rgba(6,38,42,0.28);
+        /* keep the dialog inside the viewport and scroll the form internally,
+           so the close button stays reachable instead of overflowing off-screen */
+        max-height: calc(100dvh - 24px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
-    .ahg-im-close { position: absolute; top: 18px; right: 18px; z-index: 2; }
+    .ahg-im-close {
+        position: sticky; top: 0; float: right; margin: -6px -8px 0 0; z-index: 5;
+        width: 38px; height: 38px; border-radius: 50%; background: #fff; opacity: 1;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+    }
     .ahg-im-head { margin-bottom: 22px; }
     .ahg-im-eyebrow {
         display: inline-block; text-transform: uppercase; font-size: 0.7rem; font-weight: 700;
@@ -102,14 +114,29 @@
     .ahg-im-alert.is-success { background: #e6f9f0; color: #1a8a4a; border: 1px solid #a3e6c3; }
     .ahg-im-alert.is-error   { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
     @media (max-width: 575px) {
-        .ahg-inquiry-modal .modal-content { padding: 30px 22px 26px; }
-        .ahg-im-grid { grid-template-columns: 1fr; }
-        .ahg-im-title { font-size: 1.4rem; }
+        .ahg-inquiry-modal .modal-content { padding: 22px 18px 22px; max-height: calc(100dvh - 16px); }
+        .ahg-im-grid { grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; }
+        .ahg-im-head { margin-bottom: 16px; }
+        .ahg-im-title { font-size: 1.3rem; }
+        .ahg-im-sub { font-size: 0.86rem; }
+        .ahg-im-field input, .ahg-im-field select, .ahg-im-field textarea { padding: 10px 12px; }
+        .ahg-im-field textarea { min-height: 60px; rows: 2; }
+        .ahg-im-submit { width: 100%; justify-content: center; }
     }
 </style>
 
 <script>
 (function () {
+    // Drop the floating navbar (z-index:9999) below the modal backdrop while the
+    // inquiry modal is open, so it never covers the dialog/close button.
+    var modalEl = document.getElementById('inquiryModal');
+    var navEl = document.getElementById('main-navbar');
+    if (modalEl && navEl && !modalEl.dataset.navBound) {
+        modalEl.dataset.navBound = '1';
+        modalEl.addEventListener('show.bs.modal',   function () { navEl.style.zIndex = '1000'; });
+        modalEl.addEventListener('hidden.bs.modal',  function () { navEl.style.zIndex = ''; });
+    }
+
     var form = document.getElementById('inquiryForm');
     if (!form || form.dataset.bound) return;
     form.dataset.bound = '1';

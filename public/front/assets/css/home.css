@@ -1328,6 +1328,7 @@
             background: transparent;
             border: 1.5px solid rgba(30, 167, 161, 0.55);
             cursor: pointer;
+            touch-action: manipulation;
             color: #1ea7a1;
             font-family: 'Outfit', sans-serif;
             font-weight: 400;

@@ -9,7 +9,10 @@
             color: var(--text-body);
             font-family: 'Inter', sans-serif;
             line-height: 1.7;
-            overflow-x: hidden;
+            /* clip (not hidden) prevents a horizontal scrollbar WITHOUT turning the
+               wrapper into a vertical scroll container — fixes intermittent mobile
+               scroll-lock where the page felt stuck/ended. */
+            overflow-x: clip;
         }
 
 /* Hero Section Enhancements */
