@@ -8,19 +8,26 @@
     <style>
         body { font-family: 'Outfit', sans-serif; }
 
-        /* Hero */
+        /* Hero — full image banner */
         .haw-hero {
-            background: linear-gradient(135deg, #066D77 0%, #009095 60%, #00b4bd 100%);
-            padding: 72px 0 56px;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            padding: 96px 0;
             position: relative;
             overflow: hidden;
+            background:
+                linear-gradient(180deg, rgba(11,17,20,0.82) 0%, rgba(11,17,20,0.55) 45%, rgba(11,17,20,0.80) 100%),
+                url("{{ asset('public/front-new/assets/images/about.jpg') }}") center/cover no-repeat;
         }
         .haw-hero::before {
             content: '';
             position: absolute;
             inset: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background: radial-gradient(120% 90% at 50% 0%, transparent 45%, rgba(0,0,0,0.35) 100%);
+            pointer-events: none;
         }
+        .haw-hero .container { position: relative; z-index: 1; }
         .haw-hero .badge-pill {
             background: rgba(255,255,255,0.18);
             color: #fff;
@@ -153,7 +160,7 @@
 
         /* DOH Callout */
         .doh-card {
-            background: linear-gradient(135deg, #066D77 0%, #009095 100%);
+            background: linear-gradient(135deg, #14242b 0%, #203d46 100%);
             border-radius: 20px;
             padding: 44px 40px;
             color: #fff;
@@ -178,7 +185,7 @@
         }
         .doh-card .doh-icon {
             width: 64px; height: 64px;
-            background: rgba(255,255,255,0.18);
+            background: #066D77;
             border-radius: 16px;
             display: flex; align-items: center; justify-content: center;
             font-size: 1.8rem;
@@ -214,7 +221,7 @@
         .haw-hero-cta:hover i { transform: translateX(4px); }
 
         /* Planner launcher band */
-        .haw-launch { padding: 84px 0; background: linear-gradient(135deg, #06363c 0%, #066D77 100%); position: relative; overflow: hidden; }
+        .haw-launch { padding: 84px 0; background: linear-gradient(135deg, #0f1a1e 0%, #18313a 100%); position: relative; overflow: hidden; }
         .haw-launch::before { content: ''; position: absolute; top: -70px; right: -50px; width: 260px; height: 260px; background: rgba(255,255,255,0.06); border-radius: 50%; }
         .haw-launch::after { content: ''; position: absolute; bottom: -90px; left: -40px; width: 300px; height: 300px; background: rgba(255,255,255,0.04); border-radius: 50%; }
         .haw-launch-inner { position: relative; z-index: 1; text-align: center; max-width: 740px; margin: 0 auto; color: #fff; }
@@ -224,8 +231,8 @@
         .haw-launch-steps { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px; }
         .haw-launch-step { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 100px; padding: 9px 18px; font-size: 0.85rem; font-weight: 600; }
         .haw-launch-step i { margin-right: 7px; opacity: .85; }
-        .haw-launch-btn { display: inline-flex; align-items: center; gap: 12px; background: #fff; color: #06363c; font-weight: 700; font-size: 1.02rem; padding: 17px 40px; border-radius: 100px; text-decoration: none; transition: all .25s ease; box-shadow: 0 18px 44px rgba(0,0,0,0.28); }
-        .haw-launch-btn:hover { transform: translateY(-3px); color: #06363c; background: #e6f4f5; }
+        .haw-launch-btn { display: inline-flex; align-items: center; gap: 12px; background: #fff; color: #0f1a1e; font-weight: 700; font-size: 1.02rem; padding: 17px 40px; border-radius: 100px; text-decoration: none; transition: all .25s ease; box-shadow: 0 18px 44px rgba(0,0,0,0.28); }
+        .haw-launch-btn:hover { transform: translateY(-3px); color: #0f1a1e; background: #eef2f4; }
         .haw-launch-btn i { transition: transform .25s; }
         .haw-launch-btn:hover i { transform: translateX(5px); }
         .haw-launch-meta { margin-top: 18px; font-size: 0.84rem; color: rgba(255,255,255,0.7); }

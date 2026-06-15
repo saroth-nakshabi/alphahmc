@@ -43,22 +43,24 @@
                              alt="Alpha Logo" class="brand-logo-modern">
                     </div>
                     <div class="experience-tag">
-                        <span class="tag-number">25</span>
-                        <span class="tag-text">Years of <br>Excellence</span>
+                        <span class="tag-number">20</span>
+                        <span class="tag-text">Years of Healthcare <br>Excellence</span>
                     </div>
                 </div>
 
                 <!-- Right: Value Proposition -->
                 <div class="content-panel">
                     <h6 class="text-uppercase tracking-widest text-primary fw-bold small mb-3">
-                        Enterprise Solutions
+                        Alpha Health Group
                     </h6>
-                    <h2 class="display-title">Innovation Built on <br><span class="text-gradient">Experience</span></h2>
+                    <h2 class="display-title">Innovating <br><span class="text-gradient">Healthcare Excellence</span></h2>
                     <p class="description-text">
-                        Our technology consultants apply enterprise-level knowledge to provide best-practice solutions, ensuring your business remains competitive in an ever-evolving digital landscape.
+                        From facility licensing and JCI accreditation to quality assurance, staffing and end-to-end
+                        operational consulting, we partner with hospitals, clinics and healthcare providers across the
+                        UAE &amp; GCC, turning complex regulatory and operational challenges into measurable, lasting outcomes.
                     </p>
                     <div class="action-footer">
-                        <a href="#" class="btn-minimal">
+                        <a href="{{ route('how_alpha_work') }}" class="btn-minimal">
                             Our Methodology <i class="fas fa-arrow-right ms-2"></i>
                         </a>
                     </div>
