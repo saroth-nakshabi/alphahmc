@@ -29,6 +29,7 @@ class Category extends Model
         'process_description',
         'process_service_ids',
         'process_intro',
+        'project_process_id',
         'info_three',
         'info_four',
         'announcement_id',
@@ -189,6 +190,12 @@ class Category extends Model
         $this->attributes['process_service_ids'] = is_array($value)
             ? json_encode(array_values($value))
             : $value;
+    }
+
+    /** The shared Project Process this category is linked to (if any). */
+    public function projectProcess()
+    {
+        return $this->belongsTo(\App\Models\ProjectProcess::class);
     }
 
     public function agent()

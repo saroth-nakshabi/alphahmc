@@ -369,6 +369,9 @@
         </div>
     </section>
 
+    {{-- Alpha Blueprint AI launcher --}}
+    @include('front.partials.planner-cta', ['variant' => 'light'])
+
     {{-- Clients --}}
     <section class="clients-section">
         <div class="container text-center">

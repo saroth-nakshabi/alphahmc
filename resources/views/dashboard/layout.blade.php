@@ -301,12 +301,59 @@
                         @endcan
 
                         <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('admin.project-process.index') }}" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-route"></i>
+                                </span>
+                                <span class="hide-menu">Project Process Manager</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin.inquiries.index') }}" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-mail"></i>
                                 </span>
                                 <span class="hide-menu">Service Inquiries</span>
                             </a>
+                        </li>
+
+                        <!-- ============== AI Planner =============== -->
+                        <li class="sidebar-item">
+                            <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
+                                <span class="d-flex">
+                                    <i class="ti ti-wand"></i>
+                                </span>
+                                <span class="hide-menu">AI Planner</span>
+                            </a>
+                            <ul aria-expanded="false" class="collapse first-level">
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="{{ route('admin.planner.index') }}" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-clipboard-text"></i>
+                                        </span>
+                                        <span class="hide-menu">Planning Request</span>
+                                    </a>
+                                </li>
+
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="{{ route('admin.settings.edit') }}" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-settings"></i>
+                                        </span>
+                                        <span class="hide-menu">Settings</span>
+                                    </a>
+                                </li>
+
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="{{ route('admin.planner.builder') }}" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-layout-grid-add"></i>
+                                        </span>
+                                        <span class="hide-menu">Planner Builder</span>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
 
                         <li class="sidebar-item">

@@ -586,6 +586,9 @@ function toggleTransformationDesc() {
 
 
 
+        {{-- ── Alpha Blueprint AI launcher ───────────────────── --}}
+        @include('front.partials.planner-cta', ['variant' => 'light'])
+
         {{-- ── Testimonials (conditional) ────────────────────── --}}
         @if($service->show_testimonials)
             @include('front.partials.testimonial-pills')

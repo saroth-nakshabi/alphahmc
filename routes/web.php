@@ -58,6 +58,11 @@ use App\Http\Controllers\globalController;
 use App\Http\Controllers\googleController;
 use App\Http\Controllers\ChatWidgetController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\ProjectPlannerController;
+use App\Http\Controllers\AdminPlannerController;
+use App\Http\Controllers\AdminPlannerBuilderController;
+use App\Http\Controllers\AdminProjectProcessController;
+use App\Http\Controllers\AdminSettingsController;
 
 // Front-end routes
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
@@ -145,6 +150,13 @@ Route::get('/blogs/{tag_name}', [HomeController::class, 'viewTag'])->name('view_
 Route::get('/blog/{slug}', [HomeController::class, 'viewBlog'])->name('view_blog');
 
 Route::get('/how_alpha_work', [HomeController::class, 'how_alpha_work'])->name('how_alpha_work');
+
+// Interactive Project Planner (public)
+Route::get('/plan-your-project', [ProjectPlannerController::class, 'page'])->name('planner.page');
+Route::post('/plan-your-project/step', [ProjectPlannerController::class, 'step'])->name('planner.step');
+Route::post('/plan-your-project/analyze', [ProjectPlannerController::class, 'analyze'])->name('planner.analyze');
+Route::post('/plan-your-project/contact', [ProjectPlannerController::class, 'contact'])->name('planner.contact');
+Route::post('/plan-your-project/followup', [ProjectPlannerController::class, 'followup'])->name('planner.followup');
 Route::get('/healthcare_quality_assurance', [HomeController::class, 'healthcare_quality_assurance'])->name('healthcare_quality_assurance');
 
 // Search routes (public - no auth required)
@@ -245,6 +257,33 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::post('/dashboard/inquiries/update/{id}', [AdminInquiryController::class, 'update'])->name('admin.inquiries.update');
     Route::post('/dashboard/inquiries/reply/{id}', [AdminInquiryController::class, 'reply'])->name('admin.inquiries.reply');
     Route::delete('/dashboard/inquiries/delete/{id}', [AdminInquiryController::class, 'destroy'])->name('admin.inquiries.destroy');
+
+    // Project Planner CRM
+    Route::get('/dashboard/planner', [AdminPlannerController::class, 'index'])->name('admin.planner.index');
+    Route::get('/dashboard/planner/{id}', [AdminPlannerController::class, 'show'])->name('admin.planner.show');
+    Route::post('/dashboard/planner/update/{id}', [AdminPlannerController::class, 'update'])->name('admin.planner.update');
+    Route::post('/dashboard/planner/{id}/confirm-meeting', [AdminPlannerController::class, 'confirmMeeting'])->name('admin.planner.confirmMeeting');
+
+    // AI Planner workflow builder
+    Route::get('/dashboard/planner-builder', [AdminPlannerBuilderController::class, 'index'])->name('admin.planner.builder');
+    Route::post('/dashboard/planner-builder/reorder', [AdminPlannerBuilderController::class, 'reorder'])->name('admin.planner.builder.reorder');
+    Route::post('/dashboard/planner-builder/add', [AdminPlannerBuilderController::class, 'store'])->name('admin.planner.builder.add');
+    Route::post('/dashboard/planner-builder/{id}', [AdminPlannerBuilderController::class, 'update'])->name('admin.planner.builder.update');
+    Route::delete('/dashboard/planner-builder/{id}', [AdminPlannerBuilderController::class, 'destroy'])->name('admin.planner.builder.destroy');
+    Route::delete('/dashboard/planner/delete/{id}', [AdminPlannerController::class, 'destroy'])->name('admin.planner.destroy');
+
+    // Project Process Manager — reusable processes assigned to many categories / service groups
+    Route::get('/dashboard/project-process', [AdminProjectProcessController::class, 'index'])->name('admin.project-process.index');
+    Route::get('/dashboard/project-process/create', [AdminProjectProcessController::class, 'create'])->name('admin.project-process.create');
+    Route::post('/dashboard/project-process', [AdminProjectProcessController::class, 'store'])->name('admin.project-process.store');
+    Route::get('/dashboard/project-process/{id}/edit', [AdminProjectProcessController::class, 'edit'])->name('admin.project-process.edit');
+    Route::post('/dashboard/project-process/{id}', [AdminProjectProcessController::class, 'update'])->name('admin.project-process.update');
+    Route::delete('/dashboard/project-process/{id}', [AdminProjectProcessController::class, 'destroy'])->name('admin.project-process.destroy');
+
+    // App / AI settings
+    Route::get('/dashboard/settings', [AdminSettingsController::class, 'edit'])->name('admin.settings.edit');
+    Route::post('/dashboard/settings', [AdminSettingsController::class, 'save'])->name('admin.settings.save');
+    Route::post('/dashboard/settings/test', [AdminSettingsController::class, 'test'])->name('admin.settings.test');
 
     // service routes
     Route::get('all-services', [ServiceController::class, 'index'])->name('services.index')->middleware('permission:view services');

@@ -199,6 +199,8 @@
         </section>
 
         {{-- CONVERSATION CTA --}}
+        @include('front.partials.planner-cta', ['variant' => 'light'])
+
         <section class="conversation-cta-section">
             <div class="container">
                 <p class="cta-msg">

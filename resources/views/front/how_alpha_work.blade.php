@@ -202,6 +202,33 @@
             margin-top: 24px;
             position: relative; z-index: 1;
         }
+
+        /* Hero CTA */
+        .haw-hero-cta {
+            display: inline-flex; align-items: center; gap: 10px; background: #fff; color: #066D77;
+            font-weight: 700; padding: 13px 30px; border-radius: 100px; text-decoration: none; margin-top: 24px;
+            transition: all .25s ease; box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+        }
+        .haw-hero-cta:hover { transform: translateY(-2px); color: #066D77; background: #e6f4f5; }
+        .haw-hero-cta i { transition: transform .25s; }
+        .haw-hero-cta:hover i { transform: translateX(4px); }
+
+        /* Planner launcher band */
+        .haw-launch { padding: 84px 0; background: linear-gradient(135deg, #06363c 0%, #066D77 100%); position: relative; overflow: hidden; }
+        .haw-launch::before { content: ''; position: absolute; top: -70px; right: -50px; width: 260px; height: 260px; background: rgba(255,255,255,0.06); border-radius: 50%; }
+        .haw-launch::after { content: ''; position: absolute; bottom: -90px; left: -40px; width: 300px; height: 300px; background: rgba(255,255,255,0.04); border-radius: 50%; }
+        .haw-launch-inner { position: relative; z-index: 1; text-align: center; max-width: 740px; margin: 0 auto; color: #fff; }
+        .haw-launch .badge-pill { background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.3); color: #fff; border-radius: 50px; padding: 6px 18px; font-size: 0.78rem; letter-spacing: 1.4px; text-transform: uppercase; font-weight: 700; }
+        .haw-launch h2 { font-size: clamp(1.7rem, 4vw, 2.5rem); font-weight: 800; color: #fff; margin: 18px 0 14px; line-height: 1.2; }
+        .haw-launch p { color: rgba(255,255,255,0.9); font-size: 1.05rem; line-height: 1.65; margin: 0 0 26px; }
+        .haw-launch-steps { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px; }
+        .haw-launch-step { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 100px; padding: 9px 18px; font-size: 0.85rem; font-weight: 600; }
+        .haw-launch-step i { margin-right: 7px; opacity: .85; }
+        .haw-launch-btn { display: inline-flex; align-items: center; gap: 12px; background: #fff; color: #06363c; font-weight: 700; font-size: 1.02rem; padding: 17px 40px; border-radius: 100px; text-decoration: none; transition: all .25s ease; box-shadow: 0 18px 44px rgba(0,0,0,0.28); }
+        .haw-launch-btn:hover { transform: translateY(-3px); color: #06363c; background: #e6f4f5; }
+        .haw-launch-btn i { transition: transform .25s; }
+        .haw-launch-btn:hover i { transform: translateX(5px); }
+        .haw-launch-meta { margin-top: 18px; font-size: 0.84rem; color: rgba(255,255,255,0.7); }
     </style>
 @endSection
 
@@ -213,6 +240,11 @@
             <span class="badge-pill">Our Methodology</span>
             <h1>How Alpha Works</h1>
             <p class="lead">We meticulously analyse your existing business system, design customised performance improvement plans aligned with international best practices, and ensure full regulatory compliance.</p>
+            <div>
+                <a href="{{ route('planner.page') }}" class="haw-hero-cta">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Plan your project in 60 seconds <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
             <div class="haw-breadcrumb">
                 <a href="{{ route('home') }}"><i class="bi bi-house-fill me-1"></i>Home</a>
                 <span class="sep">/</span>
@@ -231,7 +263,7 @@
             </div>
 
             <div class="row g-4">
-                <div class="col-lg-3 col-sm-6">
+                <div class="col-lg-3 col-sm-6" data-aos="fade-up">
                     <div class="process-card">
                         <div class="step-num">01</div>
                         <div class="step-icon">
@@ -242,7 +274,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3 col-sm-6">
+                <div class="col-lg-3 col-sm-6" data-aos="fade-up">
                     <div class="process-card">
                         <div class="step-num">02</div>
                         <div class="step-icon">
@@ -253,7 +285,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3 col-sm-6">
+                <div class="col-lg-3 col-sm-6" data-aos="fade-up">
                     <div class="process-card">
                         <div class="step-num">03</div>
                         <div class="step-icon">
@@ -264,7 +296,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3 col-sm-6">
+                <div class="col-lg-3 col-sm-6" data-aos="fade-up">
                     <div class="process-card">
                         <div class="step-num">04</div>
                         <div class="step-icon">
@@ -274,6 +306,27 @@
                         <p>At the end of each project cycle, achieved results are reviewed against the initial baseline to measure success rate, validate outcomes, and inform the next phase of growth.</p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- Plan Your Project launcher --}}
+    <section class="haw-launch" data-aos="fade-up">
+        <div class="container">
+            <div class="haw-launch-inner">
+                <span class="badge-pill">Alpha Blueprint AI</span>
+                <h2>Not sure where to start?</h2>
+                <p>Let <strong>Alpha Blueprint AI</strong> map your project in about a minute. Tell us your goal and it'll
+                    outline exactly how we'd approach it — with the services best suited to you.</p>
+                <div class="haw-launch-steps">
+                    <span class="haw-launch-step"><i class="fa-solid fa-bullseye"></i> Your goal</span>
+                    <span class="haw-launch-step"><i class="fa-solid fa-location-dot"></i> Region &amp; facility</span>
+                    <span class="haw-launch-step"><i class="fa-solid fa-list-check"></i> Tailored plan + services</span>
+                </div>
+                <a href="{{ route('planner.page') }}" class="haw-launch-btn">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Start planning <i class="bi bi-arrow-right"></i>
+                </a>
+                <div class="haw-launch-meta"><i class="fa-regular fa-clock"></i> ~60 seconds · No commitment</div>
             </div>
         </div>
     </section>

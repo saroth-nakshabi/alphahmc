@@ -762,6 +762,9 @@
         </div>
     </section>
 
+    {{-- ═══════════ ALPHA BLUEPRINT AI — interactive planner launcher ═══════════ --}}
+    @include('front.partials.planner-cta')
+
     {{-- ═══════════ BOOK A CONSULTATION (post-proof conversion band) ═══════════ --}}
     <section class="book-consult-cta">
         <div class="container">

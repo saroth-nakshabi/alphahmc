@@ -25,6 +25,7 @@ class ServiceGroup extends Model
         'process_description',
         'process_service_ids',
         'process_intro',
+        'project_process_id',
         'info_four',
         'announcement_id',
         'related_services',
@@ -171,6 +172,12 @@ class ServiceGroup extends Model
         $this->attributes['process_service_ids'] = is_array($value)
             ? json_encode(array_values($value))
             : $value;
+    }
+
+    /** The shared Project Process this service group is linked to (if any). */
+    public function projectProcess()
+    {
+        return $this->belongsTo(\App\Models\ProjectProcess::class);
     }
 
     public function scopePublished($query)
