@@ -172,6 +172,12 @@
                 <span class="info-label">Phone Number : </span>
                 <span class="info-value">{{ $inquiry->phone }}</span>
             </div>
+            @if($inquiry->meeting_at)
+            <div class="info-item">
+                <span class="info-label">Requested Consultation : </span>
+                <span class="info-value accent-text">{{ \Illuminate\Support\Carbon::parse($inquiry->meeting_at)->format('l, d F Y · h:i A') }}</span>
+            </div>
+            @endif
         </div>
 
         <span class="section-label">Consultation Notes : </span>

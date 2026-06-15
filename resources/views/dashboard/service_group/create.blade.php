@@ -123,9 +123,15 @@
                             </div>
                             <div class="col-12">
                                 <label class="control-label">Intro Description <span class="required-star">*</span>
-                                    <span class="text-muted fw-normal">(overview section)</span></label>
+                                    <span class="text-muted fw-normal">(overview — shown on the right of the service details band)</span></label>
                                 <textarea name="overview" rows="6" class="rich-textarea form-control"
                                     placeholder="Introduction paragraph shown below the hero..." required></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="control-label">Service Details Header
+                                    <span class="text-muted fw-normal">(shown on the left of the service details band)</span></label>
+                                <textarea name="service_details_header" rows="4" class="rich-textarea form-control"
+                                    placeholder="A short, bold lead statement for the service details band..."></textarea>
                             </div>
                         </div>
                     </div>
@@ -148,57 +154,6 @@
                                 <label class="control-label">Service Group Image <span class="required-star">*</span></label>
                                 <input type="file" name="image" class="form-control" accept="image/*" required />
                                 <div class="field-hint">Card thumbnail image.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- ── Section 3 · Core Services ── --}}
-                <div class="section-card">
-                    <div class="section-header justify-content-between">
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="section-badge text-white" style="background:#059669!important">3</span>
-                            <h6 class="mb-0 fw-semibold">Core Services</h6>
-                            <span class="item-count-badge" id="core-count">1 item</span>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-outline-success" id="addCoreServiceBtn">
-                            <i class="ti ti-plus me-1"></i> Add Core Service
-                        </button>
-                    </div>
-                    <div class="section-body p-3">
-                        <div id="core-accordion" class="accordion cst-accordion">
-                            {{-- First item pre-rendered so there is always at least 1 --}}
-                            <div class="accordion-item core-service-section-item" id="core-item-0">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#core-collapse-0" aria-expanded="true">
-                                        <span class="badge me-2 text-white" style="background:#059669;min-width:26px">#1</span>
-                                        <span class="core-item-title">Core Service 1</span>
-                                    </button>
-                                </h2>
-                                <div id="core-collapse-0" class="accordion-collapse collapse show">
-                                    <div class="accordion-body">
-                                        <div class="row g-3">
-                                            <div class="col-12">
-                                                <label class="control-label">Core Service Header <span class="required-star">*</span></label>
-                                                <input type="text" name="core_service_header[]"
-                                                    class="form-control core-header-input"
-                                                    placeholder="e.g. Quality Management" required />
-                                            </div>
-                                            <div class="col-12">
-                                                <label class="control-label">Core Service Description <span class="required-star">*</span></label>
-                                                <textarea id="core_desc_0" name="core_service_description[]"
-                                                    rows="4" class="form-control"
-                                                    placeholder="Core service description..." required></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-end mt-3">
-                                            <button type="button" class="btn btn-sm btn-outline-danger remove-core-section d-none">
-                                                <i class="ti ti-trash me-1"></i> Remove
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>

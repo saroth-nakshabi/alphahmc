@@ -1177,9 +1177,11 @@
     align-items: flex-start;
     flex-wrap: nowrap;
     gap: 28px;
-    width: fit-content;
-    max-width: 100%;
-    margin: 0 auto;
+    width: 80vw;          /* 80% of the page width */
+    max-width: 80vw;
+    left: 50%;            /* break out of the .container and center on the page */
+    transform: translateX(-50%);
+    margin: 0;
     z-index: 2;
   }
 
@@ -1254,6 +1256,10 @@
       flex-wrap: wrap;
       gap: 24px 18px;
       width: 100%;
+      max-width: 100%;
+      left: auto;
+      transform: none;
+      margin: 0 auto;
     }
 
     .process-grid::before {

@@ -155,9 +155,15 @@
                             </div>
                             <div class="col-12">
                                 <label class="control-label">Intro Description <span class="required-star">*</span>
-                                    <span class="text-muted fw-normal">(overview)</span></label>
+                                    <span class="text-muted fw-normal">(overview — shown on the right of the service details band)</span></label>
                                 <textarea name="overview" rows="6" class="rich-textarea form-control"
                                     required>{{ $service_group->overview }}</textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="control-label">Service Details Header
+                                    <span class="text-muted fw-normal">(shown on the left of the service details band)</span></label>
+                                <textarea name="service_details_header" rows="4" class="rich-textarea form-control"
+                                    placeholder="A short, bold lead statement for the service details band...">{{ $service_group->service_details_header }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -197,59 +203,6 @@
                     </div>
                 </div>
 
-                {{-- ── Section 3 · Core Services ── --}}
-                <div class="section-card">
-                    <div class="section-header justify-content-between">
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="section-badge text-white" style="background:#059669!important">3</span>
-                            <h6 class="mb-0 fw-semibold">Core Services</h6>
-                            <span class="item-count-badge" id="core-count">{{ count($coreHeaders) }} {{ count($coreHeaders) == 1 ? 'item' : 'items' }}</span>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-outline-success" id="addCoreServiceBtn">
-                            <i class="ti ti-plus me-1"></i> Add Core Service
-                        </button>
-                    </div>
-                    <div class="section-body p-3">
-                        <div id="core-accordion" class="accordion cst-accordion">
-                            @foreach ($coreHeaders as $index => $header)
-                                <div class="accordion-item core-service-section-item" id="core-item-{{ $index }}">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button {{ $index > 0 ? 'collapsed' : '' }}" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#core-collapse-{{ $index }}"
-                                            aria-expanded="{{ $index === 0 ? 'true' : 'false' }}">
-                                            <span class="badge me-2 text-white" style="background:#059669;min-width:26px">#{{ $index + 1 }}</span>
-                                            <span class="core-item-title text-truncate" style="max-width:300px">{{ $header ?: 'Core Service ' . ($index + 1) }}</span>
-                                        </button>
-                                    </h2>
-                                    <div id="core-collapse-{{ $index }}" class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}">
-                                        <div class="accordion-body">
-                                            <div class="row g-3">
-                                                <div class="col-12">
-                                                    <label class="control-label">Core Service Header <span class="required-star">*</span></label>
-                                                    <input type="text" name="core_service_header[]"
-                                                        class="form-control core-header-input"
-                                                        value="{{ $header }}"
-                                                        placeholder="e.g. Quality Management" required />
-                                                </div>
-                                                <div class="col-12">
-                                                    <label class="control-label">Core Service Description <span class="required-star">*</span></label>
-                                                    <textarea id="core_desc_{{ $index }}" name="core_service_description[]"
-                                                        rows="4" class="form-control"
-                                                        placeholder="Core service description..." required>{{ $coreDescriptions[$index] ?? '' }}</textarea>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex justify-content-end mt-3">
-                                                <button type="button" class="btn btn-sm btn-outline-danger remove-core-section">
-                                                    <i class="ti ti-trash me-1"></i> Remove
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
 
                 {{-- ── Section 4 · Page Content ── --}}
                 <div class="section-card">

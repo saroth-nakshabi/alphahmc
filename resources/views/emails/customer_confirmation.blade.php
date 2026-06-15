@@ -175,6 +175,12 @@
                     <span class="ledger-label">Date Recorded : </span>
                     <span class="ledger-value">{{ $inquiry->created_at->format('d F Y') }}</span>
                 </div>
+                @if($inquiry->meeting_at)
+                <div class="ledger-row">
+                    <span class="ledger-label">Requested Consultation : </span>
+                    <span class="ledger-value">{{ \Illuminate\Support\Carbon::parse($inquiry->meeting_at)->format('l, d F Y · h:i A') }}</span>
+                </div>
+                @endif
             </div>
 
             <p class="intro-text" style="font-style: italic;">

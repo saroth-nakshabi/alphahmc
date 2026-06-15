@@ -1024,9 +1024,11 @@
     align-items: flex-start;
     flex-wrap: nowrap;
     gap: 28px;
-    width: fit-content;
-    max-width: 100%;
-    margin: 0 auto;
+    width: 80vw;          /* 80% of the page width */
+    max-width: 80vw;
+    left: 50%;            /* break out of the .container and center on the page */
+    transform: translateX(-50%);
+    margin: 0;
     z-index: 2;
   }
 
@@ -1101,6 +1103,10 @@
       flex-wrap: wrap;
       gap: 24px 18px;
       width: 100%;
+      max-width: 100%;
+      left: auto;
+      transform: none;
+      margin: 0 auto;
     }
 
     .process-grid::before {
@@ -1161,4 +1167,78 @@
   color: #475569;
   font-size: .8rem;
   line-height: 1.55;
+}
+
+/* ── Service Details Band (light replacement for the old intro + pillar) ── */
+.service-detail-band {
+  background: #f6f8f9;
+  padding: 84px 0;
+  color: #0b0f14;
+}
+.service-detail-band .sdb-header h1,
+.service-detail-band .sdb-header h2,
+.service-detail-band .sdb-header h3,
+.service-detail-band .sdb-header h4 {
+  color: #0b0f14;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.18;
+  margin: 0 0 16px;
+  font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+}
+.service-detail-band .sdb-header p {
+  color: #2a323a;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin: 0 0 14px;
+}
+.service-detail-band .sdb-header strong { color: #0b0f14; }
+.service-detail-band .cta-group { margin-top: 22px; }
+
+.service-detail-band .sdb-desc-wrapper {
+  position: relative;
+  max-height: 360px;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+.service-detail-band .sdb-desc-wrapper.active { max-height: 4000px; }
+.service-detail-band .sdb-desc-wrapper:not(.active)::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, rgba(246,248,249,0), #f6f8f9);
+  pointer-events: none;
+}
+.service-detail-band .sdb-desc,
+.service-detail-band .sdb-desc p,
+.service-detail-band .sdb-desc li {
+  color: #1f272f;
+  font-size: 1.04rem;
+  line-height: 1.85;
+}
+.service-detail-band .sdb-desc h1,
+.service-detail-band .sdb-desc h2,
+.service-detail-band .sdb-desc h3,
+.service-detail-band .sdb-desc h4 { color: #0b0f14; font-weight: 700; }
+.service-detail-band .sdb-desc ul { padding-left: 1.1rem; }
+
+.service-detail-band .sdb-read-more {
+  margin-top: 18px;
+  background: none;
+  border: none;
+  color: #066D77;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  padding: 6px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.service-detail-band .sdb-read-more:hover { color: #044d54; }
+
+@media (max-width: 991px) {
+  .service-detail-band { padding: 56px 0; }
+  .service-detail-band .col-lg-6.offset-lg-1 { margin-top: 32px; }
 }

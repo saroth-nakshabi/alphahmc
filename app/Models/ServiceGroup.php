@@ -18,6 +18,7 @@ class ServiceGroup extends Model
         'inq_officer_phone',
         'content',
         'overview',
+        'service_details_header',
         'service_header',
         'core_service_header',
         'core_service_description',

@@ -77,6 +77,12 @@
                         <span class="inq-label">Received</span>
                         <span class="inq-val">{{ $inquiry->created_at->format('M d, Y · h:i A') }}</span>
                     </div>
+                    @if($inquiry->meeting_at)
+                    <div class="inq-row">
+                        <span class="inq-label">Requested consultation</span>
+                        <span class="inq-val">{{ \Illuminate\Support\Carbon::parse($inquiry->meeting_at)->format('l, M d, Y · h:i A') }}</span>
+                    </div>
+                    @endif
                     <div class="inq-row" style="flex-direction:column; gap:8px;">
                         <span class="inq-label">Message</span>
                         <div class="inq-msg">{{ $inquiry->message ?: 'No message provided.' }}</div>

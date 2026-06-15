@@ -121,10 +121,6 @@ class ServiceGroupController extends Controller
             'description' => 'nullable|string',
             'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'hero_image'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'core_service_header' => 'required|array|min:1',
-            'core_service_header.*' => 'required|string|max:255',
-            'core_service_description' => 'required|array|min:1',
-            'core_service_description.*' => 'required|string',
             'process_header' => 'nullable|array',
             'process_header.*' => 'nullable|string|max:255',
             'process_description' => 'nullable|array',
@@ -132,14 +128,6 @@ class ServiceGroupController extends Controller
             'process_service_ids' => 'nullable|array',
             'process_service_ids.*' => 'nullable|exists:services,id',
         ]);
-
-        $coreHeaders = array_values(array_filter($request->input('core_service_header', []), function ($value) {
-            return !is_null($value) && trim(strip_tags((string) $value)) !== '';
-        }));
-
-        $coreDescriptions = array_values(array_filter($request->input('core_service_description', []), function ($value) {
-            return !is_null($value) && trim(strip_tags((string) $value)) !== '';
-        }));
 
         // Build process steps as aligned triplets (header / description / linked service)
         $rawHeaders  = $request->input('process_header', []);
@@ -188,9 +176,8 @@ class ServiceGroupController extends Controller
             'inq_officer_phone'        => $request->input('inq_officer_phone'),
             'content'                  => $request->input('content'),
             'overview'                 => $request->input('overview'),
+            'service_details_header'   => $request->input('service_details_header'),
             'service_header'           => $request->input('service_header'),
-            'core_service_header'      => $coreHeaders,
-            'core_service_description' => $coreDescriptions,
             'process_header'           => $processHeaders,
             'process_description'      => $processDescriptions,
             'process_service_ids'      => $processServiceIds,
@@ -251,10 +238,6 @@ class ServiceGroupController extends Controller
             'description' => 'nullable|string',
             'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
             'hero_image'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
-            'core_service_header'        => 'nullable|array',
-            'core_service_header.*'      => 'nullable|string',
-            'core_service_description'   => 'nullable|array',
-            'core_service_description.*' => 'nullable|string',
             'process_header'             => 'nullable|array',
             'process_header.*'           => 'nullable|string',
             'process_description'        => 'nullable|array',
@@ -262,14 +245,6 @@ class ServiceGroupController extends Controller
             'process_service_ids'        => 'nullable|array',
             'process_service_ids.*'      => 'nullable|exists:services,id',
         ]);
-
-        $coreHeaders = array_values(array_filter($request->input('core_service_header', []), function ($value) {
-            return !is_null($value) && trim(strip_tags((string) $value)) !== '';
-        }));
-
-        $coreDescriptions = array_values(array_filter($request->input('core_service_description', []), function ($value) {
-            return !is_null($value) && trim(strip_tags((string) $value)) !== '';
-        }));
 
         // Build process steps as aligned triplets (header / description / linked service)
         $rawHeaders  = $request->input('process_header', []);
@@ -324,9 +299,8 @@ class ServiceGroupController extends Controller
             'inq_officer_phone'        => $request->input('inq_officer_phone'),
             'content'                  => $request->input('content'),
             'overview'                 => $request->input('overview'),
+            'service_details_header'   => $request->input('service_details_header'),
             'service_header'           => $request->input('service_header'),
-            'core_service_header'      => $coreHeaders,
-            'core_service_description' => $coreDescriptions,
             'process_header'           => $processHeaders,
             'process_description'      => $processDescriptions,
             'process_service_ids'      => $processServiceIds,

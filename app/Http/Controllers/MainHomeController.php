@@ -365,10 +365,25 @@ class MainHomeController extends Controller
             'phone' => 'required|string|max:20',
             'service_id' => 'nullable|exists:services,id',
             'message' => 'nullable|string',
+            'meeting_date' => 'nullable|date',
+            'meeting_time' => 'nullable|string|max:10',
         ]);
 
-        // 1. Save to Database
-        $inquiry = Inquiry::create($request->all());
+        // Combine the optional preferred date + time into a single datetime.
+        $meetingAt = $request->filled('meeting_date')
+            ? trim($request->input('meeting_date') . ' ' . ($request->input('meeting_time') ?: '10:00'))
+            : null;
+
+        // 1. Save to Database (CRM record)
+        $inquiry = Inquiry::create([
+            'name'       => $request->input('name'),
+            'email'      => $request->input('email'),
+            'phone'      => $request->input('phone'),
+            'service_id' => $request->input('service_id') ?: null,
+            'message'    => $request->input('message'),
+            'meeting_at' => $meetingAt,
+            'status'     => 'pending',
+        ]);
 
         // 2. Send Email Notification to Admin
         try {

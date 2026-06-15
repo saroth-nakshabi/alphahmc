@@ -47,6 +47,14 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="ahg-im-field">
+                        <label for="im-meeting-date">Preferred date <span class="ahg-im-opt">(optional)</span></label>
+                        <input type="date" id="im-meeting-date" name="meeting_date">
+                    </div>
+                    <div class="ahg-im-field">
+                        <label for="im-meeting-time">Preferred time <span class="ahg-im-opt">(optional)</span></label>
+                        <input type="time" id="im-meeting-time" name="meeting_time" value="10:00">
+                    </div>
                     <div class="ahg-im-field ahg-im-col2">
                         <label for="im-message">Message <span class="ahg-im-opt">(optional)</span></label>
                         <textarea id="im-message" name="message" rows="3" placeholder="Tell us briefly about your facility or requirement..."></textarea>
@@ -136,6 +144,29 @@
         modalEl.addEventListener('show.bs.modal',   function () { navEl.style.zIndex = '1000'; });
         modalEl.addEventListener('hidden.bs.modal',  function () { navEl.style.zIndex = ''; });
     }
+
+    // Don't let visitors pick a past consultation date.
+    var mDate = document.getElementById('im-meeting-date');
+    if (mDate) mDate.min = new Date().toISOString().split('T')[0];
+
+    // Global prefill helper — pages can call this before opening the modal to
+    // carry the visitor's chosen service / category into the form.
+    window.ahgPrefillInquiry = function (opts) {
+        opts = opts || {};
+        var svc = document.getElementById('im-service');
+        var msg = document.getElementById('im-message');
+        if (opts.serviceId && svc) {
+            var found = Array.prototype.some.call(svc.options, function (o) { return o.value == opts.serviceId; });
+            if (found) svc.value = String(opts.serviceId);
+        }
+        // Category-only: there's no category in the service list, so record it as the requirement.
+        if (!opts.serviceId && opts.categoryName && msg) {
+            var note = 'I am interested in: ' + opts.categoryName + ' (category).';
+            if (msg.value.indexOf(note) === -1) {
+                msg.value = note + (msg.value ? '\n' + msg.value : '');
+            }
+        }
+    };
 
     var form = document.getElementById('inquiryForm');
     if (!form || form.dataset.bound) return;

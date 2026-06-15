@@ -315,7 +315,7 @@
                                         @foreach ($main_categories as $main_category)
                                             @foreach ($main_category->mergedCategories as $category)
                                                 <option value="{{ $category->id }}"
-                                                    data-image="{{ asset('public/' . $category->image) }}"
+                                                    data-image="{{ $category->image ? asset('public/' . $category->image) : '' }}"
                                                     data-url="{{ route('front.service-category', $category->slug) }}"
                                                     data-desc="{{ Str::limit(strip_tags($category->description), 160) }}">
                                                     {{ $category->name }}
@@ -410,7 +410,7 @@
                                                 <i class="fa-solid fa-arrow-right"></i>
                                             </span>
                                         </a>
-                                        <button type="button" class="btn-preview-consult"
+                                        <button type="button" class="btn-preview-consult" id="expertiseConsultBtn"
                                                 data-bs-toggle="modal" data-bs-target="#inquiryModal">
                                             Book a Consultation
                                         </button>
@@ -1333,7 +1333,14 @@
                     const departmentName = (opt ? opt.text : '').trim() || 'Department';
                     const catUrl  = opt ? (opt.getAttribute('data-url') || '') : '';
                     const catDesc = opt ? (opt.getAttribute('data-desc') || '') : '';
+                    const catImage = opt ? (opt.getAttribute('data-image') || '') : '';
                     const options = Array.from(serviceDropdown.options);
+
+                    // Swap the right-side image to the category image (when one is set).
+                    if (serviceRight && catImage) {
+                        serviceRight.style.backgroundImage =
+                            `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('${catImage}')`;
+                    }
 
                     options.forEach(option => {
                         if (!option.value) { option.style.display = 'block'; return; }
@@ -1402,6 +1409,21 @@
                         }
                     }
                 });
+
+                // Carry the current category/service selection into the inquiry modal.
+                var expertiseConsultBtn = document.getElementById('expertiseConsultBtn');
+                if (expertiseConsultBtn) {
+                    expertiseConsultBtn.addEventListener('click', function () {
+                        if (typeof window.ahgPrefillInquiry !== 'function') return;
+                        var svcOpt = serviceDropdown.options[serviceDropdown.selectedIndex];
+                        var catOpt = categoryDropdown.options[categoryDropdown.selectedIndex];
+                        window.ahgPrefillInquiry({
+                            serviceId:    (svcOpt && svcOpt.value) ? svcOpt.value : null,
+                            serviceName:  (svcOpt && svcOpt.value) ? svcOpt.getAttribute('data-name') : null,
+                            categoryName: (catOpt && catOpt.value) ? catOpt.text.trim() : null,
+                        });
+                    });
+                }
 
                 // --- NEW: QUICK LINKS SWIPER ---
                 new Swiper(".quickLinksSwiper", {

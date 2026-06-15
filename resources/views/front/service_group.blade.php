@@ -1,7 +1,7 @@
 @extends('front/layout-2')
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.css') }}?v=2">
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-group.css') }}?v=2">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-group.css') }}?v=4">
 @endsection
 @push('page_title')
     {!! $service->name !!}
@@ -118,30 +118,19 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
     </div>
 </section> -->
 
-<!--About category section-->
-
-<section class="premium-intro light-theme">
+<!-- Service Details Band (light) — header left, intro description right -->
+<section class="service-detail-band">
   <div class="container">
-    <div class="intro-layout">
-      
-      <!-- Left Content -->
-      <div class="intro-content">
-        {{-- <span class="eyebrow">About {{ optional($service->categories)->first()->name ?? 'This Category' }}</span> --}}
-         {{-- <span class="eyebrow">ABOUT THIS CATEGORY</span> --}}
-        {{-- <h2 class="display-title">
-          UAE regulations are <em>precise</em>. <br>
-          <span class="primary-text">Preparation is everything.</span>
-        </h2> --}}
-        <div class="lead-text">
-          {!! $service->overview !!}
+    <div class="row align-items-start">
+      <!-- Left: Service Details Header -->
+      <div class="col-lg-5" data-aos="fade-right">
+        <div class="sdb-header">
+          @if(!empty($service->service_details_header))
+            {!! $service->service_details_header !!}
+          @else
+            <h2>{{ $service->service_header ?? $service->name }}</h2>
+          @endif
         </div>
-        
-        {{-- <div class="stats-mini">
-          <div class="stat-item"><span class="stat-num">400+</span> <small>Approved</small></div>
-          <div class="stat-divider"></div>
-          <div class="stat-item"><span class="stat-num">100%</span> <small>Compliance</small></div>
-        </div> --}}
-
         <div class="cta-group">
           <a href="#services" class="btn-explore-sg">
             <span>Explore Services</span>
@@ -150,103 +139,34 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
         </div>
       </div>
 
-      <!-- Right Content: Auto-Scroll -->
-    <div class="intro-visual">
-        <div class="scroll-wrapper">
-            @php
-                $tabSlider = $service->ServiceTab->count() > 3;
-                $coreHeaders = !empty($service->core_service_header)
-                    ? (is_array($service->core_service_header) ? $service->core_service_header : [$service->core_service_header])
-                    : [];
-                $coreDescriptions = !empty($service->core_service_description)
-                    ? (is_array($service->core_service_description) ? $service->core_service_description : [$service->core_service_description])
-                    : [];
-                $coreSlider = count($coreHeaders) > 3;
-                $scrollTrackClass = ($tabSlider || $coreSlider) ? 'scroll-track' : 'scroll-track no-scroll';
-            @endphp
-          <div class="{{ $scrollTrackClass }}">
-            @if($service->ServiceTab->count() > 0)
-                @foreach($service->ServiceTab as $index => $tab)
-                    <!-- Card {{ $index + 1 }} -->
-                    <div class="feature-card">
-                      <div class="card-header">
-                        <span class="card-num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                        <h4>{{ $tab->name }}</h4>
-                      </div>
-                      <p>{{ $tab->description }}</p>
-                    </div>
-                @endforeach
-                
-                @if($tabSlider)
-                    @foreach($service->ServiceTab as $index => $tab)
-                        <div class="feature-card aria-hidden">
-                          <div class="card-header">
-                            <span class="card-num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                            <h4>{{ $tab->name }}</h4>
-                          </div>
-                          <p>{{ $tab->description }}</p>
-                        </div>
-                    @endforeach
-                @endif
-            @elseif(!empty($service->core_service_header))
-                @foreach($coreHeaders as $index => $header)
-                    <div class="feature-card">
-                      <div class="card-header">
-                        <span class="card-num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                        <h4>{{ $header }}</h4>
-                      </div>
-                      <p>{!! $coreDescriptions[$index] ?? '' !!}</p>
-                    </div>
-                @endforeach
-                @if($coreSlider)
-                    @foreach($coreHeaders as $index => $header)
-                        <div class="feature-card aria-hidden">
-                          <div class="card-header">
-                            <span class="card-num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                            <h4>{{ $header }}</h4>
-                          </div>
-                          <p>{!! $coreDescriptions[$index] ?? '' !!}</p>
-                        </div>
-                    @endforeach
-                @endif
-            @else
-                <!-- Fallback if no ServiceTabs -->
-                <div class="feature-card">
-                  <div class="card-header">
-                    <span class="card-num">01</span>
-                    <h4>Authority Expertise</h4>
-                  </div>
-                  <p>DOH, DHA, and MOH specific checklists tailored to your specialty mix.</p>
-                </div>
-                <div class="feature-card">
-                  <div class="card-header">
-                    <span class="card-num">02</span>
-                    <h4>End-to-End Management</h4>
-                  </div>
-                  <p>We manage submissions, inspector coordination, and follow-ups directly.</p>
-                </div>
-                <div class="feature-card">
-                  <div class="card-header">
-                    <span class="card-num">03</span>
-                    <h4>Predictable Timelines</h4>
-                  </div>
-                  <p>Realistic milestones with resubmissions handled at no extra cost.</p>
-                </div>
-                <div class="feature-card">
-                  <div class="card-header">
-                    <span class="card-num">04</span>
-                    <h4>Integrated Logistics</h4>
-                  </div>
-                  <p>Coordination with engineering and accreditation for a turnkey launch.</p>
-                </div>
-            @endif
+      <!-- Right: Intro Description (overview) -->
+      <div class="col-lg-6 offset-lg-1" data-aos="fade-left">
+        <div class="sdb-desc-wrapper" id="sdb-desc-wrapper">
+          <div class="sdb-desc">
+            {!! $service->overview !!}
           </div>
         </div>
+        <button class="sdb-read-more" id="sdb-toggle" type="button" onclick="toggleSdbDesc()" style="display:none">
+          Read more <i class="fa-solid fa-arrow-down"></i>
+        </button>
       </div>
-
     </div>
   </div>
 </section>
+<script>
+  function toggleSdbDesc() {
+    var w = document.getElementById('sdb-desc-wrapper'), b = document.getElementById('sdb-toggle');
+    w.classList.toggle('active');
+    b.innerHTML = w.classList.contains('active')
+      ? 'Read less <i class="fa-solid fa-arrow-up"></i>'
+      : 'Read more <i class="fa-solid fa-arrow-down"></i>';
+  }
+  // Only show the toggle when the description actually overflows the clamp.
+  document.addEventListener('DOMContentLoaded', function () {
+    var w = document.getElementById('sdb-desc-wrapper'), b = document.getElementById('sdb-toggle');
+    if (w && b && w.scrollHeight > w.clientHeight + 8) b.style.display = '';
+  });
+</script>
 
 
 

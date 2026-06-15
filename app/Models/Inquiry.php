@@ -15,12 +15,14 @@ class Inquiry extends Model
         'phone',
         'service_id',
         'message',
+        'meeting_at',
         'status',
         'reply_history',
     ];
 
     protected $casts = [
         'reply_history' => 'array',
+        'meeting_at'    => 'datetime',
     ];
 
     public function service()
