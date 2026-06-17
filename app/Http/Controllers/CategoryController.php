@@ -20,7 +20,42 @@ class CategoryController extends Controller
         $data['categories'] = Category::with(['mainCategory', 'services', 'serviceGroups'])
             ->orderBy('sort_order')->orderBy('id')->get();
         $data['main_categories'] = MainCategory::all();
+        $data['services'] = Service::orderBy('name')->get(['id', 'name']);
         return view('dashboard.categories.index', $data);
+    }
+
+    /**
+     * Sync the services mapped to a category from the categories list page,
+     * without having to open each service's edit page individually.
+     */
+    public function mapServices(Request $request, $id)
+    {
+        $category = Category::findOrFail($id);
+
+        $request->validate([
+            'services'   => 'nullable|array',
+            'services.*' => 'integer|exists:services,id',
+        ]);
+
+        $category->services()->sync($request->input('services', []));
+
+        $services = $category->services()
+            ->orderBy('name')
+            ->get(['services.id', 'services.name', 'services.slug'])
+            ->map(function ($s) {
+                return [
+                    'id'   => $s->id,
+                    'name' => $s->name,
+                    'url'  => route('front.service', $s->slug),
+                ];
+            })->values();
+
+        return response()->json([
+            'success'  => true,
+            'message'  => 'Services updated for ' . $category->name . '.',
+            'services' => $services,
+            'count'    => $services->count(),
+        ]);
     }
 
     public function reorder(Request $request)
@@ -65,11 +100,11 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $data = [];
-        $data['category'] = Category::with(['mainCategories'])->findOrFail($id);
+        $data['category'] = Category::with(['mainCategories', 'services'])->findOrFail($id);
         $data['main_categories'] = MainCategory::all();
         $data['agents'] = Agent::all();
         $data['announcements'] = Announcement::all();
-        $data['services'] = Service::all();
+        $data['services'] = Service::orderBy('name')->get();
         return view('dashboard.categories.edit', $data);
     }
 
@@ -215,6 +250,8 @@ class CategoryController extends Controller
             'process_service_ids'        => 'nullable|array',
             'process_service_ids.*'      => 'nullable|exists:services,id',
             'process_intro'              => 'nullable|string',
+            'services'                   => 'nullable|array',
+            'services.*'                 => 'integer|exists:services,id',
         ]);
 
         $imagePath = $item->image;
@@ -300,6 +337,9 @@ class CategoryController extends Controller
         ]);
 
         $item->mainCategories()->sync($mainCategoryIds);
+
+        // Sync the services linked to this category (many-to-many via service_categories)
+        $item->services()->sync($request->input('services', []));
 
         // Handle Gallery Images (Add new ones)
         if ($request->hasFile('images')) {

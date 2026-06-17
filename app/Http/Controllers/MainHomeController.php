@@ -124,7 +124,7 @@ class MainHomeController extends Controller
         $data['featuredServices'] = Service::published()->where('featured', true)->take(3)->get();
         $data['all_services'] = Service::published()->get();
         $data['projects'] = Project::with('projects_images', 'projects_videos', 'projects_documents', 'project_category')->paginate(3);
-        $data['latest_blogs'] = Blog::latest()->take(3)->get();
+        $data['latest_blogs'] = Blog::orderBy('sort_order')->orderBy('id')->take(3)->get();
         $data['globaltag'] = globaltag::all();
         $data['googletag'] = googletag::all();
         $data['service_groups'] = ServiceGroup::all();
@@ -150,7 +150,7 @@ class MainHomeController extends Controller
         $data['featuredServices'] = Service::published()->where('featured', true)->take(3)->get();
         $data['all_services'] = Service::published()->get();
         $data['projects'] = Project::with('projects_images', 'projects_videos', 'projects_documents', 'project_category')->paginate(3);
-        $data['latest_blogs'] = Blog::latest()->take(3)->get();
+        $data['latest_blogs'] = Blog::orderBy('sort_order')->orderBy('id')->take(3)->get();
         $data['globaltag'] = globaltag::all();
         $data['googletag'] = googletag::all();
         $data['service_groups'] = ServiceGroup::all();
@@ -186,7 +186,7 @@ class MainHomeController extends Controller
 
     public function brands()
     {
-        $brands = Brand::latest()->get();
+        $brands = Brand::orderBy('sort_order')->orderBy('id')->get();
         $all_services = Service::published()->get();
         $brandHero = BrandHero::first();
         return view('front.brands', compact('brands', 'all_services', 'brandHero'));
@@ -210,7 +210,7 @@ class MainHomeController extends Controller
         $about_quotes = about_quote::latest()->get();
         $eco_systems = about_eco::latest()->take(6)->get();
         $clients = \App\Models\client::visible()->get();
-        $brands = Brand::latest()->get();
+        $brands = Brand::orderBy('sort_order')->orderBy('id')->get();
         return view('front.new-about', compact('about_us', 'about_content', 'about_quotes', 'eco_systems', 'clients', 'brands'));
 
 
@@ -223,7 +223,7 @@ class MainHomeController extends Controller
         $blog = Blog::where('slug', $slug)->firstOrFail();
         $blogsByTag = Blog::whereHas('tags', function ($query) use ($blog) {
             $query->whereIn('tags.id', $blog->tags->pluck('id'));
-        })->where('id', '!=', $blog->id)->paginate(3);
+        })->where('id', '!=', $blog->id)->orderBy('sort_order')->orderBy('id')->paginate(3);
 
         // Get projects with relationships
         $projects = Project::with('projects_images', 'projects_videos', 'projects_documents', 'project_category')->paginate(3);
@@ -249,7 +249,7 @@ class MainHomeController extends Controller
         }
 
         $all_services = Service::published()->get();
-        $latest_blogs = Blog::latest()->take(3)->get();
+        $latest_blogs = Blog::orderBy('sort_order')->orderBy('id')->take(3)->get();
         $clients = \App\Models\client::visible()->get();
         return view('front.projects', compact('projects', 'featuredProject', 'featuredServices', 'all_services', 'latest_blogs', 'clients'));
     }

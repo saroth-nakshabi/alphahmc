@@ -227,6 +227,7 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::post('/categories/get', [CategoryController::class, 'getCategory'])->name('categories.get');
     Route::post('/categories/reorder', [CategoryController::class, 'reorder'])->name('categories.reorder')->middleware('permission:edit categories');
     Route::post('/categories/toggle-featured/{id}', [CategoryController::class, 'toggleFeatured'])->name('categories.toggle-featured')->middleware('permission:edit categories');
+    Route::post('/categories/{id}/map-services', [CategoryController::class, 'mapServices'])->name('categories.map-services')->middleware('permission:edit categories');
 
     // Stub: the live dashboard layout links to route('strategy.index'), but the
     // strategy routes only ever existed in the host's old route cache. Redirects
@@ -437,6 +438,7 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::prefix('dashboard/brands')->group(function () {
         Route::get('/', [BrandController::class, 'index'])->name('dashboard.brands.index');
         Route::post('/store', [BrandController::class, 'store'])->name('dashboard.brands.store');
+        Route::post('/reorder', [BrandController::class, 'reorder'])->name('dashboard.brands.reorder');
         Route::get('/get', [BrandController::class, 'getBrand'])->name('dashboard.brands.get');
         Route::post('/update/{id}', [BrandController::class, 'update'])->name('dashboard.brands.update');
         Route::delete('/destroy/{id}', [BrandController::class, 'destroy'])->name('dashboard.brands.destroy');

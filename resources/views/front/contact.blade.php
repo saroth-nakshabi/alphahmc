@@ -932,164 +932,89 @@
                 </div> --}}
 
                 <div class="swiper myMapSlider">
-    <div class="swiper-wrapper">
+                    <div class="swiper-wrapper">
+                        @forelse($officeBrands as $office)
+                        <div class="swiper-slide">
+                            <div class="glass-card">
+                                <div class="map-frame">
+                                    <iframe src="{{ $office->map_embed_src }}"
+                                        style="border:0;" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                                        allowfullscreen title="{{ $office->name }} office location"></iframe>
+                                </div>
+                                <h6 class="office-name">{{ $office->name }}</h6>
+                            </div>
+                        </div>
+                        @empty
+                        <div class="swiper-slide">
+                            <div class="glass-card text-center text-muted py-5">
+                                Office locations will appear here once a Google Maps location is added to a brand.
+                            </div>
+                        </div>
+                        @endforelse
+                    </div>
 
-        <!-- Slide 1 -->
-        <div class="swiper-slide">
-            <div class="glass-card">
-                <h5 class="fw-bold text-center">Al Ain HQ</h5>
-                <div class="map-frame mb-3">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14551.984042111582!2d55.7170937!3d24.2419183!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xc95ae8607499e5ae!2sAlpha+Training+%26+Strategic+Management!5e0!3m2!1sen!2sae"
-                        width="100%" height="380px" style="border:0;" allowfullscreen=""></iframe>
+                    <!-- Pagination -->
+                    <div class="swiper-pagination"></div>
+
+                    <!-- Navigation -->
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
                 </div>
-
-            </div>
-        </div>
-
-        <!-- Slide 2 -->
-        <div class="swiper-slide">
-            <div class="glass-card">
-                <h5 class="fw-bold text-center">Dubai Office</h5>
-                <div class="map-frame mb-3">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14433.12595923586!2d55.3189752!3d25.2611146!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xe74f1ec930743c38!2sAlpha%20Health%20Consultancies!5e0!3m2!1sen!2sae"
-                        width="100%" height="380px" style="border:0;" allowfullscreen=""></iframe>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- Slide 3 -->
-        <div class="swiper-slide">
-            <div class="glass-card">
-                <h5 class="fw-bold text-center">Sri Lanka Branch</h5>
-                <div class="map-frame mb-3">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3434.9354!2d79.878342!3d6.9331885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae259ef03787805%3A0x1e845f8742dc5ce4!2sInstitute%20of%20Royal%20Aesthetic!5e0!3m2!1sen!2sae"
-                        width="100%" height="380px" style="border:0;" allowfullscreen=""></iframe>
-                </div>
-
-            </div>
-        </div>
-
-        <!--slide 4 -->
-        <div class="swiper-slide">
-            <div class="glass-card">
-                <h5 class="fw-bold text-center">Sri Lanka Branch</h5>
-                <div class="map-frame mb-3">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3434.9354!2d79.878342!3d6.9331885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae259ef03787805%3A0x1e845f8742dc5ce4!2sInstitute%20of%20Royal%20Aesthetic!5e0!3m2!1sen!2sae"
-                        width="100%" height="380px" style="border:0;" allowfullscreen=""></iframe>
-                </div>
-
-            </div>
-        </div>
-
-        {{-- slide 5 --}}
-
-        <div class="swiper-slide">
-            <div class="glass-card">
-                <h5 class="fw-bold text-center">Sri Lanka Branch</h5>
-                <div class="map-frame mb-3">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3434.9354!2d79.878342!3d6.9331885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae259ef03787805%3A0x1e845f8742dc5ce4!2sInstitute%20of%20Royal%20Aesthetic!5e0!3m2!1sen!2sae"
-                        width="100%" height="380px" style="border:0;" allowfullscreen=""></iframe>
-                </div>
-
-            </div>
-        </div>
-
-        {{-- slide 6 --}}
-
-        <div class="swiper-slide">
-            <div class="glass-card">
-                <h5 class="fw-bold text-center">Sri Lanka Branch</h5>
-                <div class="map-frame mb-3">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3434.9354!2d79.878342!3d6.9331885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae259ef03787805%3A0x1e845f8742dc5ce4!2sInstitute%20of%20Royal%20Aesthetic!5e0!3m2!1sen!2sae"
-                        width="100%" height="380px" style="border:0;" allowfullscreen=""></iframe>
-                </div>
-
-            </div>
-        </div>
-
-        {{-- slide 7 --}}
-
-        <div class="swiper-slide">
-            <div class="glass-card">
-                <h5 class="fw-bold text-center">Sri Lanka Branch</h5>
-                <div class="map-frame mb-3">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3434.9354!2d79.878342!3d6.9331885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae259ef03787805%3A0x1e845f8742dc5ce4!2sInstitute%20of%20Royal%20Aesthetic!5e0!3m2!1sen!2sae"
-                        width="100%" height="380px" style="border:0;" allowfullscreen=""></iframe>
-                </div>
-
-            </div>
-        </div>
-        <!-- Duplicate or loop your other slides same way -->
-
-    </div>
-
-    <!-- Pagination -->
-    <div class="swiper-pagination"></div>
-
-    <!-- Navigation -->
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
-</div>
             </div>
         </section>
 
-<script>
-    var swiper = new Swiper(".myMapSlider", {
-        slidesPerView: 6,
-        spaceBetween: 30,
-        loop: true,
-        speed: 2000,
-
-        autoplay: {
-            delay: 1000,
-            disableOnInteraction: false,
-            pauseOnMouseEnter: true, // ✅ pause on hover
-        },
-
-        pagination: {
-            el: ".swiper-pagination",
-            clickable: true,
-        },
-
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-        },
-
-        breakpoints: {
-            0: { slidesPerView: 1 },
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
-            1200: { slidesPerView: 4},
-            1400: { slidesPreView: 5}
-        }
-    });
-</script>
-
         <style>
 
-            .glass-card {
-    padding: 15px;
-    border-radius: 20px;
+/* Keep slides equal height and let Swiper control their width (prevents overlap) */
+.map-section .swiper { overflow: hidden; }
+.map-section .swiper-wrapper { align-items: stretch; }
+.map-section .swiper-slide {
+    height: auto;
+    display: flex;
+    box-sizing: border-box;
+}
 
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-
-    border: 1px solid rgba(255, 255, 255, 0.2);
-
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-
-    transition: all 0.2s ease-in-out;
-
-    width:360px;
+.glass-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;                 /* fill the slide — do NOT hardcode a px width */
+    padding: 12px;
+    border-radius: 18px;
+    background: #ffffff;
+    border: 1px solid #e6eef0;
+    box-shadow: 0 8px 24px rgba(6, 109, 119, 0.10);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    overflow: hidden;
 }
 
 .glass-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    transform: translateY(-6px);
+    box-shadow: 0 16px 36px rgba(6, 109, 119, 0.18);
+}
 
+/* Map on top */
+.map-frame {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    line-height: 0;
+}
+.map-frame iframe {
+    width: 100%;
+    height: 230px;
+    display: block;
+    border: 0;
+}
+
+/* Brand name below the map — smaller, subtle */
+.office-name {
+    margin: 12px 6px 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #066D77;
+    text-align: center;
+    line-height: 1.3;
+    letter-spacing: .2px;
 }
 
 /* .map-frame iframe {
@@ -1157,6 +1082,39 @@
                     once: true
                 });
             }
+        });
+
+        /* Global Offices slider — init AFTER Swiper's bundle has loaded (it is
+           included near the end of the layout, so run on window load). */
+        window.addEventListener('load', function () {
+            if (typeof Swiper === 'undefined' || !document.querySelector('.myMapSlider')) return;
+
+            var officeCount = {{ isset($officeBrands) ? $officeBrands->count() : 0 }};
+            var perView = function (n) { return Math.max(1, Math.min(n, officeCount)); };
+
+            new Swiper('.myMapSlider', {
+                slidesPerView: 1,
+                spaceBetween: 24,
+                // Loop only when there are clearly more slides than fit — avoids the
+                // overlapping / duplicated-slide glitch Swiper has with too few slides.
+                loop: officeCount > 4,
+                centerInsufficientSlides: true,
+                watchOverflow: true,
+                speed: 700,
+                autoplay: officeCount > 1 ? {
+                    delay: 3500,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true,
+                } : false,
+                pagination: { el: '.swiper-pagination', clickable: true },
+                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+                breakpoints: {
+                    0:    { slidesPerView: 1 },
+                    576:  { slidesPerView: perView(2) },
+                    992:  { slidesPerView: perView(3) },
+                    1200: { slidesPerView: perView(4) },
+                }
+            });
         });
     </script>
     @endsection

@@ -68,6 +68,7 @@ class BlogController extends Controller
             'title'            => $request->input('title'),
             'slug'             => $request->input('slug'),
             'featured'         => $request->has('featured') ? 1 : 0,
+            'sort_order'       => (int) Blog::max('sort_order') + 1, // new blogs go to the end
             'content'          => $request->input('content'),
             'description'      => $request->input('description'),
             'news_focus'       => $this->normalizeNewsFocus($request->input('news_focus')),

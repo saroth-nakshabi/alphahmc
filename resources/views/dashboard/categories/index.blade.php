@@ -134,6 +134,47 @@
             padding: 4px 12px;
         }
 
+        /* ── Map services modal (fix Select2 overflow from global .select2 height) ─── */
+        #mapSvcModal .modal-body { max-height: 60vh; overflow-y: auto; }
+        #mapSvcModal .select2,
+        #mapSvcModal .select2-container { width: 100% !important; height: auto !important; }
+        #mapSvcModal .select2-container .select2-selection--multiple {
+            min-height: 42px;
+            height: auto !important;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 3px 6px;
+        }
+        #mapSvcModal .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 0;
+            line-height: normal;
+        }
+        #mapSvcModal .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 3px 9px 3px 8px;
+            margin: 0;
+            font-size: .8rem;
+            display: inline-flex;
+            align-items: center;
+        }
+        #mapSvcModal .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+            color: #dbeafe;
+            margin-right: 6px;
+            font-weight: 700;
+            order: -1;
+        }
+        #mapSvcModal .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+            color: #fff;
+            background: transparent;
+        }
+        #mapSvcModal .select2-search--inline .select2-search__field { margin-top: 6px; }
+
         /* ── Search box ─── */
         .cat-search-wrap { position: relative; width: 240px; }
         .cat-search-wrap .ti-search {
@@ -163,6 +204,7 @@
                         'url'  => route('front.service', $s->slug),
                     ];
                 })->values()->toArray(),
+                'service_ids' => $cat->services->pluck('id')->values()->toArray(),
                 'service_groups' => $cat->serviceGroups->map(function ($g) {
                     return [
                         'id'   => $g->id,
@@ -264,6 +306,11 @@
                                         <button class="btn btn-light btn-sm view-cat" data-id="{{ $category->id }}" title="View services">
                                             <i class="ti ti-eye"></i>
                                         </button>
+                                        @can('edit categories')
+                                            <button class="btn btn-light-info btn-sm map-cat text-info" data-id="{{ $category->id }}" title="Map services">
+                                                <i class="ti ti-link"></i>
+                                            </button>
+                                        @endcan
                                         <a class="btn btn-light btn-sm" href="{{ route('front.service-category', $category->slug) }}"
                                             target="_blank" title="Open page">
                                             <i class="ti ti-external-link"></i>
@@ -352,6 +399,46 @@
         </div>
     </div>
 
+    {{-- ═══════════════════════ MAP SERVICES MODAL ═══════════════════════ --}}
+    @can('edit categories')
+    <div class="modal fade" id="mapSvcModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width:640px">
+            <div class="modal-content" style="border-radius:14px;overflow:hidden">
+                <form id="mapSvcForm">
+                    <div class="modal-header" style="background:#f8fafc;border-bottom:1px solid #e2e8f0;padding:.9rem 1.25rem">
+                        <div>
+                            <h5 class="modal-title fw-bold mb-0">Map Services</h5>
+                            <small class="text-muted">Linking services to <span id="mapSvcCatName" class="fw-semibold">—</span></small>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body p-4">
+                        <input type="hidden" id="mapSvcCatId" value="">
+                        <label class="control-label mb-2">Services in this sub-category</label>
+                        <select id="mapSvcSelect" class="form-control" multiple data-placeholder="Select services to link...">
+                            @foreach ($services as $svc)
+                                <option value="{{ $svc->id }}">{{ $svc->name }}</option>
+                            @endforeach
+                        </select>
+                        <small class="text-muted d-block mt-2">
+                            <i class="ti ti-info-circle"></i>
+                            Removing a service here only unlinks it from this category — the service itself is not deleted.
+                        </small>
+                    </div>
+
+                    <div class="modal-footer" style="border-top:1px solid #e2e8f0">
+                        <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" id="mapSvcSave" class="btn btn-primary btn-sm">
+                            <i class="ti ti-device-floppy me-1"></i> Save Mapping
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endcan
+
 @endsection
 
 @section('custom_js')
@@ -362,6 +449,7 @@
     const catData = @json($catData);
     const REORDER_URL = '{{ route('categories.reorder') }}';
     const TOGGLE_FEATURED_URL = '{{ route('categories.toggle-featured', '') }}';
+    const MAP_SERVICES_URL = '{{ url('categories') }}'; // + /{id}/map-services
     const CSRF = $('meta[name="csrf-token"]').attr('content');
     const CAN_EDIT = @json(auth()->user()->can('edit categories'));
 
@@ -514,6 +602,72 @@
                 .replace(/&/g,'&amp;').replace(/</g,'&lt;')
                 .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
         }
+
+        /* ── Map services modal ── */
+        $(document).on('click', '.map-cat', function () {
+            const id  = $(this).data('id');
+            const cat = catData[id];
+            if (!cat) return;
+
+            $('#mapSvcCatId').val(id);
+            $('#mapSvcCatName').text(cat.name);
+
+            const $select = $('#mapSvcSelect');
+
+            // (Re)initialise select2 each open so dropdownParent stays inside the modal.
+            if ($select.hasClass('select2-hidden-accessible')) {
+                $select.select2('destroy');
+            }
+            $select.val(null);
+            // Pre-select currently-linked services.
+            $select.val((cat.service_ids || []).map(String));
+            $select.select2({
+                dropdownParent: $('#mapSvcModal .modal-content'),
+                width: '100%',
+                placeholder: 'Select services to link...',
+                closeOnSelect: false
+            });
+
+            $('#mapSvcModal').modal('show');
+        });
+
+        $('#mapSvcForm').on('submit', function (e) {
+            e.preventDefault();
+            const id = $('#mapSvcCatId').val();
+            const selected = $('#mapSvcSelect').val() || [];
+            const $btn = $('#mapSvcSave');
+
+            $btn.prop('disabled', true);
+
+            $.ajax({
+                url: MAP_SERVICES_URL + '/' + id + '/map-services',
+                method: 'POST',
+                data: { services: selected },
+                headers: { 'X-CSRF-TOKEN': CSRF },
+                success: function (response) {
+                    $btn.prop('disabled', false);
+
+                    // Keep local data + UI in sync without a page reload.
+                    if (catData[id]) {
+                        catData[id].services = response.services;
+                        catData[id].service_ids = response.services.map(function (s) { return s.id; });
+                    }
+                    const $svcBadge = $('.sort-item[data-id="' + id + '"] .sort-counts span').first();
+                    $svcBadge.text(response.count + ' svc')
+                        .removeClass('count-badge-svc count-badge-zero')
+                        .addClass(response.count > 0 ? 'count-badge-svc' : 'count-badge-zero');
+
+                    $('#mapSvcModal').modal('hide');
+                    Toast.fire({ icon: 'success', title: response.message });
+                },
+                error: function (xhr) {
+                    $btn.prop('disabled', false);
+                    let msg = 'Could not update services. Please try again.';
+                    if (xhr.status === 422) msg = 'Please check the selected services.';
+                    Swal.fire({ icon: 'error', title: 'Failed', text: msg });
+                }
+            });
+        });
 
         /* ── Delete ── */
         $(document).on('click', '.delete', function () {

@@ -2,6 +2,22 @@
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.css') }}?v=2">
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-detail.css') }}?v=3">
+    <style>
+        /* Some service content was pasted from MS Word, which injects the
+           "MsoNormal" class and inline near-black colour / Word fonts that
+           override the site theme (text looks black & differently styled).
+           Force any Word-pasted markup to inherit the site's typography. */
+        .MsoNormal,
+        .MsoNormal span,
+        [class^="Mso"],
+        [class^="Mso"] span {
+            color: inherit !important;
+            font-family: inherit !important;
+            background: transparent !important;
+            line-height: inherit !important;
+        }
+        .MsoNormal { margin-bottom: 1rem !important; }
+    </style>
 @endsection
 @push('page_title')
     {!! $service->name !!}

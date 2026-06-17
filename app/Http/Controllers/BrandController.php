@@ -12,9 +12,23 @@ class BrandController extends Controller
 {
     public function index()
     {
-        $brands = Brand::latest()->get();
+        $brands = Brand::orderBy('sort_order')->orderBy('id')->get();
         $brandHero = BrandHero::first();
         return view('dashboard.brands.index', compact('brands', 'brandHero'));
+    }
+
+    public function reorder(Request $request)
+    {
+        $request->validate([
+            'order'   => 'required|array',
+            'order.*' => 'integer|exists:brands,id',
+        ]);
+
+        foreach ($request->order as $position => $id) {
+            Brand::where('id', $id)->update(['sort_order' => $position + 1]);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Order saved!']);
     }
 
     public function store(Request $request)
@@ -25,14 +39,16 @@ class BrandController extends Controller
             'address'     => 'required|string|max:255',
             'description' => 'required|string',
             'what_we_do'  => 'required|string',
+            'google_location' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $data = $request->only(['name', 'address', 'description', 'what_we_do']);
+        $data = $request->only(['name', 'address', 'description', 'what_we_do', 'google_location']);
         $data['slug'] = Str::slug($request->name);
+        $data['sort_order'] = (int) Brand::max('sort_order') + 1; // new brands go to the end
 
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
@@ -68,17 +84,19 @@ class BrandController extends Controller
             'address'     => 'required|string|max:255',
             'description' => 'required|string',
             'what_we_do'  => 'required|string',
+            'google_location' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $brand->name        = $request->name;
-        $brand->slug        = Str::slug($request->name);
-        $brand->address     = $request->address;
-        $brand->description = $request->description;
-        $brand->what_we_do  = $request->what_we_do;
+        $brand->name            = $request->name;
+        $brand->slug            = Str::slug($request->name);
+        $brand->address         = $request->address;
+        $brand->description     = $request->description;
+        $brand->what_we_do      = $request->what_we_do;
+        $brand->google_location = $request->google_location;
 
         if ($request->hasFile('logo')) {
             if ($brand->logo && file_exists(public_path('uploads/brands/' . $brand->logo))) {

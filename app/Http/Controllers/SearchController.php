@@ -69,6 +69,7 @@ class SearchController extends Controller
 
             // ⚠️ Blogs — update column names after checking
             $blogs = Blog::where('title', 'LIKE', "%{$query}%")
+                ->orderBy('sort_order')->orderBy('id')
                 ->get()
                 ->map(function ($item) {
                     return [
@@ -159,6 +160,7 @@ class SearchController extends Controller
                 });
 
             $blogs = Blog::where('title', 'LIKE', "%{$query}%")
+                ->orderBy('sort_order')->orderBy('id')
                 ->limit(3)
                 ->get()
                 ->map(function ($item) {

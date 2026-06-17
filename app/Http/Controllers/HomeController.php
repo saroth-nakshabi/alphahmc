@@ -30,7 +30,7 @@ class HomeController extends Controller
     {
         $data = [];
         $data['featured_services'] = Service::published()->where('featured', 1)->limit(6)->get();
-        $data['blogs'] = Blog::limit(6)->get();
+        $data['blogs'] = Blog::orderBy('sort_order')->orderBy('id')->limit(6)->get();
         $data['sliders'] = HomeSlider::where('status', 'active')->get();
 
         return view('front.index', $data);
@@ -54,7 +54,16 @@ class HomeController extends Controller
 
     public function contact()
     {
-        return view('front.contact');
+        // Global Offices section: only brands that have a Google Maps location set,
+        // in the same custom order used everywhere brands are listed.
+        $officeBrands = \App\Models\Brand::whereNotNull('google_location')
+            ->where('google_location', '!=', '')
+            ->orderBy('sort_order')->orderBy('id')
+            ->get()
+            ->filter(fn ($b) => !empty($b->map_embed_src))
+            ->values();
+
+        return view('front.contact', compact('officeBrands'));
     }
 
 
@@ -77,7 +86,7 @@ class HomeController extends Controller
         // Query the posts, optionally applying a search filter if the user entered a search term
         $data['blogs'] = Blog::when($search, function ($query, $search) {
             return $query->where('title', 'LIKE', '%' . $search . '%');
-        })->paginate(9);
+        })->orderBy('sort_order')->orderBy('id')->paginate(9);
 
         return view('front.blog', $data);
     }
@@ -92,7 +101,7 @@ class HomeController extends Controller
             return redirect()->route('front.blog');
         }
 
-        $data['recent_blogs'] = Blog::where('id', '!=', $data['blog']->id)->orderBy('updated_at', 'DESC')->limit(3)->get();
+        $data['recent_blogs'] = Blog::where('id', '!=', $data['blog']->id)->orderBy('sort_order')->orderBy('id')->limit(3)->get();
 
 
         // Handle dynamic service name and return view

@@ -172,6 +172,19 @@
                                     placeholder="Brief description of this category..." required>{{ $category->description }}</textarea>
                                 <div class="field-hint">Visible under the slider on the category page and on the home page cards.</div>
                             </div>
+                            <div class="col-12">
+                                <label class="control-label"><i class="ti ti-link me-1"></i>Linked Services</label>
+                                <select name="services[]" class="form-control select2"
+                                    data-placeholder="Select services to link to this category" multiple>
+                                    @foreach ($services as $svc)
+                                        <option value="{{ $svc->id }}"
+                                            {{ $category->services->contains($svc->id) ? 'selected' : '' }}>
+                                            {{ $svc->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div class="field-hint">All services that belong to this category. Add or remove here — the service itself is not deleted when unlinked.</div>
+                            </div>
                         </div>
                     </div>
                 </div>

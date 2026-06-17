@@ -2,6 +2,67 @@
 
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('public/dashboard/dist/libs/prismjs/themes/prism-okaidia.min.css') }}">
+    <style>
+        /* ── Drag list (matches categories page) ─── */
+        #sortable-list { list-style: none; padding: 0; margin: 0; }
+        .sort-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 18px;
+            margin-bottom: 8px;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: grab;
+            transition: box-shadow .15s, border-color .15s;
+            user-select: none;
+        }
+        .sort-item:active { cursor: grabbing; }
+        .sort-item.ui-sortable-helper { box-shadow: 0 8px 24px rgba(0,51,88,0.12); border-color: #94a3b8; }
+        .sort-item.ui-sortable-placeholder {
+            border: 2px dashed #cbd5e1;
+            background: #f8fafc;
+            visibility: visible !important;
+            border-radius: 10px;
+        }
+        .drag-handle { color: #cbd5e1; font-size: 1.2rem; flex-shrink: 0; transition: color .15s; }
+        .sort-item:hover .drag-handle { color: #64748b; }
+        .sort-rank {
+            width: 28px; height: 28px; background: #f1f5f9; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .78rem; font-weight: 800; color: #64748b; flex-shrink: 0;
+        }
+        .brand-logo {
+            width: 46px; height: 46px; object-fit: contain; border-radius: 8px;
+            background: #f8fafc; border: 1px solid #eef2f7; padding: 3px; flex-shrink: 0;
+        }
+        .sort-name { flex: 1; min-width: 0; }
+        .sort-name .brand-title {
+            font-weight: 600; font-size: .95rem; color: #0f172a; display: block;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .sort-name .brand-addr { font-size: .75rem; color: #94a3b8; }
+        .sort-actions { display: flex; gap: 6px; flex-shrink: 0; }
+        .sort-actions .btn { padding: 5px 10px; font-size: .78rem; }
+
+        #save-order-btn { transition: all .2s; }
+        #save-order-btn.changed { animation: pulse-btn .6s ease-in-out infinite alternate; }
+        @keyframes pulse-btn {
+            from { box-shadow: 0 0 0 0 rgba(59,130,246,0.4); }
+            to   { box-shadow: 0 0 0 8px rgba(59,130,246,0); }
+        }
+        .order-hint { font-size: .8rem; color: #94a3b8; display: flex; align-items: center; gap: 6px; }
+
+        /* ── Search box ─── */
+        .brand-search-wrap { position: relative; width: 240px; }
+        .brand-search-wrap .ti-search {
+            position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+            color: #94a3b8; font-size: .9rem; pointer-events: none;
+        }
+        .brand-search-wrap input { padding-left: 30px; border-radius: 8px; }
+        .sort-item.search-hidden { display: none; }
+    </style>
 @endsection
 
 @section('content')
@@ -64,73 +125,70 @@
     </div>
 </div>
 
-<section class="datatables">
+<section class="mt-2">
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <div class="mb-3 d-flex">
+
+                    {{-- Header row --}}
+                    <div class="mb-4 d-flex align-items-center gap-3 flex-wrap">
                         <h5 class="mb-0">Brands List</h5>
-                        <button class="btn btn-success ms-auto" data-bs-toggle="modal" data-bs-target="#addNewModal">
-                            <i class="ti ti-plus me-1"></i> Add New Brand
-                        </button>
+                        <span class="order-hint">
+                            <i class="ti ti-drag-drop"></i>
+                            Drag rows to reorder — click <strong>Save Order</strong> to apply
+                        </span>
+                        <div class="brand-search-wrap ms-auto">
+                            <i class="ti ti-search"></i>
+                            <input type="search" id="brand-search" class="form-control form-control-sm"
+                                placeholder="Search brands..." autocomplete="off" />
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button id="save-order-btn" class="btn btn-primary btn-sm">
+                                <i class="ti ti-device-floppy me-1"></i> Save Order
+                            </button>
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addNewModal">
+                                <i class="ti ti-plus me-1"></i> Add New
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="table-responsive">
-                        <table id="items-table" class="table border table-striped table-bordered display text-nowrap">
-                            <thead>
-                                <tr>
-                                    <th>Logo</th>
-                                    <th>Brand Name</th>
-                                    <th>Address</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if(isset($brands) && count($brands) > 0)
-                                    @foreach($brands as $item)
-                                        <tr data-id="{{ $item->id }}">
-                                            <td>
-                                                <img src="{{ asset('public/uploads/brands/' . $item->logo) }}"
-                                                     alt="{{ $item->name }}"
-                                                     style="width:50px; height:50px; object-fit:contain; border-radius:6px;">
-                                            </td>
-                                            <td>{{ $item->name }}</td>
-                                            <td>{{ $item->address }}</td>
-                                            
-                                            <td>
-                                                <div class="btn-group">
-                                                    <button class="dropdown-toggle btn btn-primary btn-sm"
-                                                            data-bs-toggle="dropdown"
-                                                            data-bs-auto-close="true" aria-expanded="false">
-                                                        <i class="bi bi-three-dots"></i>
-                                                    </button>
-                                                    <ul class="dropdown-menu">
-                                                        <li>
-                                                            <a class="dropdown-item edit" href="javascript:void(0);"
-                                                               data-id="{{ $item->id }}">Edit</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item delete" href="javascript:void(0);"
-                                                               data-id="{{ $item->id }}">Delete</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @endif
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>Logo</th>
-                                    <th>Brand Name</th>
-                                    <th>Address</th>
-                                    <th>Action</th>
-                                </tr>
-                            </tfoot>
-                        </table>
+                    {{-- Sortable list --}}
+                    <ul id="sortable-list">
+                        @if(isset($brands) && count($brands) > 0)
+                            @foreach($brands as $item)
+                                <li class="sort-item" data-id="{{ $item->id }}">
+                                    <span class="drag-handle"><i class="ti ti-grip-vertical"></i></span>
+                                    <span class="sort-rank">{{ $loop->iteration }}</span>
+                                    <img class="brand-logo" src="{{ asset('public/uploads/brands/' . $item->logo) }}" alt="{{ $item->name }}">
+                                    <span class="sort-name">
+                                        <span class="brand-title">{{ $item->name }}</span>
+                                        <span class="brand-addr"><i class="ti ti-map-pin"></i> {{ $item->address ?: '—' }}</span>
+                                    </span>
+                                    <div class="sort-actions">
+                                        <button class="btn btn-light btn-sm edit" data-id="{{ $item->id }}" title="Edit">
+                                            <i class="ti ti-edit"></i>
+                                        </button>
+                                        <button class="btn btn-light-danger btn-sm delete text-danger" data-id="{{ $item->id }}" title="Delete">
+                                            <i class="ti ti-trash"></i>
+                                        </button>
+                                    </div>
+                                </li>
+                            @endforeach
+                        @endif
+                    </ul>
+
+                    <div id="search-empty-state" class="text-center py-5 text-muted d-none">
+                        <i class="ti ti-zoom-cancel" style="font-size:3rem;display:block;margin-bottom:.6rem;color:#cbd5e1"></i>
+                        <p class="mb-0">No brands match "<span id="search-empty-term" class="fw-semibold"></span>"</p>
                     </div>
+
+                    @if(!isset($brands) || count($brands) === 0)
+                        <div class="text-center py-5 text-muted" id="brands-empty-state">
+                            <i class="ti ti-building-store" style="font-size:3rem;display:block;margin-bottom:.6rem;color:#cbd5e1"></i>
+                            <p>No brands yet. Add one to get started.</p>
+                        </div>
+                    @endif
 
                 </div>
             </div>
@@ -171,6 +229,17 @@
                             <label class="control-label mb-1">Corporate Address <span class="text-danger">*</span></label>
                             <input type="text" id="address" name="address" class="form-control"
                                    placeholder="e.g. Dubai, UAE" required />
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label class="control-label mb-1">Google Maps Location
+                                <small class="text-muted">(optional — shown in the "Global Offices" section on the Contact page)</small>
+                            </label>
+                            <textarea id="google_location" name="google_location" rows="2" class="form-control"
+                                      placeholder='Paste the Google Maps "Embed a map" code or its src link. Leave blank to hide this brand from Global Offices.'></textarea>
+                            <small class="text-muted">In Google Maps → Share → <b>Embed a map</b> → Copy HTML, and paste it here.</small>
                         </div>
                     </div>
 
@@ -239,6 +308,17 @@
 
                     <div class="col-12">
                         <div class="mb-3">
+                            <label class="control-label mb-1">Google Maps Location
+                                <small class="text-muted">(optional — shown in the "Global Offices" section on the Contact page)</small>
+                            </label>
+                            <textarea id="edit_google_location" name="google_location" rows="2" class="form-control"
+                                      placeholder='Paste the Google Maps "Embed a map" code or its src link. Leave blank to hide this brand from Global Offices.'></textarea>
+                            <small class="text-muted">In Google Maps → Share → <b>Embed a map</b> → Copy HTML, and paste it here.</small>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="mb-3">
                             <label class="control-label mb-1">General Description <span class="text-danger">*</span></label>
                             <textarea id="edit_description" name="description" rows="3"
                                       class="form-control" placeholder="Brief about the brand..." required></textarea>
@@ -266,17 +346,15 @@
 
 @section('custom_js')
 <script src="{{ asset('public/dashboard/dist/libs/prismjs/prism.js') }}"></script>
+<script src="{{ asset('public/dashboard/dist/libs/jquery-ui/dist/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('public/dashboard/dist/libs/tinymce/tinymce.min.js') }}"></script>
 
 <script>
-$(document).ready(function() {
+const REORDER_URL = '{{ route('dashboard.brands.reorder') }}';
+const LOGO_BASE   = '{{ asset('public/uploads/brands') }}';
+const CSRF = $('meta[name="csrf-token"]').attr('content');
 
-    // ── DataTable ──
-    var items_table = $("#items-table").DataTable({
-        dom: "Bfrtip",
-        buttons: ["copy", "csv", "excel", "pdf", "print"],
-    });
-    $(".buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel").addClass("btn btn-primary mr-1");
+$(document).ready(function() {
 
     // ── TinyMCE ──
     tinymce.init({
@@ -286,6 +364,85 @@ $(document).ready(function() {
         image_title: true,
         automatic_uploads: true,
         images_upload_url: '/uploads/tinymce-image',
+    });
+
+    function escHtml(str) {
+        return String(str ?? '')
+            .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+            .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function updateRanks() {
+        $('#sortable-list .sort-item').each(function (i) {
+            $(this).find('.sort-rank').text(i + 1);
+        });
+    }
+
+    function brandRow(d) {
+        const logo = LOGO_BASE + '/' + d.logo;
+        return '<li class="sort-item" data-id="' + d.id + '">' +
+            '<span class="drag-handle"><i class="ti ti-grip-vertical"></i></span>' +
+            '<span class="sort-rank">0</span>' +
+            '<img class="brand-logo" src="' + logo + '" alt="' + escHtml(d.name) + '">' +
+            '<span class="sort-name">' +
+                '<span class="brand-title">' + escHtml(d.name) + '</span>' +
+                '<span class="brand-addr"><i class="ti ti-map-pin"></i> ' + (escHtml(d.address) || '—') + '</span>' +
+            '</span>' +
+            '<div class="sort-actions">' +
+                '<button class="btn btn-light btn-sm edit" data-id="' + d.id + '" title="Edit"><i class="ti ti-edit"></i></button>' +
+                '<button class="btn btn-light-danger btn-sm delete text-danger" data-id="' + d.id + '" title="Delete"><i class="ti ti-trash"></i></button>' +
+            '</div>' +
+        '</li>';
+    }
+
+    // ── Drag-and-drop sort ──
+    $("#sortable-list").sortable({
+        handle: '.drag-handle',
+        placeholder: 'sort-item ui-sortable-placeholder',
+        tolerance: 'pointer',
+        update: function () {
+            updateRanks();
+            $('#save-order-btn').addClass('changed');
+        }
+    });
+
+    // ── Search filter ──
+    $('#brand-search').on('input', function () {
+        const term = $(this).val().toLowerCase().trim();
+        let visible = 0;
+        $('#sortable-list .sort-item').each(function () {
+            const text = $(this).find('.sort-name').text().toLowerCase();
+            const match = !term || text.indexOf(term) !== -1;
+            $(this).toggleClass('search-hidden', !match);
+            if (match) visible++;
+        });
+        $('#search-empty-term').text($(this).val().trim());
+        $('#search-empty-state').toggleClass('d-none', visible > 0 || !term);
+    });
+
+    // ── Save order ──
+    $('#save-order-btn').on('click', function () {
+        const order = [];
+        $('#sortable-list .sort-item').each(function () { order.push($(this).data('id')); });
+
+        Swal.fire({ title: 'Saving...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+        $.ajax({
+            url: REORDER_URL,
+            method: 'POST',
+            data: JSON.stringify({ order: order }),
+            contentType: 'application/json',
+            headers: { 'X-CSRF-TOKEN': CSRF },
+            success: function () {
+                Swal.close();
+                $('#save-order-btn').removeClass('changed');
+                Toast.fire({ icon: 'success', title: 'Order saved! This order is used on the Brands and About pages.' });
+            },
+            error: function () {
+                Swal.close();
+                Swal.fire({ icon: 'error', title: 'Failed', text: 'Could not save order. Please try again.' });
+            }
+        });
     });
 
     // ── ADD ──
@@ -300,7 +457,7 @@ $(document).ready(function() {
                 data: formData,
                 processData: false,
                 contentType: false,
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                headers: { 'X-CSRF-TOKEN': CSRF },
                 beforeSend: function() {
                     Swal.fire({ title: 'Processing...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
                 },
@@ -308,28 +465,10 @@ $(document).ready(function() {
                     Swal.close();
                     Toast.fire({ icon: 'success', title: 'Brand added successfully' });
 
-                    const logoHtml = response.data.logo
-                        ? `<img src="/uploads/brands/${response.data.logo}" style="width:50px;height:50px;object-fit:contain;border-radius:6px;">`
-                        : '—';
+                    $('#brands-empty-state').remove();
+                    $('#sortable-list').append(brandRow(response.data));
+                    updateRanks();
 
-                    const newRow = `<tr data-id="${response.data.id}">
-                        <td>${logoHtml}</td>
-                        <td>${response.data.name}</td>
-                        <td>${response.data.address}</td>
-                        <td>
-                            <div class="btn-group">
-                                <button class="dropdown-toggle btn btn-primary btn-sm" data-bs-toggle="dropdown" data-bs-auto-close="true">
-                                    <i class="bi bi-three-dots"></i>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item edit" href="javascript:void(0);" data-id="${response.data.id}">Edit</a></li>
-                                    <li><a class="dropdown-item delete" href="javascript:void(0);" data-id="${response.data.id}">Delete</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>`;
-
-                    items_table.row.add($(newRow)).draw();
                     $('#addNewModal').modal('hide');
                     $('#add_form')[0].reset();
                     tinymce.get('what_we_do')?.setContent('');
@@ -353,25 +492,24 @@ $(document).ready(function() {
             url: `{{ route('dashboard.brands.get') }}`,
             method: 'GET',
             data: { id },
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            headers: { 'X-CSRF-TOKEN': CSRF },
             success: function(response) {
                 const d = response.data;
 
                 $('#edit_name').val(d.name);
                 $('#edit_address').val(d.address);
+                $('#edit_google_location').val(d.google_location || '');
                 $('#edit_description').val(d.description);
 
-                // TinyMCE
                 if (tinymce.get('edit_what_we_do')) {
                     tinymce.get('edit_what_we_do').setContent(d.what_we_do ?? '');
                 } else {
                     $('#edit_what_we_do').val(d.what_we_do ?? '');
                 }
 
-                // Current logo preview
                 if (d.logo) {
                     $('#current_logo_preview').html(
-                        `<img src="{{ asset('public/uploads/brands/') }}/${d.logo}" style="height:60px;object-fit:contain;border-radius:6px;" alt="Current Logo">
+                        `<img src="${LOGO_BASE}/${d.logo}" style="height:60px;object-fit:contain;border-radius:6px;" alt="Current Logo">
                         <small class="text-muted ms-2">Current logo</small>`
                     );
                 } else {
@@ -398,7 +536,7 @@ $(document).ready(function() {
                 data: formData,
                 processData: false,
                 contentType: false,
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                headers: { 'X-CSRF-TOKEN': CSRF },
                 beforeSend: function() {
                     Swal.fire({ title: 'Updating...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
                 },
@@ -407,27 +545,13 @@ $(document).ready(function() {
                     Toast.fire({ icon: 'success', title: 'Brand updated successfully' });
 
                     const d = response.data;
-                    const logoHtml = d.logo
-                        ? `<img src="/uploads/brands/${d.logo}" style="width:50px;height:50px;object-fit:contain;border-radius:6px;">`
-                        : '—';
+                    const $li = $(`#sortable-list .sort-item[data-id='${d.id}']`);
+                    if ($li.length) {
+                        $li.find('.brand-title').text(d.name);
+                        $li.find('.brand-addr').html('<i class="ti ti-map-pin"></i> ' + (escHtml(d.address) || '—'));
+                        if (d.logo) $li.find('.brand-logo').attr('src', LOGO_BASE + '/' + d.logo);
+                    }
 
-                    let row = $(`#items-table tr[data-id='${d.id}']`);
-                    items_table.row(row).data([
-                        logoHtml,
-                        d.name,
-                        d.address,
-                        `<div class="btn-group">
-                            <button class="dropdown-toggle btn btn-primary btn-sm" data-bs-toggle="dropdown" data-bs-auto-close="true">
-                                <i class="bi bi-three-dots"></i>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item edit" href="javascript:void(0);" data-id="${d.id}">Edit</a></li>
-                                <li><a class="dropdown-item delete" href="javascript:void(0);" data-id="${d.id}">Delete</a></li>
-                            </ul>
-                        </div>`
-                    ]).draw(false);
-
-                    $(`#items-table tr[data-id='${d.id}']`).attr('data-id', d.id);
                     $('#editModal').modal('hide');
                 },
                 error: function(xhr) {
@@ -443,7 +567,7 @@ $(document).ready(function() {
     // ── DELETE ──
     $(document).on('click', '.delete', function() {
         const id = $(this).data('id');
-        const row = $(this).closest('tr');
+        const $li = $(this).closest('.sort-item');
 
         Swal.fire({
             title: 'Are you sure?',
@@ -459,14 +583,15 @@ $(document).ready(function() {
                 $.ajax({
                     url: `{{ route('dashboard.brands.destroy', '') }}/${id}`,
                     method: 'DELETE',
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    headers: { 'X-CSRF-TOKEN': CSRF },
                     beforeSend: function() {
                         Swal.fire({ title: 'Deleting...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
                     },
                     success: function(response) {
                         Swal.close();
                         Toast.fire({ icon: 'success', title: response.message });
-                        items_table.row(row).remove().draw();
+                        $li.remove();
+                        updateRanks();
                     },
                     error: function() {
                         Swal.close();
