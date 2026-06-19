@@ -22,8 +22,38 @@
         label.form-label, .control-label { font-weight: 500; font-size: .85rem; margin-bottom: .3rem; display: block; }
         .item-count-badge { background: #e0f2fe; color: #0369a1; border-radius: 20px; padding: 2px 10px; font-size: .73rem; font-weight: 600; }
         .body-wrapper > .container-fluid { padding-left: 0 !important; padding-right: 0 !important; }
-        .select2-container { display: block !important; }
-        .select2-container--default .select2-selection--multiple { height: auto !important; }
+        /* Linked-services multi-select: fixed max height with an internal scrollbar,
+           so however many tags are selected the box never grows over / hides the
+           image fields below it. */
+        /* ── Linked-services multi-select ──────────────────────────────
+           Goal: the tag box grows with selections up to a max, then scrolls
+           inside itself, and the card grows to contain it.
+           Root cause of the old overlap: Select2's <span class="selection">
+           wrapper has no display rule (defaults to inline), so the box height
+           never reached the card. Forcing it to block fixes the propagation. */
+        .select2-container { display: block !important; width: 100% !important; height: auto !important; }
+        .select2-container .selection { display: block !important; }   /* ← the actual fix */
+        .select2-container--default .select2-selection--multiple {
+            height: auto !important;
+            min-height: 40px !important;
+            max-height: 100px !important;   /* grows up to here … */
+            overflow-y: auto !important;    /* … then scrolls inside the box */
+            overflow-x: hidden !important;
+            line-height: normal !important;
+            padding: 4px 6px !important;
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 transparent;
+        }
+        .select2-container--default .select2-selection--multiple::-webkit-scrollbar { width: 8px; }
+        .select2-container--default .select2-selection--multiple::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+        .select2-container--default .select2-selection--multiple::-webkit-scrollbar-track { background: transparent; }
+        .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+            display: block !important; white-space: normal !important;
+            line-height: normal !important; padding: 0 !important;
+        }
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            white-space: normal !important;
+        }
     </style>
 @endsection
 
