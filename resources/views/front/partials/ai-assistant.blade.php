@@ -1,48 +1,57 @@
 @php
-    // 1. Set the global default number
-    $defaultPhone = "97158128418";
-    $targetPhone = $defaultPhone;
-    $officerName = "our experts";
+    // A. Global default number — admin-editable in Dashboard → Settings (no code change to update).
+    $defaultPhone = \App\Models\AppSetting::get('whatsapp_default_number', '97158128418');
+    $targetPhone  = $defaultPhone;
+    $officerName  = 'our experts';
 
-    $currentService = null;
+    // B. On leader-bearing detail pages, use that page's connected leader (Inquiry Officer WhatsApp).
+    //    Each of these models carries inq_officer_phone / inq_officer_name.
+    $leaderRoutes = [
+        'front.service'          => \App\Models\Service::class,
+        'front.service-category' => \App\Models\Category::class,
+        'service-packages'       => \App\Models\ServiceGroup::class,
+    ];
 
-    // Only show inquiry officer phone on specific service detail routes
-    // This prevents the inquiry officer phone from appearing on all pages
-    $serviceRoutes = ['front.service'];
     $currentRouteName = request()->route() ? request()->route()->getName() : null;
+    $leader = null;
 
-    if (in_array($currentRouteName, $serviceRoutes)) {
-        // Determine the current service using explicit route parameters or injected service objects only.
-        $route = request()->route();
-        if ($route) {
-            $routeParams = $route->parameters();
-            foreach ($routeParams as $param) {
-                if ($param instanceof \App\Models\Service) {
-                    $currentService = $param;
-                    break;
-                }
+    if ($currentRouteName && isset($leaderRoutes[$currentRouteName])) {
+        $modelClass = $leaderRoutes[$currentRouteName];
+        $route      = request()->route();
 
-                if (is_string($param) && $param !== '') {
-                    $currentService = \App\Models\Service::where('slug', $param)->first();
-                    if ($currentService) {
-                        break;
-                    }
-                }
+        // Prefer an already-bound model instance on the route.
+        foreach ($route->parameters() as $param) {
+            if ($param instanceof $modelClass) {
+                $leader = $param;
+                break;
             }
         }
 
-        // Fallback to a service object passed into the view.
-        if (!$currentService) {
-            $currentService = $service ?? ($data['service'] ?? null);
+        // Otherwise resolve by the {slug} route parameter.
+        if (!$leader) {
+            $slug = $route->parameter('slug');
+            if (is_string($slug) && $slug !== '') {
+                $leader = $modelClass::where('slug', $slug)->first();
+            }
+        }
+
+        // Last resort: a model object injected into the view.
+        if (!$leader) {
+            $leader = $service ?? $category ?? ($data['service'] ?? null);
         }
     }
 
-    // 3. If a service is found and has an inquiry officer phone, override the default
-    if ($currentService && !empty(trim($currentService->inq_officer_phone))) {
-        $targetPhone = trim($currentService->inq_officer_phone);
-        if (!empty($currentService->inq_officer_name)) {
-            $officerName = $currentService->inq_officer_name;
+    if ($leader && !empty(trim((string) $leader->inq_officer_phone))) {
+        $targetPhone = trim($leader->inq_officer_phone);
+        if (!empty($leader->inq_officer_name)) {
+            $officerName = $leader->inq_officer_name;
         }
+    }
+
+    // D. Normalise to digits only (strip +, spaces, dashes, brackets) so wa.me links never break.
+    $targetPhone = preg_replace('/\D+/', '', (string) $targetPhone);
+    if ($targetPhone === '') {
+        $targetPhone = preg_replace('/\D+/', '', (string) $defaultPhone) ?: '97158128418';
     }
 @endphp
 
@@ -259,30 +268,50 @@
 
         setTimeout(function () {
             typing.remove();
-            
+
             // Show the canned bot reply
             addMsg(getReply(text), false);
-            
-            // Show connecting message and redirect
-            setTimeout(() => {
-                addMsg("Connecting you to our team on WhatsApp...", false);
-                
-                // Open in a POPUP window
-                const width = 600;
-                const height = 700;
-                const left = (window.innerWidth / 2) - (width / 2);
-                const top = (window.innerHeight / 2) - (height / 2);
 
-                setTimeout(() => {
-                    window.open(
-                        whatsappUrl, 
-                        'WhatsAppChat', 
-                        `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`
-                    );
-                }, 1000);
-            }, 800);
-
+            // Offer a REAL, user-clicked WhatsApp link. A delayed window.open() loses the
+            // click's user-activation and gets stopped by popup blockers — a tap on an
+            // anchor never does. wa.me links are normal navigation, so ad blockers ignore them.
+            addWhatsAppCta(whatsappUrl);
         }, 1000);
+    }
+
+    function addWhatsAppCta(url) {
+        const wrap = document.createElement('div');
+        wrap.className = 'ava-msg ava-msg-bot';
+
+        const av = document.createElement('div');
+        av.className = 'ava-msg-avatar';
+        av.textContent = 'α';
+
+        const bubble = document.createElement('div');
+        bubble.className = 'ava-msg-bubble';
+
+        const p = document.createElement('p');
+        p.textContent = 'Tap below to continue on WhatsApp:';
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.className = 'ava-wa-cta';
+        a.style.cssText = 'display:inline-flex;align-items:center;gap:8px;margin-top:8px;background:#25D366;color:#fff;font-weight:600;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:.9rem;';
+        a.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.553 4.116 1.522 5.847L.057 23.882l6.219-1.432A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z" fill="#fff"/></svg> Open WhatsApp';
+
+        const t = document.createElement('span');
+        t.className = 'ava-msg-time';
+        t.textContent = getTime();
+
+        bubble.appendChild(p);
+        bubble.appendChild(a);
+        bubble.appendChild(t);
+        wrap.appendChild(av);
+        wrap.appendChild(bubble);
+        chatBody.appendChild(wrap);
+        scrollBottom();
     }
 
     /* ---- Toggle panel ---- */

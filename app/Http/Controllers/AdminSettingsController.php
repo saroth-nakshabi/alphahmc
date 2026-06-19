@@ -20,6 +20,7 @@ class AdminSettingsController extends Controller
             'aiActive'      => $ai->enabled(),
             'contactTiming' => AppSetting::get('planner_contact_timing', 'before'),
             'showRaw'       => AppSetting::bool('planner_show_raw', false),
+            'whatsappNumber'=> AppSetting::get('whatsapp_default_number', '97158128418'),
         ]);
     }
 
@@ -32,6 +33,7 @@ class AdminSettingsController extends Controller
             'anthropic_api_key'      => 'nullable|string|max:255',
             'gemini_api_key'         => 'nullable|string|max:255',
             'planner_contact_timing' => 'nullable|in:before,after',
+            'whatsapp_default_number'=> 'nullable|string|max:25',
         ]);
 
         AppSetting::set('ai_planner_enabled', $request->boolean('ai_planner_enabled') ? '1' : '0');
@@ -40,6 +42,12 @@ class AdminSettingsController extends Controller
         AppSetting::set('gemini_model', $request->input('gemini_model') ?: 'gemini-2.5-flash');
         AppSetting::set('planner_contact_timing', $request->input('planner_contact_timing') === 'after' ? 'after' : 'before');
         AppSetting::set('planner_show_raw', $request->boolean('planner_show_raw') ? '1' : '0');
+
+        // Floating WhatsApp default (global) number — digits only (strip +, spaces, dashes).
+        $wa = preg_replace('/\D+/', '', (string) $request->input('whatsapp_default_number'));
+        if ($wa !== '') {
+            AppSetting::set('whatsapp_default_number', $wa);
+        }
 
         // Only overwrite a key when a new one is entered; "__clear__" removes it.
         foreach (['anthropic_api_key', 'gemini_api_key'] as $field) {

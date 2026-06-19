@@ -314,8 +314,23 @@
                                         <option value="" selected disabled>Choose industry category...</option>
                                         @foreach ($main_categories as $main_category)
                                             @foreach ($main_category->mergedCategories as $category)
+                                                @php
+                                                    // `image` is stored as a bare filename, `hero_image` as a full uploads/ path —
+                                                    // normalise both. Rule: category image → fall back to hero image → default (never blank).
+                                                    $catImg = $category->image
+                                                        ? (\Illuminate\Support\Str::contains($category->image, '/')
+                                                            ? asset('public/' . ltrim($category->image, '/'))
+                                                            : asset('public/uploads/category_images/' . $category->image))
+                                                        : null;
+                                                    $catHero = $category->hero_image
+                                                        ? (\Illuminate\Support\Str::contains($category->hero_image, '/')
+                                                            ? asset('public/' . ltrim($category->hero_image, '/'))
+                                                            : asset('public/uploads/category_images/' . $category->hero_image))
+                                                        : null;
+                                                    $catDisplayImg = $catImg ?: ($catHero ?: asset('public/front/assets/img/hero/service-details-bg.jpg'));
+                                                @endphp
                                                 <option value="{{ $category->id }}"
-                                                    data-image="{{ $category->image ? asset('public/' . $category->image) : '' }}"
+                                                    data-image="{{ $catDisplayImg }}"
                                                     data-url="{{ route('front.service-category', $category->slug) }}"
                                                     data-desc="{{ Str::limit(strip_tags($category->description), 160) }}">
                                                     {{ $category->name }}

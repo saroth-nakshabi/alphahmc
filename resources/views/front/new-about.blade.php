@@ -104,29 +104,54 @@
             padding: 56px 0;
         }
         .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
-            align-items: center;
+            display: flex; flex-wrap: wrap;
+            align-items: center; justify-content: center;
+            row-gap: 8px;
         }
-        .stat-block { text-align: center; padding: 16px 24px; }
+        .stat-block {
+            flex: 1 1 140px; /* equal widths in a row; wraps gracefully for any count */
+            text-align: center; padding: 16px 22px;
+            /* Apple-style staggered reveal — settled to default by .is-counting */
+            opacity: 0; transform: translateY(16px);
+            transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);
+            will-change: opacity, transform;
+        }
+        /* hairline vertical divider between adjacent blocks (no separate sep elements) */
+        .stat-block + .stat-block { border-left: 1px solid var(--border); }
+        .about-stats-strip.is-counting .stat-block { opacity: 1; transform: none; }
+        /* gentle stagger — applies to however many blocks exist */
+        .about-stats-strip.is-counting .stat-block:nth-child(2) { transition-delay: .07s; }
+        .about-stats-strip.is-counting .stat-block:nth-child(3) { transition-delay: .14s; }
+        .about-stats-strip.is-counting .stat-block:nth-child(4) { transition-delay: .21s; }
+        .about-stats-strip.is-counting .stat-block:nth-child(5) { transition-delay: .28s; }
+        .about-stats-strip.is-counting .stat-block:nth-child(6) { transition-delay: .35s; }
+        .about-stats-strip.is-counting .stat-block:nth-child(7) { transition-delay: .42s; }
+        .about-stats-strip.is-counting .stat-block:nth-child(8) { transition-delay: .49s; }
         .stat-num {
             display: block;
             font-family: 'Libre Baskerville', serif;
-            font-size: 2.6rem; font-weight: 700;
-            color: var(--teal); line-height: 1; margin-bottom: 6px;
+            font-size: 2.2rem; font-weight: 700;
+            color: var(--teal); line-height: 1; margin-bottom: 8px;
+            white-space: nowrap;
+            font-variant-numeric: tabular-nums; /* digits keep width while counting */
+            font-feature-settings: 'tnum' 1;
         }
         .stat-lbl {
             font-size: 0.78rem; text-transform: uppercase;
             letter-spacing: 1.5px; color: var(--muted); font-weight: 600;
         }
-        .stat-sep { width: 1px; height: 56px; background: var(--border); }
+        @media (prefers-reduced-motion: reduce) {
+            .stat-block { opacity: 1 !important; transform: none !important; transition: none !important; }
+        }
         @media (max-width: 767px) {
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 1px; background: var(--border);
+            .stat-block {
+                flex: 0 0 50%; max-width: 50%;  /* two per row, wraps into rows */
+                padding: 24px 12px;
+                border-left: none;
+                border-top: 1px solid var(--border);
             }
-            .stat-block { background: #fff; padding: 28px 16px; }
-            .stat-sep { display: none; }
+            .stat-block + .stat-block { border-left: none; }
+            .stat-block:nth-child(odd) { border-right: 1px solid var(--border); }
             .stat-num { font-size: 2rem; }
         }
 
@@ -526,27 +551,20 @@
         {{-- ══════════════════════ STATS STRIP ══════════════════════════ --}}
         <section class="about-stats-strip">
             <div class="container">
+                @php
+                    // Dynamic counters managed in Dashboard → About → Counters / Stats.
+                    $counters = $about_counters ?? collect();
+                @endphp
+                @if($counters->count())
                 <div class="stats-grid">
-                    <div class="stat-block">
-                        <span class="stat-num">25+</span>
-                        <span class="stat-lbl">Years of Excellence</span>
-                    </div>
-                    <div class="stat-sep"></div>
-                    <div class="stat-block">
-                        <span class="stat-num">500+</span>
-                        <span class="stat-lbl">Healthcare Clients</span>
-                    </div>
-                    <div class="stat-sep"></div>
-                    <div class="stat-block">
-                        <span class="stat-num">50+</span>
-                        <span class="stat-lbl">Countries Served</span>
-                    </div>
-                    <div class="stat-sep"></div>
-                    <div class="stat-block">
-                        <span class="stat-num">1,000+</span>
-                        <span class="stat-lbl">Projects Delivered</span>
-                    </div>
+                    @foreach($counters as $counter)
+                        <div class="stat-block">
+                            <span class="stat-num" data-target="{{ (int) $counter->value }}" data-suffix="{{ $counter->suffix }}">{{ number_format($counter->value) }}{{ $counter->suffix }}</span>
+                            <span class="stat-lbl">{{ $counter->label }}</span>
+                        </div>
+                    @endforeach
                 </div>
+                @endif
             </div>
         </section>
 
@@ -595,6 +613,115 @@
                 @endforeach
             </div>
         </section>
+        @endif
+
+        {{-- ══════════════════════ LEADERSHIP TEAM ════════════════════ --}}
+        @if(($about_staff ?? collect())->count())
+        <section class="about-team-section">
+            <style>
+                .about-team-section { padding: 72px 0; background: #f8fafb; }
+                .team-header { text-align: center; max-width: 820px; margin: 0 auto 40px; }
+                .team-tag { display:inline-block; text-transform:uppercase; letter-spacing:2px; font-size:.72rem;
+                    font-weight:700; color:#009095; margin-bottom:10px; }
+                .team-title { font-family:'Libre Baskerville', serif; font-size:2rem; color:#16242a; margin:0 0 16px; line-height:1.25; }
+                .team-intro { color:#5b6b72; font-size:.98rem; line-height:1.7; }
+                .teamSwiper { padding: 8px 4px 56px; }
+                .team-card {
+                    width:100%; text-align:left; background:#fff; border:1px solid #eef0f2; border-radius:16px;
+                    overflow:hidden; cursor:pointer; padding:0; display:flex; flex-direction:column; height:100%;
+                    box-shadow:0 8px 24px rgba(0,0,0,0.04);
+                    transition:transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s cubic-bezier(.22,1,.36,1), border-color .35s ease;
+                }
+                .team-card:hover { transform:translateY(-6px); box-shadow:0 18px 40px rgba(6,109,119,0.14); border-color:#cfe6e8; }
+                .team-card-photo { width:100%; aspect-ratio:1/1; overflow:hidden; background:#eef3f4; }
+                .team-card-photo img { width:100%; height:100%; object-fit:cover; transition:transform .5s cubic-bezier(.22,1,.36,1); }
+                .team-card:hover .team-card-photo img { transform:scale(1.06); }
+                .team-card-body { padding:18px 18px 20px; display:flex; flex-direction:column; flex:1; }
+                .team-card-name { font-size:1.05rem; font-weight:700; color:#16242a; margin:0 0 4px; }
+                .team-card-title { font-size:.82rem; color:#009095; font-weight:600; }
+                .team-card-cta { margin-top:14px; font-size:.76rem; font-weight:600; color:#5b6b72;
+                    display:inline-flex; align-items:center; gap:6px; }
+                .team-card:hover .team-card-cta { color:#009095; }
+                .teamSwiper .swiper-button-next, .teamSwiper .swiper-button-prev { color:#009095; }
+                .teamSwiper .swiper-button-next:after, .teamSwiper .swiper-button-prev:after { font-size:1.4rem; }
+                .teamSwiper .swiper-pagination-bullet-active { background:#009095; }
+                /* Profile popup */
+                .team-modal { border:0; border-radius:18px; overflow:hidden; }
+                .team-modal-close { position:absolute; top:14px; right:14px; z-index:3; }
+                .team-modal-head { display:flex; gap:18px; align-items:center; padding:26px 26px 18px;
+                    background:linear-gradient(135deg,#f3f9f9,#ffffff); }
+                .team-modal-head img { width:96px; height:96px; border-radius:14px; object-fit:cover; flex-shrink:0; border:1px solid #e2e8f0; }
+                .team-modal-head h3 { margin:0 0 4px; font-size:1.25rem; color:#16242a; font-weight:700; }
+                .team-modal-head span { color:#009095; font-weight:600; font-size:.88rem; }
+                .team-modal-body { padding:6px 26px 28px; color:#4b5961; line-height:1.7; font-size:.95rem; white-space:pre-line; }
+                @media (max-width:575px){ .team-modal-head { flex-direction:column; text-align:center; } }
+            </style>
+
+            <div class="container">
+                <div class="team-header" data-aos="fade-up">
+                    <span class="team-tag">Healthcare Management Leadership</span>
+                    <h2 class="team-title">Executive &amp; Quality Leadership Team</h2>
+                    <p class="team-intro">
+                        Our leadership team brings together <strong>50+ years</strong> of combined experience in
+                        healthcare management, regulatory compliance, engineering, quality assurance, information
+                        security, accreditation, and healthcare planning across the <strong>UAE and the wider GCC</strong>.
+                        With proven expertise in establishing, operating, and scaling healthcare facilities under
+                        DOH, DHA, and MOHAP regulations, the team delivers strategic direction aligned with
+                        operational excellence and patient safety.
+                    </p>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="swiper teamSwiper" data-aos="fade-up">
+                    <div class="swiper-wrapper">
+                        @foreach($about_staff as $staff)
+                            @php
+                                $staffImg = $staff->image
+                                    ? asset('public/uploads/about_staff/' . $staff->image)
+                                    : asset('public/front/assets/img/hero/service-details-bg.jpg');
+                            @endphp
+                            <div class="swiper-slide" style="height:auto;">
+                                <button type="button" class="team-card"
+                                    data-name="{{ $staff->name }}"
+                                    data-title="{{ $staff->title }}"
+                                    data-img="{{ $staffImg }}"
+                                    data-desc="{{ $staff->short_description }}">
+                                    <span class="team-card-photo">
+                                        <img src="{{ $staffImg }}" alt="{{ $staff->name }}" loading="lazy">
+                                    </span>
+                                    <span class="team-card-body">
+                                        <span class="team-card-name">{{ $staff->name }}</span>
+                                        <span class="team-card-title">{{ $staff->title }}</span>
+                                        <span class="team-card-cta">View profile <i class="fas fa-arrow-right"></i></span>
+                                    </span>
+                                </button>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
+            </div>
+        </section>
+
+        {{-- Staff profile popup --}}
+        <div class="modal fade" id="staffModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content team-modal">
+                    <button type="button" class="btn-close team-modal-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="team-modal-head">
+                        <img id="staffModalImg" src="" alt="">
+                        <div>
+                            <h3 id="staffModalName"></h3>
+                            <span id="staffModalTitle"></span>
+                        </div>
+                    </div>
+                    <div class="team-modal-body" id="staffModalDesc"></div>
+                </div>
+            </div>
+        </div>
         @endif
 
         {{-- ══════════════════════ ECOSYSTEM SECTION ══════════════════ --}}
@@ -716,6 +843,88 @@
         if (typeof AOS !== 'undefined') {
             AOS.init({ duration: 900, once: true, offset: 80 });
         }
+
+        /* ── Stats strip: reveal + count-up when scrolled into view ── */
+        (function () {
+            const strip = document.querySelector('.about-stats-strip');
+            if (!strip) return;
+
+            const nums   = strip.querySelectorAll('.stat-num');
+            const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            function countUp(el) {
+                const target = parseInt(el.getAttribute('data-target'), 10) || 0;
+                const suffix = el.getAttribute('data-suffix') || '';
+                const fmt    = function (n) { return Math.round(n).toLocaleString('en-US') + suffix; };
+
+                if (reduce) { el.textContent = fmt(target); return; }
+
+                const duration = 1700;
+                let start = null;
+                el.textContent = fmt(0);
+
+                function step(ts) {
+                    if (start === null) start = ts;
+                    const p = Math.min((ts - start) / duration, 1);
+                    // ease-out cubic — fast then gently settles (Apple-like)
+                    const eased = 1 - Math.pow(1 - p, 3);
+                    el.textContent = fmt(target * eased);
+                    if (p < 1) requestAnimationFrame(step);
+                    else el.textContent = fmt(target);
+                }
+                requestAnimationFrame(step);
+            }
+
+            function run() {
+                strip.classList.add('is-counting');     // triggers the CSS reveal
+                nums.forEach(function (el, i) {
+                    setTimeout(function () { countUp(el); }, reduce ? 0 : i * 90);
+                });
+            }
+
+            if ('IntersectionObserver' in window) {
+                const io = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (e) {
+                        if (e.isIntersecting) { run(); io.disconnect(); }
+                    });
+                }, { threshold: 0.35 });
+                io.observe(strip);
+            } else {
+                run(); // very old browsers — just show + count
+            }
+        })();
+
+        /* ── Leadership team carousel + profile popup ── */
+        if (typeof Swiper !== 'undefined' && document.querySelector('.teamSwiper')) {
+            new Swiper('.teamSwiper', {
+                slidesPerView: 1,
+                spaceBetween: 24,
+                grabCursor: true,
+                pagination: { el: '.teamSwiper .swiper-pagination', clickable: true },
+                navigation: { nextEl: '.teamSwiper .swiper-button-next', prevEl: '.teamSwiper .swiper-button-prev' },
+                breakpoints: {
+                    576:  { slidesPerView: 2 },
+                    992:  { slidesPerView: 3 },
+                    1200: { slidesPerView: 4 },
+                },
+            });
+        }
+
+        (function () {
+            const modalEl = document.getElementById('staffModal');
+            if (!modalEl || typeof bootstrap === 'undefined') return;
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            document.querySelectorAll('.team-card').forEach(function (card) {
+                card.addEventListener('click', function () {
+                    document.getElementById('staffModalImg').src         = this.dataset.img || '';
+                    document.getElementById('staffModalImg').alt         = this.dataset.name || '';
+                    document.getElementById('staffModalName').textContent  = this.dataset.name || '';
+                    document.getElementById('staffModalTitle').textContent = this.dataset.title || '';
+                    document.getElementById('staffModalDesc').textContent  = this.dataset.desc || '';
+                    modal.show();
+                });
+            });
+        })();
 
         /* Partner carousel — continuous scroll, no pause between slides */
         if (typeof Swiper !== 'undefined' && document.querySelector('.partnerSwiper')) {

@@ -578,6 +578,24 @@
                                         <span class="hide-menu">Eco System</span>
                                     </a>
                                 </li>
+
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="{{ route('about_counters.index') }}" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-circle"></i>
+                                        </span>
+                                        <span class="hide-menu">Counters / Stats</span>
+                                    </a>
+                                </li>
+
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="{{ route('about_staff.index') }}" aria-expanded="false">
+                                        <span>
+                                            <i class="ti ti-circle"></i>
+                                        </span>
+                                        <span class="hide-menu">Leadership Team</span>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
 

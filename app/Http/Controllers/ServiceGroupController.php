@@ -20,7 +20,7 @@ class ServiceGroupController extends Controller
 {
     public function front(Request $request, $slug = null)
     {
-        $serviceQuery = ServiceGroup::with(['agent.user', 'services', 'faqs', 'announcement']);
+        $serviceQuery = ServiceGroup::with(['agent.user', 'services' => fn ($q) => $q->where('status', 'published'), 'faqs', 'announcement']);
         $service = $slug
             ? $serviceQuery->where('slug', $slug)->first()
             : $serviceQuery->orderByDesc('is_featured')->latest()->first();
@@ -47,7 +47,7 @@ class ServiceGroupController extends Controller
 
     public function allServices($slug)
     {
-        $service = ServiceGroup::with(['services'])->where('slug', $slug)->first();
+        $service = ServiceGroup::with(['services' => fn ($q) => $q->where('status', 'published')])->where('slug', $slug)->first();
 
         if (!$service) {
             return redirect()->route('front.all-services')->with('error', 'Service group not found.');

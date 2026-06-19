@@ -270,49 +270,106 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
         </div>
       </div>
 
-      <div class="browse-grid reveal">
+      {{-- Service pills styled like the home page "Alpha Updates" cards: image left,
+           name + 2-line description right, laid out two per row. --}}
+      <style>
+        /* grid-auto-rows:1fr + height:100% makes every pill the same height as the tallest */
+        .svc-pill-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 18px; align-items: stretch; }
+        .svc-pill {
+          display: flex; gap: 16px; align-items: stretch; text-decoration: none; height: 100%;
+          background: #fff; border: 1px solid #eef0f2; border-radius: 14px; overflow: hidden;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.04); min-height: 172px;
+          transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s cubic-bezier(.22,1,.36,1), border-color .35s ease;
+        }
+        .svc-pill:hover { transform: translateY(-4px); box-shadow: 0 16px 38px rgba(6,109,119,0.14); border-color: #cfe6e8; }
+        .svc-pill-media { flex: 0 0 118px; width: 118px; overflow: hidden; background: #f3f5f6; }
+        .svc-pill-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s cubic-bezier(.22,1,.36,1); }
+        .svc-pill:hover .svc-pill-media img { transform: scale(1.07); }
+        .svc-pill-body { flex: 1; min-width: 0; padding: 14px 16px 14px 0; display: flex; flex-direction: column; }
+        .svc-pill-tag {
+          text-transform: uppercase; font-size: .64rem; font-weight: 700; letter-spacing: 1px;
+          color: #009095; margin-bottom: 6px; display: inline-flex; align-items: center; gap: 5px;
+        }
+        .svc-pill-title {
+          font-size: 1rem; font-weight: 700; color: #16242a; line-height: 1.32; margin: 0 0 8px;
+          /* reserve a 2-line slot so 1-line titles keep the same height as 2-line ones */
+          min-height: 2.64em;
+          display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .svc-pill-desc {
+          font-size: .82rem; color: #5b6b72; line-height: 1.5; margin: 0 0 10px;
+          display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .svc-pill-more {
+          margin-top: auto; align-self: flex-start;
+          display: inline-flex; align-items: center; gap: 6px;
+          font-size: .74rem; font-weight: 600; letter-spacing: .2px; color: #009095;
+          padding: 6px 12px; border: 1px solid #d3e6e7; border-radius: 8px; background: transparent;
+          transition: background .25s ease, color .25s ease, border-color .25s ease;
+        }
+        .svc-pill:hover .svc-pill-more { background: #009095; color: #fff; border-color: #009095; }
+        .svc-pill-more i { font-size: .66rem; transition: transform .3s ease; }
+        .svc-pill:hover .svc-pill-more i { transform: translateX(3px); }
+        .svc-pill--package { border-left: 3px solid #009095; }
+        .svc-pill-empty {
+          grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #9aa5ad;
+          border: 1px dashed #d7dee2; border-radius: 14px;
+        }
+        @media (max-width: 768px) { .svc-pill-grid { grid-template-columns: 1fr; } }
+      </style>
+
+      <div class="svc-pill-grid reveal">
         @if($totalItems === 0)
-          <div class="browse-card current">
-            <div class="browse-card-left">
-              <div class="browse-card-icon-wrap">i</div>
-              <div class="browse-card-text">
-                <div class="browse-card-title">No services added for this category yet.</div>
-                <div class="browse-card-count">Please connect services from dashboard.</div>
-              </div>
-            </div>
+          <div class="svc-pill-empty">
+            No services added for this category yet. Please connect services from the dashboard.
           </div>
         @else
           {{-- Individual services --}}
           @foreach($categoryServices as $categoryService)
-            <a href="{{ route('front.service', $categoryService->slug) }}" class="browse-card current"
+            @php
+              $svcImg = $categoryService->hero_image
+                  ? asset('public/uploads/service_images/' . $categoryService->hero_image)
+                  : asset('public/front/assets/img/hero/service-details-bg.jpg');
+              $svcDesc = trim(strip_tags($categoryService->description ?: ($categoryService->overview ?? '')));
+            @endphp
+            <a href="{{ route('front.service', $categoryService->slug) }}" class="svc-pill"
               aria-label="{{ $categoryService->name }}">
-              <div class="browse-card-left">
-                <div class="browse-card-text">
-                  <h3 class="browse-card-title">{{ $categoryService->name }}</h3>
-                  <div class="browse-card-count">{{ Str::limit(strip_tags($categoryService->description), 120) }}</div>
-                </div>
+              <div class="svc-pill-media">
+                <img src="{{ $svcImg }}" alt="{{ $categoryService->name }}" loading="lazy">
               </div>
-              <div class="browse-card-arrow-btn">→</div>
+              <div class="svc-pill-body">
+                <h3 class="svc-pill-title">{{ $categoryService->name }}</h3>
+                @if($svcDesc !== '')
+                  <p class="svc-pill-desc">{{ Str::limit($svcDesc, 230) }}</p>
+                @endif
+                <span class="svc-pill-more">View details <i class="fa-solid fa-arrow-right"></i></span>
+              </div>
             </a>
           @endforeach
 
           {{-- Service packages / groups --}}
           @foreach($categoryServiceGroups as $group)
-            <a href="{{ route('service-packages', $group->slug) }}" class="browse-card current"
-              aria-label="{{ $group->name }}"
-              style="border-left:3px solid #009095">
-              <div class="browse-card-left">
-                <div class="browse-card-text">
-                  <h3 class="browse-card-title" style="display:flex;align-items:center;gap:.45rem">
-                    <i class="bi bi-collection-fill" style="color:#009095;font-size:.85rem;flex-shrink:0"></i>
-                    {{ $group->name }}
-                  </h3>
-                  <div class="browse-card-count" style="color:#009095;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.4px">
-                    Service Package
-                  </div>
-                </div>
+            @php
+              $grpImg = $group->hero_image
+                  ? asset('public/' . ltrim($group->hero_image, '/'))
+                  : ($group->image
+                      ? asset('public/uploads/service_group_images/' . $group->image)
+                      : asset('public/front/assets/img/hero/service-details-bg.jpg'));
+              $grpDesc = trim(strip_tags($group->description ?: ($group->overview ?? '')));
+            @endphp
+            <a href="{{ route('service-packages', $group->slug) }}" class="svc-pill svc-pill--package"
+              aria-label="{{ $group->name }}">
+              <div class="svc-pill-media">
+                <img src="{{ $grpImg }}" alt="{{ $group->name }}" loading="lazy">
               </div>
-              <div class="browse-card-arrow-btn">→</div>
+              <div class="svc-pill-body">
+                <span class="svc-pill-tag"><i class="bi bi-collection-fill"></i> Service Package</span>
+                <h3 class="svc-pill-title">{{ $group->name }}</h3>
+                @if($grpDesc !== '')
+                  <p class="svc-pill-desc">{{ Str::limit($grpDesc, 230) }}</p>
+                @endif
+                <span class="svc-pill-more">View package <i class="fa-solid fa-arrow-right"></i></span>
+              </div>
             </a>
           @endforeach
         @endif

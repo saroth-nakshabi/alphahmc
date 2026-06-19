@@ -35,6 +35,7 @@ class Service extends Model
         'inq_officer_name',
         'inq_officer_phone',
         'show_testimonials',
+        'sort_order',
     ];
 
 

@@ -225,26 +225,17 @@
         background: #fff;
     }
 
-    .logo-row {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 80px;
-        flex-wrap: wrap;
-        margin-top: 60px;
-    }
-
-    .logo-row img {
-        max-height: 35px;
-        filter: grayscale(1);
-        opacity: 0.4;
+    .blog-client-swiper-outer { margin-top: 50px; overflow: hidden; }
+    .blogClientSwiper .swiper-wrapper { align-items: center; transition-timing-function: linear !important; }
+    .blog-client-slide { width: auto; display: flex; justify-content: center; }
+    .blog-client-logo { display: flex; align-items: center; justify-content: center; padding: 0 40px; }
+    .blog-client-logo img {
+        max-height: 48px; width: auto; object-fit: contain;
+        filter: grayscale(1); opacity: 0.5;
         transition: var(--transition-smooth);
     }
-
-    .logo-row img:hover {
-        filter: grayscale(0);
-        opacity: 1;
-        transform: scale(1.05);
+    .blog-client-logo img:hover {
+        filter: grayscale(0); opacity: 1; transform: scale(1.05);
     }
 
     /* BUTTONS */
@@ -372,18 +363,28 @@
     {{-- Alpha Blueprint AI launcher --}}
     @include('front.partials.planner-cta', ['variant' => 'light'])
 
-    {{-- Clients --}}
+    {{-- Clients (dynamic logo carousel) --}}
+    @if(($clients ?? collect())->count())
     <section class="clients-section">
         <div class="container text-center">
             <h2 class="thinking-title" style="font-size: 2rem;">Trusted by Industry Leaders</h2>
-            <div class="logo-row">
-                <img src="{{ asset('public/front-new/assets/images/logo1.png') }}" alt="Client logo">
-                <img src="{{ asset('public/front-new/assets/images/logo2.png') }}" alt="Client logo">
-                <img src="{{ asset('public/front-new/assets/images/logo3.png') }}" alt="Client logo">
-                <img src="{{ asset('public/front-new/assets/images/logo4.png') }}" alt="Client logo">
+        </div>
+        <div class="blog-client-swiper-outer">
+            <div class="swiper blogClientSwiper">
+                <div class="swiper-wrapper">
+                    @foreach($clients as $client)
+                        <div class="swiper-slide blog-client-slide">
+                            <div class="blog-client-logo">
+                                <img src="{{ asset('public/uploads/clients/' . $client->logo) }}"
+                                     alt="{{ $client->name }}" loading="lazy">
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </div>
     </section>
+    @endif
 
     <script>
         // Smooth Scroll
@@ -402,5 +403,20 @@
             let scrolled = (winScroll / height) * 100;
             document.getElementById("progress-bar").style.width = scrolled + "%";
         };
+
+        // Client logo carousel — continuous marquee-style scroll
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof Swiper !== 'undefined' && document.querySelector('.blogClientSwiper')) {
+                new Swiper('.blogClientSwiper', {
+                    slidesPerView: 'auto',
+                    spaceBetween: 20,
+                    loop: true,
+                    speed: 3500,
+                    allowTouchMove: true,
+                    grabCursor: true,
+                    autoplay: { delay: 0, disableOnInteraction: false, pauseOnMouseEnter: true },
+                });
+            }
+        });
     </script>
 @endsection

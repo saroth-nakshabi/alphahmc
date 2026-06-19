@@ -296,6 +296,8 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::post('/services/get', [ServiceController::class, 'getService'])->name('services.get');
     Route::post('/services/featured', [ServiceController::class, 'featuredHandle'])->name('services.featured.change');
     Route::post('/services/{id}/toggle-status', [ServiceController::class, 'toggleStatus'])->name('services.toggle_status');
+    Route::post('/services/{id}/move-to-group', [ServiceController::class, 'moveToServiceGroup'])->name('services.move-to-group')->middleware('permission:edit services');
+    Route::post('/services/reorder', [ServiceController::class, 'reorder'])->name('services.reorder')->middleware('permission:edit services');
     Route::post('/services/upload-documents/{id}', [ServiceController::class, 'uploadDocuments'])->name('services.upload_documents');
 
     // -- Service Magazine (Insights) CRUD routes --
@@ -329,14 +331,14 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::post('/home-sliders/get', [HomeSliderController::class, 'getSlider'])->name('sliders.home.get');
     Route::post('/home-sliders/status', [HomeSliderController::class, 'statusHandle'])->name('sliders.status.change');
 
-    // blog routes
-    Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index')->middleware('permission:view blogs');
-    Route::post('/blogs', [BlogController::class, 'store'])->name('blogs.store')->middleware('permission:create blogs');
-    Route::delete('/blogs/delete/{id}', [BlogController::class, 'destroy'])->name('blogs.destroy')->middleware('permission:delete blogs');
-    Route::post('/blogs/update/{id}', [BlogController::class, 'update'])->name('blogs.update')->middleware('permission:edit blogs');
-    Route::post('/blogs/get', [BlogController::class, 'getBlog'])->name('blogs.get');
-    Route::post('/blogs/featured', [BlogController::class, 'featuredHandle'])->name('blogs.featured.change');
-    Route::post('/blogs/reorder', [BlogController::class, 'reorder'])->name('blogs.reorder')->middleware('permission:edit blogs');
+    // blog routes (dashboard blog manager — URL is /manage-blog; route names kept as blogs.* )
+    Route::get('/manage-blog', [BlogController::class, 'index'])->name('blogs.index')->middleware('permission:view blogs');
+    Route::post('/manage-blog', [BlogController::class, 'store'])->name('blogs.store')->middleware('permission:create blogs');
+    Route::delete('/manage-blog/delete/{id}', [BlogController::class, 'destroy'])->name('blogs.destroy')->middleware('permission:delete blogs');
+    Route::post('/manage-blog/update/{id}', [BlogController::class, 'update'])->name('blogs.update')->middleware('permission:edit blogs');
+    Route::post('/manage-blog/get', [BlogController::class, 'getBlog'])->name('blogs.get');
+    Route::post('/manage-blog/featured', [BlogController::class, 'featuredHandle'])->name('blogs.featured.change');
+    Route::post('/manage-blog/reorder', [BlogController::class, 'reorder'])->name('blogs.reorder')->middleware('permission:edit blogs');
 
     // tags Routes (blog)
     Route::get('/tags', [TagController::class, 'index'])->name('blog.tags.index')->middleware('permission:view tags');
@@ -452,6 +454,26 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
         Route::post('/get', [About_quoteController::class, 'get'])->name('about_quote.get');
         Route::post('/update/{id}', [About_quoteController::class, 'update'])->name('about_quote.update');
         Route::delete('/destroy/{id}', [About_quoteController::class, 'destroy'])->name('about_quote.destroy');
+    });
+
+    //About counters (stats strip) routes
+    Route::prefix('about-counters')->group(function () {
+        Route::get('/', [App\Http\Controllers\AboutCounterController::class, 'index'])->name('about_counters.index');
+        Route::post('/', [App\Http\Controllers\AboutCounterController::class, 'store'])->name('about_counters.store');
+        Route::post('/get', [App\Http\Controllers\AboutCounterController::class, 'get'])->name('about_counters.get');
+        Route::post('/reorder', [App\Http\Controllers\AboutCounterController::class, 'reorder'])->name('about_counters.reorder');
+        Route::post('/update/{id}', [App\Http\Controllers\AboutCounterController::class, 'update'])->name('about_counters.update');
+        Route::delete('/destroy/{id}', [App\Http\Controllers\AboutCounterController::class, 'destroy'])->name('about_counters.destroy');
+    });
+
+    //About staff / leadership team routes
+    Route::prefix('about-staff')->group(function () {
+        Route::get('/', [App\Http\Controllers\AboutStaffController::class, 'index'])->name('about_staff.index');
+        Route::post('/', [App\Http\Controllers\AboutStaffController::class, 'store'])->name('about_staff.store');
+        Route::post('/get', [App\Http\Controllers\AboutStaffController::class, 'get'])->name('about_staff.get');
+        Route::post('/reorder', [App\Http\Controllers\AboutStaffController::class, 'reorder'])->name('about_staff.reorder');
+        Route::post('/update/{id}', [App\Http\Controllers\AboutStaffController::class, 'update'])->name('about_staff.update');
+        Route::delete('/destroy/{id}', [App\Http\Controllers\AboutStaffController::class, 'destroy'])->name('about_staff.destroy');
     });
 
     //tags routes

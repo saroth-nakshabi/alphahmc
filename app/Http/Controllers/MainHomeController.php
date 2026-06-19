@@ -41,7 +41,12 @@ class MainHomeController extends Controller
 {
     public function index()
     {
-        $categories = MainCategory::with(['categories.services', 'allCategories.services'])->orderBy('sort_order')->get();
+        $categories = MainCategory::with([
+            'categories',
+            'categories.services' => fn ($q) => $q->where('status', 'published'),
+            'allCategories',
+            'allCategories.services' => fn ($q) => $q->where('status', 'published'),
+        ])->orderBy('sort_order')->get();
         $homeSliders = HomeSlider::where('status', 'active')->get();
         $blogs = Blog::where('featured', true)->orderBy('sort_order')->orderBy('id')->take(3)->get();
         // $featuredServices = Service::where('featured', true)->take(3)->get();
@@ -135,7 +140,13 @@ class MainHomeController extends Controller
     public function serviceCategory($slug)
     {
         $data = [];
-        $category = Category::with(['agent.user', 'services', 'faqs', 'magazines', 'serviceGroups'])->where('slug', $slug)->first();
+        $category = Category::with([
+            'agent.user',
+            'services' => fn ($q) => $q->where('status', 'published')->orderBy('sort_order')->orderBy('id'),
+            'faqs',
+            'magazines',
+            'serviceGroups' => fn ($q) => $q->where('status', 'published'),
+        ])->where('slug', $slug)->first();
 
         if (!$category) {
             return redirect()->route('front.all-services');
@@ -211,7 +222,9 @@ class MainHomeController extends Controller
         $eco_systems = about_eco::latest()->take(6)->get();
         $clients = \App\Models\client::visible()->get();
         $brands = Brand::orderBy('sort_order')->orderBy('id')->get();
-        return view('front.new-about', compact('about_us', 'about_content', 'about_quotes', 'eco_systems', 'clients', 'brands'));
+        $about_counters = \App\Models\AboutCounter::orderBy('sort_order')->orderBy('id')->get();
+        $about_staff = \App\Models\AboutStaff::orderBy('sort_order')->orderBy('id')->get();
+        return view('front.new-about', compact('about_us', 'about_content', 'about_quotes', 'eco_systems', 'clients', 'brands', 'about_counters', 'about_staff'));
 
 
         // return view('front.new-about', compact('about_content'));
@@ -230,8 +243,11 @@ class MainHomeController extends Controller
 
         $featuredServices = Service::published()->where('featured', true)->take(4)->get();
 
+        // Client logos for the "Trusted by Industry Leaders" carousel
+        $clients = \App\Models\client::visible()->get();
+
         // Pass both blog and projects to the view
-        return view('front.single_blog_page', compact('blog', 'projects', 'featuredServices', 'blogsByTag'));
+        return view('front.single_blog_page', compact('blog', 'projects', 'featuredServices', 'blogsByTag', 'clients'));
     }
 
 
@@ -284,7 +300,7 @@ class MainHomeController extends Controller
         $categories = MainCategory::with([
             'allCategories',
             'allCategories.services' => function ($query) use ($search) {
-                $query->where('status', 'published');
+                $query->where('status', 'published')->orderBy('sort_order')->orderBy('id');
                 if ($search) {
                     $query->where('name', 'like', '%' . $search . '%');
                 }

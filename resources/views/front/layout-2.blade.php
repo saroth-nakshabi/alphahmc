@@ -79,7 +79,10 @@
             wait_for_update:    500,
         });
         // Consent Mode V2: model conversions even when ads consent denied
-        gtag('set', 'url_passthrough', true);
+        // url_passthrough disabled: it was appending the GA linker "?_gl=..." string to
+        // every internal link while consent was denied. Off = clean URLs (slightly less
+        // accurate cookieless attribution). ads_data_redaction stays on (no URL impact).
+        gtag('set', 'url_passthrough', false);
         gtag('set', 'ads_data_redaction', true);
     }
 </script>
@@ -203,11 +206,11 @@
 {{-- Consent initialization moved above $globaltags — see top of head --}}
 
 
-    {{-- Google Tag --}}
+    {{-- Google Tags (GA4 / Google Ads / GTM head) — rendered RAW so the <script>
+         elements actually execute. Sits after the Consent Mode V2 defaults above,
+         so tags initialise with the correct consent signal. --}}
 @foreach($googletags as $tag)
-    <script type="application/ld+json">
-        {!!  strip_tags( $tag->tags) !!}
-    </script>
+    {!! $tag->tags !!}
 @endforeach
 
     {{-- Global WebSite Schema (enables Google Sitelinks Search Box) --}}
@@ -356,7 +359,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             ad_personalization: 'denied',
         });
         // Keep conversion modeling active even after rejection
-        gtag('set', 'url_passthrough', true);
+        // url_passthrough disabled: it was appending the GA linker "?_gl=..." string to
+        // every internal link while consent was denied. Off = clean URLs (slightly less
+        // accurate cookieless attribution). ads_data_redaction stays on (no URL impact).
+        gtag('set', 'url_passthrough', false);
         gtag('set', 'ads_data_redaction', true);
         setConsentWithExpiry('rejected');
         hideCookieBanner();

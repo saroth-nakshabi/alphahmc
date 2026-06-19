@@ -119,6 +119,15 @@
                             </label>
                         </div>
 
+                        <hr class="my-4">
+                        <label class="form-label fw-semibold" for="whatsapp_default_number">Floating WhatsApp — default number</label>
+                        <p class="text-muted small mb-2">Used by the floating "Chat with Alpha" widget on all pages that don't have a service leader. Service / category / package pages override this with their own Inquiry Officer WhatsApp number. Enter the full number with country code, digits only (e.g. <code>97158128418</code>) — any <code>+</code>, spaces or dashes are removed automatically.</p>
+                        <div class="input-group mb-4" style="max-width:320px">
+                            <span class="input-group-text">+</span>
+                            <input type="text" class="form-control" id="whatsapp_default_number" name="whatsapp_default_number"
+                                   value="{{ $whatsappNumber }}" placeholder="97158128418" inputmode="numeric">
+                        </div>
+
                         <button type="submit" class="btn btn-success"><i class="ti ti-device-floppy me-1"></i> Save settings</button>
                     </form>
                 </div>

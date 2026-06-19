@@ -22,11 +22,29 @@ class ServiceController extends Controller
     public function index()
     {
         $data = [];
-        $data['services'] = Service::with(['categories.mainCategory'])->get();
+        $data['services'] = Service::with(['categories.mainCategory'])
+            ->orderBy('sort_order')->orderBy('id')->get();
         $data['categories'] = Category::all();
         $data['agents'] = Agent::all();
 
         return view('dashboard.services.index', $data);
+    }
+
+    /**
+     * Persist the drag-and-drop order from the services listing page.
+     */
+    public function reorder(Request $request)
+    {
+        $request->validate([
+            'order'   => 'required|array',
+            'order.*' => 'integer|exists:services,id',
+        ]);
+
+        foreach ($request->order as $position => $id) {
+            Service::where('id', $id)->update(['sort_order' => $position + 1]);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Order saved!']);
     }
 
     public function create()
@@ -137,6 +155,7 @@ class ServiceController extends Controller
             'agent_id'          => $request->input('agent') ?? null,
             'inq_officer_name'  => $request->input('inq_officer_name'),
             'inq_officer_phone' => $request->input('inq_officer_phone'),
+            'sort_order'        => (int) Service::max('sort_order') + 1, // new services go to the end
         ]);
 
 
@@ -488,19 +507,148 @@ class ServiceController extends Controller
 
     public function destroy($id)
     {
-        $item = Service::findOrFail($id);
+        $item = Service::with('images')->findOrFail($id);
 
-        // Delete the image file from the storage
-        if (file_exists(public_path('uploads/product_images/' . $item->images->first()->image))) {
-            unlink(public_path('uploads/product_images/' . $item->images->first()->image));
+        // Delete each gallery image file from storage (guard against services with no images)
+        foreach ($item->images as $img) {
+            if (!empty($img->image)) {
+                $path = public_path('uploads/service_images/' . $img->image);
+                if (file_exists($path)) {
+                    @unlink($path);
+                }
+            }
         }
 
+        // Child rows (service_images, service_documents, service_categories pivot) cascade on delete.
         $item->delete();
 
         return response()->json([
             'success' => true,
             'message' => 'Deleted successfully!',
         ], 201);
+    }
+
+    /**
+     * Copy a service into a new Service Group (package) using the agreed field mapping.
+     *
+     * The original service is NOT deleted: it is kept as a Draft (status = draft) with its
+     * slug suffixed "_moved", so the new group takes the clean slug. This lets an admin
+     * validate the migrated data and then delete the service manually afterwards.
+     *
+     * Field mapping (Service form label → Service Group form label / column):
+     *   Service Name            → name
+     *   URL Slug                → slug          (group keeps the clean slug; service → "{slug}_moved")
+     *   Categories              → categories pivot (category_service_group)
+     *   Connected Agent         → agent_id
+     *   Inquiry Officer Name    → inq_officer_name
+     *   Inquiry Officer WhatsApp→ inq_officer_phone
+     *   Hero Section Image      → hero_image
+     *   Hero Description (content)        → Hero Description (content)
+     *   SEO / Meta              → meta_title / meta_description / meta_keywords
+     *   Core Service Description (info_two) → Intro Description (overview)
+     *   Intro Description (overview)        → Service Details Header (service_details_header)
+     *   Core Service Header (info_one)      → Core Service Header (core_service_header[])
+     *   CTA Header (info_three)             → CTA Description (info_four)
+     *   Magazine / Insights     → not migrated (stays on the draft service)
+     *   FAQs                    → FAQs (copied as new rows; the service keeps its own)
+     *
+     * Image files are shared (the group reuses the same files on disk). Member services
+     * (service_group_services) are left empty — added manually later.
+     */
+    public function moveToServiceGroup($id)
+    {
+        $service = Service::with(['categories', 'faq'])->findOrFail($id);
+
+        // Clean base slug — the group takes this; uniquify within service_groups.
+        $base = $service->slug ?: \Illuminate\Support\Str::slug($service->name);
+        $base = preg_replace('/_moved(-\d+)?$/', '', $base); // avoid stacking "_moved" on re-runs
+        $groupSlug = $base;
+        $n = 2;
+        while (\App\Models\ServiceGroup::where('slug', $groupSlug)->exists()) {
+            $groupSlug = $base . '-' . $n++;
+        }
+
+        $categoryIds = $service->categories->pluck('id')->all();
+
+        // Service hero/sliding images are filenames under uploads/service_images/.
+        // Service-group image fields render via asset('public/'.ltrim(...)), so store the
+        // full relative path and reuse the same files (no copying, no broken images).
+        $heroPath = $service->hero_image ? 'uploads/service_images/' . $service->hero_image : null;
+        $cardPath = $service->sliding_image
+            ? 'uploads/service_images/' . $service->sliding_image
+            : $heroPath;
+
+        $name = $service->name;
+
+        $group = \DB::transaction(function () use ($service, $base, $groupSlug, $heroPath, $cardPath, $categoryIds) {
+
+            $group = \App\Models\ServiceGroup::create([
+                'name'                   => $service->name,
+                'slug'                   => $groupSlug,
+                'hero_image'             => $heroPath,
+                'image'                  => $cardPath,
+                // Hero Description → Hero Description
+                'content'                => $service->content,
+                // Core Service Description (info_two) → Intro Description (overview)
+                'overview'               => $service->info_two,
+                // Intro Description (overview) → Service Details Header
+                'service_details_header' => $service->overview,
+                // Core Service Header (info_one) → Core Service Header (stored as JSON array)
+                'core_service_header'    => $service->info_one ? [$service->info_one] : [],
+                // CTA Header (info_three) → CTA Description (info_four)
+                'info_four'              => $service->info_three,
+                'agent_id'               => $service->agent_id,
+                'inq_officer_name'       => $service->inq_officer_name,
+                'inq_officer_phone'      => $service->inq_officer_phone,
+                'announcement_id'        => $service->announcement_id,
+                'related_services'       => is_array($service->related_services) ? $service->related_services : [],
+                'is_featured'            => $service->featured ? 1 : 0,
+                'status'                 => $service->status,
+                'published_date'         => $service->published_date,
+                'updated_date'           => $service->updated_date,
+                'meta_title'             => $service->meta_title,
+                'meta_description'       => $service->meta_description,
+                'meta_keywords'          => $service->meta_keywords,
+                'show_testimonials'      => $service->show_testimonials,
+                'category_id'            => $categoryIds[0] ?? null,
+            ]);
+
+            // Mirror category links into the group's pivot so it appears under the same categories.
+            if (!empty($categoryIds)) {
+                $group->categories()->sync($categoryIds);
+            }
+
+            // COPY FAQs to the group as new rows — the draft service keeps its own FAQs intact.
+            // service_group_id is set directly (not mass-assignable); service_id is null (now nullable).
+            foreach ($service->faq as $faq) {
+                $copy = new \App\Models\Faq();
+                $copy->faq_question     = $faq->faq_question;
+                $copy->faq_answer       = $faq->faq_answer;
+                $copy->service_id       = null;
+                $copy->service_group_id = $group->id;
+                $copy->save();
+            }
+
+            // Keep the service for validation: unpublish it and free the clean slug for the group.
+            $movedSlug = $base . '_moved';
+            $m = 2;
+            while (Service::where('slug', $movedSlug)->where('id', '!=', $service->id)->exists()) {
+                $movedSlug = $base . '_moved-' . $m++;
+            }
+            $service->slug   = $movedSlug;
+            $service->status = 'draft';
+            $service->save();
+
+            return $group;
+        });
+
+        return response()->json([
+            'success'   => true,
+            'message'   => $name . ' copied to Service Groups. The original service was kept as a Draft (slug: ' . $service->slug . ') for you to validate, then delete manually.',
+            'group_id'  => $group->id,
+            'edit_url'  => route('service-group.edit', $group->id),
+            'moved_slug'=> $service->slug,
+        ]);
     }
 
     public function getService(Request $request)
