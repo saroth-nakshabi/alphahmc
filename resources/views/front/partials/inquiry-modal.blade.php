@@ -60,6 +60,13 @@
                         <textarea id="im-message" name="message" rows="3" placeholder="Tell us briefly about your facility or requirement..."></textarea>
                     </div>
                 </div>
+                <div class="ahg-im-consent">
+                    <label class="ahg-im-check">
+                        <input type="checkbox" id="im-consent" name="consent" value="1" required>
+                        <span>I agree to be contacted by Alpha Health Group regarding this inquiry and accept the
+                            <a href="{{ url('/alpha-privacy-policy') }}" target="_blank" rel="noopener">privacy policy</a>.</span>
+                    </label>
+                </div>
                 <button type="submit" class="ahg-im-submit" id="inquirySubmitBtn">
                     <span class="ahg-im-submit-label">Submit Inquiry</span>
                     <i class="fa-solid fa-arrow-right"></i>
@@ -118,6 +125,10 @@
     .ahg-im-submit:disabled { opacity: .65; cursor: not-allowed; }
     .ahg-im-submit i { font-size: 0.8rem; transition: transform .3s ease; }
     .ahg-im-submit:hover i { transform: translateX(4px); }
+    .ahg-im-consent { margin-bottom: 18px; }
+    .ahg-im-check { display: flex; align-items: flex-start; gap: 10px; font-size: 0.82rem; color: #5b6b73; line-height: 1.5; cursor: pointer; }
+    .ahg-im-check input { width: 18px; height: 18px; margin: 2px 0 0; flex-shrink: 0; accent-color: #066D77; cursor: pointer; }
+    .ahg-im-check a { color: #066D77; text-decoration: underline; }
     .ahg-im-alert { border-radius: 10px; padding: 12px 16px; font-size: 0.9rem; margin-bottom: 18px; }
     .ahg-im-alert.is-success { background: #e6f9f0; color: #1a8a4a; border: 1px solid #a3e6c3; }
     .ahg-im-alert.is-error   { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
@@ -183,6 +194,12 @@
 
     form.addEventListener('submit', function (e) {
         e.preventDefault();
+        // Require contact consent before sending.
+        var consent = document.getElementById('im-consent');
+        if (consent && !consent.checked) {
+            showAlert('error', 'Please tick the consent box so we can contact you.');
+            return;
+        }
         if (alertBox) alertBox.className = 'ahg-im-alert d-none';
         if (btn) { btn.disabled = true; if (label) label.textContent = 'Submitting...'; }
 

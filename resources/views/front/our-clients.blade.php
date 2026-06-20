@@ -351,17 +351,25 @@
 @section('content')
 
 {{-- ── HERO ─────────────────────────────────────────────── --}}
-<section class="cl-hero">
+@php
+    // Unified page settings (Dashboard → Pages & SEO). Falls back to legacy ClientSetting.
+    $cs = $pageMeta ?? ($clientSetting ?? \App\Models\ClientSetting::current());
+    $clHeroBg = $cs && $cs->hero_image
+        ? asset('public/uploads/page_images/' . $cs->hero_image)
+        : null;
+@endphp
+<section class="cl-hero{{ $clHeroBg ? ' has-bg' : '' }}"
+    @if($clHeroBg) style="background-image: linear-gradient(rgba(8,23,43,0.82), rgba(8,23,43,0.88)), url('{{ $clHeroBg }}'); background-size: cover; background-position: center;" @endif>
     <div class="container">
         <div class="cl-hero-grid">
             <div>
-                <span class="cl-hero-eyebrow"><i class="fas fa-handshake"></i> Trusted Partnerships</span>
-                <h1>Healthcare Facilities<br>That <span>Trust Alpha</span></h1>
-                <p class="lead">
-                    From DOH-licensed hospitals to homecare providers and specialty clinics,
-                    Alpha Health Group partners with leading healthcare organisations across the UAE
-                    to deliver compliance, accreditation, and operational excellence.
-                </p>
+                @if($cs->hero_eyebrow)
+                    <span class="cl-hero-eyebrow"><i class="fas fa-handshake"></i> {{ $cs->hero_eyebrow }}</span>
+                @endif
+                <h1>{{ $cs->hero_title }}@if($cs->hero_subtitle)<br><span>{{ $cs->hero_subtitle }}</span>@endif</h1>
+                @if(trim(strip_tags((string) $cs->hero_description)) !== '')
+                    <p class="lead">{!! nl2br(e($cs->hero_description)) !!}</p>
+                @endif
             </div>
         </div>
     </div>
@@ -444,15 +452,16 @@
                                 @if($client->short_description)
                                     <p class="cl-card-short">{{ $client->short_description }}</p>
                                 @endif
-                                @if($client->description)
+                                @if(trim(strip_tags((string) $client->description)) !== '')
                                     <div class="cl-card-desc">
-                                        {!! nl2br(e($client->description)) !!}
+                                        {{-- Rich-text HTML from the editor — render as-is, do NOT escape --}}
+                                        {!! $client->description !!}
                                     </div>
                                 @endif
                             </div>
 
                             {{-- Expand button --}}
-                            @if($client->description)
+                            @if(trim(strip_tags((string) $client->description)) !== '')
                                 <div class="cl-card-footer">
                                     <button class="btn-cl-expand" data-target="client-card-{{ $client->id }}">
                                         <span class="expand-label">Read More</span>

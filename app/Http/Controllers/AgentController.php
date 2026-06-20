@@ -81,12 +81,26 @@ class AgentController extends Controller
             'last_name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'unique:' . User::class . ',phone,' . $agent->user->id],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class . ',email,' . $agent->user->id],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
 
-        $agent->update([
+        $attributes = [
             'title' => $request->title,
             'short_description' => $request->description,
-        ]);
+        ];
+
+        // Replace the profile image only when a new file is uploaded.
+        if ($request->hasFile('image')) {
+            if ($agent->image && file_exists(public_path('uploads/agent_images/' . $agent->image))) {
+                @unlink(public_path('uploads/agent_images/' . $agent->image));
+            }
+            $image = $request->file('image');
+            $image_name = time() . '_' . Str::uuid() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('uploads/agent_images'), $image_name);
+            $attributes['image'] = $image_name;
+        }
+
+        $agent->update($attributes);
 
         $agent->user->update([
             'first_name' => $request->first_name,

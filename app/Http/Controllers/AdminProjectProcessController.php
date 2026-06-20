@@ -13,7 +13,7 @@ class AdminProjectProcessController extends Controller
     /** View all created processes in one place. */
     public function index()
     {
-        $processes = ProjectProcess::withCount(['categories', 'serviceGroups'])
+        $processes = ProjectProcess::withCount(['categories', 'serviceGroups', 'services'])
             ->latest()->paginate(20);
 
         return view('dashboard.project_process.index', compact('processes'));
@@ -28,6 +28,7 @@ class AdminProjectProcessController extends Controller
             'groups'     => ServiceGroup::orderBy('name')->get(['id', 'name']),
             'assignedCategoryIds' => [],
             'assignedGroupIds'    => [],
+            'assignedServiceIds'  => [],
             'processItems' => [],
         ]);
     }
@@ -67,6 +68,7 @@ class AdminProjectProcessController extends Controller
             'groups'     => ServiceGroup::orderBy('name')->get(['id', 'name']),
             'assignedCategoryIds' => Category::where('project_process_id', $process->id)->pluck('id')->all(),
             'assignedGroupIds'    => ServiceGroup::where('project_process_id', $process->id)->pluck('id')->all(),
+            'assignedServiceIds'  => Service::where('project_process_id', $process->id)->pluck('id')->all(),
             'processItems' => $processItems,
         ]);
     }
@@ -85,9 +87,10 @@ class AdminProjectProcessController extends Controller
     public function destroy($id)
     {
         $process = ProjectProcess::findOrFail($id);
-        // Unlink (leave the already-copied content in place on each record).
+        // Unlink everything referencing this process.
         Category::where('project_process_id', $process->id)->update(['project_process_id' => null]);
         ServiceGroup::where('project_process_id', $process->id)->update(['project_process_id' => null]);
+        Service::where('project_process_id', $process->id)->update(['project_process_id' => null]);
         $process->delete();
 
         return back()->with('success', 'Project process deleted. Linked categories / service groups keep their last content.');
@@ -109,6 +112,8 @@ class AdminProjectProcessController extends Controller
             'category_ids.*'        => 'exists:categories,id',
             'group_ids'             => 'nullable|array',
             'group_ids.*'           => 'exists:service_groups,id',
+            'service_ids'           => 'nullable|array',
+            'service_ids.*'         => 'exists:services,id',
         ]);
     }
 
@@ -145,31 +150,20 @@ class AdminProjectProcessController extends Controller
     {
         $categoryIds = array_map('intval', (array) $request->input('category_ids', []));
         $groupIds    = array_map('intval', (array) $request->input('group_ids', []));
+        $serviceIds  = array_map('intval', (array) $request->input('service_ids', []));
 
-        // Unlink records that were removed from the assignment (keep their content).
+        // Unlink records that were removed from the assignment.
         Category::where('project_process_id', $process->id)->whereNotIn('id', $categoryIds ?: [0])
             ->update(['project_process_id' => null]);
         ServiceGroup::where('project_process_id', $process->id)->whereNotIn('id', $groupIds ?: [0])
             ->update(['project_process_id' => null]);
+        Service::where('project_process_id', $process->id)->whereNotIn('id', $serviceIds ?: [0])
+            ->update(['project_process_id' => null]);
 
-        // Link + push content into the selected categories.
-        foreach (Category::whereIn('id', $categoryIds)->get() as $cat) {
-            $cat->project_process_id  = $process->id;
-            $cat->process_intro       = $process->process_intro;
-            $cat->process_header      = $process->process_header;
-            $cat->process_description = $process->process_description;
-            $cat->process_service_ids = $process->process_service_ids;
-            $cat->save();
-        }
-
-        // Link + push content into the selected service groups.
-        foreach (ServiceGroup::whereIn('id', $groupIds)->get() as $grp) {
-            $grp->project_process_id  = $process->id;
-            $grp->process_intro       = $process->process_intro;
-            $grp->process_header      = $process->process_header;
-            $grp->process_description = $process->process_description;
-            $grp->process_service_ids = $process->process_service_ids;
-            $grp->save();
-        }
+        // Link the selected records. Content is read LIVE from the process via the
+        // resolving accessors, so only the FK needs to be set (no copying).
+        Category::whereIn('id', $categoryIds)->update(['project_process_id' => $process->id]);
+        ServiceGroup::whereIn('id', $groupIds)->update(['project_process_id' => $process->id]);
+        Service::whereIn('id', $serviceIds)->update(['project_process_id' => $process->id]);
     }
 }

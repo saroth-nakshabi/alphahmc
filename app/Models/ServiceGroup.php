@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ResolvesProcess;
 use Illuminate\Database\Eloquent\Model;
 
 class ServiceGroup extends Model
 {
+    use ResolvesProcess;
+
     protected $fillable = [
         'name',
         'slug',
@@ -100,80 +103,7 @@ class ServiceGroup extends Model
         }
     }
 
-    public function getProcessHeaderAttribute($value)
-    {
-        if (is_array($value)) {
-            return $value;
-        }
-
-        $decoded = json_decode($value, true);
-        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-            return $decoded;
-        }
-
-        if ($value === null) {
-            return [];
-        }
-
-        return [$value];
-    }
-
-    public function getProcessDescriptionAttribute($value)
-    {
-        if (is_array($value)) {
-            return $value;
-        }
-
-        $decoded = json_decode($value, true);
-        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-            return $decoded;
-        }
-
-        if ($value === null) {
-            return [];
-        }
-
-        return [$value];
-    }
-
-    public function setProcessHeaderAttribute($value)
-    {
-        if (is_array($value)) {
-            $this->attributes['process_header'] = json_encode(array_values($value));
-        } else {
-            $this->attributes['process_header'] = $value;
-        }
-    }
-
-    public function setProcessDescriptionAttribute($value)
-    {
-        if (is_array($value)) {
-            $this->attributes['process_description'] = json_encode(array_values($value));
-        } else {
-            $this->attributes['process_description'] = $value;
-        }
-    }
-
-    public function getProcessServiceIdsAttribute($value)
-    {
-        if (is_array($value)) {
-            return $value;
-        }
-
-        $decoded = json_decode($value ?? '', true);
-        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-            return $decoded;
-        }
-
-        return [];
-    }
-
-    public function setProcessServiceIdsAttribute($value)
-    {
-        $this->attributes['process_service_ids'] = is_array($value)
-            ? json_encode(array_values($value))
-            : $value;
-    }
+    // Process attributes resolve from the linked ProjectProcess — see ResolvesProcess trait.
 
     /** The shared Project Process this service group is linked to (if any). */
     public function projectProcess()

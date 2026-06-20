@@ -24,14 +24,18 @@
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/new-blog.css') }}?v=5">
     <style>
         .blog-hero { background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.65)), url('{{ asset('public/uploads/service_images/1780592725_hero_image_5492b395-ef2a-467a-b3af-c05d3e9e1341.jpg') }}'); }
+        /* Make the whole insight card clickable (stretched-link covers this box) */
+        .blog-card-premium { position: relative; }
+        .blog-card-item { cursor: pointer; }
     </style>
 {{-- HERO SECTION (MATCHING PROJECTS PAGE) --}}
-    <section class="blog-hero">
+    <section class="blog-hero"
+        @if(isset($pageMeta) && $pageMeta?->hero_image) style="background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.65)), url('{{ asset('public/uploads/page_images/' . $pageMeta->hero_image) }}');" @endif>
         <div class="container">
             <div class="banner-text">
-                <h1 class="hero-title">Healthcare Management Updates & Insights</h1>
+                <h1 class="hero-title">{{ $pageMeta?->hero_title ?: 'Healthcare Management Updates & Insights' }}</h1>
                 <p class="hero-description">
-                    Your go-to resource for healthcare leaders — covering management updates, DOH compliance guidance, operational excellence strategies, and industry trends shaping healthcare across the UAE and GCC.
+                    {{ $pageMeta?->hero_description ?: 'Your go-to resource for healthcare leaders — covering management updates, DOH compliance guidance, operational excellence strategies, and industry trends shaping healthcare across the UAE and GCC.' }}
                 </p>
                 <a href="#" class="hero-btn" data-bs-toggle="modal" data-bs-target="#inquiryModal">Contact Us</a>
             </div>
@@ -183,7 +187,7 @@
                                     <p class="blog-excerpt">
                                         {{ Str::limit(strip_tags($blog->description), 130) }}
                                     </p>
-                                    <a href="{{ route('front.singleBlog', $blog->slug) }}" class="btn-read-more">
+                                    <a href="{{ route('front.singleBlog', $blog->slug) }}" class="btn-read-more stretched-link">
                                         Read Insight <i class="fas fa-arrow-right"></i>
                                     </a>
                                 </div>

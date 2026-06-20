@@ -221,84 +221,58 @@
                             <span class="hide-menu">Service</span>
                         </li>
 
+                        {{-- Service Manager: groups Categories, Services and Service Groups --}}
                         <li class="sidebar-item">
-                            <a class="sidebar-link has-arrow" href="#" aria-expanded="false">
+                            <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
                                 <span class="d-flex">
-                                    <i class="ti ti-layout-kanban"></i>
+                                    <i class="ti ti-briefcase"></i>
                                 </span>
-                                <span class="hide-menu">Categories</span>
+                                <span class="hide-menu">Service Manager</span>
                             </a>
                             <ul aria-expanded="false" class="collapse first-level">
                                 @can('view main categories')
                                     <li class="sidebar-item">
-                                        <a class="sidebar-link" href="{{ route('main_categories.index') }}"
-                                            aria-expanded="false">
-                                            <span>
-                                                <i class="ti ti-circle"></i>
-                                            </span>
+                                        <a class="sidebar-link" href="{{ route('main_categories.index') }}" aria-expanded="false">
+                                            <span><i class="ti ti-circle"></i></span>
                                             <span class="hide-menu">Main Categories</span>
                                         </a>
                                     </li>
                                 @endcan
-
                                 @can('view categories')
                                     <li class="sidebar-item">
-                                        <a class="sidebar-link" href="{{ route('categories.index') }}"
-                                            aria-expanded="false">
-                                            <span>
-                                                <i class="ti ti-circle"></i>
-                                            </span>
+                                        <a class="sidebar-link" href="{{ route('categories.index') }}" aria-expanded="false">
+                                            <span><i class="ti ti-circle"></i></span>
                                             <span class="hide-menu">Categories</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('view services')
+                                    <li class="sidebar-item">
+                                        <a class="sidebar-link" href="{{ route('services.index') }}" aria-expanded="false">
+                                            <span><i class="ti ti-circle"></i></span>
+                                            <span class="hide-menu">Services</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('view services')
+                                    <li class="sidebar-item">
+                                        <a class="sidebar-link" href="{{ route('service-group.index') }}" aria-expanded="false">
+                                            <span><i class="ti ti-circle"></i></span>
+                                            <span class="hide-menu">Service Group</span>
                                         </a>
                                     </li>
                                 @endcan
                             </ul>
                         </li>
 
-
-                        {{-- @can('view main categories')
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ route('main_categories.index') }}" aria-expanded="false">
+                            <a class="sidebar-link" href="{{ route('admin.pages.index') }}" aria-expanded="false">
                                 <span>
-                                    <i class="ti ti-layout-kanban"></i>
+                                    <i class="ti ti-file-text"></i>
                                 </span>
-                                <span class="hide-menu">Main Categories</span>
+                                <span class="hide-menu">Pages &amp; SEO</span>
                             </a>
                         </li>
-                        @endcan
-
-                        @can('view categories')
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ route('categories.index') }}" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-layout-kanban"></i>
-                                </span>
-                                <span class="hide-menu">Categories</span>
-                            </a>
-                        </li>
-                        @endcan --}}
-
-                        @can('view services')
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{{ route('services.index') }}" aria-expanded="false">
-                                    <span>
-                                        <i class="ti ti-book"></i>
-                                    </span>
-                                    <span class="hide-menu">Services</span>
-                                </a>
-                            </li>
-                        @endcan
-
-                        @can('view services')
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{{ route('service-group.index') }}" aria-expanded="false">
-                                    <span>
-                                        <i class="ti ti-category"></i>
-                                    </span>
-                                    <span class="hide-menu">Service Group</span>
-                                </a>
-                            </li>
-                        @endcan
 
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin.project-process.index') }}" aria-expanded="false">

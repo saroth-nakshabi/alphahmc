@@ -273,6 +273,11 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::delete('/dashboard/planner-builder/{id}', [AdminPlannerBuilderController::class, 'destroy'])->name('admin.planner.builder.destroy');
     Route::delete('/dashboard/planner/delete/{id}', [AdminPlannerController::class, 'destroy'])->name('admin.planner.destroy');
 
+    // Pages & SEO — manage standard pages' SEO tags + hero content
+    Route::get('/dashboard/pages', [App\Http\Controllers\PageSettingController::class, 'index'])->name('admin.pages.index');
+    Route::get('/dashboard/pages/{key}/edit', [App\Http\Controllers\PageSettingController::class, 'edit'])->name('admin.pages.edit');
+    Route::post('/dashboard/pages/{key}', [App\Http\Controllers\PageSettingController::class, 'update'])->name('admin.pages.update');
+
     // Project Process Manager — reusable processes assigned to many categories / service groups
     Route::get('/dashboard/project-process', [AdminProjectProcessController::class, 'index'])->name('admin.project-process.index');
     Route::get('/dashboard/project-process/create', [AdminProjectProcessController::class, 'create'])->name('admin.project-process.create');
@@ -432,6 +437,7 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
         Route::post('/update/{id}',[clientsController::class, 'update'])->name('dashboard.clients.update');
         Route::delete('/destroy/{id}',[clientsController::class, 'destroy'])->name('dashboard.clients.destroy');
         Route::post('/reorder',[clientsController::class, 'reorder'])->name('dashboard.clients.reorder');
+        Route::post('/hero',[clientsController::class, 'updateHero'])->name('dashboard.clients.updateHero');
         Route::post('/toggle-featured/{id}',[clientsController::class, 'toggleFeatured'])->name('dashboard.clients.toggle-featured');
         Route::post('/toggle-status/{id}',[clientsController::class, 'toggleStatus'])->name('dashboard.clients.toggle-status');
     });

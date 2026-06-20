@@ -218,7 +218,7 @@
     <!-- edit modal -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-            <form class="modal-content" action="#" method="POST" id="edit_form">
+            <form class="modal-content" action="#" method="POST" id="edit_form" enctype="multipart/form-data">
                 <div class="modal-header d-flex align-items-center">
                     <h4 class="modal-title">
                         Edit agent
@@ -283,6 +283,17 @@
                             </div>
                         </div>
                         <!--/span-->
+                    </div>
+                    <!--/row-->
+                    <div class="row pt-3">
+                        <div class="col-12">
+                            <div class="mb-2">
+                                <label class="control-label mb-1">Profile Image
+                                    <small class="text-muted">(leave empty to keep the current one)</small></label>
+                                <input type="file" name="image" class="form-control" accept="image/*" />
+                                <div class="mt-2" id="edit_image_preview"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -632,6 +643,16 @@
                             .phone);
                         $('#edit_form').find('[name="title"]').val(response.data.title);
                         $('#edit_form').find('[name="description"]').val(response.data.short_description);
+
+                        // Reset the file input and show the current image (if any)
+                        $('#edit_form').find('[name="image"]').val('');
+                        const imgBase = '{{ asset('public/uploads/agent_images') }}';
+                        $('#edit_image_preview').html(
+                            response.data.image
+                                ? `<img src="${imgBase}/${response.data.image}" alt="Current image" style="height:72px;width:72px;object-fit:cover;border-radius:8px;border:1px solid #e2e8f0;"><small class="text-muted ms-2">Current image</small>`
+                                : '<small class="text-muted">No image uploaded yet.</small>'
+                        );
+
                         $('#editModal').modal('toggle');
                     },
                     error: function(xhr) {

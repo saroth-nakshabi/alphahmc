@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\client;
+use App\Models\ClientSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class clientsController extends Controller
 {
@@ -12,7 +14,38 @@ class clientsController extends Controller
     public function index()
     {
         $clients = client::orderBy('sort_order')->orderBy('id')->get();
-        return view('dashboard.Clients.index', compact('clients'));
+        $clientSetting = ClientSetting::current();
+        return view('dashboard.Clients.index', compact('clients', 'clientSetting'));
+    }
+
+    /** Save the "Our Clients" page hero (background image + heading/intro content). */
+    public function updateHero(Request $request)
+    {
+        $request->validate([
+            'hero_eyebrow'     => 'nullable|string|max:255',
+            'hero_title'       => 'nullable|string|max:255',
+            'hero_subtitle'    => 'nullable|string|max:255',
+            'hero_description' => 'nullable|string',
+            'hero_image'       => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+        ]);
+
+        $setting = ClientSetting::current();
+
+        $data = $request->only(['hero_eyebrow', 'hero_title', 'hero_subtitle', 'hero_description']);
+
+        if ($request->hasFile('hero_image')) {
+            if ($setting->hero_image && file_exists(public_path('uploads/client_images/' . $setting->hero_image))) {
+                @unlink(public_path('uploads/client_images/' . $setting->hero_image));
+            }
+            $file = $request->file('hero_image');
+            $name = time() . '_' . Str::uuid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/client_images'), $name);
+            $data['hero_image'] = $name;
+        }
+
+        $setting->update($data);
+
+        return back()->with('success', 'Clients page hero updated.');
     }
 
     public function reorder(Request $request)

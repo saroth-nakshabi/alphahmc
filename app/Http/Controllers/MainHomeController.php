@@ -110,7 +110,7 @@ class MainHomeController extends Controller
     public function Service($slug)
     {
         $data = [];
-        $data['service'] = Service::published()->with('agent', 'ServiceTab', 'faq', 'announcement')->where('slug', $slug)->first();
+        $data['service'] = Service::published()->with('agent', 'ServiceTab', 'faq', 'announcement', 'projectProcess')->where('slug', $slug)->first();
         if (!$data['service']) {
             return redirect()->route('front.all-services');
         }
@@ -335,7 +335,8 @@ class MainHomeController extends Controller
     {
         $clients = \App\Models\client::visible()->get();
         $all_services = Service::published()->get();
-        return view('front.our-clients', compact('clients', 'all_services'));
+        $clientSetting = \App\Models\ClientSetting::current();
+        return view('front.our-clients', compact('clients', 'all_services', 'clientSetting'));
     }
 
     public function feedbackForm()
@@ -390,13 +391,19 @@ class MainHomeController extends Controller
             ? trim($request->input('meeting_date') . ' ' . ($request->input('meeting_time') ?: '10:00'))
             : null;
 
+        // Record the contact consent on the CRM message so it's visible in the dashboard.
+        $message = $request->input('message');
+        if ($request->boolean('consent')) {
+            $message = trim(($message ? $message . "\n" : '') . '— Consent: agreed to be contacted (privacy policy accepted).');
+        }
+
         // 1. Save to Database (CRM record)
         $inquiry = Inquiry::create([
             'name'       => $request->input('name'),
             'email'      => $request->input('email'),
             'phone'      => $request->input('phone'),
             'service_id' => $request->input('service_id') ?: null,
-            'message'    => $request->input('message'),
+            'message'    => $message,
             'meeting_at' => $meetingAt,
             'status'     => 'pending',
         ]);

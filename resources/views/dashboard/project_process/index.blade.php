@@ -36,6 +36,7 @@
                             <th style="width:90px" class="text-center">Steps</th>
                             <th style="width:140px" class="text-center">Categories</th>
                             <th style="width:150px" class="text-center">Service Groups</th>
+                            <th style="width:110px" class="text-center">Services</th>
                             <th style="width:120px">Updated</th>
                             <th style="width:120px">Action</th>
                         </tr>
@@ -51,6 +52,9 @@
                                 <td class="text-center">
                                     <span class="badge {{ $p->service_groups_count ? 'bg-light-success text-success' : 'bg-light-secondary text-muted' }}">{{ $p->service_groups_count }}</span>
                                 </td>
+                                <td class="text-center">
+                                    <span class="badge {{ $p->services_count ? 'bg-light-success text-success' : 'bg-light-secondary text-muted' }}">{{ $p->services_count }}</span>
+                                </td>
                                 <td class="text-muted small">{{ $p->updated_at?->format('M d, Y') }}</td>
                                 <td>
                                     <div class="btn-group">
@@ -61,7 +65,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="6" class="text-center text-muted py-4">No processes yet. Click <strong>New Process</strong> to create your first reusable project process.</td></tr>
+                            <tr><td colspan="7" class="text-center text-muted py-4">No processes yet. Click <strong>New Process</strong> to create your first reusable project process.</td></tr>
                         @endforelse
                     </tbody>
                 </table>

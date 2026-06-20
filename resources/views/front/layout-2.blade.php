@@ -5,8 +5,22 @@
     <meta name="robots" content="index, follow">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@stack('page_title')</title>
-    <meta name="description" content="@yield('meta_description', 'Alpha Health Group delivers expert healthcare consultancy, DOH compliance, quality assurance, and operational excellence for healthcare facilities in the UAE.')">
+    {{-- SEO: dashboard-managed PageSetting takes precedence on standard pages;
+         detail pages (services etc.) fall back to their own @push/@yield values. --}}
+    @php
+        $pmTitle = (isset($pageMeta) && $pageMeta && $pageMeta->meta_title) ? $pageMeta->meta_title : null;
+        $pmDesc  = (isset($pageMeta) && $pageMeta && $pageMeta->meta_description) ? $pageMeta->meta_description : null;
+        $pmKeys  = (isset($pageMeta) && $pageMeta && $pageMeta->meta_keywords) ? $pageMeta->meta_keywords : null;
+        $pmOg    = (isset($pageMeta) && $pageMeta && $pageMeta->og_image) ? asset('public/uploads/page_images/' . $pageMeta->og_image) : null;
+    @endphp
+
+    @if($pmTitle)<title>{{ $pmTitle }}</title>@else<title>@stack('page_title')</title>@endif
+    @if($pmDesc)
+        <meta name="description" content="{{ $pmDesc }}">
+    @else
+        <meta name="description" content="@yield('meta_description', 'Alpha Health Group delivers expert healthcare consultancy, DOH compliance, quality assurance, and operational excellence for healthcare facilities in the UAE.')">
+    @endif
+    @if($pmKeys)<meta name="keywords" content="{{ $pmKeys }}">@endif
     @stack('meta')
 
     <link rel="canonical" href="{{ url()->current() }}">
@@ -16,8 +30,13 @@
     <meta property="og:locale" content="en_US" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="{{ url()->current() }}" />
-    <meta property="og:title" content="@stack('page_title')" />
-    <meta property="og:description" content="@yield('meta_description', 'Alpha Health Group delivers expert healthcare consultancy, DOH compliance, quality assurance, and operational excellence for healthcare facilities in the UAE.')" />
+    <meta property="og:title" content="{{ $pmTitle ?? '' }}@unless($pmTitle)@stack('page_title')@endunless" />
+    @if($pmDesc)
+        <meta property="og:description" content="{{ $pmDesc }}" />
+    @else
+        <meta property="og:description" content="@yield('meta_description', 'Alpha Health Group delivers expert healthcare consultancy, DOH compliance, quality assurance, and operational excellence for healthcare facilities in the UAE.')" />
+    @endif
+    @if($pmOg)<meta property="og:image" content="{{ $pmOg }}" /><meta name="twitter:image" content="{{ $pmOg }}" />@endif
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@AlphaHealthGrp" />
     @stack('og_tags')
@@ -287,7 +306,7 @@
 
     <!-- Site CSS — blocking (critical nav + layout styles) -->
     <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/slide-menu.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/slide-menu.css') }}?v=4">
 
     <!-- Icon fonts + animation libs — deferred (not needed for first paint) -->
     <link rel="preload" as="style"
@@ -452,7 +471,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         <span></span>
                         <span></span>
                     </div>
-                    <div class="btn-label">EXPLORE</div>
+                    <div class="btn-label">MENU</div>
                 </button>
             </div>
 
@@ -523,6 +542,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         </div>
                     </div>
                 </div>
+                <a href="{{ route('contact') }}" class="nav-contact-cta">Contact</a>
+                <style>
+                    .nav-contact-cta{display:inline-flex;align-items:center;justify-content:center;height:46px;box-sizing:border-box;margin-left:16px;padding:0 22px;background:rgba(255,255,255,0.20);backdrop-filter:blur(15px);color:inherit;border:1px solid rgba(255,255,255,0.4);border-radius:50px;font-weight:600;font-size:.85rem;text-decoration:none;white-space:nowrap;transition:background .2s,border-color .2s,color .2s;}
+                    .nav-contact-cta:hover{background:rgba(255,255,255,0.4);border-color:#009095;color:#009095;}
+                    @media (max-width:600px){.nav-contact-cta{padding:0 16px;margin-left:8px;}}
+                </style>
             </div>
         </div>
 
@@ -553,12 +578,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="menu-group mt-5">
                         <h6 class="sidebar-menu-heading">OUR GROUP</h6>
-                        <div class="service-content"><a href="{{ route('front.new-about') }}">About Alpha Health</a></div>
-                        <div class="service-content"><a href="{{ route('front.brands') }}">Our Brands</a></div>
-                        <div class="service-content"><a href="{{ route('front.new_blog') }}">Knowledge Base</a></div>
-                        <div class="service-content"><a href="{{ route('front.project') }}">Case Studies</a></div>
-                        <div class="service-content"><a href="{{ route('contact') }}">Contact Us</a></div>
-                        <div class="service-content"><a href="{{ route('front.ahg-updates') }}">AHG Updates</a></div>
+                        {{-- Opens its sub-links in the right panel (like the categories / Our Packages) --}}
+                        <div class="service-content"><a href="javascript:void(0);" class="group-link" id="group_about">Who We Are</a></div>
+                        <div class="service-content"><a href="javascript:void(0);" class="kb-link" id="kb_trigger">Knowledge Base</a></div>
+                        <div class="service-content"><a href="javascript:void(0);" class="cs-link" id="cs_trigger">Case Studies</a></div>
                     </div>
                 </div>
 
@@ -599,6 +622,41 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                         </li>
                                     @endforeach
                                 @endif
+
+                                <!-- About Alpha Health Group sub-links -->
+                                <li class="service-group-item filter-group" style="display: none;">
+                                    <a href="{{ route('front.new-about') }}" class="main-category-link-sub service-group-link">About Alpha Health Group</a>
+                                </li>
+                                <li class="service-group-item filter-group" style="display: none;">
+                                    <a href="{{ route('front.brands') }}" class="main-category-link-sub service-group-link">Our Brands</a>
+                                </li>
+                                <li class="service-group-item filter-group" style="display: none;">
+                                    <a href="{{ route('front.ahg-updates') }}" class="main-category-link-sub service-group-link">AHG Updates</a>
+                                </li>
+                                <li class="service-group-item filter-group" style="display: none;">
+                                    <a href="{{ route('front.testimonials') }}" class="main-category-link-sub service-group-link">Testimonials</a>
+                                </li>
+                                <li class="service-group-item filter-group" style="display: none;">
+                                    <a href="{{ route('contact') }}" class="main-category-link-sub service-group-link">Contact Us</a>
+                                </li>
+
+                                <!-- Knowledge Base: blog categories (tags) -->
+                                @if (isset($nav_blog_tags))
+                                    @foreach ($nav_blog_tags as $tag)
+                                        <li class="service-content-category filter-kb" style="display: none;">
+                                            <a href="#" class="main-category-link-sub" id="tag_{{ $tag->id }}">{{ $tag->name }}</a>
+                                        </li>
+                                    @endforeach
+                                @endif
+
+                                <!-- Case Studies: project categories -->
+                                @if (isset($nav_project_categories))
+                                    @foreach ($nav_project_categories as $pcat)
+                                        <li class="service-content-category filter-cs" style="display: none;">
+                                            <a href="#" class="main-category-link-sub" id="pcat_{{ $pcat->id }}">{{ $pcat->name }}</a>
+                                        </li>
+                                    @endforeach
+                                @endif
                             </ul>
                         </div>
 
@@ -627,8 +685,30 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                         @endif
                                     @endforeach
                                 @endforeach
+
+                                {{-- Knowledge Base: blogs under each tag --}}
+                                @if (isset($nav_blog_tags))
+                                    @foreach ($nav_blog_tags as $tag)
+                                        @foreach ($tag->blogs as $blog)
+                                            <li class="service-item filter-tag_{{ $tag->id }}" style="display: none;">
+                                                <a href="{{ route('front.singleBlog', $blog->slug) }}">{{ $blog->title }}</a>
+                                            </li>
+                                        @endforeach
+                                    @endforeach
+                                @endif
+
+                                {{-- Case Studies: projects under each category --}}
+                                @if (isset($nav_project_categories))
+                                    @foreach ($nav_project_categories as $pcat)
+                                        @foreach ($pcat->projects as $project)
+                                            <li class="service-item filter-pcat_{{ $pcat->id }}" style="display: none;">
+                                                <a href="{{ route('front.project_details', $project->slug) }}">{{ $project->name }}</a>
+                                            </li>
+                                        @endforeach
+                                    @endforeach
+                                @endif
                             </ul>
-                            
+
                             <!-- View All Button -->
                             <div class="view-all-services-wrapper mt-4" style="display: none;">
                                 <a href="{{ route('front.all-services') }}" class="view-all-services-btn">
@@ -699,6 +779,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     /* =========================
        TOGGLE MENU
     ========================= */
+    function closeMegaMenu() {
+        const nav = $("#main-navbar");
+        if (!nav.hasClass("menu-is-open")) return;
+        nav.removeClass("menu-is-open");
+        $("#explore-search-toggle").removeClass("is-active").find(".btn-label").text("MENU");
+        $(".mobile-sub-list").remove();
+        $(".mobile-service-list").remove();
+    }
+
     $("#explore-search-toggle").on("click", function () {
         const nav = $("#main-navbar");
         nav.toggleClass("menu-is-open");
@@ -706,13 +795,32 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         if (nav.hasClass("menu-is-open")) {
             $(this).find(".btn-label").text("CLOSE");
             $(this).addClass("is-active");
+
+            // Desktop: pre-load the first service category so the right panel isn't
+            // empty on open — gives the visitor real content immediately.
+            if (!isMobile()) {
+                var $firstCat = $(".main-category-link").first();
+                if ($firstCat.length) handleMainCategory($firstCat);
+            }
         } else {
-            $(this).find(".btn-label").text("EXPLORE");
+            $(this).find(".btn-label").text("MENU");
             $(this).removeClass("is-active");
 
             $(".mobile-sub-list").remove();
             $(".mobile-service-list").remove();
         }
+    });
+
+    // Close the mega-menu when clicking OUTSIDE it (not on hover-out).
+    $(document).on("click", function (e) {
+        if ($("#main-navbar").hasClass("menu-is-open") && !$(e.target).closest("#main-navbar").length) {
+            closeMegaMenu();
+        }
+    });
+
+    // Close on Escape key too.
+    $(document).on("keydown", function (e) {
+        if (e.key === "Escape") closeMegaMenu();
     });
 
     //search button click
@@ -920,6 +1028,22 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         }
     });
 
+    // Handle About Alpha Health Group link (shows its sub-links in the right panel)
+    $(".group-link").on("mouseenter click", function (e) {
+        if (!isMobile()) {
+            if (e.type === "click") e.preventDefault();
+            handleGroup($(this));
+        }
+    });
+
+    // Handle Knowledge Base / Case Studies (3-level like the categories)
+    $(".kb-link").on("mouseenter click", function (e) {
+        if (!isMobile()) { if (e.type === "click") e.preventDefault(); handleKB($(this)); }
+    });
+    $(".cs-link").on("mouseenter click", function (e) {
+        if (!isMobile()) { if (e.type === "click") e.preventDefault(); handleCS($(this)); }
+    });
+
     $(document).on("mouseenter click", ".main-category-link-sub:not(.service-group-link)", function (e) {
         if (!isMobile()) {
             if (e.type === "mouseenter") {
@@ -942,6 +1066,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             $(".mobile-service-list").remove();
 
             $(".main-category-link").removeClass("active-category");
+            $(".packages-link").removeClass("active-category");
             $(this).addClass("active-category");
 
             // 🔥 UPDATE HEADING + DESCRIPTION
@@ -991,6 +1116,61 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             $(this).parent().append(subList);
         }
+    });
+
+    // Handle About Alpha Health Group on Mobile
+    $(".group-link").on("click", function (e) {
+        if (isMobile()) {
+            e.preventDefault();
+
+            $(".mobile-sub-list").remove();
+            $(".mobile-service-list").remove();
+
+            $(".main-category-link").removeClass("active-category");
+            $(".packages-link").removeClass("active-category");
+            $(".group-link").addClass("active-category");
+
+            $("#dynamic-heading").text("Who We Are");
+            $("#dynamic-desc").text("About us, our brands, AHG updates, testimonials and contact.");
+
+            let subList = $('<ul class="mobile-sub-list list-unstyled"></ul>');
+            $(".filter-group").each(function () {
+                let clone = $(this).clone();
+                clone.show();
+                subList.append(clone);
+            });
+
+            $(this).parent().append(subList);
+        }
+    });
+
+    // Handle Knowledge Base / Case Studies on Mobile (tap a topic → its articles/projects)
+    function mobileGroupedDrilldown($trigger, filterClass, heading, desc) {
+        $(".mobile-sub-list").remove();
+        $(".mobile-service-list").remove();
+        $(".main-category-link, .packages-link, .group-link, .kb-link, .cs-link").removeClass("active-category");
+        $trigger.addClass("active-category");
+        $("#dynamic-heading").text(heading);
+        $("#dynamic-desc").text(desc);
+
+        let subList = $('<ul class="mobile-sub-list list-unstyled"></ul>');
+        $('.' + filterClass).each(function () {
+            let clone = $(this).clone();
+            clone.show();
+            clone.find(".main-category-link-sub:not(.service-group-link):not(.disabled)").each(function () {
+                if (!$(this).find(".mobile-expand-chevron").length) {
+                    $(this).append('<span class="mobile-expand-chevron" aria-hidden="true"><i class="fas fa-chevron-right"></i></span>');
+                }
+            });
+            subList.append(clone);
+        });
+        $trigger.parent().append(subList);
+    }
+    $(".kb-link").on("click", function (e) {
+        if (isMobile()) { e.preventDefault(); mobileGroupedDrilldown($(this), "filter-kb", "Knowledge Base", "Browse our insights by topic."); }
+    });
+    $(".cs-link").on("click", function (e) {
+        if (isMobile()) { e.preventDefault(); mobileGroupedDrilldown($(this), "filter-cs", "Case Studies", "Explore our projects by category."); }
     });
 
     /* =========================
@@ -1060,11 +1240,52 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     /* =========================
        SHARED FUNCTIONS
     ========================= */
+    function handleGroup(el) {
+        const title = "Who We Are";
+
+        $(".main-category-link, .packages-link, .kb-link, .cs-link").removeClass("active-category");
+        $(".group-link").addClass("active-category");
+
+        // Show only the group's sub-links in the right panel.
+        $(".service-content-category").hide();
+        $(".service-group-item").hide();
+        $(".filter-group").show();
+        $(".serv-col").hide();
+
+        $("#dynamic-heading").text(title);
+        $("#dynamic-desc").text("About us, our brands, AHG updates, testimonials and contact.");
+    }
+
+    // Knowledge Base / Case Studies: level-1 trigger → show its sub-list (tags / project
+    // categories). Hovering a sub-item then reveals level-3 (blogs / projects) via handleSubCategory.
+    function handleGroupedDrilldown(filterClass, heading, desc) {
+        $(".service-content-category").hide();
+        $(".service-group-item").hide();
+        $('.' + filterClass).show();
+        $(".serv-col").show();
+        $(".service-item").hide();
+        $(".view-all-services-wrapper").hide();
+        $("#dynamic-heading").text(heading);
+        $("#dynamic-desc").text(desc);
+    }
+
+    function handleKB(el) {
+        $(".main-category-link, .packages-link, .group-link, .cs-link").removeClass("active-category");
+        $(".kb-link").addClass("active-category");
+        handleGroupedDrilldown("filter-kb", "Knowledge Base", "Browse our insights by topic, then pick an article.");
+    }
+
+    function handleCS(el) {
+        $(".main-category-link, .packages-link, .group-link, .kb-link").removeClass("active-category");
+        $(".cs-link").addClass("active-category");
+        handleGroupedDrilldown("filter-cs", "Case Studies", "Explore our projects by category, then open a case study.");
+    }
+
     function handleMainCategory(el) {
         const mainId = el.attr("id");
         const title = el.text().trim();
 
-        $(".main-category-link").removeClass("active-category");
+        $(".main-category-link, .packages-link, .group-link, .kb-link, .cs-link").removeClass("active-category");
         el.addClass("active-category");
 
         $(".service-content-category").hide();
@@ -1094,20 +1315,32 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         $(".filter-" + subId).show();
         $(".view-all-services-wrapper").show();
 
-        // Point the button to this sub-category's page
-        $(".view-all-services-btn").attr("href", subCategoryUrl && subCategoryUrl !== "#" ? subCategoryUrl : "{{ route('front.all-services') }}");
+        // Context-aware "View All" button: Knowledge Base / Case Studies → "View All",
+        // service categories → "View All Services".
+        var $btn = $(".view-all-services-btn");
+        if (subId && subId.indexOf("tag_") === 0) {
+            $btn.attr("href", "{{ route('front.new_blog') }}").html('View All <i class="fas fa-arrow-right ms-2"></i>');
+            $("#dynamic-desc").text("Articles under " + title + ".");
+        } else if (subId && subId.indexOf("pcat_") === 0) {
+            $btn.attr("href", "{{ route('front.project') }}").html('View All <i class="fas fa-arrow-right ms-2"></i>');
+            $("#dynamic-desc").text("Case studies under " + title + ".");
+        } else {
+            $btn.attr("href", subCategoryUrl && subCategoryUrl !== "#" ? subCategoryUrl : "{{ route('front.all-services') }}")
+                .html('View All Services <i class="fas fa-arrow-right ms-2"></i>');
+            $("#dynamic-desc").text("Specialized services available under " + title + ".");
+        }
 
         $("#dynamic-heading").text(title);
-        $("#dynamic-desc").text("Specialized services available under " + title + ".");
     }
 
     function handlePackages(el) {
         const title = "Our Packages";
 
-        $(".main-category-link").removeClass("active-category");
+        $(".main-category-link, .group-link, .kb-link, .cs-link").removeClass("active-category");
         $(".packages-link").addClass("active-category");
 
         $(".service-content-category").hide();
+        $(".service-group-item").hide();   // clear group + other items first
         $(".filter-packages").show();
 
         // Hide the entire services column

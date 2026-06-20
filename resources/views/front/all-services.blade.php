@@ -246,6 +246,27 @@ body {
     box-shadow: 0 20px 40px rgba(11, 31, 58, 0.1);
 }
 
+.as-card__media {
+    position: relative;
+    margin: -28px -28px 18px;          /* full-bleed over the card padding */
+    height: 168px;
+    overflow: hidden;
+    border-radius: var(--as-radius) var(--as-radius) 0 0;
+    background: #eef3f4;
+}
+.as-card__media img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.5s var(--as-ease);
+}
+.as-card:hover .as-card__media img { transform: scale(1.06); }
+.as-card__media .as-card__badge { position: absolute; top: 12px; left: 12px; }
+.as-card__tag {
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(255,255,255,0.92); color: #009095;
+    padding: 4px 10px; border-radius: 6px;
+    font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+}
+
 .as-card__top {
     display: flex;
     justify-content: space-between;
@@ -461,7 +482,9 @@ body {
                     <div class="as-grid">
                         @foreach ($category->services as $service)
                             <div class="as-card single-service-cart">
-                                <div class="as-card__top">
+                                <div class="as-card__media">
+                                    <img src="{{ $service->hero_image ? asset('public/uploads/service_images/' . $service->hero_image) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}"
+                                         alt="{{ $service->name }}" loading="lazy">
                                     @if($service->featured)
                                         <span class="as-card__badge">Featured</span>
                                     @endif
@@ -480,13 +503,13 @@ body {
                         @endforeach
                         @foreach ($category->serviceGroups as $group)
                             <div class="as-card single-service-cart">
-                                <div class="as-card__top">
+                                <div class="as-card__media">
+                                    <img src="{{ $group->hero_image ? asset('public/' . ltrim($group->hero_image, '/')) : ($group->image ? asset('public/uploads/service_group_images/' . $group->image) : asset('public/front/assets/img/hero/service-details-bg.jpg')) }}"
+                                         alt="{{ $group->name }}" loading="lazy">
                                     @if($group->is_featured)
                                         <span class="as-card__badge">Featured</span>
                                     @endif
-                                    <span style="font-size:.7rem;color:#009095;font-weight:600;letter-spacing:.04em;text-transform:uppercase;">
-                                        <i class="fa-solid fa-layer-group me-1"></i>Service Group
-                                    </span>
+                                    <span class="as-card__tag"><i class="fa-solid fa-layer-group me-1"></i>Service Group</span>
                                 </div>
                                 <h3 class="as-card__title service-name">{{ $group->name }}</h3>
                                 <p class="as-card__desc">{{ strip_tags($group->description ?? 'A comprehensive group of healthcare consultancy services.') }}</p>
@@ -513,62 +536,26 @@ body {
     </section>
 </div>
 
-{{-- INQUIRY MODAL --}}
-<div class="modal fade as-modal" id="inquiryModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Service Inquiry</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-4">
-                <p class="mb-4 text-muted">Please provide your details and we'll get back to you regarding <strong id="selectedServiceName" class="text-navy"></strong>.</p>
-                <form id="quickInquiryForm" action="{{ route('front.inquiry.submit') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="service_id" id="inquiryServiceId">
-                    <div class="mb-3">
-                        <label class="as-form-label">Full Name</label>
-                        <input type="text" name="name" class="form-control as-form-control" placeholder="John Doe" required>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="as-form-label">Email Address</label>
-                            <input type="email" name="email" class="form-control as-form-control" placeholder="john@example.com" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="as-form-label">Phone Number</label>
-                            <input type="tel" name="phone" class="form-control as-form-control" placeholder="+971 ..." required>
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <label class="as-form-label">Message (Optional)</label>
-                        <textarea name="message" class="form-control as-form-control" rows="3" placeholder="I'm interested in knowing more about..."></textarea>
-                    </div>
-                    <button type="submit" class="btn w-100 py-3 text-white fw-bold" style="background: var(--as-teal); border-radius: 12px;">
-                        Submit Inquiry
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+{{-- Default site inquiry / "Book a Consultation" modal (with contact consent) --}}
+@push('inquiry_modal')
+    @include('front.partials.inquiry-modal')
+@endpush
 
 <script>
-    // Inquiry Functionality
-    let inquiryModalInst = null;
-    
+    // Open the default "Book a Consultation" modal with the chosen service pre-filled.
     function openInquiry(serviceName, serviceId) {
-        const modalEl = document.getElementById('inquiryModal');
-        if (!inquiryModalInst && typeof bootstrap !== 'undefined') {
-            inquiryModalInst = new bootstrap.Modal(modalEl);
+        var isGroup = typeof serviceId === 'string' && serviceId.indexOf('sg_') === 0;
+        if (typeof window.ahgPrefillInquiry === 'function') {
+            if (isGroup) {
+                window.ahgPrefillInquiry({ categoryName: serviceName });   // groups aren't in the service dropdown
+            } else {
+                window.ahgPrefillInquiry({ serviceId: serviceId, serviceName: serviceName });
+            }
         }
-        
-        document.getElementById('selectedServiceName').innerText = serviceName;
-        document.getElementById('inquiryServiceId').value = serviceId;
-
-        if (inquiryModalInst) {
-            inquiryModalInst.show();
-        } else {
+        var modalEl = document.getElementById('inquiryModal');
+        if (modalEl && typeof bootstrap !== 'undefined') {
+            bootstrap.Modal.getOrCreateInstance(modalEl).show();
+        } else if (modalEl) {
             $(modalEl).modal('show');
         }
     }
@@ -723,46 +710,7 @@ body {
 
         runScrollSpy();
 
-        // AJAX Form submission
-        const inquiryForm = document.getElementById('quickInquiryForm');
-        if (inquiryForm) {
-            inquiryForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const btn = this.querySelector('button');
-                const oldText = btn.innerText;
-                
-                const formData = new FormData(this);
-                
-                btn.innerText = 'Sending...';
-                btn.disabled = true;
-
-                fetch(this.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => {
-                    if (response.ok) {
-                        alert('Thank you! Your inquiry has been sent successfully.');
-                        if (inquiryModalInst) inquiryModalInst.hide();
-                        else $(document.getElementById('inquiryModal')).modal('hide');
-                        this.reset();
-                    } else {
-                        alert('Something went wrong. Please try again.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Failed to send inquiry.');
-                })
-                .finally(() => {
-                    btn.innerText = oldText;
-                    btn.disabled = false;
-                });
-            });
-        }
+        // Inquiry submission is handled by the shared default modal (partials/inquiry-modal).
     });
 </script>
 @endsection

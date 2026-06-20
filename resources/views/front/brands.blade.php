@@ -316,12 +316,13 @@
 <div class="brands-page">
 
     {{-- ── HERO ─────────────────────────────────────────────────────── --}}
-    <section class="brands-hero">
+    <section class="brands-hero"
+        @if(isset($pageMeta) && $pageMeta?->hero_image) style="background-image: linear-gradient(rgba(8,23,43,0.72), rgba(8,23,43,0.82)), url('{{ asset('public/uploads/page_images/' . $pageMeta->hero_image) }}'); background-size: cover; background-position: center;" @endif>
         <div class="container hero-inner">
             <div class="col-lg-8">
-                <div class="hero-eyebrow"><span></span> AGH Business Portfolio</div>
-                <h1>Alpha Health Group<br>Brands</h1>
-                <p>A curated ecosystem of specialised healthcare companies, each delivering excellence and innovation across distinct areas of the sector.</p>
+                <div class="hero-eyebrow"><span></span> {{ $pageMeta?->hero_eyebrow ?: 'AGH Business Portfolio' }}</div>
+                <h1>{{ $pageMeta?->hero_title ?: 'Alpha Health Group' }}<br>{{ $pageMeta?->hero_subtitle ?: 'Brands' }}</h1>
+                <p>{{ $pageMeta?->hero_description ?: 'A curated ecosystem of specialised healthcare companies, each delivering excellence and innovation across distinct areas of the sector.' }}</p>
                 <div class="hero-count-pill">
                     <i class="fas fa-layer-group"></i>
                     {{ $brands->count() }} Subsidiary {{ Str::plural('Company', $brands->count()) }}

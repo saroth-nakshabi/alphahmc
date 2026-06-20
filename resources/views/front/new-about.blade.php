@@ -526,17 +526,18 @@
     <div class="about-page-wrapper">
 
         {{-- ══════════════════════ HERO (UNCHANGED) ══════════════════════ --}}
-        <section class="hero-premium-v2">
+        <section class="hero-premium-v2"
+            @if(isset($pageMeta) && $pageMeta?->hero_image) style="background-image: url('{{ asset('public/uploads/page_images/' . $pageMeta->hero_image) }}'); background-size: cover; background-position: center;" @endif>
             <div class="hero-overlay"></div>
             <div class="container hero-content-container">
                 <div class="row align-items-center g-5 div-content">
                     <div class="col-lg-7" data-aos="fade-right">
                         <h1 class="display-large">
-                            About <br>
-                            <span style="color:#fff;">{{ $about_us->title ?? 'Alpha Corp' }}</span>
+                            {{ $pageMeta?->hero_title ?: 'About' }} <br>
+                            <span style="color:#fff;">{{ $pageMeta?->hero_subtitle ?: ($about_us->title ?? 'Alpha Corp') }}</span>
                         </h1>
                         <p class="hero-desc mb-5">
-                            {!! $about_us->description ?? 'Default Description Here' !!}
+                            {!! $pageMeta?->hero_description ?: ($about_us->description ?? 'Default Description Here') !!}
                         </p>
                         <a href="#about-story" class="btn-contact-premium">Explore Our Journey</a>
                     </div>

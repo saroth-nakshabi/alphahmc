@@ -87,6 +87,70 @@
     </div>
 </div>
 
+{{-- ── Our Clients page hero (background image + heading/intro) ── --}}
+<section class="mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="ti ti-circle-check me-1"></i> {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    @endif
+
+                    <div class="d-flex align-items-center mb-3">
+                        <h5 class="mb-0"><i class="ti ti-photo me-2"></i>Clients Page Hero</h5>
+                        <span class="text-muted small ms-auto">Shown at the top of the public <strong>Our Clients</strong> page.</span>
+                    </div>
+
+                    <form action="{{ route('dashboard.clients.updateHero') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Hero Background Image</label>
+                                @if($clientSetting->hero_image)
+                                    <div class="mb-2">
+                                        <img src="{{ asset('public/uploads/client_images/' . $clientSetting->hero_image) }}"
+                                             alt="Hero" style="width:100%;max-height:120px;object-fit:cover;border-radius:8px;border:1px solid #e2e8f0;">
+                                    </div>
+                                @endif
+                                <input type="file" name="hero_image" class="form-control" accept="image/*">
+                                <div class="form-text">Leave empty to keep the current image. Sits behind a dark overlay, so a darker photo reads best.</div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Eyebrow / Tag</label>
+                                        <input type="text" name="hero_eyebrow" class="form-control" value="{{ $clientSetting->hero_eyebrow }}" placeholder="e.g. Trusted Partnerships">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Title</label>
+                                        <input type="text" name="hero_title" class="form-control" value="{{ $clientSetting->hero_title }}" placeholder="e.g. Healthcare Facilities">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Highlighted Subtitle</label>
+                                        <input type="text" name="hero_subtitle" class="form-control" value="{{ $clientSetting->hero_subtitle }}" placeholder="e.g. That Trust Alpha">
+                                        <div class="form-text">Shown in the accent colour under the title.</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Intro Description</label>
+                                        <textarea name="hero_description" rows="3" class="form-control" placeholder="Short intro paragraph below the title…">{{ $clientSetting->hero_description }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-success"><i class="ti ti-device-floppy me-1"></i> Save Hero</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section class="mt-4">
     <div class="row">
         <div class="col-12">

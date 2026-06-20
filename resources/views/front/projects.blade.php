@@ -8,12 +8,13 @@
                           url('{{ asset('public/uploads/service_images/1777903827_hero_image_f2b72665-520c-438d-b7ab-0df3442aecce.jpg') }}'); }
     </style>
 <!-- Hero Section -->
-<section class="service-banner">
+<section class="service-banner"
+    @if(isset($pageMeta) && $pageMeta?->hero_image) style="background-image: linear-gradient(rgba(0, 0, 0, 0.45), var(--premium-black)), url('{{ asset('public/uploads/page_images/' . $pageMeta->hero_image) }}'); background-size: cover; background-position: center;" @endif>
     <div class="container">
         <div class="banner-text">
-            <h1 class="hero-title">Turnkey Healthcare <br>Facility Projects</h1>
+            <h1 class="hero-title">{!! $pageMeta?->hero_title ?: 'Turnkey Healthcare <br>Facility Projects' !!}</h1>
             <p class="hero-description">
-                From concept and engineering through planning, construction, and full operational readiness, we deliver complete healthcare facility projects across the UAE and GCC. Explore how our specialists solve complex challenges and bring ambitious hospitals and clinics to life, on time and to standard.
+                {{ $pageMeta?->hero_description ?: 'From concept and engineering through planning, construction, and full operational readiness, we deliver complete healthcare facility projects across the UAE and GCC. Explore how our specialists solve complex challenges and bring ambitious hospitals and clinics to life, on time and to standard.' }}
             </p>
             <a href="#build-extraordinary" class="hero-btn">
                 Start Your Project <i class="fas fa-arrow-right"></i>

@@ -2,6 +2,8 @@
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.css') }}?v=2">
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-detail.css') }}?v=3">
+    {{-- Project Process section styles (shared with the category page) --}}
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-category.css') }}?v=1">
     <style>
         /* Some service content was pasted from MS Word, which injects the
            "MsoNormal" class and inline near-black colour / Word fonts that
@@ -455,6 +457,59 @@ function toggleTransformationDesc() {
             </div>
         </section>
 
+
+        {{-- ── Project Process (assigned from the Project Process Manager) ── --}}
+        @php
+          $processHeaders      = (array) $service->process_header;
+          $processDescriptions = (array) $service->process_description;
+          $processCount        = max(count($processHeaders), count($processDescriptions));
+          $processServiceIds   = (array) $service->process_service_ids;
+          $linkedIds           = array_values(array_filter($processServiceIds));
+          $processServiceMap   = count($linkedIds)
+              ? \App\Models\Service::whereIn('id', $linkedIds)->get()->keyBy('id')
+              : collect();
+        @endphp
+        @if ($processCount > 0)
+          <section class="process-section" id="process-journey">
+            <div class="blob-container">
+              <div class="blob blob-1"></div>
+              <div class="blob blob-2"></div>
+            </div>
+            <div class="container">
+              <div class="process-header" data-aos="fade-up">
+                <span class="process-eyebrow">Our Process</span>
+                @if(!empty($service->process_intro))
+                    {!! $service->process_intro !!}
+                @else
+                    <h2 class="process-title">How we deliver <em>{{ $service->name }}</em></h2>
+                    <p class="process-subtitle">A structured {{ $processCount }}-phase engagement built for precision and speed.</p>
+                @endif
+              </div>
+              <div class="process-grid">
+                @for ($i = 0; $i < $processCount; $i++)
+                  <div class="process-card" data-aos="fade-up" data-aos-delay="{{ min(($i + 1) * 100, 500) }}">
+                    <div class="card-shine"></div>
+                    <div class="step-num-wrapper">
+                      <span class="step-num">{{ str_pad((string) ($i + 1), 2, '0', STR_PAD_LEFT) }}</span>
+                      <div class="step-icon"></div>
+                    </div>
+                    <h4>{{ $processHeaders[$i] ?? 'Process Step' }}</h4>
+                    <p>{!! $processDescriptions[$i] ?? '' !!}</p>
+                    @php $stepService = !empty($processServiceIds[$i]) ? ($processServiceMap[$processServiceIds[$i]] ?? null) : null; @endphp
+                    @if ($stepService)
+                      <a href="{{ route('front.service', $stepService->slug) }}" class="process-svc">
+                        <span class="process-svc-name">{{ $stepService->name }} →</span>
+                        @if (trim(strip_tags((string) $stepService->overview)) !== '')
+                          <span class="process-svc-desc">{{ Str::limit(strip_tags($stepService->overview), 140) }}</span>
+                        @endif
+                      </a>
+                    @endif
+                  </div>
+                @endfor
+              </div>
+            </div>
+          </section>
+        @endif
 
         <!--FAQ Section-->
         <section class="help-list-section" id="faq-section">

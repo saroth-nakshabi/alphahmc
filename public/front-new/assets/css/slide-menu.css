@@ -87,19 +87,21 @@
 .glass-search-container {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.20);
   backdrop-filter: blur(15px);
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 30px;
-  padding: 5px 20px;
-  width: 280px;
-  transition: var(--transition-curve);
+  padding: 0 18px;
+  width: 200px;            /* compact: just fits the icon + "Search anything" */
+  height: 46px;            /* match Menu & Contact buttons */
+  box-sizing: border-box;
+  transition: width 0.35s cubic-bezier(.22,1,.36,1), background 0.3s, border-color 0.3s, box-shadow 0.3s;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
 }
 
 .glass-search-container:focus-within {
   background: rgba(255, 255, 255, 0.5);
-  width: 320px;
+  width: 340px;            /* expands to a comfortable width when clicked/typing */
   border-color: var(--alpha-teal);
   box-shadow: 0 8px 30px rgba(30, 167, 161, 0.1);
 }
@@ -163,7 +165,9 @@
   background: #066D77;
   color: #fff;
   border: none;
-  padding: 14px 32px;
+  padding: 0 32px;
+  height: 46px;            /* match Search & Contact buttons */
+  box-sizing: border-box;
   border-radius: 35px;
   font-family: 'Outfit', sans-serif;
   font-weight: 700;

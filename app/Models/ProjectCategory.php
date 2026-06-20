@@ -16,6 +16,9 @@ class ProjectCategory extends Model
         return $this->hasMany(Project::class);
     }
 
-
-
+    /** Alias of project() — readable name for nav/eager-loading. */
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
+    }
 }

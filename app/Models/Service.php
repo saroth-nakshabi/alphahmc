@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ResolvesProcess;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Service extends Model
 {
     use HasFactory;
+    use ResolvesProcess;
 
     protected $fillable = [
         'name',
@@ -36,7 +38,14 @@ class Service extends Model
         'inq_officer_phone',
         'show_testimonials',
         'sort_order',
+        'project_process_id',
     ];
+
+    /** The Project Process assigned to this service (shown on the service page). */
+    public function projectProcess()
+    {
+        return $this->belongsTo(\App\Models\ProjectProcess::class);
+    }
 
 
     

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\SyncsProcess;
 use App\Models\Category;
 use App\Models\MainCategory;
 use App\Models\Agent;
@@ -14,6 +15,8 @@ use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
+    use SyncsProcess;
+
     public function index()
     {
         $data = [];
@@ -208,6 +211,9 @@ class CategoryController extends Controller
 
         $item->mainCategories()->sync($mainCategoryIds);
 
+        // Centralise the process: create/link a ProjectProcess so it shows in the manager.
+        $this->syncProcess($item, $request->input('process_intro'), $processHeaders, $processDescriptions, $processServiceIds, $item->name . ' — Process');
+
         // Handle Gallery Images
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image_file) {
@@ -337,6 +343,9 @@ class CategoryController extends Controller
         ]);
 
         $item->mainCategories()->sync($mainCategoryIds);
+
+        // Centralise the process: update the linked ProjectProcess (or create+link a new one).
+        $this->syncProcess($item, $request->input('process_intro'), $processHeaders, $processDescriptions, $processServiceIds, $item->name . ' — Process');
 
         // Sync the services linked to this category (many-to-many via service_categories)
         $item->services()->sync($request->input('services', []));

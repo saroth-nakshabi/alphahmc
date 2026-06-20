@@ -71,6 +71,11 @@ class ProjectProcess extends Model
         return $this->hasMany(ServiceGroup::class);
     }
 
+    public function services()
+    {
+        return $this->hasMany(Service::class);
+    }
+
     /** Number of process steps defined. */
     public function getStepCountAttribute(): int
     {

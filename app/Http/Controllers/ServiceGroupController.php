@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\SyncsProcess;
 use App\Models\ServiceGroup;
 use App\Models\Service;
 use App\Models\Agent;
@@ -18,6 +19,8 @@ use Illuminate\Support\Str;
 
 class ServiceGroupController extends Controller
 {
+    use SyncsProcess;
+
     public function front(Request $request, $slug = null)
     {
         $serviceQuery = ServiceGroup::with(['agent.user', 'services' => fn ($q) => $q->where('status', 'published'), 'faqs', 'announcement']);
@@ -198,6 +201,9 @@ class ServiceGroupController extends Controller
 
         $serviceGroup->categories()->sync($request->input('category_ids', []));
 
+        // Centralise the process so it shows in the Project Process Manager.
+        $this->syncProcess($serviceGroup, $request->input('process_intro'), $processHeaders, $processDescriptions, $processServiceIds, $serviceGroup->name . ' — Process');
+
         // Handle FAQs
         if ($request->has('faqs')) {
             foreach ($request->input('faqs') as $faq) {
@@ -320,6 +326,9 @@ class ServiceGroupController extends Controller
         }
 
         $serviceGroup->categories()->sync($request->input('category_ids', []));
+
+        // Centralise the process: update the linked ProjectProcess (or create+link a new one).
+        $this->syncProcess($serviceGroup, $request->input('process_intro'), $processHeaders, $processDescriptions, $processServiceIds, $serviceGroup->name . ' — Process');
 
         // Handle FAQs
         $serviceGroup->faqs()->delete();

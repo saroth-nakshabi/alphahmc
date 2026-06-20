@@ -112,13 +112,23 @@
                         </select>
                     </div>
 
-                    <div class="mb-2">
+                    <div class="mb-3">
                         <label class="form-label fw-semibold">Service groups</label>
                         <select name="group_ids[]" class="form-control select2-assign" multiple data-placeholder="Select service groups…">
                             @foreach ($groups as $g)
                                 <option value="{{ $g->id }}" {{ in_array($g->id, $assignedGroupIds) ? 'selected' : '' }}>{{ $g->name }}</option>
                             @endforeach
                         </select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold">Services</label>
+                        <select name="service_ids[]" class="form-control select2-assign" multiple data-placeholder="Select services…">
+                            @foreach ($services as $s)
+                                <option value="{{ $s->id }}" {{ in_array($s->id, $assignedServiceIds ?? []) ? 'selected' : '' }}>{{ $s->name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="form-text">The process will display on each selected service's page.</div>
                     </div>
                 </div>
             </div>
