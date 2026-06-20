@@ -40,6 +40,16 @@ class PageSetting extends Model
             'meta_title' => 'Healthcare Consultancy in Dubai | Alpha Health Group',
             'meta_description' => 'Alpha Health Group is a trusted healthcare consultancy in the UAE. We deliver DOH compliance, accreditation support, quality assurance, and operational excellence for hospitals and clinics.',
         ],
+        'all_services' => [
+            'label'      => 'All Services',
+            'route'      => 'front.all-services',
+            'has_hero'   => true,
+            'meta_title' => 'All Healthcare Consultancy Services | Alpha Health Group',
+            'meta_description' => 'Browse all healthcare consultancy services by Alpha Health Group — DOH licensing, JCIA accreditation, quality assurance, infection control, patient safety, and more for UAE facilities.',
+            'hero_eyebrow'  => 'Our Expertise',
+            'hero_title'    => 'Healthcare',
+            'hero_subtitle' => 'Consultancy Services',
+        ],
         'about' => [
             'label'      => 'About Us',
             'route'      => 'front.new-about',
@@ -64,6 +74,14 @@ class PageSetting extends Model
             'hero_title'       => 'Healthcare Facilities',
             'hero_subtitle'    => 'That Trust Alpha',
             'hero_description' => 'From DOH-licensed hospitals to homecare providers and specialty clinics, Alpha Health Group partners with leading healthcare organisations across the UAE to deliver compliance, accreditation, and operational excellence.',
+        ],
+        'testimonials' => [
+            'label'      => 'Testimonials / Reviews',
+            'route'      => 'front.testimonials',
+            'has_hero'   => true,
+            'meta_title' => 'Client Reviews & Testimonials | Alpha Health Group',
+            'meta_description' => 'Read verified reviews and testimonials from healthcare clients who have worked with Alpha Health Group across the UAE and GCC.',
+            'hero_eyebrow'  => 'Client Reviews',
         ],
         'insights' => [
             'label'      => 'Insights / Blog',
@@ -123,6 +141,20 @@ class PageSetting extends Model
     public function hasHero(): bool
     {
         return (bool) (self::REGISTRY[$this->page_key]['has_hero'] ?? false);
+    }
+
+    /** Public (front-end) URL for this page, or null if the route can't be resolved. */
+    public function publicUrl(): ?string
+    {
+        $routeName = self::REGISTRY[$this->page_key]['route'] ?? null;
+        if (!$routeName || !\Illuminate\Support\Facades\Route::has($routeName)) {
+            return null;
+        }
+        try {
+            return route($routeName);
+        } catch (\Throwable $e) {
+            return null;
+        }
     }
 
     public function label(): string

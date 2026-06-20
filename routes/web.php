@@ -273,6 +273,12 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::delete('/dashboard/planner-builder/{id}', [AdminPlannerBuilderController::class, 'destroy'])->name('admin.planner.builder.destroy');
     Route::delete('/dashboard/planner/delete/{id}', [AdminPlannerController::class, 'destroy'])->name('admin.planner.destroy');
 
+    // Mega-menu promo slides (max 3, auto-rotating in the menu's default panel)
+    Route::get('/dashboard/menu-promos', [App\Http\Controllers\MenuPromoController::class, 'index'])->name('admin.menu-promos.index');
+    Route::post('/dashboard/menu-promos', [App\Http\Controllers\MenuPromoController::class, 'store'])->name('admin.menu-promos.store');
+    Route::post('/dashboard/menu-promos/{id}', [App\Http\Controllers\MenuPromoController::class, 'update'])->name('admin.menu-promos.update');
+    Route::delete('/dashboard/menu-promos/{id}', [App\Http\Controllers\MenuPromoController::class, 'destroy'])->name('admin.menu-promos.destroy');
+
     // Pages & SEO — manage standard pages' SEO tags + hero content
     Route::get('/dashboard/pages', [App\Http\Controllers\PageSettingController::class, 'index'])->name('admin.pages.index');
     Route::get('/dashboard/pages/{key}/edit', [App\Http\Controllers\PageSettingController::class, 'edit'])->name('admin.pages.edit');

@@ -1,0 +1,146 @@
+/* ============================================================
+   Standardized static-page hero (cinematic image band)
+   Shared across all static pages EXCEPT the home page.
+   Markup: resources/views/front/partials/page-hero.blade.php
+   Background image is per-page (Dashboard → Pages & SEO);
+   falls back to the brand navy gradient when none is set.
+   ============================================================ */
+.page-hero {
+    --ph-navy:      #0B1F3A;
+    --ph-navy-2:    #102B52;
+    --ph-teal:      #4FC3B5;
+    --ph-teal-deep: #066D77;
+
+    position: relative;
+    background: linear-gradient(120deg, var(--ph-navy) 0%, var(--ph-navy-2) 100%);
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+/* Soft radial glow for depth (sits above the bg, below content) */
+.page-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 120% at 85% 0%, rgba(79, 195, 181, 0.16) 0%, transparent 55%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.page-hero__inner {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 170px 24px 84px;
+}
+
+.page-hero__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ph-teal);
+    margin: 0 0 20px;
+}
+
+.page-hero__title {
+    font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin: 0;
+    color: #fff;
+    max-width: 920px;
+}
+.page-hero__title .ph-sub {
+    display: block;
+    color: rgba(255, 255, 255, 0.78);
+    font-weight: 400;
+}
+
+.page-hero__desc {
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+    font-size: 1.15rem;
+    line-height: 1.7;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 720px;
+    margin: 24px 0 0;
+}
+
+.page-hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 26px;
+    padding: 10px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.06);
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    color: #fff;
+}
+.page-hero__badge i { color: var(--ph-teal); }
+
+.page-hero__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 32px;
+    padding: 15px 38px;
+    background: var(--ph-teal);
+    color: #06262b;
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 3px;
+    transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+.page-hero__cta:hover {
+    background: #fff;
+    color: var(--ph-navy);
+    transform: translateY(-3px);
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.28);
+}
+
+.page-hero__breadcrumb {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 30px;
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+.page-hero__breadcrumb a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+.page-hero__breadcrumb a:hover { color: #fff; }
+.page-hero__breadcrumb .sep { margin: 0 9px; color: rgba(255, 255, 255, 0.4); }
+.page-hero__breadcrumb .current { color: #fff; }
+
+@media (max-width: 991px) {
+    .page-hero__inner { padding: 132px 20px 64px; }
+}
+@media (max-width: 575px) {
+    .page-hero__inner { padding: 112px 18px 52px; }
+    .page-hero__desc { font-size: 1.02rem; }
+    .page-hero__cta { width: 100%; justify-content: center; }
+}

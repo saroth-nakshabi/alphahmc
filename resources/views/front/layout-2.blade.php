@@ -305,8 +305,8 @@
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
 
     <!-- Site CSS — blocking (critical nav + layout styles) -->
-    <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/slide-menu.css') }}?v=4">
+    <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/style.css') }}?v=2">
+    <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/slide-menu.css') }}?v=8">
 
     <!-- Icon fonts + animation libs — deferred (not needed for first paint) -->
     <link rel="preload" as="style"
@@ -353,7 +353,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         @endif
     @endforeach
 
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/front-global.css') }}?v=6">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/front-global.css') }}?v=7">
 
 {{-- Consent update functions (called by banner buttons) --}}
     <script>
@@ -580,8 +580,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         <h6 class="sidebar-menu-heading">OUR GROUP</h6>
                         {{-- Opens its sub-links in the right panel (like the categories / Our Packages) --}}
                         <div class="service-content"><a href="javascript:void(0);" class="group-link" id="group_about">Who We Are</a></div>
-                        <div class="service-content"><a href="javascript:void(0);" class="kb-link" id="kb_trigger">Knowledge Base</a></div>
-                        <div class="service-content"><a href="javascript:void(0);" class="cs-link" id="cs_trigger">Case Studies</a></div>
+                        <div class="service-content"><a href="{{ route('front.new_blog') }}" class="kb-link" id="kb_trigger">Knowledge Base</a></div>
+                        <div class="service-content"><a href="{{ route('front.project') }}" class="cs-link" id="cs_trigger">Case Studies</a></div>
                     </div>
                 </div>
 
@@ -591,6 +591,52 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         <h2 id="dynamic-heading">Our Expertise</h2>
                         <p id="dynamic-desc">Discover our comprehensive healthcare solutions tailored for your needs.
                         </p>
+                    </div>
+
+                    {{-- Curated default panel: shown when the menu first opens (desktop); hidden once a trigger is used.
+                         Featured services are admin-curated via the service `featured` flag + sort order. --}}
+                    <div id="menu-default-panel" class="menu-default-panel {{ (isset($nav_menu_promos) && count($nav_menu_promos)) ? '' : 'no-promo' }}">
+                        <div class="mdp-featured">
+                            <div class="mdp-label">Featured Services</div>
+                            <div class="mdp-grid">
+                                @if (isset($nav_featured_services) && count($nav_featured_services))
+                                    @foreach ($nav_featured_services as $fs)
+                                        <a href="{{ route('front.service', $fs->slug) }}" class="mdp-card">
+                                            <span class="mdp-card-title">{{ $fs->name }}</span>
+                                            <i class="fas fa-arrow-right"></i>
+                                        </a>
+                                    @endforeach
+                                @endif
+                            </div>
+                            <a href="{{ route('front.all-services') }}" class="mdp-viewall">View all services <i class="fas fa-arrow-right ms-1"></i></a>
+                        </div>
+                        @if (isset($nav_menu_promos) && count($nav_menu_promos))
+                            <aside class="mdp-promo-slider" id="mdp-promo-slider">
+                                <div class="mdp-promo-stack">
+                                    @foreach ($nav_menu_promos as $promo)
+                                        <div class="mdp-promo-slide {{ $loop->first ? 'active' : '' }}">
+                                            @if($promo->eyebrow)
+                                                <span class="mdp-promo-eyebrow">{{ $promo->eyebrow }}</span>
+                                            @endif
+                                            <h4 class="mdp-promo-title">{{ $promo->title }}</h4>
+                                            @if($promo->text)
+                                                <p class="mdp-promo-text">{{ $promo->text }}</p>
+                                            @endif
+                                            @if($promo->cta_label && $promo->cta_url)
+                                                <a href="{{ $promo->cta_url }}" class="mdp-promo-cta">{{ $promo->cta_label }} <i class="fas fa-arrow-right ms-1"></i></a>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                </div>
+                                @if (count($nav_menu_promos) > 1)
+                                    <div class="mdp-promo-dots">
+                                        @foreach ($nav_menu_promos as $promo)
+                                            <button type="button" class="mdp-promo-dot {{ $loop->first ? 'active' : '' }}" data-idx="{{ $loop->index }}" aria-label="Show promo {{ $loop->iteration }}"></button>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </aside>
+                        @endif
                     </div>
 
                     <div class="categories_service">
@@ -637,26 +683,35 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     <a href="{{ route('front.testimonials') }}" class="main-category-link-sub service-group-link">Testimonials</a>
                                 </li>
                                 <li class="service-group-item filter-group" style="display: none;">
+                                    <a href="{{ route('front.our-clients') }}" class="main-category-link-sub service-group-link">Our Clients</a>
+                                </li>
+                                <li class="service-group-item filter-group" style="display: none;">
                                     <a href="{{ route('contact') }}" class="main-category-link-sub service-group-link">Contact Us</a>
                                 </li>
 
-                                <!-- Knowledge Base: blog categories (tags) -->
+                                <!-- Knowledge Base: blog categories (tags) — each opens the insights page filtered to that tag -->
                                 @if (isset($nav_blog_tags))
                                     @foreach ($nav_blog_tags as $tag)
                                         <li class="service-content-category filter-kb" style="display: none;">
-                                            <a href="#" class="main-category-link-sub" id="tag_{{ $tag->id }}">{{ $tag->name }}</a>
+                                            <a href="{{ route('front.new_blog') }}?{{ rawurlencode(strtolower($tag->name)) }}" class="main-category-link-sub kb-flat-link" id="tag_{{ $tag->id }}">{{ $tag->name }}</a>
                                         </li>
                                     @endforeach
                                 @endif
+                                <li class="service-content-category filter-kb" style="display: none;">
+                                    <a href="{{ route('front.new_blog') }}" class="main-category-link-sub kb-flat-link"><strong>View All Insights</strong></a>
+                                </li>
 
-                                <!-- Case Studies: project categories -->
+                                <!-- Case Studies: project categories + View All at the bottom (all link to the Case Studies main page) -->
                                 @if (isset($nav_project_categories))
                                     @foreach ($nav_project_categories as $pcat)
                                         <li class="service-content-category filter-cs" style="display: none;">
-                                            <a href="#" class="main-category-link-sub" id="pcat_{{ $pcat->id }}">{{ $pcat->name }}</a>
+                                            <a href="{{ route('front.project') }}" class="main-category-link-sub cs-flat-link" id="pcat_{{ $pcat->id }}">{{ $pcat->name }}</a>
                                         </li>
                                     @endforeach
                                 @endif
+                                <li class="service-content-category filter-cs" style="display: none;">
+                                    <a href="{{ route('front.project') }}" class="main-category-link-sub cs-flat-link"><strong>View All Case Studies</strong></a>
+                                </li>
                             </ul>
                         </div>
 
@@ -786,6 +841,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         $("#explore-search-toggle").removeClass("is-active").find(".btn-label").text("MENU");
         $(".mobile-sub-list").remove();
         $(".mobile-service-list").remove();
+        stopPromoSlider();
     }
 
     $("#explore-search-toggle").on("click", function () {
@@ -796,11 +852,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             $(this).find(".btn-label").text("CLOSE");
             $(this).addClass("is-active");
 
-            // Desktop: pre-load the first service category so the right panel isn't
-            // empty on open — gives the visitor real content immediately.
+            // Desktop: show the curated default panel (featured services + promo) on open —
+            // editorial first impression instead of jumping into the first category.
             if (!isMobile()) {
-                var $firstCat = $(".main-category-link").first();
-                if ($firstCat.length) handleMainCategory($firstCat);
+                showMenuDefaultPanel();
             }
         } else {
             $(this).find(".btn-label").text("MENU");
@@ -1037,14 +1092,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     });
 
     // Handle Knowledge Base / Case Studies (3-level like the categories)
-    $(".kb-link").on("mouseenter click", function (e) {
-        if (!isMobile()) { if (e.type === "click") e.preventDefault(); handleKB($(this)); }
+    // Knowledge Base: hover reveals blog categories; CLICK navigates to the insights main page (default href).
+    $(".kb-link").on("mouseenter", function (e) {
+        if (!isMobile()) { handleKB($(this)); }
     });
-    $(".cs-link").on("mouseenter click", function (e) {
-        if (!isMobile()) { if (e.type === "click") e.preventDefault(); handleCS($(this)); }
+    // Case Studies: hover reveals project categories; CLICK navigates to the Case Studies main page (default href).
+    $(".cs-link").on("mouseenter", function (e) {
+        if (!isMobile()) { handleCS($(this)); }
     });
 
-    $(document).on("mouseenter click", ".main-category-link-sub:not(.service-group-link)", function (e) {
+    $(document).on("mouseenter click", ".main-category-link-sub:not(.service-group-link):not(.cs-flat-link):not(.kb-flat-link)", function (e) {
         if (!isMobile()) {
             if (e.type === "mouseenter") {
                 handleSubCategory($(this));
@@ -1166,12 +1223,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         });
         $trigger.parent().append(subList);
     }
-    $(".kb-link").on("click", function (e) {
-        if (isMobile()) { e.preventDefault(); mobileGroupedDrilldown($(this), "filter-kb", "Knowledge Base", "Browse our insights by topic."); }
-    });
-    $(".cs-link").on("click", function (e) {
-        if (isMobile()) { e.preventDefault(); mobileGroupedDrilldown($(this), "filter-cs", "Case Studies", "Explore our projects by category."); }
-    });
+    // Knowledge Base on mobile: tap navigates straight to the insights main page (no drilldown).
+    // Case Studies on mobile: tap navigates straight to the Case Studies main page (no drilldown).
 
     /* =========================
        MOBILE: SUB CATEGORY (L2 → accordion reveals L3 services)
@@ -1240,7 +1293,49 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     /* =========================
        SHARED FUNCTIONS
     ========================= */
+    // Curated default panel (open state) ⇄ real menu content (after a trigger).
+    function showMenuDefaultPanel() {
+        // Use explicit display values — both containers are CSS grid, so jQuery .show() (which
+        // forces display:block) would break their layout.
+        $("#menu-default-panel").css("display", "grid");
+        $(".categories_service").css("display", "none");
+        $(".main-category-link, .packages-link, .group-link, .kb-link, .cs-link").removeClass("active-category");
+        $("#dynamic-heading").text("Our Expertise");
+        $("#dynamic-desc").text("Explore our most-requested services, or choose an area from the left.");
+        startPromoSlider();
+    }
+    function revealMenuContent() {
+        $("#menu-default-panel").css("display", "none");
+        $(".categories_service").css("display", "grid");
+        stopPromoSlider();
+    }
+
+    /* Mega-menu promo auto-slider (dashboard-managed, max 3) */
+    var mpTimer = null, mpIdx = 0;
+    function mpSlides() { return $("#mdp-promo-slider .mdp-promo-slide"); }
+    function mpGo(i) {
+        var $s = mpSlides();
+        if (!$s.length) return;
+        mpIdx = (i + $s.length) % $s.length;
+        $s.removeClass("active").eq(mpIdx).addClass("active");
+        $("#mdp-promo-slider .mdp-promo-dot").removeClass("active").eq(mpIdx).addClass("active");
+    }
+    function startPromoSlider() {
+        stopPromoSlider();
+        if (mpSlides().length <= 1) return;
+        mpTimer = setInterval(function () { mpGo(mpIdx + 1); }, 9000);
+    }
+    function stopPromoSlider() { if (mpTimer) { clearInterval(mpTimer); mpTimer = null; } }
+    // Clickable dots (jump + restart), pause on hover — interruptible, premium feel.
+    $(document).on("click", "#mdp-promo-slider .mdp-promo-dot", function () {
+        mpGo(parseInt($(this).attr("data-idx"), 10) || 0);
+        startPromoSlider();
+    });
+    $(document).on("mouseenter", "#mdp-promo-slider", stopPromoSlider);
+    $(document).on("mouseleave", "#mdp-promo-slider", startPromoSlider);
+
     function handleGroup(el) {
+        revealMenuContent();
         const title = "Who We Are";
 
         $(".main-category-link, .packages-link, .kb-link, .cs-link").removeClass("active-category");
@@ -1259,6 +1354,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     // Knowledge Base / Case Studies: level-1 trigger → show its sub-list (tags / project
     // categories). Hovering a sub-item then reveals level-3 (blogs / projects) via handleSubCategory.
     function handleGroupedDrilldown(filterClass, heading, desc) {
+        revealMenuContent();
         $(".service-content-category").hide();
         $(".service-group-item").hide();
         $('.' + filterClass).show();
@@ -1282,6 +1378,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
 
     function handleMainCategory(el) {
+        revealMenuContent();
         const mainId = el.attr("id");
         const title = el.text().trim();
 
@@ -1334,6 +1431,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
 
     function handlePackages(el) {
+        revealMenuContent();
         const title = "Our Packages";
 
         $(".main-category-link, .group-link, .kb-link, .cs-link").removeClass("active-category");

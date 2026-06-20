@@ -33,7 +33,7 @@
                         <th>Page</th>
                         <th>Meta Title</th>
                         <th class="text-center" style="width:90px">Hero</th>
-                        <th style="width:110px">Action</th>
+                        <th style="width:190px">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -52,6 +52,12 @@
                                 <a href="{{ route('admin.pages.edit', $page->page_key) }}" class="btn btn-sm btn-info">
                                     <i class="ti ti-edit"></i> Edit
                                 </a>
+                                @if($page->publicUrl())
+                                    <a href="{{ $page->publicUrl() }}" target="_blank" rel="noopener"
+                                       class="btn btn-sm btn-outline-secondary" title="Open the live page in a new tab">
+                                        <i class="ti ti-external-link"></i> View
+                                    </a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

@@ -525,29 +525,16 @@
 
     <div class="about-page-wrapper">
 
-        {{-- ══════════════════════ HERO (UNCHANGED) ══════════════════════ --}}
-        <section class="hero-premium-v2"
-            @if(isset($pageMeta) && $pageMeta?->hero_image) style="background-image: url('{{ asset('public/uploads/page_images/' . $pageMeta->hero_image) }}'); background-size: cover; background-position: center;" @endif>
-            <div class="hero-overlay"></div>
-            <div class="container hero-content-container">
-                <div class="row align-items-center g-5 div-content">
-                    <div class="col-lg-7" data-aos="fade-right">
-                        <h1 class="display-large">
-                            {{ $pageMeta?->hero_title ?: 'About' }} <br>
-                            <span style="color:#fff;">{{ $pageMeta?->hero_subtitle ?: ($about_us->title ?? 'Alpha Corp') }}</span>
-                        </h1>
-                        <p class="hero-desc mb-5">
-                            {!! $pageMeta?->hero_description ?: ($about_us->description ?? 'Default Description Here') !!}
-                        </p>
-                        <a href="#about-story" class="btn-contact-premium">Explore Our Journey</a>
-                    </div>
-                    <div class="col-lg-5 text-end" data-aos="fade-left" data-aos-delay="200">
-                        <img src="{{ asset('public/uploads/about_us_logos/' . ($about_us->logo ?? 'default.jpg')) }}"
-                            alt="Logo" class="hero-logo" />
-                    </div>
-                </div>
-            </div>
-        </section>
+        {{-- ══════════════════════ HERO (standardized) ══════════════════════ --}}
+        @include('front.partials.page-hero', [
+            'heroEyebrow' => 'About Alpha Health Group',
+            'heroTitle'   => 'About',
+            'heroSubtitle'=> $about_us->title ?? 'Alpha Corp',
+            'heroDesc'    => $about_us->description ?? null,
+            'heroCtaText' => 'Explore Our Journey',
+            'heroCtaUrl'  => '#about-story',
+            'breadcrumb'  => ['Home' => route('home'), 'About Us' => null],
+        ])
 
         {{-- ══════════════════════ STATS STRIP ══════════════════════════ --}}
         <section class="about-stats-strip">

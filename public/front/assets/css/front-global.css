@@ -709,7 +709,7 @@ h1, .h1 { font-weight: 500 !important; }
         }
 
         .footer-links a::before {
-            content: '→';
+            content: '\2192';
             color: #4CAF50;
             font-weight: bold;
             opacity: 0;

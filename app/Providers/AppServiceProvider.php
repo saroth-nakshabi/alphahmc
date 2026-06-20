@@ -46,6 +46,21 @@ class AppServiceProvider extends ServiceProvider
             View::share('service_groups', ServiceGroup::all());
         }
 
+        // Mega-menu default panel: a curated set of featured services (admin curates via the
+        // `featured` flag + `sort_order`). Capped so the open-menu panel stays editorial.
+        if (Schema::hasTable('services')) {
+            View::share('nav_featured_services', \App\Models\Service::where('status', 'published')
+                ->where('featured', 1)
+                ->orderBy('sort_order')->orderBy('id')
+                ->take(6)->get());
+        }
+
+        // Mega-menu default panel: auto-rotating promo slides (dashboard-managed, max 3).
+        if (Schema::hasTable('menu_promos')) {
+            View::share('nav_menu_promos', \App\Models\MenuPromo::activeOrdered()
+                ->take(\App\Models\MenuPromo::MAX)->get());
+        }
+
         // Mega-menu: Knowledge Base (blog tags → blogs) and Case Studies (project categories → projects)
         if (Schema::hasTable('tags') && Schema::hasTable('blog_tags')) {
             View::share('nav_blog_tags', \App\Models\Tag::has('blogs')

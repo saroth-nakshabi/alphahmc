@@ -260,17 +260,15 @@
 
 <div class="reviews-page">
 
-    {{-- Hero --}}
-    <section class="reviews-hero">
-        <div class="container reviews-hero-inner">
-            <div class="reviews-hero-label"><span></span> Client Reviews</div>
-            <h1>{{ $settings->hero_message }}</h1>
-            <p class="reviews-hero-msg">Verified experiences from healthcare professionals and facility leaders across the UAE and GCC who have partnered with Alpha Health Group.</p>
-            <button type="button" class="reviews-hero-cta" data-bs-toggle="modal" data-bs-target="#writeReviewModal">
-                <i class="fa-solid fa-pen-to-square"></i> Share Your Experience
-            </button>
-        </div>
-    </section>
+    {{-- Hero (standardized) --}}
+    @include('front.partials.page-hero', [
+        'heroEyebrow' => 'Client Reviews',
+        'heroTitle'   => $settings->hero_message,
+        'heroDesc'    => 'Verified experiences from healthcare professionals and facility leaders across the UAE and GCC who have partnered with Alpha Health Group.',
+        'heroCtaText' => 'Share Your Experience',
+        'heroCtaModal'=> '#writeReviewModal',
+        'breadcrumb'  => ['Home' => route('home'), 'Client Reviews' => null],
+    ])
 
     {{-- Summary --}}
     <section class="reviews-summary-section">

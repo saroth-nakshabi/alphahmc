@@ -275,6 +275,15 @@
                         </li>
 
                         <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('admin.menu-promos.index') }}" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-ad-2"></i>
+                                </span>
+                                <span class="hide-menu">Menu Promos</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin.project-process.index') }}" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-route"></i>

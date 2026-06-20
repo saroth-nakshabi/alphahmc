@@ -350,30 +350,13 @@
 
 @section('content')
 
-{{-- ── HERO ─────────────────────────────────────────────── --}}
-@php
-    // Unified page settings (Dashboard → Pages & SEO). Falls back to legacy ClientSetting.
-    $cs = $pageMeta ?? ($clientSetting ?? \App\Models\ClientSetting::current());
-    $clHeroBg = $cs && $cs->hero_image
-        ? asset('public/uploads/page_images/' . $cs->hero_image)
-        : null;
-@endphp
-<section class="cl-hero{{ $clHeroBg ? ' has-bg' : '' }}"
-    @if($clHeroBg) style="background-image: linear-gradient(rgba(8,23,43,0.82), rgba(8,23,43,0.88)), url('{{ $clHeroBg }}'); background-size: cover; background-position: center;" @endif>
-    <div class="container">
-        <div class="cl-hero-grid">
-            <div>
-                @if($cs->hero_eyebrow)
-                    <span class="cl-hero-eyebrow"><i class="fas fa-handshake"></i> {{ $cs->hero_eyebrow }}</span>
-                @endif
-                <h1>{{ $cs->hero_title }}@if($cs->hero_subtitle)<br><span>{{ $cs->hero_subtitle }}</span>@endif</h1>
-                @if(trim(strip_tags((string) $cs->hero_description)) !== '')
-                    <p class="lead">{!! nl2br(e($cs->hero_description)) !!}</p>
-                @endif
-            </div>
-        </div>
-    </div>
-</section>
+{{-- ── HERO (standardized) ──────────────────────────────── --}}
+@include('front.partials.page-hero', [
+    'heroEyebrow' => 'Trusted Partnerships',
+    'heroTitle'   => 'Healthcare Facilities',
+    'heroSubtitle'=> 'That Trust Alpha',
+    'breadcrumb'  => ['Home' => route('home'), 'Our Clients' => null],
+])
 
 {{-- ── LOGO TICKER ───────────────────────────────────────── --}}
 @if($clients->count() > 0)

@@ -1,6 +1,8 @@
 ﻿@extends('front/layout-2')
 
-@push('page_title', 'All Healthcare Consultancy Services | Alpha Health Group')
+@push('page_title')
+All Healthcare Consultancy Services | Alpha Health Group
+@endpush
 
 @section('meta_description')Browse all healthcare consultancy services by Alpha Health Group — DOH licensing, JCIA accreditation, quality assurance, infection control, patient safety, and more for UAE facilities.@endsection
 
@@ -22,7 +24,6 @@
 }
 
 body {
-    margin-top: 140px !important;
     background-color: var(--as-bg);
 }
 
@@ -95,7 +96,7 @@ body {
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--as-border);
     padding: 15px 0;
-    margin-top: -40px;
+    margin-top: 0;
 }
 
 .as-search-box {
@@ -414,27 +415,13 @@ body {
         ->values();
 @endphp
 <div class="as-page">
-    {{-- HERO SECTION --}}
-    <section class="as-hero">
-        <div class="container">
-            <div class="row align-items-center" style="margin-top: 140px;">
-                <div class="col-lg-8">
-                    <h1 class="as-hero__title">
-                        <span>Our Expertise</span>
-                        Healthcare<br>Consultancy Services
-                    </h1>
-                </div>
-                <div class="col-lg-4 text-lg-end">
-                    <div class="as-breadcrumb">
-                        <a href="{{ route('home') }}">Home</a>
-                        <span>/</span>
-                        <a href="#">Services</a>
-                        {{-- <a id="share-icon" href="#" class="ms-2"><i class="fa-solid fa-share-nodes"></i></a> --}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    {{-- HERO SECTION (standardized) --}}
+    @include('front.partials.page-hero', [
+        'heroEyebrow'  => 'Our Expertise',
+        'heroTitle'    => 'Healthcare',
+        'heroSubtitle' => 'Consultancy Services',
+        'breadcrumb'   => ['Home' => route('home'), 'Services' => null],
+    ])
 
     {{-- STICKY TOOLS (Search & Nav) --}}
     <div class="as-sticky-tools">

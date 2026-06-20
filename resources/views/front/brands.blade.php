@@ -315,29 +315,15 @@
 
 <div class="brands-page">
 
-    {{-- ── HERO ─────────────────────────────────────────────────────── --}}
-    <section class="brands-hero"
-        @if(isset($pageMeta) && $pageMeta?->hero_image) style="background-image: linear-gradient(rgba(8,23,43,0.72), rgba(8,23,43,0.82)), url('{{ asset('public/uploads/page_images/' . $pageMeta->hero_image) }}'); background-size: cover; background-position: center;" @endif>
-        <div class="container hero-inner">
-            <div class="col-lg-8">
-                <div class="hero-eyebrow"><span></span> {{ $pageMeta?->hero_eyebrow ?: 'AGH Business Portfolio' }}</div>
-                <h1>{{ $pageMeta?->hero_title ?: 'Alpha Health Group' }}<br>{{ $pageMeta?->hero_subtitle ?: 'Brands' }}</h1>
-                <p>{{ $pageMeta?->hero_description ?: 'A curated ecosystem of specialised healthcare companies, each delivering excellence and innovation across distinct areas of the sector.' }}</p>
-                <div class="hero-count-pill">
-                    <i class="fas fa-layer-group"></i>
-                    {{ $brands->count() }} Subsidiary {{ Str::plural('Company', $brands->count()) }}
-                </div>
-            </div>
-        </div>
-
-        <nav class="hero-breadcrumb container" aria-label="Breadcrumb">
-            <a href="{{ route('home') }}">Home</a>
-            <span class="bc-sep">›</span>
-            <a href="{{ route('front.new-about') }}">About Us</a>
-            <span class="bc-sep">›</span>
-            <span class="bc-current">Our Branches</span>
-        </nav>
-    </section>
+    {{-- ── HERO (standardized) ──────────────────────────────────────── --}}
+    @include('front.partials.page-hero', [
+        'heroEyebrow' => 'AGH Business Portfolio',
+        'heroTitle'   => 'Alpha Health Group',
+        'heroSubtitle'=> 'Brands',
+        'heroDesc'    => 'A curated ecosystem of specialised healthcare companies, each delivering excellence and innovation across distinct areas of the sector.',
+        'heroBadge'   => ['icon' => 'fas fa-layer-group', 'text' => $brands->count() . ' Subsidiary ' . Str::plural('Company', $brands->count())],
+        'breadcrumb'  => ['Home' => route('home'), 'About Us' => route('front.new-about'), 'Our Branches' => null],
+    ])
 
     {{-- ── INTRO ────────────────────────────────────────────────────── --}}
     <section class="brands-intro">

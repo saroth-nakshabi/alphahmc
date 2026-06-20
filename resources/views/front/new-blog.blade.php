@@ -28,26 +28,15 @@
         .blog-card-premium { position: relative; }
         .blog-card-item { cursor: pointer; }
     </style>
-{{-- HERO SECTION (MATCHING PROJECTS PAGE) --}}
-    <section class="blog-hero"
-        @if(isset($pageMeta) && $pageMeta?->hero_image) style="background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.65)), url('{{ asset('public/uploads/page_images/' . $pageMeta->hero_image) }}');" @endif>
-        <div class="container">
-            <div class="banner-text">
-                <h1 class="hero-title">{{ $pageMeta?->hero_title ?: 'Healthcare Management Updates & Insights' }}</h1>
-                <p class="hero-description">
-                    {{ $pageMeta?->hero_description ?: 'Your go-to resource for healthcare leaders — covering management updates, DOH compliance guidance, operational excellence strategies, and industry trends shaping healthcare across the UAE and GCC.' }}
-                </p>
-                <a href="#" class="hero-btn" data-bs-toggle="modal" data-bs-target="#inquiryModal">Contact Us</a>
-            </div>
-            <nav class="hero-breadcrumb container" aria-label="Breadcrumb">
-                <a href="{{ route('home') }}">Home</a>
-                <span class="bc-sep">›</span>
-                <a href="#">Insights</a>
-                <span class="bc-sep">›</span>
-                <span class="bc-current">Healthcare Management Updates</span>
-            </nav>
-        </div>
-    </section>
+{{-- HERO SECTION (standardized) --}}
+    @include('front.partials.page-hero', [
+        'heroEyebrow' => 'Healthcare Insights',
+        'heroTitle'   => 'Healthcare Management Updates & Insights',
+        'heroDesc'    => 'Your go-to resource for healthcare leaders — covering management updates, DOH compliance guidance, operational excellence strategies, and industry trends shaping healthcare across the UAE and GCC.',
+        'heroCtaText' => 'Contact Us',
+        'heroCtaModal'=> '#inquiryModal',
+        'breadcrumb'  => ['Home' => route('home'), 'Insights' => null],
+    ])
 
     <div class="blog-page-wrapper">
         {{-- BLOG SUMMARY (MATCHING PROJECT SUMMARY) --}}
@@ -293,6 +282,25 @@
                         });
                     });
                 });
+
+                // Auto-apply a filter from the URL query (e.g. ?regulations or ?filter=regulations
+                // from the Knowledge Base mega-menu). Matches a tag against the existing filter buttons.
+                const search = window.location.search.replace(/^\?/, '');
+                if (search) {
+                    const parts = decodeURIComponent(search).toLowerCase().split('=');
+                    const candidate = (parts[1] || parts[0] || '').trim();
+                    if (candidate) {
+                        const matched = Array.from(filterBtns).find(b =>
+                            (b.getAttribute('data-filter') || '').toLowerCase() === candidate);
+                        if (matched) {
+                            matched.click();
+                            const nav = document.querySelector('.blog-filter-nav');
+                            if (nav) {
+                                setTimeout(() => nav.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+                            }
+                        }
+                    }
+                }
             });
         </script>
 

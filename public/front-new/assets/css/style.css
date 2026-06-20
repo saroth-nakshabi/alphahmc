@@ -762,7 +762,7 @@ h6 {
 }
 
 .btn-signin::after {
-  content: "→";
+  content: "\2192";
 
   font-weight: bold;
   display: inline-block;
