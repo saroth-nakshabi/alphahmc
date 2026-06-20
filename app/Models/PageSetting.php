@@ -50,6 +50,16 @@ class PageSetting extends Model
             'hero_title'    => 'Healthcare',
             'hero_subtitle' => 'Consultancy Services',
         ],
+        'facility_types' => [
+            'label'      => 'Services by Facility Type',
+            'route'      => 'front.facility-types',
+            'has_hero'   => true,
+            'meta_title' => 'Healthcare Services by Facility Type | Alpha Health Group',
+            'meta_description' => 'Find Alpha Health Group consultancy services tailored to your facility — hospitals, medical centers, day surgery centers, pharmacies, diagnostic labs, rehabilitation, home healthcare, and telehealth across the UAE.',
+            'hero_eyebrow'  => 'Tailored to Your Facility',
+            'hero_title'    => 'Services by',
+            'hero_subtitle' => 'Facility Type',
+        ],
         'about' => [
             'label'      => 'About Us',
             'route'      => 'front.new-about',
@@ -100,7 +110,7 @@ class PageSetting extends Model
         'contact' => [
             'label'      => 'Contact',
             'route'      => 'contact',
-            'has_hero'   => false,
+            'has_hero'   => true,
             'meta_title' => 'Contact Us | Alpha Health Group',
             'meta_description' => 'Get in touch with Alpha Health Group for healthcare consultancy services, DOH compliance support, and accreditation assistance for healthcare facilities across the UAE.',
         ],

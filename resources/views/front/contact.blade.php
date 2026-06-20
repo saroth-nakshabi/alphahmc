@@ -309,7 +309,8 @@
 
     <div class="contact-page-wrapper">
         <!-- Hero Header -->
-        <section class="contact-hero">
+        <section class="contact-hero"
+            @if(isset($pageMeta) && $pageMeta?->hero_image) style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('{{ asset('public/uploads/page_images/' . $pageMeta->hero_image) }}'); background-size: cover; background-position: center;" @endif>
             <div class="container">
                 {{-- <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
@@ -317,10 +318,9 @@
                         <li class="breadcrumb-item active" aria-current="page">CONTACT</li>
                     </ol>
                 </nav> --}}
-                <h1 class="display-large" data-aos="fade-up">Let's Define the <br>Future of Health.</h1>
+                <h1 class="display-large" data-aos="fade-up">{!! $pageMeta?->hero_title ?: "Let's Define the <br>Future of Health." !!}</h1>
                 <p class="fs-5 opacity-75 mt-4" style="max-width: 600px;">
-                    Reach out to our global consultancy network for specialized healthcare solutions
-                    tailored to your institutional goals.
+                    {{ $pageMeta?->hero_description ?: 'Reach out to our global consultancy network for specialized healthcare solutions tailored to your institutional goals.' }}
                 </p>
             </div>
         </section>

@@ -1,5 +1,5 @@
 @php
-    $testimonials = \App\Models\testimonial::latest()->get();
+    $testimonials = \App\Models\Testimonial::latest()->get();
 @endphp
 
 

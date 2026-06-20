@@ -1503,7 +1503,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                             <li><a href="{{ route('front.all-services') }}"><i class="fas fa-chevron-right"></i> All Services</a></li>
                             <li><a href="{{ route('front.new_blog') }}"><i class="fas fa-chevron-right"></i> Knowledge Base</a></li>
                             <li><a href="{{ route('front.project') }}"><i class="fas fa-chevron-right"></i> Case Studies</a></li>
-                            <li><a href="{{ route('front.all-services') }}"><i class="fas fa-chevron-right"></i> Services by Facility Type</a></li>
+                            <li><a href="{{ route('front.facility-types') }}"><i class="fas fa-chevron-right"></i> Services by Facility Type</a></li>
                         </ul>
                     </div>
                 </div>

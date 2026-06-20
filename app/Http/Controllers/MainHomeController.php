@@ -345,6 +345,31 @@ class MainHomeController extends Controller
         return view('front.share-experience', compact('all_services'));
     }
 
+    /**
+     * "Services by Facility Type" — lists the sub-categories of the
+     * "By Facility Type" main category, each with its published services.
+     */
+    public function facilityTypes()
+    {
+        $main = MainCategory::where('name', 'By Facility Type')->first();
+
+        $facilityTypes = collect();
+        if ($main) {
+            $facilityTypes = $main->mergedCategories
+                ->map(function ($cat) {
+                    $cat->setRelation('services', $cat->services()
+                        ->where('status', 'published')
+                        ->orderBy('name')->get());
+                    return $cat;
+                })
+                ->filter(fn ($cat) => $cat->services->count() > 0)
+                ->values();
+        }
+
+        $all_services = Service::published()->get();
+        return view('front.facility-types', compact('facilityTypes', 'main', 'all_services'));
+    }
+
     public function submitTestimonial(Request $request)
     {
         $request->validate([

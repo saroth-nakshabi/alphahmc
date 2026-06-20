@@ -100,6 +100,7 @@ Route::get('/new_service/{slug}', function ($slug) {
 });
 Route::get('/service-category/{slug}', [MainHomeController::class, 'serviceCategory'])->name('front.service-category');
 Route::get('/all_services', [MainHomeController::class, 'allServices'])->name('front.all-services');
+Route::get('/services-by-facility-type', [MainHomeController::class, 'facilityTypes'])->name('front.facility-types');
 Route::redirect('/services', '/all_services', 301);
 Route::post('/inquiry/submit', [MainHomeController::class, 'submitInquiry'])->name('front.inquiry.submit');
 Route::get('/healthcare-management-update-insights', [MainHomeController::class, 'blog'])->name('front.new_blog');

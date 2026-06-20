@@ -960,126 +960,19 @@ function toggleTransformationDesc() {
 
         @include('front.view.announcement')
 
-        <!-- Inquiry Modal -->
-        <div class="modal fade inquiry-modal" id="inquiryModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content border-0 shadow-lg">
-                    <div class="row g-0">
-                        <!-- Left Panel: Brand Context -->
-                        <div class="col-lg-4 d-none d-lg-block"
-                            style="background: linear-gradient(135deg, #1a1a1a 0%, #000 100%); padding: 50px 20px; color: #fff;">
-                            <div class="mb-5">
-                                <img src="{{ asset('public/front-new/assets/images/alpha-logo.svg') }}" alt="Alpha"
-                                    style="width: 100px; filter: brightness(0) invert(1);">
-                            </div>
-                            <h3 class="fw-bold mb-4" style="font-size: 1.8rem; line-height: 1.2;">Elevate your healthcare
-                                standards.</h3>
-                            <p class="opacity-75 mb-5" style="font-size: 0.95rem; line-height: 1.6;">Our experts are ready
-                                to
-                                partner with you. Share your requirements and we'll craft a bespoke solution.</p>
-
-                            {{-- Agent info inside modal --}}
-                            @if(isset($service->agent))
-                                <div class="d-flex align-items-center gap-3 mb-4 p-3"
-                                    style="background:rgba(255,255,255,0.1); border-radius:12px;">
-                                    <img src="{{ $service->agent->image ? asset('public/uploads/agent_images/' . $service->agent->image) : asset('public/front-new/assets/images/blog_images/Doctor-image/2.webp') }}"
-                                        alt="Agent"
-                                        style="width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.4);">
-                                    <div>
-                                        <div style="font-weight:700;font-size:1rem;">
-                                            {{ $service->agent->user->first_name . ' ' . $service->agent->user->last_name }}
-                                        </div>
-                                        <div style="opacity:0.7;font-size:0.85rem;">
-                                            {{ $service->agent->title ?? 'Service Leader' }}</div>
-                                    </div>
-                                </div>
-                            @endif
-
-                            <div class="inquiry-steps">
-                                <div class="inquiry-step mb-4">
-                                    <div class="step-num">STEP 01</div>
-                                    <div class="step-text">Contact Information</div>
-                                </div>
-                                <div class="inquiry-step mb-4 opacity-50">
-                                    <div class="step-num">STEP 02</div>
-                                    <div class="step-text">Service Selection</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Right Panel: Form -->
-                        <div class="col-lg-8 p-4 p-md-5 bg-white position-relative">
-                            <button type="button" class="btn-close position-absolute top-0 end-0 m-4"
-                                data-bs-dismiss="modal" aria-label="Close"></button>
-
-                            <div class="mb-5">
-                                <span class="text-uppercase tracking-wider fw-bold text-muted small d-block mb-2">Connect
-                                    with us</span>
-                                <h2 class="fw-bold text-dark" style="letter-spacing: -0.5px;">Service Inquiry</h2>
-                                @if(session('success'))
-                                    <div class="alert alert-success mt-3" style="border-radius: 12px;">
-                                        {{ session('success') }}
-                                    </div>
-                                @endif
-                            </div>
-
-                            <form id="inquiryForm" action="{{ route('front.inquiry.submit') }}" method="POST">
-                                @csrf
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <div class="form-floating">
-                                            <input type="text" name="name" class="form-control bg-light border-0"
-                                                id="inqName" placeholder="Name" required>
-                                            <label for="inqName">Full Name</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-floating">
-                                            <input type="email" name="email" class="form-control bg-light border-0"
-                                                id="inqEmail" placeholder="Email" required>
-                                            <label for="inqEmail">Email Address</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-floating">
-                                            <input type="tel" name="phone" class="form-control bg-light border-0"
-                                                id="inqPhone" placeholder="Phone" required>
-                                            <label for="inqPhone">Phone Number</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-floating">
-                                            <select name="service_id" class="form-select bg-light border-0" id="inqService">
-                                                <option selected disabled>Choose a specialization</option>
-                                                @foreach($all_services as $s)
-                                                    <option value="{{ $s->id }}" {{ $s->id == $service->id ? 'selected' : '' }}>
-                                                        {{ $s->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            <label for="inqService">Requested Service</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-floating">
-                                            <textarea name="message" class="form-control bg-light border-0"
-                                                placeholder="Message" id="inqMessage" style="height: 250px"></textarea>
-                                            <label for="inqMessage">How can we help you?</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 pt-3">
-                                        <button type="submit" class="btn btn-dark w-100 py-3 fw-bold shadow-sm"
-                                            style="border-radius: 12px; letter-spacing: 0.5px;">
-                                            SEND INQUIRY
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- Inquiry Modal — shared default "Book a Consultation" (popup-blocker-safe Bootstrap modal, mobile-optimized) -->
+        @include('front.partials.inquiry-modal')
+        <script>
+            (function () {
+                var im = document.getElementById('inquiryModal');
+                if (!im) return;
+                im.addEventListener('show.bs.modal', function () {
+                    if (typeof window.ahgPrefillInquiry === 'function') {
+                        window.ahgPrefillInquiry({ categoryName: @json($service->name) });
+                    }
+                });
+            })();
+        </script>
 
     </div>
 

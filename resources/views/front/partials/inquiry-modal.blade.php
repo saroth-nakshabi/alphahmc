@@ -166,15 +166,35 @@
         opts = opts || {};
         var svc = document.getElementById('im-service');
         var msg = document.getElementById('im-message');
+
+        // Always clear any previously injected category option first.
+        if (svc) {
+            var oldCat = svc.querySelector('option[data-ahg-cat]');
+            if (oldCat) oldCat.remove();
+        }
+
         if (opts.serviceId && svc) {
             var found = Array.prototype.some.call(svc.options, function (o) { return o.value == opts.serviceId; });
             if (found) svc.value = String(opts.serviceId);
         }
-        // Category-only: there's no category in the service list, so record it as the requirement.
-        if (!opts.serviceId && opts.categoryName && msg) {
-            var note = 'I am interested in: ' + opts.categoryName + ' (category).';
-            if (msg.value.indexOf(note) === -1) {
-                msg.value = note + (msg.value ? '\n' + msg.value : '');
+
+        // Category / group only: these aren't real services, so show the name in the service
+        // select (as a non-submitting display option) AND note it in the message.
+        if (!opts.serviceId && opts.categoryName) {
+            var label = opts.contextLabel || 'category';
+            if (svc) {
+                var opt = document.createElement('option');
+                opt.value = '';                 // empty → submits as a general enquiry (no bogus service_id)
+                opt.text = opts.categoryName + ' (' + label + ')';
+                opt.setAttribute('data-ahg-cat', '1');
+                svc.insertBefore(opt, svc.options[1] || null);  // right after "Not sure / general enquiry"
+                opt.selected = true;
+            }
+            if (msg) {
+                var note = 'I am interested in: ' + opts.categoryName + ' (' + label + ').';
+                if (msg.value.indexOf(note) === -1) {
+                    msg.value = note + (msg.value ? '\n' + msg.value : '');
+                }
             }
         }
     };
