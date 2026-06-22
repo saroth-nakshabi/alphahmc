@@ -36,65 +36,70 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="mb-3 d-flex">
+                        <style>
+                            #sortable-list { list-style: none; padding: 0; margin: 0; }
+                            .sort-item { display: flex; align-items: center; gap: 14px; padding: 12px 16px; margin-bottom: 10px;
+                                background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; transition: box-shadow .2s, border-color .2s; }
+                            .sort-item:hover { border-color: #cbd5e1; box-shadow: 0 4px 14px rgba(0,51,88,0.06); }
+                            .sort-item.ui-sortable-helper { box-shadow: 0 8px 24px rgba(0,51,88,0.12); border-color: #94a3b8; }
+                            .sort-item.ui-sortable-placeholder { visibility: visible !important; background: #f1f5f9; border: 1px dashed #94a3b8; }
+                            .drag-handle { cursor: grab; color: #94a3b8; font-size: 1.1rem; flex-shrink: 0; }
+                            .sort-rank { width: 26px; height: 26px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+                                background: #f1f5f9; border-radius: 50%; font-size: .78rem; font-weight: 700; color: #475569; }
+                            .proj-thumb { width: 64px; height: 44px; object-fit: cover; border-radius: 8px; border: 1px solid #e2e8f0; flex-shrink: 0; }
+                            .sort-name { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+                            .proj-title { font-weight: 700; color: #1e293b; }
+                            .proj-cat { font-size: .8rem; color: #94a3b8; }
+                            .sort-actions { display: flex; gap: 6px; flex-shrink: 0; }
+                        </style>
+
+                        <div class="mb-3 d-flex align-items-center gap-3 flex-wrap">
                             <h5 class="mb-0">Projects List</h5>
-
-                            <button class="btn btn-success ms-auto" data-bs-toggle="modal" data-bs-target="#addNewModal">
-                                <i class="ti ti-plus me-1"></i>
-                                Add New
-                            </button>
-
+                            <span class="text-muted small">
+                                <i class="ti ti-drag-drop"></i> Drag rows to reorder — click <strong>Save Order</strong> to apply
+                            </span>
+                            <div class="d-flex gap-2 ms-auto">
+                                @can('edit projects')
+                                <button id="save-order-btn" class="btn btn-primary btn-sm">
+                                    <i class="ti ti-device-floppy me-1"></i> Save Order
+                                </button>
+                                @endcan
+                                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addNewModal">
+                                    <i class="ti ti-plus me-1"></i> Add New
+                                </button>
+                            </div>
                         </div>
-                        <div class="table-responsive">
-                            <table id="items-table" class="table border table-striped table-bordered display text-nowrap">
-                                <thead>
-                                    <!-- start row -->
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Action</th>
-                                    </tr>
-                                    <!-- end row -->
-                                </thead>
-                                <tbody>
-                                    @if (isset($Projects) && count($Projects) > 0)
-                                        @foreach ($Projects as $Project)
-                                            <!-- start row -->
-                                            <tr data-id="{{ $Project->id }}">
-                                                <td>{{ $Project->name }}</td>
-                                                <td>
-                                                    <div class="btn-group">
-                                                        <button class="dropdown-toggle btn btn-primary btn-sm"
-                                                            data-bs-toggle="dropdown" data-bs-auto-close="true"
-                                                            aria-expanded="false">
-                                                            <i class="bi bi-three-dots"></i>
-                                                        </button>
-                                                        <ul class="dropdown-menu">
-                                                            @can('edit tags')
-                                                                <li><a class="dropdown-item edit" href="javascript:void(0);"
-                                                                        data-id="{{ $Project->id }}">Edit</a></li>
-                                                            @endcan
-                                                            @can('delete tags')
-                                                                <li><a class="dropdown-item delete" href="javascript:void(0);"
-                                                                        data-id="{{ $Project->id }}">Delete</a></li>
-                                                            @endcan
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <!-- end row -->
-                                        @endforeach
-                                    @endif
-                                </tbody>
-                                <tfoot>
-                                    <!-- start row -->
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Action</th>
-                                    </tr>
-                                    <!-- end row -->
-                                </tfoot>
-                            </table>
-                        </div>
+
+                        <ul id="sortable-list">
+                            @if (isset($Projects) && count($Projects) > 0)
+                                @foreach ($Projects as $Project)
+                                    <li class="sort-item" data-id="{{ $Project->id }}">
+                                        <span class="drag-handle"><i class="ti ti-grip-vertical"></i></span>
+                                        <span class="sort-rank">{{ $loop->iteration }}</span>
+                                        <img class="proj-thumb"
+                                            src="{{ isset($Project->projects_images[0]) ? asset('public/' . $Project->projects_images[0]->image) : asset('public/front-new/assets/images/section-3-1st-image.jpg') }}"
+                                            alt="{{ $Project->name }}">
+                                        <span class="sort-name">
+                                            <span class="proj-title">{{ $Project->name }}</span>
+                                            <span class="proj-cat">{{ $Project->project_category->name ?? '—' }}</span>
+                                        </span>
+                                        <div class="sort-actions">
+                                            @can('edit projects')
+                                                <button class="btn btn-light btn-sm edit" data-id="{{ $Project->id }}" title="Edit"><i class="ti ti-edit"></i></button>
+                                            @endcan
+                                            @can('delete projects')
+                                                <button class="btn btn-light-danger btn-sm delete text-danger" data-id="{{ $Project->id }}" title="Delete"><i class="ti ti-trash"></i></button>
+                                            @endcan
+                                        </div>
+                                    </li>
+                                @endforeach
+                            @endif
+                        </ul>
+                        @if (!isset($Projects) || count($Projects) === 0)
+                            <div class="text-center py-5 text-muted" id="projects-empty-state">
+                                <p class="mb-0">No projects yet. Add one to get started.</p>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -574,6 +579,7 @@
     <!-- core files -->
     <!-- ---------------------------------------------- -->
     <script src="{{ asset('public/dashboard/dist/libs/prismjs/prism.js') }}"></script>
+    <script src="{{ asset('public/dashboard/dist/libs/jquery-ui/dist/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('public/dashboard/dist/libs/tinymce/tinymce.min.js') }}"></script>
 
     <!-- ---------------------------------------------- -->
@@ -582,13 +588,34 @@
 
     <script>
         $(document).ready(function() {
-            var items_table = $("#items-table").DataTable({
-                dom: "Bfrtip",
-                buttons: ["copy", "csv", "excel", "pdf", "print"],
+            // ── Drag-to-reorder (same pattern as Brands) ──
+            const REORDER_URL = '{{ route('project.reorder') }}';
+            const CSRF = $('meta[name="csrf-token"]').attr('content');
+
+            function renumberProjects() {
+                $('#sortable-list .sort-item').each(function (i) { $(this).find('.sort-rank').text(i + 1); });
+            }
+
+            if ($('#sortable-list').length && $.fn.sortable) {
+                $('#sortable-list').sortable({
+                    handle: '.drag-handle',
+                    placeholder: 'sort-item ui-sortable-placeholder',
+                    forcePlaceholderSize: true,
+                    update: renumberProjects
+                });
+            }
+
+            $('#save-order-btn').on('click', function () {
+                const order = $('#sortable-list .sort-item').map(function () { return $(this).data('id'); }).get();
+                const $btn = $(this).prop('disabled', true);
+                $.ajax({
+                    url: REORDER_URL, method: 'POST', data: { order: order },
+                    headers: { 'X-CSRF-TOKEN': CSRF },
+                    success: function (res) { Toast.fire({ icon: 'success', title: (res && res.message) || 'Order saved!' }); },
+                    error: function () { Swal.fire({ icon: 'error', title: 'Failed to save order' }); },
+                    complete: function () { $btn.prop('disabled', false); }
+                });
             });
-            $(
-                ".buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel"
-            ).addClass("btn btn-primary mr-1");
 
             tinymce.init({
                 selector: '.rich-textarea', // Target textareas by their class
@@ -806,34 +833,8 @@
                                 icon: 'success',
                                 title: `${response.message}`
                             });
-                            const newRow = `<tr data-id='${response.data.id}'>
-                                            <td>${response.data.name}</td>
-                                            <td><div class="btn-group">
-                                                        <button class="dropdown-toggle btn btn-primary btn-sm"
-                                                            data-bs-toggle="dropdown" data-bs-auto-close="true"
-                                                            aria-expanded="false">
-                                                            <i class="bi bi-three-dots"></i>
-                                                        </button>
-                                                        <ul class="dropdown-menu">
-                                                            <li><a class="dropdown-item edit" href="javascript:void(0);"
-                                                                    data-id="${response.data.id}">Edit</a></li>
-                                                            <li><a class="dropdown-item delete" href="javascript:void(0);"
-                                                                    data-id="${response.data.id}">Delete</a></li>
-                                                        </ul>
-                                                    </div></td>
-                                            </tr>`;
-                            // Add new row to DataTable
-                            items_table.row.add($(newRow)).draw();
-
-                            // Close the modal
-                            $('#addNewModal').modal(
-                                'hide'); // Replace #addNewModal with your modal ID
-
-                            // Clear the form
-                            $('#add_form')[0].reset();
-                            $('#addNewModal .select2-services').val(null).trigger('change');
-                            challengeIndex = 1;
-                            renderChallengeSections('challenge-sections-container', [], false);
+                            $('#addNewModal').modal('hide');
+                            setTimeout(function () { location.reload(); }, 700);
                         },
                         error: function(xhr) {
                             // Close the loading Swal
@@ -919,37 +920,9 @@
                                 title: `${response.message}`
                             });
 
-                            let row = $('#items-table').find(
-                                `tr[data-id='${response.data.id}']`);
-                            row.html(`
-                            <td>${response.data.name}</td>
-                            <td><div class="btn-group">
-                                                        <button class="dropdown-toggle btn btn-primary btn-sm"
-                                                            data-bs-toggle="dropdown" data-bs-auto-close="true"
-                                                            aria-expanded="false">
-                                                            <i class="bi bi-three-dots"></i>
-                                                        </button>
-                                                        <ul class="dropdown-menu">
-                                                            <li><a class="dropdown-item edit" href="javascript:void(0);"
-                                                                    data-id="${response.data.id}">Edit</a></li>
-                                                            <li><a class="dropdown-item delete" href="javascript:void(0);"
-                                                                    data-id="${response.data.id}">Delete</a></li>
-                                                        </ul>
-                                                    </div></td>
-                            `);
-                            // destroy the table to reinitialize
-                            items_table.destroy();
-                            // re initialize the table
-                            items_table = $("#items-table").DataTable({
-                                dom: "Bfrtip",
-                                buttons: ["copy", "csv", "excel", "pdf", "print"],
-                            });
-                            $(
-                                ".buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel"
-                            ).addClass("btn btn-primary mr-1");
-
-                            // Close the modal
+                            // Close the modal and refresh the list
                             $('#editModal').modal('toggle');
+                            setTimeout(function () { location.reload(); }, 700);
                         },
                         error: function(xhr) {
                             // Close the loading Swal
@@ -1057,13 +1030,13 @@
             $(document).on('click', '.delete', function() {
                 const id = $(this).data('id');
                 const deleteUrl = '{{ route("project.destroy", ["id" => "__ID__"]) }}'.replace('__ID__', id);
-                const row = $(this).closest('tr'); // Get the closest table row
+                const row = $(this).closest('.sort-item'); // Get the closest list item
 
-                handleDelete(deleteUrl, items_table, row);
+                handleDelete(deleteUrl, row);
             });
 
             // // Function to handle deletion
-            function handleDelete(delete_url, table, row) {
+            function handleDelete(delete_url, row) {
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to recover this item!",
@@ -1100,8 +1073,11 @@
                                     icon: 'success',
                                     title: `${response.message}`
                                 });
-                                // Remove the row from the DataTable
-                                table.row(row).remove().draw();
+                                // Remove the item from the list and renumber
+                                row.slideUp(200, function () {
+                                    row.remove();
+                                    renumberProjects();
+                                });
                             },
                             error: function(xhr) {
                                 Swal.close();

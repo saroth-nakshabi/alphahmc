@@ -1050,7 +1050,7 @@
   border-radius: var(--r-lg);
   padding: 40px 44px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   transition: box-shadow 0.4s, border-color 0.4s;
   display: flex;
   flex-direction: column;
@@ -1081,17 +1081,14 @@
 .pdl-cpill--problem { background: rgba(232,80,58,0.08); color: var(--cr); }
 .pdl-cpill--solution { background: rgba(39,176,116,0.08); color: #1a9060; }
 
-.pdl-ccard h3 { font-size: 1.45rem; margin-bottom: 12px; line-height: 1.3; }
+.pdl-ccard h3 { font-size: 1.45rem; margin-bottom: 16px; line-height: 1.3; }
 .pdl-ccard p {
   font-size: 0.92rem;
   color: var(--slate-3);
   line-height: 1.8;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 5;
-  -webkit-box-orient: vertical;
-  flex: 1;
+  margin: 0 0 4px;
 }
+.pdl-ccard p.pdl-ccard__solution { flex: 1; }
 
 .pdl-ccard__rule {
   height: 1px;
@@ -1114,6 +1111,7 @@
 
 .pdl-carousel-inner {
   display: flex;
+  align-items: stretch;
   gap: 24px;
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -1121,7 +1119,7 @@
 .pdl-ccard-slider {
   flex: 0 0 calc(50% - 12px);
   min-width: calc(50% - 12px);
-  height: 440px;
+  display: flex;
 }
 
 .pdl-carousel-btn {
@@ -1196,7 +1194,7 @@
   .pdl-ccard-slider {
     flex: 0 0 85%;
     min-width: 85%;
-    height: 480px;
+    height: auto;
     scroll-snap-align: start;
   }
   .pdl-carousel-btn { display: none; }
@@ -2099,11 +2097,9 @@
                   <div class="pdl-ccard pdl-ccard--problem pdl-reveal">
                     <div class="pdl-ccard__top-bar"></div>
                     <h3>{{ $item['challenge_title'] ?? 'Project Challenge' }}</h3>
-                    <span class="pdl-cpill pdl-cpill--problem">Challenge</span>
                     <p>{!! $item['challenge'] ?? '' !!}</p>
                     <div class="pdl-ccard__rule"></div>
-                    <span class="pdl-cpill pdl-cpill--solution">Solution</span>
-                    <p>{!! $item['resolution'] ?? '' !!}</p>
+                    <p class="pdl-ccard__solution">{!! $item['resolution'] ?? '' !!}</p>
                   </div>
                 </div>
               @endforeach
@@ -2125,11 +2121,9 @@
           <div class="pdl-ccard pdl-ccard--problem pdl-reveal">
             <div class="pdl-ccard__top-bar"></div>
             <h3>{{ $project->challenge_title ?? 'Project Challenge' }}</h3>
-            <span class="pdl-cpill pdl-cpill--problem">Challenge</span>
             <p>{!! $project->challenge ?? '' !!}</p>
             <div class="pdl-ccard__rule"></div>
-            <span class="pdl-cpill pdl-cpill--solution">Solution</span>
-            <p>{!! $project->resolution ?? '' !!}</p>
+            <p class="pdl-ccard__solution">{!! $project->resolution ?? '' !!}</p>
           </div>
         </div>
       @endif
