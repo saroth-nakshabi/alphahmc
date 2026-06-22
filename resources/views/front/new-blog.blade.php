@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/blog-base.css') }}?v=2">
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/new-blog.css') }}?v=5">
     <style>
-        .blog-hero { background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.65)), url('{{ asset('public/uploads/service_images/1780592725_hero_image_5492b395-ef2a-467a-b3af-c05d3e9e1341.jpg') }}'); }
+        .blog-hero { background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.65)), url('{{ \App\Support\Img::thumb('uploads/service_images/1780592725_hero_image_5492b395-ef2a-467a-b3af-c05d3e9e1341.jpg', 1600) }}'); }
         /* Make the whole insight card clickable (stretched-link covers this box) */
         .blog-card-premium { position: relative; }
         .blog-card-item { cursor: pointer; }
@@ -70,7 +70,7 @@
                 <div class="container">
                     <div class="featured-box">
                         <div class="featured-image-side">
-                            <img src="{{ $featuredBlog->image ? asset('public/uploads/blog_images/' . $featuredBlog->image) : asset('public/front-new/assets/images/section-3-1st-image.jpg') }}"
+                            <img src="{{ $featuredBlog->image ? \App\Support\Img::thumb('uploads/blog_images/' . $featuredBlog->image, 1000) : asset('public/front-new/assets/images/section-3-1st-image.jpg') }}"
                                 alt="{{ $featuredBlog->title }}">
                         </div>
                         <div class="featured-content-side">
@@ -157,7 +157,7 @@
                                     @if($blog->tags->first())
                                         <span class="blog-tag-badge">{{ $blog->tags->first()->name }}</span>
                                     @endif
-                                    <img src="{{ $blog->image ? asset('public/uploads/blog_images/' . $blog->image) : asset('public/front-new/assets/images/blog_images/blog-card-image-01.webp') }}"
+                                    <img src="{{ $blog->image ? \App\Support\Img::thumb('uploads/blog_images/' . $blog->image, 800) : asset('public/front-new/assets/images/blog_images/blog-card-image-01.webp') }}"
                                         alt="{{ $blog->title }}">
                                 </div>
                                 <div class="blog-card-body">

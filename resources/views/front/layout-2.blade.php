@@ -307,13 +307,14 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap">
     </noscript>
 
-    <!-- Bootstrap CSS — blocking (needed for above-fold grid layout) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
+    <!-- Bootstrap CSS — blocking (needed for above-fold grid layout).
+         Self-hosted (was jsDelivr CDN) to drop the ~1.95s cross-origin round-trip
+         and apply the local 1-year cache. v5.2.3, byte-identical to CDN (SRI verified). -->
+    <link href="{{ asset('public/front/assets/css/vendor/bootstrap-5.2.3.min.css') }}?v=1" rel="stylesheet" />
 
     <!-- Site CSS — blocking (critical nav + layout styles) -->
-    <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/style.css') }}?v=2">
-    <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/slide-menu.css') }}?v=15">
+    <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/style.min.css') }}?v=3">
+    <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/slide-menu.min.css') }}?v=16">
 
     <!-- Icon fonts + animation libs — deferred (not needed for first paint) -->
     <link rel="preload" as="style"
@@ -360,7 +361,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         @endif
     @endforeach
 
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/front-global.css') }}?v=9">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/front-global.min.css') }}?v=10">
 
 {{-- Consent update functions (called by banner buttons) --}}
     <script>
@@ -591,7 +592,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     <div class="menu-group">
                         <h6 class="sidebar-menu-heading">Discover Alpha</h6>
                         {{-- Opens its sub-links in the right panel (like the categories / Our Packages) --}}
-                        <div class="service-content"><a href="javascript:void(0);" class="group-link" id="group_about">Who We Are</a></div>
+                        <div class="service-content"><a href="{{ route('front.new-about') }}" class="group-link" id="group_about">Who We Are</a></div>
                         <div class="service-content"><a href="{{ route('front.new_blog') }}" class="kb-link" id="kb_trigger">Knowledge Base</a></div>
                         <div class="service-content"><a href="{{ route('front.project') }}" class="cs-link" id="cs_trigger">Case Studies</a></div>
                     </div>

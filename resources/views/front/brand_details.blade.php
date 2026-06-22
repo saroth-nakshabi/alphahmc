@@ -34,7 +34,7 @@
         padding-top: 160px;
         padding-bottom: 100px;
         @if(isset($brandHero) && $brandHero->image)
-            background-image: url('{{ asset('public/uploads/brands/' . $brandHero->image) }}');
+            background-image: url('{{ \App\Support\Img::thumb('uploads/brands/' . $brandHero->image, 1600) }}');
         @else
             background-image: url('{{ asset('public/front-new/assets/images/service_details/service-details-2.webp') }}');
         @endif
@@ -294,7 +294,7 @@
                 </div>
                 <div class="col-lg-5 d-flex justify-content-center justify-content-lg-end">
                     <div class="brand-hero-logo-card">
-                        <img src="{{ $brand->logo ? asset('public/uploads/brands/' . $brand->logo) : asset('public/front-new/assets/images/alpha-logo.svg') }}"
+                        <img src="{{ $brand->logo ? \App\Support\Img::thumb('uploads/brands/' . $brand->logo, 400) : asset('public/front-new/assets/images/alpha-logo.svg') }}"
                             alt="{{ $brand->name }}">
                     </div>
                 </div>
@@ -319,7 +319,7 @@
                 {{-- Sticky left panel: logo + meta --}}
                 <div class="about-logo-panel" data-aos="fade-right">
                     <div class="about-logo-box">
-                        <img src="{{ $brand->logo ? asset('public/uploads/brands/' . $brand->logo) : asset('public/front-new/assets/images/alpha-logo.svg') }}"
+                        <img src="{{ $brand->logo ? \App\Support\Img::thumb('uploads/brands/' . $brand->logo, 400) : asset('public/front-new/assets/images/alpha-logo.svg') }}"
                             alt="{{ $brand->name }}" loading="lazy">
                     </div>
 

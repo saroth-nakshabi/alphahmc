@@ -158,6 +158,15 @@
         modalEl.addEventListener('hidden.bs.modal',  function () { navEl.style.zIndex = ''; });
     }
 
+    // Clear any success/error message when the modal closes, so it reopens clean.
+    if (modalEl && !modalEl.dataset.alertBound) {
+        modalEl.dataset.alertBound = '1';
+        modalEl.addEventListener('hidden.bs.modal', function () {
+            var ab = document.getElementById('inquiryAlert');
+            if (ab) ab.className = 'ahg-im-alert d-none';
+        });
+    }
+
     // Don't let visitors pick a past consultation date.
     var mDate = document.getElementById('im-meeting-date');
     if (mDate) mDate.min = new Date().toISOString().split('T')[0];
@@ -243,6 +252,14 @@
                 if (typeof gtag === 'function') { gtag('event', 'ahg_inquiry_submitted', { form_id: 'inquiryForm' }); }
                 window.dataLayer = window.dataLayer || [];
                 window.dataLayer.push({ event: 'ahg_inquiry_submitted', form_id: 'inquiryForm' });
+                // Genuine-success conversion signal (fires only here, never on validation errors).
+                window.dataLayer.push({ event: 'inquiry_sent' });
+                // Let the visitor read the thank-you message, then auto-close the modal.
+                setTimeout(function () {
+                    if (window.bootstrap && modalEl) {
+                        (bootstrap.Modal.getInstance(modalEl) || bootstrap.Modal.getOrCreateInstance(modalEl)).hide();
+                    }
+                }, 2000);
             } else {
                 var msg = res.d.message || 'Please check the form and try again.';
                 if (res.d.errors) { msg = Object.values(res.d.errors).map(function (v) { return v[0]; }).join(' '); }

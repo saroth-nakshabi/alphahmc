@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/projects.css') }}?v=6">
     <style>
         .service-banner { background-image: linear-gradient(rgba(0, 0, 0, 0.3), var(--premium-black)),
-                          url('{{ asset('public/uploads/service_images/1777903827_hero_image_f2b72665-520c-438d-b7ab-0df3442aecce.jpg') }}'); }
+                          url('{{ \App\Support\Img::thumb('uploads/service_images/1777903827_hero_image_f2b72665-520c-438d-b7ab-0df3442aecce.jpg', 1600) }}'); }
     </style>
 <!-- Hero Section (standardized) -->
 @include('front.partials.page-hero', [
@@ -71,7 +71,7 @@
         <div class="featured-box">
             <div class="featured-image-side">
                 @if($featuredProject->projects_images->count() > 0)
-                    <img src="{{ asset('public/' . $featuredProject->projects_images[0]->image) }}"
+                    <img src="{{ \App\Support\Img::thumb($featuredProject->projects_images[0]->image, 1000) }}"
                          alt="{{ $featuredProject->name }}">
                 @else
                     <img src="{{ asset('public/front-new/assets/images/section-3-1st-image.jpg') }}"
@@ -167,7 +167,7 @@
                 @if ($project->project_category)
                     <a href="{{ route('front.project_details', $project->slug) }}" class="premium-project-card" data-category="{{ $project->project_category->name }}" style="display:block;text-decoration:none;color:inherit;">
                         <div class="project-img-container">
-                            <img src="{{ isset($project->projects_images[0]) ? asset('public/' . $project->projects_images[0]->image) : asset('public/front-new/assets/images/section-3-1st-image.jpg') }}" alt="{{ $project->name }}">
+                            <img src="{{ isset($project->projects_images[0]) ? \App\Support\Img::thumb($project->projects_images[0]->image, 800) : asset('public/front-new/assets/images/section-3-1st-image.jpg') }}" alt="{{ $project->name }}">
                             <div class="project-cat-badge">{{ $project->project_category->name }}</div>
                         </div>
                         <div class="p-4 pt-5">
@@ -234,7 +234,7 @@
                                 </div>
                             </div>
                             <div class="blog-item-thumb">
-                                <img src="{{ asset('public/uploads/blog_images/' . $blog->image) }}"
+                                <img src="{{ \App\Support\Img::thumb('uploads/blog_images/' . $blog->image, 800) }}"
                                     alt="{{ $blog->title }}" loading="lazy">
                             </div>
                         </a>
@@ -301,7 +301,7 @@
             <div class="col-lg-4">
                 <a href="{{ route('front.singleBlog', $blog->slug) }}" class="text-decoration-none">
                     <div class="card border-0 h-100">
-                        <img src="{{ asset('public/uploads/blog_images/' . $blog->image) }}" class="rounded-4 mb-3" style="height: 240px; object-fit: cover;">
+                        <img src="{{ \App\Support\Img::thumb('uploads/blog_images/' . $blog->image, 600) }}" class="rounded-4 mb-3" style="height: 240px; object-fit: cover;">
                         <span class="text-muted small">{{ $blog->created_at->format('M d, Y') }} • 3 min read</span>
                         <h4 class="text-dark fw-bold mt-2">{{ $blog->title }}</h4>
                     </div>

@@ -27,7 +27,7 @@ class SecurityHeaders
             "font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com",
             "img-src 'self' data: blob: https: http:",
             "media-src 'self' blob: https:",
-            "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://static.cloudflareinsights.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://stats.g.doubleclick.net https://www.google.com wss:",
+            "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://region1.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://static.cloudflareinsights.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://stats.g.doubleclick.net https://*.g.doubleclick.net https://ad.doubleclick.net https://www.googleadservices.com https://www.google.com wss:",
             "frame-src 'self' https://www.google.com https://www.youtube.com https://player.vimeo.com https://td.doubleclick.net https://googleads.g.doubleclick.net",
             "object-src 'none'",
             "base-uri 'self'",

@@ -1,9 +1,9 @@
 @extends('front/layout-2')
 @section('custom_css')
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.css') }}?v=2">
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-detail.css') }}?v=4">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.min.css') }}?v=3">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-detail.min.css') }}?v=5">
     {{-- Project Process section styles (shared with the category page) --}}
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-category.css') }}?v=2">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-category.min.css') }}?v=3">
     <style>
         /* Some service content was pasted from MS Word, which injects the
            "MsoNormal" class and inline near-black colour / Word fonts that
@@ -60,7 +60,7 @@
         <!-- Hero Section -->
         <section class="service-hero">
             <div class="hero-background"
-                style="background-image: linear-gradient(to right, rgba(0, 0, 0, 85%), rgba(202, 202, 202, 0.363)),url('{{ $service->hero_image ? asset('public/uploads/service_images/' . $service->hero_image) : (isset($service->images[0]) ? asset('public/uploads/service_images/' . $service->images[0]->image) : asset('public/front/assets/img/hero/service-details-bg.jpg')) }}');">
+                style="background-image: linear-gradient(to right, rgba(0, 0, 0, 85%), rgba(202, 202, 202, 0.363)),url('{{ $service->hero_image ? \App\Support\Img::thumb('uploads/service_images/' . $service->hero_image, 1600) : (isset($service->images[0]) ? \App\Support\Img::thumb('uploads/service_images/' . $service->images[0]->image, 1600) : asset('public/front/assets/img/hero/service-details-bg.jpg')) }}');">
             </div>
 
             <div class="container">
@@ -218,7 +218,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
                                 $firstImg = ($firstMag && $firstMag->image)
                                     ? ((strpos($firstMag->image, 'http') === 0)
                                         ? $firstMag->image
-                                        : asset('public/uploads/magazines/' . $firstMag->image))
+                                        : \App\Support\Img::thumb('uploads/magazines/' . $firstMag->image, 720))
                                     : '';
                             @endphp
                             <img src="{{ $firstImg }}" alt="Magazine Feature" id="mag-main-image">
@@ -245,7 +245,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
         @php
             $currImg = $mag->image ? ((strpos($mag->image, 'http') === 0)
                 ? $mag->image
-                : asset('public/uploads/magazines/' . $mag->image)) : '';
+                : \App\Support\Img::thumb('uploads/magazines/' . $mag->image, 720)) : '';
         @endphp
         <div class="swiper-slide">
             <div class="mag-card" data-img="{{ $currImg }}">
@@ -260,7 +260,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
         @php
             $currImg = $mag->image ? ((strpos($mag->image, 'http') === 0)
                 ? $mag->image
-                : asset('public/uploads/magazines/' . $mag->image)) : '';
+                : \App\Support\Img::thumb('uploads/magazines/' . $mag->image, 720)) : '';
         @endphp
         <div class="swiper-slide">
             <div class="mag-card" data-img="{{ $currImg }}">
@@ -274,7 +274,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
         @php
             $currImg = $mag->image ? ((strpos($mag->image, 'http') === 0)
                 ? $mag->image
-                : asset('public/uploads/magazines/' . $mag->image)) : '';
+                : \App\Support\Img::thumb('uploads/magazines/' . $mag->image, 720)) : '';
         @endphp
         <div class="swiper-slide">
             <div class="mag-card" data-img="{{ $currImg }}">
@@ -419,7 +419,7 @@ function toggleTransformationDesc() {
                         <span class="leader-label">Service Leader</span>
                         <hr class="leader-hr">
                         <div class="leader-profile">
-                            <img src="{{ isset($service->agent) && $service->agent->image ? asset('public/uploads/agent_images/' . $service->agent->image) : asset('public/front-new/assets/images/blog_images/Doctor-image/2.webp') }}"
+                            <img src="{{ isset($service->agent) && $service->agent->image ? \App\Support\Img::thumb('uploads/agent_images/' . $service->agent->image, 250) : asset('public/front-new/assets/images/blog_images/Doctor-image/2.webp') }}"
                                 alt="Leader" class="leader-circle-img">
                             <div class="leader-meta">
                                 <div class="leader-name-bold">
@@ -440,7 +440,7 @@ function toggleTransformationDesc() {
                                     <a href="tel:{{ $phone }}" class="contact-link-icon" title="Call">
                                         <i class="fas fa-phone"></i>
                                     </a>
-                                    <a href="javascript:void(0)" class="contact-link-icon" title="Email"
+                                    <a href="{{ route('contact') }}" class="contact-link-icon" title="Email"
                                         data-bs-toggle="modal" data-bs-target="#inquiryModal">
                                         <i class="fas fa-envelope"></i>
                                     </a>
@@ -594,7 +594,7 @@ function toggleTransformationDesc() {
                                 <a href="{{ route('front.service', $related->slug) }}" class="interest-card-link">
                                     <div class="interest-card">
                                         <div class="interest-img-wrapper">
-                                            <img src="{{ $related->hero_image ? asset('public/uploads/service_images/' . $related->hero_image) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}"
+                                            <img src="{{ $related->hero_image ? \App\Support\Img::thumb('uploads/service_images/' . $related->hero_image, 800) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}"
                                                 alt="{{ $related->name }}">
                                         </div>
                                         <div class="interest-content">
@@ -629,7 +629,7 @@ function toggleTransformationDesc() {
                                     <div class="ey-case-card">
                                         <div class="ey-case-img-wrapper">
                                             @if(isset($project->projects_images[0]))
-                                                <img src="{{ asset('public/' . $project->projects_images[0]->image) }}"
+                                                <img src="{{ \App\Support\Img::thumb($project->projects_images[0]->image, 800) }}"
                                                     class="ey-case-img" alt="{{ $project->name }}">
                                             @endif
                                         </div>
@@ -659,7 +659,7 @@ function toggleTransformationDesc() {
                             @endphp
                             @if($blog)
                                 <a href="{{ route('front.singleBlog', $blog->slug) }}" class="ey-related-card">
-                                    <img src="{{ isset($blog->image) && $blog->image ? asset('public/uploads/blog_images/' . $blog->image) : asset('public/front-new/assets/images/blog_images/Doctor-image/2.webp') }}"
+                                    <img src="{{ isset($blog->image) && $blog->image ? \App\Support\Img::thumb('uploads/blog_images/' . $blog->image, 800) : asset('public/front-new/assets/images/blog_images/Doctor-image/2.webp') }}"
                                         class="rc-bg-img" alt="{{ $blog->title }}">
 
                                     <div class="ey-related-content">

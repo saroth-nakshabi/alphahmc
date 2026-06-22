@@ -74,7 +74,7 @@
         <!-- poster shows instantly; source is injected only on desktop to avoid mobile network hit -->
         @php
             $heroPoster = (isset($homeSliders) && count($homeSliders) && $homeSliders->first()->image)
-                ? asset('public/uploads/slider_images/' . $homeSliders->first()->image)
+                ? \App\Support\Img::thumb('uploads/slider_images/' . $homeSliders->first()->image, 1920)
                 : asset('public/front-new/assets/images/video-thumbnail.jpg');
         @endphp
         <video muted loop playsinline class="hero-bg-video hero-bg-active" id="heroVideo"
@@ -99,14 +99,14 @@
             @if(isset($homeSliders) && count($homeSliders) > 0)
                 @foreach($homeSliders as $index => $slider)
                     <div class="hero-bg-image-item {{ $index == 0 ? 'hero-img-active' : '' }}"
-                        style="background-image: url('{{ asset('public/uploads/slider_images/' . $slider->image) }}');"
+                        style="background-image: url('{{ \App\Support\Img::thumb('uploads/slider_images/' . $slider->image, 1920) }}');"
                         data-image-index="{{ $index }}">
                     </div>
                     @if($index === 0)
                         {{-- Preload the first hero image so it's fetched at highest priority --}}
                         @push('meta')
                         <link rel="preload" as="image"
-                              href="{{ asset('public/uploads/slider_images/' . $slider->image) }}"
+                              href="{{ \App\Support\Img::thumb('uploads/slider_images/' . $slider->image, 1920) }}"
                               fetchpriority="high">
                         @endpush
                     @endif
@@ -386,8 +386,8 @@
                                                     <option value="{{ $service->id }}" data-parent-id="{{ $category->id }}"
                                                         data-name="{{ $service->name }}" data-slug="{{ $service->slug }}"
                                                         data-overview="{{ strip_tags($service->overview) }}"
-                                                        data-hero="{{ $service->hero_image ? asset('public/uploads/service_images/' . $service->hero_image) : '' }}"
-                                                        data-image="{{ $service->images->count() ? asset('public/uploads/service_images/' . $service->images->first()->image) : '' }}">
+                                                        data-hero="{{ $service->hero_image ? \App\Support\Img::thumb('uploads/service_images/' . $service->hero_image, 1200) : '' }}"
+                                                        data-image="{{ $service->images->count() ? \App\Support\Img::thumb('uploads/service_images/' . $service->images->first()->image, 1200) : '' }}">
                                                         {{ $service->name }}
                                                     </option>
                                                 @endforeach
@@ -489,7 +489,7 @@
 
                 <a href="{{ route('front.service-category', $category->slug) }}"
                     class="article-card {{ $gridClass }}" aria-label="Explore {{ $category->name }}"
-                    style="background-image: url('{{ $category->card_image ? asset('public/' . ltrim($category->card_image, '/')) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}')" data-aos="fade-up"
+                    style="background-image: url('{{ $category->card_image ? \App\Support\Img::thumb(ltrim($category->card_image, '/'), 700) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}')" data-aos="fade-up"
                     data-aos-delay="{{ $index * 50 }}">
                     <div class="article-content">
                         <h4>{{ $category->name }}</h4>
@@ -624,7 +624,7 @@
                        aria-hidden="{{ $loopIndex >= $insightBlogs->count() ? 'true' : 'false' }}"
                        @if($loopIndex >= $insightBlogs->count()) tabindex="-1" @endif>
                         <div class="ibc-card-media"
-                             style="background-image:url('{{ $blog->image ? asset('public/uploads/blog_images/' . $blog->image) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}')"></div>
+                             style="background-image:url('{{ $blog->image ? \App\Support\Img::thumb('uploads/blog_images/' . $blog->image, 700) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}')"></div>
                         <div class="ibc-card-scrim"></div>
                         <div class="ibc-card-panel">
                             <span class="ibc-card-label">Insight</span>
@@ -756,7 +756,7 @@
                                         <div class="case-card-media">
                                             @php
                                                 $projectCover = $project->projects_images->first();
-                                                $projectImagePath = ($projectCover && $projectCover->image) ? asset('public/' . $projectCover->image) : 'https://placehold.co/600x400';
+                                                $projectImagePath = ($projectCover && $projectCover->image) ? \App\Support\Img::thumb($projectCover->image, 700) : 'https://placehold.co/600x400';
                                             @endphp
                                             <img src="{{ $projectImagePath }}" alt="{{ $project->name }}">
                                         </div>
@@ -784,7 +784,7 @@
                             @foreach($alphaUpdates as $update)
                                 <a href="{{ route('front.singleBlog', $update->slug) }}" class="alpha-update-card">
                                     <div class="alpha-update-media">
-                                        <img src="{{ $update->image ? asset('public/uploads/blog_images/' . $update->image) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}"
+                                        <img src="{{ $update->image ? \App\Support\Img::thumb('uploads/blog_images/' . $update->image, 700) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}"
                                              alt="{{ $update->title }}" loading="lazy">
                                     </div>
                                     <div class="alpha-update-body">
@@ -843,7 +843,7 @@
             <div class="oc-track">
                 @foreach($clients->concat($clients) as $i => $client)
                     <div class="oc-logo" title="{{ $client->name }}" aria-hidden="{{ $i >= $clients->count() ? 'true' : 'false' }}">
-                        <img src="{{ asset('public/uploads/clients/' . $client->logo) }}" alt="{{ $client->name }}" loading="lazy">
+                        <img src="{{ \App\Support\Img::thumb('uploads/clients/' . $client->logo, 300) }}" alt="{{ $client->name }}" loading="lazy">
                     </div>
                 @endforeach
             </div>
@@ -871,7 +871,7 @@
         <div class="ann-slider-wrapper" id="annSlider">
             @foreach($featured as $index => $announcement)
                 <div class="announcement-split-card ann-slide {{ $index === 0 ? 'active' : '' }}">
-                    <div class="ann-split-content" style="background-image:linear-gradient(to right, rgba(0, 0, 0, 80%), rgba(133, 133, 133, 0)), url('{{ asset('public/uploads/announcements/' . $announcement->image) }}'); background-size: cover; background-position: center;">
+                    <div class="ann-split-content" style="background-image:linear-gradient(to right, rgba(0, 0, 0, 80%), rgba(133, 133, 133, 0)), url('{{ \App\Support\Img::thumb('uploads/announcements/' . $announcement->image, 1400) }}'); background-size: cover; background-position: center;">
                         <div class="ann-text-box">
                             <h3 class="ann-split-title">{{ $announcement->title }}</h3>
                             @if($announcement->description)
