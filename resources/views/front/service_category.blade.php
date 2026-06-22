@@ -142,6 +142,9 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
           <a href="#services" class="btn-primary">Explore Services</a>
           {{-- <a href="/about" class="btn-outline">Our Track Record</a> --}}
         </div>
+        <p class="content-updated-meta" style="margin-top:18px;font-size:0.85rem;color:#6b7280;">
+          Updated: {{ ($service->updated_date ?? $service->updated_at)->format('M d, Y') }}
+        </p>
       </div>
 
       <!-- Right Content: Auto-Scroll -->

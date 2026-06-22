@@ -537,9 +537,11 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    left: 64px;                 /* clear the MENU button */
+    left: auto;                 /* anchor to the right so the MENU button stays visible */
     right: 12px;
-    width: auto;
+    width: 60%;                 /* ~60% of the bar; leaves the left 40% for MENU + logo */
+    min-width: 0;               /* release the circle's 48px floor */
+    aspect-ratio: auto;         /* release the 1:1 ratio so the bar fills its width */
     height: 46px;
     border-radius: 30px;
     background: #fff;
@@ -790,4 +792,25 @@
   width: 22px;
   border-radius: 4px;
   background: var(--alpha-teal);
+}
+/* Mobile menu close button — bottom-left, one-handed reach (mobile only, only while menu open) */
+.menu-mobile-close { display: none; }
+@media (max-width: 991px) {
+  #main-navbar.menu-is-open .menu-mobile-close {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    z-index: 2147483000;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 50px;
+    background: #066D77;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 10px 28px rgba(6, 109, 119, 0.45);
+  }
 }

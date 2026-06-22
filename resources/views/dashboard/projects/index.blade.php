@@ -211,6 +211,12 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
+                                <label class="control-label mb-1">Case Study Date</label>
+                                <input type="date" name="project_date" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
                                 <label class="control-label mb-1">Project Duration</label>
                                 <input type="text" name="project_duration" class="form-control" placeholder="e.g. 18 months" />
                             </div>
@@ -439,6 +445,12 @@
                             <div class="mb-3">
                                 <label class="control-label mb-1">Client Name</label>
                                 <input type="text" id="edit_client_name" name="client_name" class="form-control" placeholder="e.g. Dubai Health Authority" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="control-label mb-1">Case Study Date</label>
+                                <input type="date" id="edit_project_date" name="project_date" class="form-control" />
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -1005,6 +1017,7 @@
 
                         // New detail fields
                         $('#edit_form').find('#edit_client_name').val(response.data.client_name || '');
+                        $('#edit_form').find('#edit_project_date').val(response.data.project_date || '');
                         $('#edit_form').find('#edit_project_duration').val(response.data.project_duration || '');
                         $('#edit_form').find('#edit_project_location').val(response.data.project_location || '');
                         $('#edit_form').find('#edit_regulatory_authority').val(response.data.regulatory_authority || '');

@@ -313,7 +313,7 @@
 
     <!-- Site CSS — blocking (critical nav + layout styles) -->
     <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/style.css') }}?v=2">
-    <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/slide-menu.css') }}?v=12">
+    <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/slide-menu.css') }}?v=15">
 
     <!-- Icon fonts + animation libs — deferred (not needed for first paint) -->
     <link rel="preload" as="style"
@@ -360,7 +360,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         @endif
     @endforeach
 
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/front-global.css') }}?v=8">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/front-global.css') }}?v=9">
 
 {{-- Consent update functions (called by banner buttons) --}}
     <script>
@@ -553,15 +553,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <style>
                     .nav-contact-cta{display:inline-flex;align-items:center;justify-content:center;height:46px;box-sizing:border-box;margin-left:16px;padding:0 22px;background:rgba(255,255,255,0.20);backdrop-filter:blur(15px);color:inherit;border:1px solid rgba(255,255,255,0.4);border-radius:50px;font-weight:600;font-size:.85rem;text-decoration:none;white-space:nowrap;transition:background .2s,border-color .2s,color .2s;}
                     .nav-contact-cta:hover{background:rgba(255,255,255,0.4);border-color:#009095;color:#009095;}
-                    /* Mobile: shrink Contact so the search circle keeps its shape (nav-right gap handles spacing) */
-                    @media (max-width:991px){.nav-contact-cta{height:44px;padding:0 16px;margin-left:0;font-size:.8rem;}}
-                    @media (max-width:600px){.nav-contact-cta{height:40px;padding:0 13px;margin-left:0;font-size:.72rem;}}
+                    /* Mobile: hide Contact in the header (kept in the slide menu); search owns the right side. Shows on desktop/web. */
+                    @media (max-width:991px){.nav-contact-cta{display:none !important;}}
                 </style>
             </div>
         </div>
 
         <!-- Expanded Content Area -->
         <div id="sidebar-menu">
+            {{-- Mobile-only bottom-left close (easy one-handed reach) --}}
+            <button type="button" class="menu-mobile-close" id="menuMobileClose" aria-label="Close menu">
+                <i class="fas fa-xmark"></i> Close
+            </button>
             <div class="sidebar-inner-content">
 
                 <!-- Left Column: Menu Groups -->
@@ -873,6 +876,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             $(".mobile-sub-list").remove();
             $(".mobile-service-list").remove();
         }
+    });
+
+    // Mobile bottom-left close button
+    $(document).on("click", "#menuMobileClose", function () {
+        closeMegaMenu();
     });
 
     // Close the mega-menu when clicking OUTSIDE it (not on hover-out).

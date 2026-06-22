@@ -91,7 +91,9 @@
     }
     .ahg-im-close {
         position: sticky; top: 0; float: right; margin: -6px -8px 0 0; z-index: 5;
-        width: 38px; height: 38px; border-radius: 50%; background: #fff; opacity: 1;
+        width: 38px; height: 38px; border-radius: 50%; opacity: 1;
+        /* white circle + explicit X icon (the bare `background:#fff` was wiping Bootstrap's icon) */
+        background: #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='%2314252a' d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center / 14px auto no-repeat;
         box-shadow: 0 2px 10px rgba(0,0,0,0.12);
     }
     .ahg-im-head { margin-bottom: 22px; }

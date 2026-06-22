@@ -70,10 +70,6 @@
                         <div class="hero-desc-wrapper">
                             {!! $service->content !!}
                         </div>
-                        <div class="hero-meta mt-4" style="display: flex; gap: 25px; font-size: 0.9rem; color: rgba(255,255,255,0.8); border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; max-width: 500px;">
-                            <span title="Date this service was listed">Published: {{ ($service->published_date ?? $service->created_at)->format('M d, Y') }}</span>
-                            <span title="Date this service was last modified"> Updated: {{ ($service->updated_date ?? $service->updated_at)->format('M d, Y') }}</span>
-                        </div>
                         <div class="hero-actions">
                             <button type="button"
     class="glass-btn"
@@ -149,6 +145,9 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
                             {!! $service->info_one !!}
                         </div>
                         {{-- Left Read more removed as requested --}}
+                        <p class="content-updated-meta" style="margin-top:18px;font-size:0.85rem;color:#6b7280;">
+                            Updated: {{ ($service->updated_date ?? $service->updated_at)->format('M d, Y') }}
+                        </p>
                     </div>
                     <div class="col-lg-7 offset-lg-1" data-aos="fade-left">
                         <div class="transformation-desc-wrapper" id="transformation-desc-wrapper">
@@ -578,6 +577,45 @@ function toggleTransformationDesc() {
             });
         </script>
 
+        <!-- Related services you might be interested in -->
+        @php
+            $displayServices = (isset($relatedServices) ? $relatedServices : collect())->take(6);
+            if ($displayServices->isEmpty()) {
+                $displayServices = isset($featuredServices) ? $featuredServices->take(3) : collect();
+            }
+        @endphp
+        @if ($displayServices->count())
+            <section class="bottom-interests">
+                <div class="container">
+                    <h3 class="mb-5 text-center" style="font-size: 2.8rem; font-weight: 700; color: #1a1a1a;">Related services you might be interested in</h3>
+                    <div class="row g-4">
+                        @foreach ($displayServices as $related)
+                            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
+                                <a href="{{ route('front.service', $related->slug) }}" class="interest-card-link">
+                                    <div class="interest-card">
+                                        <div class="interest-img-wrapper">
+                                            <img src="{{ $related->hero_image ? asset('public/uploads/service_images/' . $related->hero_image) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}"
+                                                alt="{{ $related->name }}">
+                                        </div>
+                                        <div class="interest-content">
+                                            <span class="text-uppercase small fw-bold text-muted mb-2 d-block">
+                                                Related Service
+                                            </span>
+                                            <h4>{{ $related->name }}</h4>
+                                            <div class="interest-meta">
+                                                <span>View Service</span>
+                                                <i class="fa-solid fa-arrow-right"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </section>
+        @endif
+
         <!-- Case Studies & Related Content Split Section -->
         <section class="split-section-ey">
             <div class="container">
@@ -665,40 +703,6 @@ function toggleTransformationDesc() {
             @include('front.partials.testimonial-pills')
         @endif
 
-        <!-- Bottom Interests -->
-        <section class="bottom-interests">
-            <div class="container">
-                <h3 class="mb-5 text-center" style="font-size: 2.8rem; font-weight: 700; color: #1a1a1a;">You might be
-                    interested in</h3>
-                <div class="row g-4">
-                    @php
-                        $displayServices = isset($featuredServices) ? $featuredServices->take(3) : collect();
-                    @endphp
-                    @foreach ($displayServices as $related)
-                        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
-                            <a href="{{ route('front.service', $related->slug) }}" class="interest-card-link">
-                                <div class="interest-card">
-                                    <div class="interest-img-wrapper">
-                                        <img src="{{ $related->hero_image ? asset('public/uploads/service_images/' . $related->hero_image) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}"
-                                            alt="{{ $related->name }}">
-                                    </div>
-                                    <div class="interest-content">
-                                        <span class="text-uppercase small fw-bold text-muted mb-2 d-block">
-                                            Featured Service
-                                        </span>
-                                        <h4>{{ $related->name }}</h4>
-                                        <div class="interest-meta">
-                                            <span>View Service</span>
-                                            <i class="fa-solid fa-arrow-right"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </section>
 
 
         @include('front.view.announcement')

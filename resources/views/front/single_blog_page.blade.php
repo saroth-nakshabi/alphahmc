@@ -247,13 +247,14 @@
         background: #fff;
     }
 
-    .blog-client-swiper-outer { margin-top: 50px; overflow: hidden; }
+    .blog-client-swiper-outer { margin-top: 40px; overflow: hidden; }
     .blogClientSwiper .swiper-wrapper { align-items: center; transition-timing-function: linear !important; }
-    .blog-client-slide { width: auto; display: flex; justify-content: center; }
-    .blog-client-logo { display: flex; align-items: center; justify-content: center; padding: 0 40px; }
+    /* Even, evenly-spaced columns so the logo strip reads as an organized row */
+    .blog-client-slide { width: 150px; display: flex; align-items: center; justify-content: center; }
+    .blog-client-logo { display: flex; align-items: center; justify-content: center; width: 100%; padding: 0 10px; }
     .blog-client-logo img {
-        max-height: 48px; width: auto; object-fit: contain;
-        filter: grayscale(1); opacity: 0.5;
+        max-height: 46px; max-width: 100%; width: auto; object-fit: contain;
+        filter: grayscale(1); opacity: 0.55;
         transition: var(--transition-smooth);
     }
     .blog-client-logo img:hover {
@@ -357,8 +358,8 @@
         <div class="container">
             <div class="row align-items-end mb-5">
                 <div class="col-md-8">
-                    <h6 class="article-badge">Insights</h6>
-                    <h2 class="thinking-title mb-0">Our Latest Thinking</h2>
+                    <h6 class="article-badge">Our Blogs</h6>
+                    <h2 class="thinking-title mb-0">Our Latest Insights</h2>
                 </div>
                 <div class="col-md-4 text-md-end d-none d-md-block">
                     <a href="{{ route('front.new_blog') }}" class="btn-premium">VIEW ALL INSIGHTS</a>
@@ -381,6 +382,73 @@
             </div>
         </div>
     </section>
+
+    {{-- Services you might be interested in (same split design as the Projects page) --}}
+    @if(($featuredServices ?? collect())->count())
+    <style>
+        .premium-blog-section { padding: 100px 0; background: #ffffff; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9; overflow-x: hidden; }
+        .kb-main-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 32px; padding: 60px; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
+        .blog-split-wrapper { display: grid; grid-template-columns: 1fr 1.5fr; gap: 80px; align-items: center; }
+        .blog-info-panel h2 { font-size: 2.8rem; font-weight: 800; color: #0f172a; margin: 16px 0 18px; letter-spacing: -1px; }
+        .blog-info-panel p { color: #64748b; font-size: 1rem; line-height: 1.75; }
+        .sub-badge { display: inline-block; text-transform: uppercase; font-weight: 700; font-size: 0.75rem; letter-spacing: 2px; color: #066D77; background: rgba(6,109,119,0.08); padding: 6px 16px; border-radius: 100px; border: 1px solid rgba(6,109,119,0.18); }
+        .kb-btn { display: inline-flex; align-items: center; gap: 10px; margin-top: 28px; padding: 13px 30px; background: #0f172a; color: #fff; border-radius: 100px; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; text-decoration: none; }
+        .kb-btn:hover { background: #066D77; color: #fff; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(6,109,119,0.25); }
+        .blog-list-panel { display: flex; flex-direction: column; gap: 16px; }
+        .blog-list-item { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 20px 24px; border-radius: 16px; background: #fff; border: 1px solid #e2e8f0; transition: all 0.3s ease; text-decoration: none; }
+        .blog-list-item:hover { border-color: #066D77; box-shadow: 0 6px 20px rgba(6,109,119,0.08); transform: translateX(6px); }
+        .blog-item-content { flex: 1; min-width: 0; }
+        .blog-item-content h3 { color: #1e293b; font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; transition: color 0.25s ease; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .blog-list-item:hover h3 { color: #066D77; }
+        .blog-item-meta { display: flex; align-items: center; gap: 8px; color: #94a3b8; font-size: 0.8rem; }
+        .meta-dot { width: 5px; height: 5px; background: #066D77; border-radius: 50%; flex-shrink: 0; }
+        .blog-item-thumb { width: 88px; height: 88px; border-radius: 12px; overflow: hidden; flex-shrink: 0; }
+        .blog-item-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .blog-list-item:hover .blog-item-thumb img { transform: scale(1.08); }
+        @media (max-width: 991px) { .blog-split-wrapper { grid-template-columns: 1fr; gap: 36px; } }
+        @media (max-width: 767px) { .premium-blog-section { padding: 60px 0; } .kb-main-card { padding: 28px; border-radius: 22px; } .blog-info-panel h2 { font-size: 2rem; } .blog-list-item { padding: 16px; } .blog-item-thumb { width: 70px; height: 70px; } }
+    </style>
+    <section class="premium-blog-section">
+        <div class="container">
+            <div class="kb-main-card">
+                <div class="blog-split-wrapper">
+                    {{-- Left Info Panel --}}
+                    <div class="blog-info-panel">
+                        <h2>Services you might be interested in</h2>
+                        <p>
+                            Explore Alpha Health Group's healthcare consultancy services, from DOH licensing and
+                            accreditation to quality, compliance, and operational excellence, tailored to your facility.
+                        </p>
+                        <a href="{{ route('front.all-services') }}" class="kb-btn">
+                            <span>View All Services</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    {{-- Right Service List --}}
+                    <div class="blog-list-panel">
+                        @foreach ($featuredServices->take(3) as $svc)
+                            <a href="{{ route('front.service', $svc->slug) }}" class="blog-list-item">
+                                <div class="blog-item-content">
+                                    <h3>{{ $svc->name }}</h3>
+                                    <div class="blog-item-meta">
+                                        <span class="meta-dot"></span>
+                                        <span>Alpha Health</span>
+                                        <span>{{ optional($svc->categories->first())->name ?? 'Healthcare Consultancy' }}</span>
+                                    </div>
+                                </div>
+                                <div class="blog-item-thumb">
+                                    <img src="{{ $svc->hero_image ? asset('public/uploads/service_images/' . $svc->hero_image) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}"
+                                        alt="{{ $svc->name }}" loading="lazy">
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    @endif
 
     {{-- Alpha Blueprint AI launcher --}}
     @include('front.partials.planner-cta', ['variant' => 'light'])
@@ -431,7 +499,7 @@
             if (typeof Swiper !== 'undefined' && document.querySelector('.blogClientSwiper')) {
                 new Swiper('.blogClientSwiper', {
                     slidesPerView: 'auto',
-                    spaceBetween: 20,
+                    spaceBetween: 12,
                     loop: true,
                     speed: 3500,
                     allowTouchMove: true,

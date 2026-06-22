@@ -1,8 +1,8 @@
 @extends('front/layout-2')
 
 @section('content')
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/blog-base.css') }}?v=2">
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/projects.css') }}?v=5">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/blog-base.css') }}?v=3">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/projects.css') }}?v=6">
     <style>
         .service-banner { background-image: linear-gradient(rgba(0, 0, 0, 0.3), var(--premium-black)),
                           url('{{ asset('public/uploads/service_images/1777903827_hero_image_f2b72665-520c-438d-b7ab-0df3442aecce.jpg') }}'); }
@@ -118,9 +118,9 @@
                         </div>
                     </div>
                     <div class="meta-item">
-                        <h4>Last Updated</h4>
+                        <h4>Date</h4>
                         <div class="tech-tags">
-                            <span class="tech-tag">{{ ($featuredProject->updated_date ?? $featuredProject->updated_at)->format('M d, Y') }}</span>
+                            <span class="tech-tag">{{ $featuredProject->created_at->format('M d, Y') }}</span>
                         </div>
                     </div>
                 </div>
@@ -165,22 +165,22 @@
         <div class="premium-project-grid" id="projectContainer">
             @foreach ($projects as $project)
                 @if ($project->project_category)
-                    <div class="premium-project-card" data-category="{{ $project->project_category->name }}">
+                    <a href="{{ route('front.project_details', $project->slug) }}" class="premium-project-card" data-category="{{ $project->project_category->name }}" style="display:block;text-decoration:none;color:inherit;">
                         <div class="project-img-container">
                             <img src="{{ isset($project->projects_images[0]) ? asset('public/' . $project->projects_images[0]->image) : asset('public/front-new/assets/images/section-3-1st-image.jpg') }}" alt="{{ $project->name }}">
                             <div class="project-cat-badge">{{ $project->project_category->name }}</div>
                         </div>
                         <div class="p-4 pt-5">
-                            <span class="text-muted small fw-bold text-uppercase opacity-50">Global Impact</span>
+                            <span class="text-muted small fw-bold text-uppercase opacity-50">{{ $project->client_name ?: 'Case Study' }}</span>
                             <h3 class="fw-bold my-2" style="font-size: 1.5rem;">{{ $project->name }}</h3>
                             <div class="text-muted small mb-4">
                                 {!! Str::limit(strip_tags($project->description), 120) !!}
                             </div>
-                            <a href="{{ route('front.project_details', $project->slug) }}" class="text-dark fw-bold text-decoration-none">
+                            <span class="text-dark fw-bold text-decoration-none">
                                 VIEW CASE STUDY <i class="fas fa-arrow-right ms-2"></i>
-                            </a>
+                            </span>
                         </div>
-                    </div>
+                    </a>
                 @endif
             @endforeach
         </div>

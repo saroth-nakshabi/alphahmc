@@ -49,6 +49,7 @@
                             <table id="items-table" class="table border table-striped table-bordered display text-nowrap">
                                 <thead>
                                     <tr>
+                                        <th>Image</th>
                                         <th>Name</th>
                                         <th>Active</th>
                                         <th>Action</th>
@@ -58,6 +59,15 @@
                                     @if (isset($sliders) && count($sliders) > 0)
                                         @foreach ($sliders as $slider)
                                             <tr data-id="{{ $slider->id }}">
+                                                <td>
+                                                    @if ($slider->image)
+                                                        <img src="{{ asset('public/uploads/slider_images/' . $slider->image) }}"
+                                                            alt="{{ $slider->main_title }}"
+                                                            style="width:90px;height:54px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0;">
+                                                    @else
+                                                        <span class="text-muted small">—</span>
+                                                    @endif
+                                                </td>
                                                 <td>{{ $slider->main_title }}</td>
                                                 <td>
                                                     <div class="form-check form-switch">
@@ -93,6 +103,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
+                                        <th>Image</th>
                                         <th>Name</th>
                                         <th>Active</th>
                                         <th>Action</th>
@@ -275,6 +286,12 @@
         // FIX 3: Pass permission flags from Blade to JS to control which buttons appear in AJAX-rendered rows
         const canEdit   = @json(auth()->user()?->can('edit home sliders') ?? false);
         const canDelete = @json(auth()->user()?->can('delete home sliders') ?? false);
+        const sliderImgBase = "{{ asset('public/uploads/slider_images') }}";
+        function sliderImgCell(img, title) {
+            return img
+                ? `<td><img src="${sliderImgBase}/${img}" alt="${title || ''}" style="width:90px;height:54px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0;"></td>`
+                : `<td><span class="text-muted small">—</span></td>`;
+        }
 
         $(document).ready(function() {
             var items_table = $("#items-table").DataTable({
@@ -361,6 +378,7 @@
 
                             const newRow = `
                                 <tr data-id="${response.data.id}">
+                                    ${sliderImgCell(response.data.image, response.data.main_title)}
                                     <td>${response.data.main_title}</td>
                                     <td>
                                         <div class="form-check form-switch">
@@ -448,6 +466,7 @@
 
                             let row = $('#items-table').find(`tr[data-id="${response.data.id}"]`);
                             row.html(`
+                                ${sliderImgCell(response.data.image, response.data.main_title)}
                                 <td>${response.data.main_title}</td>
                                 <td>
                                     <div class="form-check form-switch">

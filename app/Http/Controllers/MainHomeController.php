@@ -121,9 +121,17 @@ class MainHomeController extends Controller
         if ($data['service']->related_services && is_array($data['service']->related_services)) {
             $data['relatedServices'] = Service::published()->whereIn('id', $data['service']->related_services)->get();
         } else {
-            $data['relatedServices'] = Service::published()->whereHas('categories', function ($query) use ($categoryIds) {
-                $query->whereIn('categories.id', $categoryIds);
-            })->where('id', '!=', $data['service']->id)->get();
+            // No related services chosen — fall back to others in the same category,
+            // prioritising featured services first.
+            $data['relatedServices'] = Service::published()
+                ->whereHas('categories', function ($query) use ($categoryIds) {
+                    $query->whereIn('categories.id', $categoryIds);
+                })
+                ->where('id', '!=', $data['service']->id)
+                ->orderByDesc('featured')
+                ->orderBy('sort_order')
+                ->orderBy('id')
+                ->get();
         }
 
         $data['featuredServices'] = Service::published()->where('featured', true)->take(3)->get();
@@ -254,10 +262,11 @@ class MainHomeController extends Controller
 
     public function project()
     {
-        $projects = Project::with('projects_images', 'projects_videos', 'projects_documents', 'project_category')->get();
+        $projects = Project::with('projects_images', 'projects_videos', 'projects_documents', 'project_category')
+            ->orderBy('sort_order')->orderBy('id')->get();
         $featuredProject = Project::with(['projects_images', 'project_category'])
             ->where('featured', true)->first()
-            ?? Project::with(['projects_images', 'project_category'])->latest()->first();
+            ?? Project::with(['projects_images', 'project_category'])->orderBy('sort_order')->orderBy('id')->first();
 
         $featuredServices = collect();
         if ($featuredProject && !empty($featuredProject->service_ids)) {

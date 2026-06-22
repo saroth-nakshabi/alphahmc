@@ -102,6 +102,22 @@ Route::get('/service-category/{slug}', [MainHomeController::class, 'serviceCateg
 Route::get('/all_services', [MainHomeController::class, 'allServices'])->name('front.all-services');
 Route::get('/services-by-facility-type', [MainHomeController::class, 'facilityTypes'])->name('front.facility-types');
 Route::redirect('/services', '/all_services', 301);
+
+// ── Legacy URL 301 redirects — old indexed pages → current pages ──
+Route::redirect('/new-professional-license', '/services/uae-healthcare-professional-licensing', 301);
+Route::redirect('/uae-healthcare-professional-licensing', '/services/uae-healthcare-professional-licensing', 301);
+Route::redirect('/transfer-professional-license', '/service-category/healthcare-professional-licensing', 301);
+Route::redirect('/healthcare-professional-licensing', '/service-category/healthcare-professional-licensing', 301);
+Route::redirect('/bahrain-healthcare-professional-license', '/service-category/healthcare-professional-licensing', 301);
+Route::redirect('/medical-engineering-services', '/service-category/engineering-design-approvals', 301);
+Route::redirect('/qatar-healthcare-professional-license', '/services/healthcare-professional-licensing-qatar', 301);
+Route::redirect('/saudi-healthcare-professional-license', '/services/saudi-healthcare-professional-licensing', 301);
+Route::redirect('/moh-product-registration', '/service-category/pharmaceutical-product-services', 301);
+Route::redirect('/activate-professional-license', '/services/activate-your-uae-healthcare-license', 301);
+Route::redirect('/healthcare-insurance-empanelment', '/service-category/insurance-empanelment', 301);
+Route::redirect('/careers', '/service-category/healthcare-professional-resourcing', 301);
+Route::redirect('/careers/apply-job', '/service-category/healthcare-professional-resourcing', 301);
+
 Route::post('/inquiry/submit', [MainHomeController::class, 'submitInquiry'])->middleware('throttle:10,1')->name('front.inquiry.submit');
 Route::get('/healthcare-management-update-insights', [MainHomeController::class, 'blog'])->name('front.new_blog');
 Route::redirect('/new_blog', '/healthcare-management-update-insights', 301);
@@ -404,6 +420,7 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::get('/projects', [ProjectController::class, 'index'])->name('project.index')->middleware('permission:view projects');
     Route::post('/projects-store', [ProjectController::class, 'store'])->name('project.store')->middleware('permission:create projects');
     Route::post('/projects/get', [ProjectController::class, 'getProject'])->name('project.getProject')->middleware('permission:view projects');
+    Route::post('/projects/reorder', [ProjectController::class, 'reorder'])->name('project.reorder')->middleware('permission:edit projects');
     Route::post('/projects/update/{id}', [ProjectController::class, 'update'])->name('project.update')->middleware('permission:edit projects');
     Route::delete('/projects/destroy/{id}', [ProjectController::class, 'destroy'])->name('project.destroy')->middleware('permission:delete projects');
 

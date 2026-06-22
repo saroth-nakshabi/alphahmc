@@ -619,8 +619,8 @@
 }
 
 .pdl-overview__title {
-  font-size: clamp(2.6rem, 3.5vw, 4rem);
-  margin-bottom: 28px;
+  font-size: 1.6rem;
+  margin-bottom: 16px;
 }
 
 .pdl-overview__body {
@@ -685,35 +685,34 @@
 
 /* ─── SERVICES DELIVERED ──────────────────────────────────────────── */
 .pdl-svc-block {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border);
+  margin-top: 52px;
+  padding: 32px 36px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg, 18px);
+  background: var(--bg, #f8fafc);
 }
 .pdl-svc-block__lbl {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 0.59rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 12px;
+  font-size: 1.35rem;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.3px;
+  color: var(--ink, #0f172a);
+  margin-bottom: 18px;
 }
 .pdl-svc-pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
 }
 .pdl-svc-pill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 15px;
+  padding: 9px 18px;
   border-radius: 100px;
-  background: var(--white);
+  background: var(--white, #fff);
   border: 1px solid var(--border-md);
-  font-size: 0.82rem;
-  font-weight: 500;
+  font-size: 0.9rem;
+  font-weight: 600;
   color: var(--slate-3);
   text-decoration: none;
   transition: all 0.25s var(--ease-expo);
@@ -885,7 +884,7 @@
   gap: 32px;
 }
 
-.pdl-gallery__title { font-size: clamp(2.4rem, 3.2vw, 3.8rem); }
+.pdl-gallery__title { font-size: 1.6rem; }
 
 .pdl-filter-bar {
   display: flex;
@@ -1035,8 +1034,8 @@
 }
 
 .pdl-challenges__title {
-  font-size: clamp(2.6rem, 3.5vw, 4rem);
-  margin-bottom: 72px;
+  font-size: 1.6rem;
+  margin-bottom: 28px;
 }
 
 .pdl-challenges__grid {
@@ -1305,7 +1304,7 @@
   gap: 24px;
 }
 
-.pdl-related__title { font-size: clamp(2.4rem, 3.2vw, 3.8rem); }
+.pdl-related__title { font-size: 1.6rem; }
 
 .pdl-related__grid {
   display: grid;
@@ -1499,7 +1498,7 @@
 
   .pdl-overview { padding: 80px 0; }
   .pdl-overview__grid { grid-template-columns: 1fr; gap: 48px; }
-  .pdl-overview__title { font-size: 2.8rem; }
+  .pdl-overview__title { font-size: 1.5rem; }
   
   .pdl-features { padding: 80px 0; }
   .pdl-features__head { grid-template-columns: 1fr; gap: 24px; margin-bottom: 48px; }
@@ -1509,7 +1508,7 @@
   .pdl-gallery__head { flex-direction: column; align-items: flex-start; gap: 24px; }
   
   .pdl-challenges { padding: 80px 0; }
-  .pdl-challenges__title { font-size: 2.8rem; margin-bottom: 48px; }
+  .pdl-challenges__title { font-size: 1.5rem; margin-bottom: 24px; }
   
   .pdl-results { padding: 80px 0; }
   .pdl-results__grid { grid-template-columns: repeat(2, 1fr); }
@@ -1533,7 +1532,7 @@
   .pd-btn { width: 100%; justify-content: center; }
   
   .pdl-overview__title, .pdl-features__title, .pdl-gallery__title, .pdl-challenges__title, .pdl-results__title, .pdl-related__title {
-    font-size: 2.2rem;
+    font-size: 1.4rem;
   }
   
   .pdl-stat-row { padding: 16px; gap: 16px; }
@@ -1723,9 +1722,9 @@
                             @if($project->client_name || $project->client_website)
                             <div class="pd-hero-client" style="display:flex; align-items:center; gap:16px; margin-bottom:28px; flex-wrap:wrap;">
                                 @if($project->client_name)
-                                <div style="display:flex; align-items:center; gap:8px;">
-                                    <i data-lucide="building-2" style="width:16px;height:16px;color:var(--cr);flex-shrink:0;"></i>
-                                    <span style="font-size:0.92rem; font-weight:600; color:var(--slate);">{{ $project->client_name }}</span>
+                                <div style="display:flex; align-items:center; gap:9px;">
+                                    <i data-lucide="building-2" style="width:19px;height:19px;color:var(--cr);flex-shrink:0;"></i>
+                                    <span style="font-size:1.15rem; font-weight:700; color:var(--ink, #0f172a);">{{ $project->client_name }}</span>
                                 </div>
                                 @endif
                                 @if($project->client_name && $project->client_website)
@@ -1737,14 +1736,6 @@
                                     {{ preg_replace('#^https?://(www\.)?#i', '', rtrim($project->client_website, '/')) }}
                                 </a>
                                 @endif
-                            </div>
-                            @endif
-                            @if($project->projects_images->count() > 0 || $project->projects_videos->count() > 0 || $project->projects_documents->count() > 0)
-                            <div class="pd-hero-ctas" style="display: flex; gap: 15px; margin-top: 0; flex-wrap: wrap;">
-                                <a href="#gallery" class="pd-btn pd-btn-primary">
-                                    <i data-lucide="layout-grid" style="width:17px;height:17px;"></i>
-                                    <span>View Assets</span>
-                                </a>
                             </div>
                             @endif
                         </div>
@@ -1848,7 +1839,7 @@
         <div class="pdl-reveal">
           <div class="pdl-eyebrow">
             <span class="pdl-eyebrow__tick"></span>
-            <span class="pdl-eyebrow__text">01 — Overview</span>
+            <span class="pdl-eyebrow__text">Overview</span>
           </div>
           <h2 class="pdl-overview__title">{{ $project->name }}</h2>
           <div class="pdl-overview__body">{!! $project->description !!}</div>
@@ -1900,25 +1891,20 @@
             @endif
           </div>
 
-          @if(isset($projectServices) && $projectServices->count() > 0)
-          <div class="pdl-svc-block">
-            <div class="pdl-svc-block__lbl">
-              <i data-lucide="briefcase" style="width:13px;height:13px;"></i>
-              Services Delivered
-            </div>
-            <div class="pdl-svc-pills">
-              @foreach($projectServices as $svc)
-              <a href="{{ route('front.service', $svc->slug) }}" class="pdl-svc-pill">
-                <i data-lucide="arrow-right" style="width:12px;height:12px;"></i>
-                {{ $svc->name }}
-              </a>
-              @endforeach
-            </div>
-          </div>
-          @endif
-
         </div>
       </div>
+
+      {{-- Services Delivered — full-width prominent band (no icons) --}}
+      @if(isset($projectServices) && $projectServices->count() > 0)
+      <div class="pdl-svc-block pdl-reveal">
+        <div class="pdl-svc-block__lbl">Services Delivered</div>
+        <div class="pdl-svc-pills">
+          @foreach($projectServices as $svc)
+          <a href="{{ route('front.service', $svc->slug) }}" class="pdl-svc-pill">{{ $svc->name }}</a>
+          @endforeach
+        </div>
+      </div>
+      @endif
     </div>
   </section>
 
@@ -1930,7 +1916,7 @@
         <div class="pdl-reveal">
           <div class="pdl-eyebrow">
             <span class="pdl-eyebrow__tick"></span>
-            <span class="pdl-eyebrow__text">03 — Assets</span>
+            <span class="pdl-eyebrow__text">Assets</span>
           </div>
           <h2 class="pdl-gallery__title">Project<br><em>Gallery</em></h2>
         </div>
@@ -2113,8 +2099,10 @@
                   <div class="pdl-ccard pdl-ccard--problem pdl-reveal">
                     <div class="pdl-ccard__top-bar"></div>
                     <h3>{{ $item['challenge_title'] ?? 'Project Challenge' }}</h3>
+                    <span class="pdl-cpill pdl-cpill--problem">Challenge</span>
                     <p>{!! $item['challenge'] ?? '' !!}</p>
                     <div class="pdl-ccard__rule"></div>
+                    <span class="pdl-cpill pdl-cpill--solution">Solution</span>
                     <p>{!! $item['resolution'] ?? '' !!}</p>
                   </div>
                 </div>
@@ -2137,8 +2125,10 @@
           <div class="pdl-ccard pdl-ccard--problem pdl-reveal">
             <div class="pdl-ccard__top-bar"></div>
             <h3>{{ $project->challenge_title ?? 'Project Challenge' }}</h3>
+            <span class="pdl-cpill pdl-cpill--problem">Challenge</span>
             <p>{!! $project->challenge ?? '' !!}</p>
             <div class="pdl-ccard__rule"></div>
+            <span class="pdl-cpill pdl-cpill--solution">Solution</span>
             <p>{!! $project->resolution ?? '' !!}</p>
           </div>
         </div>
@@ -2155,7 +2145,7 @@
         <div>
           <div class="pdl-eyebrow">
             <span class="pdl-eyebrow__tick"></span>
-            <span class="pdl-eyebrow__text">06 — Portfolio</span>
+            <span class="pdl-eyebrow__text">Portfolio</span>
           </div>
           <h2 class="pdl-related__title">More<br><em>Case Studies</em></h2>
         </div>

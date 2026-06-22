@@ -2715,3 +2715,35 @@
             .oc-marquee::-webkit-scrollbar { display: none; }
             .oc-logo { transition: none; }
         }
+
+/* Mobile hero (2026-06-22): shorter, text vertically centred, controls anchored at the bottom */
+@media (max-width: 767px) {
+    .hero-video-modern {
+        height: auto;
+        min-height: 64vh;
+        padding-bottom: 72px;            /* leaves room for the bottom controls */
+    }
+    /* Vertically centre the slider text (override the inline top padding) + nudge a bit higher */
+    .hero-video-modern > .container {
+        padding-top: 36px !important;
+        justify-content: center;
+    }
+    .hero-texts-wrapper {
+        transform: translateY(-6%);
+        min-height: auto;
+    }
+    /* Loading bar: anchor bottom-left, clear of the toggle */
+    .hero-progress-track {
+        position: absolute;
+        left: 16px;
+        bottom: 16px;
+        width: 48%;
+        margin: 0;
+        z-index: 11;
+    }
+    /* Toggle buttons: inside the hero, bottom-right (was bottom:-50px and overflowing) */
+    .hero-mode-bar {
+        bottom: 18px !important;
+        right: 16px !important;
+    }
+}

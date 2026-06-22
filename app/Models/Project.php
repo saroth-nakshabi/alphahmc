@@ -22,6 +22,7 @@ class Project extends Model
         'project_scope',
         'service_ids',
         'featured',
+        'sort_order',
         'challenge_heading',
         'challenge_title',
         'challenge',

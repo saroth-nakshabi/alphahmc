@@ -18,7 +18,7 @@ class ProjectController extends Controller
     public function index()
     {
         $projectsCategories = ProjectCategory::all();
-        $Projects = Project::all();
+        $Projects = Project::orderBy('sort_order')->orderBy('id')->get();
         $services = Service::published()->orderBy('name')->get();
 
         return view('dashboard.projects.index', compact('Projects', 'projectsCategories', 'services'));
@@ -102,7 +102,16 @@ class ProjectController extends Controller
             'challenge' => $challengeDescriptions[0] ?? null,
             'resolution' => $challengeResolutions[0] ?? null,
             'challenges' => $challenges ?: null,
+            'sort_order' => (int) Project::max('sort_order') + 1,
         ]);
+
+        // Manual case-study (created) date
+        if ($request->filled('project_date')) {
+            $item->timestamps = false;
+            $item->created_at = \Carbon\Carbon::parse($request->input('project_date'))->startOfDay();
+            $item->save();
+            $item->timestamps = true;
+        }
 
         // Handle multiple image uploads
         $images = $request->file('image');
@@ -166,11 +175,13 @@ class ProjectController extends Controller
         $id = $request->input('id');
         $item = Project::with(["project_category"])->findOrFail($id);
 
+        $data = $item->toArray();
+        $data['project_date'] = $item->created_at ? $item->created_at->format('Y-m-d') : null;
 
         return response()->json([
             'success' => true,
             'message' => 'Updated successfully!',
-            'data' => $item,
+            'data' => $data,
         ], 201);
     }
 
@@ -256,6 +267,14 @@ class ProjectController extends Controller
             'challenges' => $challenges ?: null,
         ]);
 
+        // Manual case-study (created) date
+        if ($request->filled('project_date')) {
+            $item->timestamps = false;
+            $item->created_at = \Carbon\Carbon::parse($request->input('project_date'))->startOfDay();
+            $item->save();
+            $item->timestamps = true;
+        }
+
         // Handle image update
         if ($request->hasFile('image')) {
             $oldImages = ProjectImage::where('project_id', $item->id)->get();
@@ -339,5 +358,20 @@ class ProjectController extends Controller
             'success' => true,
             'message' => 'Deleted successfully!',
         ], 201);
+    }
+
+    /** Persist drag-and-drop order (same pattern as brands). */
+    public function reorder(Request $request)
+    {
+        $request->validate([
+            'order'   => 'required|array',
+            'order.*' => 'integer|exists:projects,id',
+        ]);
+
+        foreach ($request->order as $position => $id) {
+            Project::where('id', $id)->update(['sort_order' => $position + 1]);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Order saved!']);
     }
 }

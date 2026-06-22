@@ -279,19 +279,21 @@ h1, .h1 { font-weight: 500 !important; }
         margin-top: 20px;
     }
 
-    /* ── Mobile L2: expandable row with chevron ── */
+    /* ── Mobile L2: expandable row with the chevron on the LEFT ── */
     .mobile-sub-list .main-category-link-sub:not(.service-group-link):not(.disabled) {
         display: flex !important;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-start;
+        gap: 10px;
         min-height: 48px;
         touch-action: manipulation;
         padding-right: 4px;
     }
 
     .mobile-expand-chevron {
-        width: 30px;
-        height: 30px;
+        order: -1;                 /* move the interactive chevron to the left of the label */
+        width: 22px;               /* smaller circle */
+        height: 22px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -299,7 +301,7 @@ h1, .h1 { font-weight: 500 !important; }
         border-radius: 50%;
         background: rgba(0, 144, 149, 0.08);
         color: #009095;
-        font-size: 0.65rem;
+        font-size: 0.58rem;
         transition: transform 0.22s cubic-bezier(0.165, 0.84, 0.44, 1),
                     background 0.22s ease;
     }
@@ -307,6 +309,17 @@ h1, .h1 { font-weight: 500 !important; }
     .mobile-sub-expanded > a .mobile-expand-chevron {
         transform: rotate(90deg);
         background: rgba(0, 144, 149, 0.18);
+    }
+
+    /* Remove the leaked desktop "›" so L2 keeps only the interactive chevron,
+       and L3 keeps only its single right-side chevron (no double arrows). */
+    .mobile-sub-list a::after,
+    .mobile-service-list a::after { content: none !important; }
+
+    /* L1: when a top-level item is open, rotate its arrow downward (interactive) */
+    .service-content a.active-category::after {
+        transform: rotate(90deg) !important;
+        opacity: 1 !important;
     }
 
     /* ── Mobile L3: compact modern panel ── */

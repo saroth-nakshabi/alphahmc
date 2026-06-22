@@ -111,10 +111,15 @@ class HomeSliderController extends Controller
         $id = $request->input('id');
         $item = HomeSlider::findOrFail($id);
 
+        $data = $item->toArray();
+        $data['image_url'] = $item->image
+            ? asset('public/uploads/slider_images/' . $item->image)
+            : null;
+
         return response()->json([
             'success' => true,
             'message' => 'Updated successfully!',
-            'data' => $item,
+            'data' => $data,
         ], 201);
     }
 

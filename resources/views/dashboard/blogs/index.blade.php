@@ -259,7 +259,7 @@
                     <div class="row g-3 mt-1">
                         <div class="col-md-12">
                             <label class="control-label mb-1">Content <span class="text-danger">*</span></label>
-                            <textarea id="editor" name="content" rows="8" class="form-control" placeholder="Write blog content..." required></textarea>
+                            <textarea id="editor" name="content" rows="8" class="form-control" placeholder="Write blog content..."></textarea>
                         </div>
                     </div>
                     <hr class="mt-4">
@@ -362,7 +362,7 @@
                     <div class="row g-3 mt-1">
                         <div class="col-md-12">
                             <label class="control-label mb-1">Content <span class="text-danger">*</span></label>
-                            <textarea id="editor-edit" name="content" rows="8" class="form-control" placeholder="Write blog content..." required></textarea>
+                            <textarea id="editor-edit" name="content" rows="8" class="form-control" placeholder="Write blog content..."></textarea>
                         </div>
                     </div>
                     <hr class="mt-4">
@@ -393,7 +393,7 @@
 
 @section('custom_js')
     <script src="{{ asset('public/dashboard/dist/libs/jquery-ui/dist/jquery-ui.min.js') }}"></script>
-    <script src="{{ asset('public/dashboard/dist/libs/ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('public/dashboard/dist/libs/tinymce/tinymce.min.js') }}"></script>
     <script src="{{ asset('public/dashboard/dist/libs/prismjs/prism.js') }}"></script>
     <script>
         const REORDER_URL = '{{ route('blogs.reorder') }}';
@@ -403,42 +403,58 @@
 
         var pendingContent = null;
 
-        var ckConfig = {
+        /* ── TinyMCE — same editor used on the service pages ── */
+        const tinyConfig = {
+            plugins: 'code searchreplace autolink directionality visualblocks link media table charmap nonbreaking anchor advlist lists wordcount fullscreen',
+            toolbar: 'undo redo | blocks | bold italic underline forecolor backcolor | link | alignleft aligncenter alignright | bullist numlist | fullscreen code',
             height: 380,
-            uploadUrl: '{{ route("ckeditor.upload") }}?_token={{ csrf_token() }}',
-            toolbar: [
-                { name: 'document',    items: ['Source', '-', 'Undo', 'Redo'] },
-                { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat'] },
-                { name: 'paragraph',   items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'Blockquote'] },
-                { name: 'links',       items: ['Link', 'Unlink'] },
-                { name: 'insert',      items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar'] },
-                '/',
-                { name: 'styles',      items: ['Format', 'Font', 'FontSize'] },
-                { name: 'colors',      items: ['TextColor', 'BGColor'] },
-            ],
-            removePlugins: 'elementspath',
-            resize_enabled: true,
+            menubar: false,
+            branding: false,
+            promotion: false,
+            image_title: true,
+            automatic_uploads: true,
+            images_upload_url: '/upload-image',
+            images_upload_handler: function (blobInfo, success, failure) {
+                var fd = new FormData();
+                fd.append('file', blobInfo.blob(), blobInfo.filename());
+                fetch('/upload-image', { method: 'POST', body: fd, headers: { 'X-CSRF-TOKEN': CSRF } })
+                    .then(r => r.ok ? r.json() : Promise.reject(r))
+                    .then(j => j.location ? success(j.location) : failure('No location in response'))
+                    .catch(e => failure('Upload failed: ' + e));
+            }
         };
 
-        function ckGet(id)  { return CKEDITOR.instances[id] ? CKEDITOR.instances[id].getData() : ''; }
-        function ckSet(id, html) { if (CKEDITOR.instances[id]) CKEDITOR.instances[id].setData(html); }
+        // Let TinyMCE dialogs (link/image/etc.) keep focus inside Bootstrap modals.
+        document.addEventListener('focusin', function (e) {
+            if (e.target.closest('.tox-tinymce, .tox-tinymce-aux, .tox-dialog, .tox-menu') !== null) {
+                e.stopImmediatePropagation();
+            }
+        });
+
+        function tinyGet(id)       { return tinymce.get(id) ? tinymce.get(id).getContent() : ''; }
+        function tinySet(id, html) { if (tinymce.get(id)) tinymce.get(id).setContent(html || ''); }
 
         /* ── Init Add editor when modal becomes visible ── */
         document.getElementById('addNewModal').addEventListener('shown.bs.modal', function() {
-            if (!CKEDITOR.instances['editor']) {
-                CKEDITOR.replace('editor', ckConfig);
+            if (!tinymce.get('editor')) {
+                tinymce.init({ selector: '#editor', ...tinyConfig });
             }
         });
 
         /* ── Init Edit editor when modal becomes visible, then load pending content ── */
         document.getElementById('editModal').addEventListener('shown.bs.modal', function() {
-            if (!CKEDITOR.instances['editor-edit']) {
-                var ed = CKEDITOR.replace('editor-edit', ckConfig);
-                ed.on('instanceReady', function() {
-                    if (pendingContent !== null) { ed.setData(pendingContent); pendingContent = null; }
+            if (!tinymce.get('editor-edit')) {
+                tinymce.init({
+                    selector: '#editor-edit',
+                    ...tinyConfig,
+                    setup: function(ed) {
+                        ed.on('init', function() {
+                            if (pendingContent !== null) { ed.setContent(pendingContent); pendingContent = null; }
+                        });
+                    }
                 });
             } else if (pendingContent !== null) {
-                CKEDITOR.instances['editor-edit'].setData(pendingContent);
+                tinymce.get('editor-edit').setContent(pendingContent);
                 pendingContent = null;
             }
         });
@@ -584,7 +600,7 @@
             /* ── Add Form ── */
             $('#add_form').on('submit', function(e) {
                 e.preventDefault();
-                document.querySelector('#editor').value = ckGet('editor');
+                document.querySelector('#editor').value = tinyGet('editor');
                 var formData = new FormData(this);
                 Swal.fire({ title: 'Saving...', allowOutsideClick: false, didOpen: function() { Swal.showLoading(); } });
                 $.ajax({
@@ -599,7 +615,7 @@
                         updateRanks();
                         $('#addNewModal').modal('hide');
                         $('#add_form')[0].reset();
-                        ckSet('editor', '');
+                        tinySet('editor', '');
                         $('[name="tags[]"].select2-add').val(null).trigger('change');
                     },
                     error: function(xhr) {
@@ -616,7 +632,7 @@
             /* ── Edit Form ── */
             $('#edit_form').on('submit', function(e) {
                 e.preventDefault();
-                document.querySelector('#editor-edit').value = ckGet('editor-edit');
+                document.querySelector('#editor-edit').value = tinyGet('editor-edit');
                 var formData = new FormData(this);
                 Swal.fire({ title: 'Updating...', allowOutsideClick: false, didOpen: function() { Swal.showLoading(); } });
                 $.ajax({
@@ -680,7 +696,7 @@
                         $('#edit_published_date').val(d.published_date ? String(d.published_date).substring(0, 10) : '');
                         $('#edit_updated_date').val(d.updated_date ? String(d.updated_date).substring(0, 10) : '');
                         pendingContent = d.content || '';
-                        if (CKEDITOR.instances['editor-edit']) { CKEDITOR.instances['editor-edit'].setData(pendingContent); pendingContent = null; }
+                        if (tinymce.get('editor-edit')) { tinymce.get('editor-edit').setContent(pendingContent); pendingContent = null; }
                         $('#editModal').modal('show');
                     },
                     error: function() {

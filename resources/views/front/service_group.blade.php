@@ -48,10 +48,6 @@
                         <div class="hero-desc-wrapper">
                             {!! $service->content !!}
                         </div>
-                        <div class="hero-meta mt-4" style="display: flex; gap: 25px; font-size: 0.9rem; color: rgba(255,255,255,0.8); border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; max-width: 500px;">
-                            <span title="Date this service group was listed">Published: {{ ($service->published_date ?? $service->created_at)->format('M d, Y') }}</span>
-                            <span title="Date this service group was last modified">Updated: {{ ($service->updated_date ?? $service->updated_at)->format('M d, Y') }}</span>
-                        </div>
                         <div class="hero-actions">
                             <button type="button"
     class="glass-btn"
@@ -137,6 +133,9 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
             <i class="fa-solid fa-arrow-right"></i>
           </a>
         </div>
+        <p class="content-updated-meta" style="margin-top:18px;font-size:0.85rem;color:#6b7280;">
+          Updated: {{ ($service->updated_date ?? $service->updated_at)->format('M d, Y') }}
+        </p>
       </div>
 
       <!-- Right: Intro Description (overview) -->

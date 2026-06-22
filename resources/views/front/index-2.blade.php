@@ -72,8 +72,13 @@
 
         <!-- BACKGROUND: Video Layer (Default Active) -->
         <!-- poster shows instantly; source is injected only on desktop to avoid mobile network hit -->
+        @php
+            $heroPoster = (isset($homeSliders) && count($homeSliders) && $homeSliders->first()->image)
+                ? asset('public/uploads/slider_images/' . $homeSliders->first()->image)
+                : asset('public/front-new/assets/images/video-thumbnail.jpg');
+        @endphp
         <video muted loop playsinline class="hero-bg-video hero-bg-active" id="heroVideo"
-               poster="{{ asset('public/front-new/assets/images/video-thumbnail.jpg') }}">
+               poster="{{ $heroPoster }}">
         </video>
         <script>
             if (window.innerWidth >= 768) {
@@ -217,7 +222,7 @@
         </div>
     </section>
 
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/home.css') }}?v=2">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/home.css') }}?v=6">
 
 
     <script>
@@ -254,9 +259,21 @@
                 if (currentMode === 'image') syncBgImage();
                 startProgress();
             }
+            // Lazy-inject the video source (used on mobile, where it isn't loaded upfront).
+            function ensureVideoSource() {
+                if (!videoBg || videoBg.querySelector('source')) return;
+                var s = document.createElement('source');
+                s.src  = '{{ asset("public/front-new/assets/images/AHG Hero Video.mp4") }}';
+                s.type = 'video/mp4';
+                videoBg.appendChild(s);
+                videoBg.load();
+                videoBg.play().catch(function () {});
+            }
+
             if (btnVideo) btnVideo.addEventListener('click', function () {
                 if (currentMode === 'video') return;
                 currentMode = 'video';
+                ensureVideoSource();           // safe, on-demand load (esp. mobile)
                 btnVideo.classList.add('active-mode');
                 btnImage.classList.remove('active-mode');
                 videoBg.classList.add('hero-bg-active');
@@ -271,6 +288,18 @@
                 videoBg.classList.remove('hero-bg-active');
                 syncBgImage();
             });
+
+            // On mobile, default to the image slider (avoid the bare video poster);
+            // the video loads only if the user taps the video toggle.
+            if (window.innerWidth < 768) {
+                currentMode = 'image';
+                if (btnVideo) btnVideo.classList.remove('active-mode');
+                if (btnImage) btnImage.classList.add('active-mode');
+                if (videoBg) videoBg.classList.remove('hero-bg-active');
+                if (imageBg) imageBg.classList.add('hero-bg-active');
+                syncBgImage();
+            }
+
             if (slides.length > 0) startProgress();
         });
     </script>
@@ -1336,8 +1365,23 @@
             const ctaText = singleService ? singleService.querySelector('.btn-text') : null;
 
             if (categoryDropdown && serviceDropdown) {
-                // 1. Initial Reset (optional but recommended)
-                // serviceDropdown.value = "";
+                // Snapshot the full service list once so we can rebuild it per category.
+                // (display:none on <option> is ignored by some browsers, so we re-add options.)
+                const serviceFirstOption = serviceDropdown.querySelector('option');
+                const allServiceOptions = Array.from(serviceDropdown.options)
+                    .filter(o => o.value)
+                    .map(o => o.cloneNode(true));
+
+                function rebuildServiceOptions(categoryId) {
+                    serviceDropdown.innerHTML = '';
+                    if (serviceFirstOption) serviceDropdown.appendChild(serviceFirstOption);
+                    allServiceOptions.forEach(o => {
+                        if (!categoryId || o.getAttribute('data-parent-id') === String(categoryId)) {
+                            serviceDropdown.appendChild(o.cloneNode(true));
+                        }
+                    });
+                    serviceDropdown.value = "";
+                }
 
                 const catDisplay = document.querySelector('.category-name-display');
 
@@ -1349,22 +1393,15 @@
                     const catUrl  = opt ? (opt.getAttribute('data-url') || '') : '';
                     const catDesc = opt ? (opt.getAttribute('data-desc') || '') : '';
                     const catImage = opt ? (opt.getAttribute('data-image') || '') : '';
-                    const options = Array.from(serviceDropdown.options);
-
                     // Swap the right-side image to the category image (when one is set).
                     if (serviceRight && catImage) {
                         serviceRight.style.backgroundImage =
                             `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('${catImage}')`;
                     }
 
-                    options.forEach(option => {
-                        if (!option.value) { option.style.display = 'block'; return; }
-                        option.style.display =
-                            option.getAttribute('data-parent-id') === selectedCategoryId ? 'block' : 'none';
-                    });
-
-                    // Reset service selection when the department changes
-                    serviceDropdown.value = "";
+                    // Narrow the service dropdown to ONLY this category's services
+                    // (empty category id rebuilds the full list).
+                    rebuildServiceOptions(selectedCategoryId);
 
                     // Show the category overview + an "Explore Category" CTA to its page
                     if (catDisplay)      catDisplay.textContent = 'Department';
