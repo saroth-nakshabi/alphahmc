@@ -52,6 +52,7 @@
                                         <th>Email</th>
                                         <th>Phone</th>
                                         <th>Role</th>
+                                        <th>Actions</th>
                                     </tr>
                                     <!-- end row -->
                                 </thead>
@@ -65,6 +66,12 @@
                                                 <td>{{ $user->phone }}</td>
                                                 <td>
                                                     {{ $user->getRoleNames()->first() ?? 'No role assigned' }}
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('all_users.permissions', $user->id) }}"
+                                                        class="btn btn-sm btn-primary">
+                                                        <i class="bi bi-shield-lock me-1"></i> Manage Access
+                                                    </a>
                                                 </td>
                                             </tr>
                                             <!-- end row -->

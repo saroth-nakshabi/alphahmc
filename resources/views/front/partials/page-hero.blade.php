@@ -18,7 +18,7 @@
 --}}
 @once
     @push('meta')
-        <link rel="stylesheet" href="{{ asset('public/front/assets/css/page-hero.css') }}?v=2">
+        <link rel="stylesheet" href="{{ asset('public/front/assets/css/page-hero.css') }}?v=3">
     @endpush
 @endonce
 

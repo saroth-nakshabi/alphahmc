@@ -1241,3 +1241,8 @@
   .service-detail-band { padding: 56px 0; }
   .service-detail-band .col-lg-6.offset-lg-1 { margin-top: 32px; }
 }
+
+/* Mobile hero title fit (2026-06-22) — small-phone step */
+@media (max-width: 480px) {
+    .hero-title { font-size: 1.85rem !important; }
+}

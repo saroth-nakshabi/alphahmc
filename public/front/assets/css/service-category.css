@@ -1321,3 +1321,11 @@
   font-size: .8rem;
   line-height: 1.55;
 }
+
+/* Mobile hero title fit (2026-06-22) — keep the hero heading within the viewport on phones */
+@media (max-width: 768px) {
+    .hero-title { font-size: clamp(1.9rem, 6.5vw, 2.6rem) !important; line-height: 1.15 !important; }
+}
+@media (max-width: 480px) {
+    .hero-title { font-size: 1.85rem !important; }
+}

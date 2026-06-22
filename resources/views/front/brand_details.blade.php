@@ -1,5 +1,15 @@
 @extends('front/layout-2')
 
+@php
+    $brandMetaTitle = empty($brand->meta_title) ? $brand->name : $brand->meta_title;
+    $brandMetaDesc  = $brand->meta_description ?: \Illuminate\Support\Str::limit(strip_tags($brand->description ?? ''), 160);
+@endphp
+@push('page_title', $brandMetaTitle . ' | Alpha Health Group')
+@push('meta')
+    <meta name="description" content="{{ $brandMetaDesc }}">
+    @if(!empty($brand->meta_keywords))<meta name="keywords" content="{{ $brand->meta_keywords }}">@endif
+@endpush
+
 @section('content')
 <style>
     :root {

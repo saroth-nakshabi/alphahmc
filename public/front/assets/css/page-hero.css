@@ -138,9 +138,12 @@
 
 @media (max-width: 991px) {
     .page-hero__inner { padding: 132px 20px 64px; }
+    .page-hero__title { font-size: clamp(2rem, 5.5vw, 3rem); }
 }
 @media (max-width: 575px) {
     .page-hero__inner { padding: 112px 18px 52px; }
+    .page-hero__title { font-size: 1.9rem; line-height: 1.18; letter-spacing: -0.01em; }
+    .page-hero__title .ph-sub { font-size: 1.5rem; }
     .page-hero__desc { font-size: 1.02rem; }
     .page-hero__cta { width: 100%; justify-content: center; }
 }

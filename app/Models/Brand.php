@@ -18,6 +18,10 @@ class Brand extends Model
         'what_we_do',
         'sort_order',
         'google_location',
+        'meta_title',
+        'meta_description',
+        'meta_keywords',
+        'areaServed',
     ];
 
     /**

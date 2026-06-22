@@ -158,12 +158,12 @@
                         <input type="email" name="email" class="form-control" placeholder="author@example.com">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Position <span class="text-danger">*</span></label>
-                        <input type="text" name="position" class="form-control" placeholder="e.g. Quality Manager" required>
+                        <label class="form-label">Position</label>
+                        <input type="text" name="position" class="form-control" placeholder="e.g. Quality Manager">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Company Name <span class="text-danger">*</span></label>
-                        <input type="text" name="company_name" class="form-control" placeholder="Organisation name" required>
+                        <label class="form-label">Company Name</label>
+                        <input type="text" name="company_name" class="form-control" placeholder="Organisation name">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Related Service</label>
@@ -233,11 +233,11 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Position</label>
-                        <input type="text" id="edit_position" name="position" class="form-control" required>
+                        <input type="text" id="edit_position" name="position" class="form-control">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Company Name</label>
-                        <input type="text" id="edit_company_name" name="company_name" class="form-control" required>
+                        <input type="text" id="edit_company_name" name="company_name" class="form-control">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Related Service</label>

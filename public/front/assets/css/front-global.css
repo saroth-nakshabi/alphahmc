@@ -895,7 +895,7 @@ h1, .h1 { font-weight: 500 !important; }
             flex-wrap: wrap;
             gap: 20px;
             position: relative;
-            padding-bottom: 100px !important;
+            padding-bottom: 30px !important;
         }
 
         .legal-text {
@@ -1120,7 +1120,7 @@ h1, .h1 { font-weight: 500 !important; }
                 flex-direction: column;
                 text-align: center;
                 gap: 25px;
-                padding-bottom: 90px !important;
+                padding-bottom: 30px !important;
             }
 
             .contact-info {

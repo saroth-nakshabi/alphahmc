@@ -1,7 +1,7 @@
 @extends('front/layout-2')
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.css') }}?v=2">
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-group.css') }}?v=4">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-group.css') }}?v=5">
 @endsection
 @push('page_title')
     {!! $service->name !!}
@@ -871,10 +871,9 @@ function toggleTransformationDesc() {
                         clickable: true,
                     },
                 });
-            }
 
-                        // AOS init
-                        if (typeof AOS !== 'undefined') {
+                // AOS init
+                if (typeof AOS !== 'undefined') {
                 AOS.init({
                     duration: 800,
                     once: true,
@@ -906,7 +905,7 @@ function toggleTransformationDesc() {
                 if (!isActive) {
                     item.classList.add('active');
                 }
-            });
+            }
         </script>
     @endpush
 @endsection

@@ -23,8 +23,8 @@ class ContactController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'author_name' => 'required|string|max:255',
-            'position' => 'required|string|max:255',
-            'company_name' => 'required|string|max:255',
+            'position' => 'nullable|string|max:255',
+            'company_name' => 'nullable|string|max:255',
             'content' => 'required|string',
             'rating' => 'required|integer|min:1|max:5',
             'featured' => 'sometimes|boolean',
@@ -80,8 +80,8 @@ class ContactController extends Controller
 
         $validator = Validator::make($request->all(), [
             'author_name' => 'required|string|max:255',
-            'position' => 'required|string|max:255',
-            'company_name' => 'required|string|max:255',
+            'position' => 'nullable|string|max:255',
+            'company_name' => 'nullable|string|max:255',
             'content' => 'required|string',
             'rating' => 'required|integer|min:1|max:5',
             'featured' => 'sometimes|boolean',

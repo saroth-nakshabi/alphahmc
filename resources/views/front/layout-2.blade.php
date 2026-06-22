@@ -138,7 +138,7 @@
         foreach ($service->faq as $faq) {
             $faqSchema[] = [
                 '@type'          => 'Question',
-                'Question'           => $faq->faq_question,
+                'name'           => $faq->faq_question,
                 'acceptedAnswer' => [
                     '@type' => 'Answer',
                     'text'  => strip_tags($faq->faq_answer),
@@ -155,16 +155,18 @@
         '@type'       => 'ProfessionalService',
         'name'        => $service->name,
         'description' => strip_tags($service->content),
-        'areaServed' => $service->areaServed,
-        'serviceType' => $service->serviceType,
         'provider'    => [
             '@type' => 'Organization',
             'name'  => 'Alpha Health Consultancies',  /*config('app.name')*/
         ],
     ];
 
-    if (!empty($areaServed)) {
-        $professionalService['areaServed'] = $areaServed;
+    // Only emit these when set — avoids null properties in the JSON-LD.
+    if (!empty($service->areaServed)) {
+        $professionalService['areaServed'] = $service->areaServed;
+    }
+    if (!empty($service->serviceType)) {
+        $professionalService['serviceType'] = $service->serviceType;
     }
 
     $schema[] = $professionalService;
@@ -276,7 +278,12 @@
                 'areaServed'        => 'AE',
                 'availableLanguage' => ['English', 'Arabic'],
             ],
-            'sameAs' => [],
+            'sameAs' => [
+                'https://www.linkedin.com/company/alphatsm/',
+                'https://www.instagram.com/alphahealthgroup/',
+                'https://www.facebook.com/alphatsm',
+                'https://x.com/alphatsm_',
+            ],
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
     !!}
     </script>
@@ -306,7 +313,7 @@
 
     <!-- Site CSS — blocking (critical nav + layout styles) -->
     <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/style.css') }}?v=2">
-    <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/slide-menu.css') }}?v=8">
+    <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/slide-menu.css') }}?v=12">
 
     <!-- Icon fonts + animation libs — deferred (not needed for first paint) -->
     <link rel="preload" as="style"
@@ -353,7 +360,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         @endif
     @endforeach
 
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/front-global.css') }}?v=7">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/front-global.css') }}?v=8">
 
 {{-- Consent update functions (called by banner buttons) --}}
     <script>
@@ -546,7 +553,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <style>
                     .nav-contact-cta{display:inline-flex;align-items:center;justify-content:center;height:46px;box-sizing:border-box;margin-left:16px;padding:0 22px;background:rgba(255,255,255,0.20);backdrop-filter:blur(15px);color:inherit;border:1px solid rgba(255,255,255,0.4);border-radius:50px;font-weight:600;font-size:.85rem;text-decoration:none;white-space:nowrap;transition:background .2s,border-color .2s,color .2s;}
                     .nav-contact-cta:hover{background:rgba(255,255,255,0.4);border-color:#009095;color:#009095;}
-                    @media (max-width:600px){.nav-contact-cta{padding:0 16px;margin-left:8px;}}
+                    /* Mobile: shrink Contact so the search circle keeps its shape (nav-right gap handles spacing) */
+                    @media (max-width:991px){.nav-contact-cta{height:44px;padding:0 16px;margin-left:0;font-size:.8rem;}}
+                    @media (max-width:600px){.nav-contact-cta{height:40px;padding:0 13px;margin-left:0;font-size:.72rem;}}
                 </style>
             </div>
         </div>
@@ -576,8 +585,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         </div>
                     </div>
 
-                    <div class="menu-group mt-5">
-                        <h6 class="sidebar-menu-heading">OUR GROUP</h6>
+                    <div class="menu-group">
+                        <h6 class="sidebar-menu-heading">Discover Alpha</h6>
                         {{-- Opens its sub-links in the right panel (like the categories / Our Packages) --}}
                         <div class="service-content"><a href="javascript:void(0);" class="group-link" id="group_about">Who We Are</a></div>
                         <div class="service-content"><a href="{{ route('front.new_blog') }}" class="kb-link" id="kb_trigger">Knowledge Base</a></div>
@@ -916,18 +925,32 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             }
             if (e.key === "Escape") {
                 hideDropdown();
+                $(".glass-search-container").removeClass("search-open");
             }
         });
 
-        // ── Button click: go to results page ──────────────────
-        $(".glass-search-btn").on("click", function () {
+        // ── Button click: mobile = expand the bar first, then search ──
+        $(".glass-search-btn").on("click", function (e) {
+            var $c = $(".glass-search-container");
+            var isMobileNav = window.matchMedia("(max-width: 991px)").matches;
+            if (isMobileNav && !$c.hasClass("search-open")) {
+                e.preventDefault();
+                e.stopPropagation();
+                $c.addClass("search-open");
+                setTimeout(function () {
+                    var el = document.getElementById("main-search-input");
+                    if (el) el.focus();
+                }, 60);
+                return;
+            }
             performSearch();
         });
 
-        // ── Click outside: close dropdown ─────────────────────
+        // ── Click outside: close dropdown + collapse mobile search ──
         $(document).on("click", function (e) {
             if (!$(e.target).closest(".glass-search-container").length) {
                 hideDropdown();
+                $(".glass-search-container").removeClass("search-open");
             }
         });
 
@@ -1188,7 +1211,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             $(".group-link").addClass("active-category");
 
             $("#dynamic-heading").text("Who We Are");
-            $("#dynamic-desc").text("About us, our brands, AHG updates, testimonials and contact.");
+            $("#dynamic-desc").text("Alpha Health Group delivers integrated consulting, compliance, operational, and engineering solutions that help healthcare organisations build, operate, and grow with confidence.");
 
             let subList = $('<ul class="mobile-sub-list list-unstyled"></ul>');
             $(".filter-group").each(function () {
@@ -1348,7 +1371,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         $(".serv-col").hide();
 
         $("#dynamic-heading").text(title);
-        $("#dynamic-desc").text("About us, our brands, AHG updates, testimonials and contact.");
+        $("#dynamic-desc").text("Alpha Health Group delivers integrated consulting, compliance, operational, and engineering solutions that help healthcare organisations build, operate, and grow with confidence.");
     }
 
     // Knowledge Base / Case Studies: level-1 trigger → show its sub-list (tags / project
@@ -1692,23 +1715,27 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
         // Logo rotation
         const logoIcon = document.querySelector('.logo-icon');
-        logoIcon.addEventListener('mouseenter', () => {
-            logoIcon.style.transform = 'rotateY(180deg) scale(1.1)';
-        });
+        if (logoIcon) {
+            logoIcon.addEventListener('mouseenter', () => {
+                logoIcon.style.transform = 'rotateY(180deg) scale(1.1)';
+            });
 
-        logoIcon.addEventListener('mouseleave', () => {
-            logoIcon.style.transform = 'rotateY(0) scale(1)';
-        });
+            logoIcon.addEventListener('mouseleave', () => {
+                logoIcon.style.transform = 'rotateY(0) scale(1)';
+            });
+        }
 
         // Mission highlight animation
         const missionHighlight = document.querySelector('.mission-highlight');
-        missionHighlight.addEventListener('mouseenter', () => {
-            missionHighlight.style.transform = 'translateX(15px)';
-        });
+        if (missionHighlight) {
+            missionHighlight.addEventListener('mouseenter', () => {
+                missionHighlight.style.transform = 'translateX(15px)';
+            });
 
-        missionHighlight.addEventListener('mouseleave', () => {
-            missionHighlight.style.transform = 'translateX(0)';
-        });
+            missionHighlight.addEventListener('mouseleave', () => {
+                missionHighlight.style.transform = 'translateX(0)';
+            });
+        }
 
         // Initialize on load
         document.addEventListener('DOMContentLoaded', () => {

@@ -1,5 +1,27 @@
 @extends('front/layout-2')
 
+@php
+    // Dynamic SEO from the blog record: meta_title falls back to the post title;
+    // keywords fall back to the blog's comma-joined tags when meta_keywords is empty.
+    $blogMetaTitle = empty($blog->meta_title) ? $blog->title : $blog->meta_title;
+    $blogKeywords  = $blog->meta_keywords;
+    if (empty($blogKeywords)) {
+        $blogKeywords = optional($blog->tags)->pluck('name')->filter()->implode(', ');
+    }
+    $blogMetaDesc = $blog->meta_description ?: \Illuminate\Support\Str::limit(strip_tags($blog->description ?? $blog->content ?? ''), 160);
+@endphp
+@push('page_title', $blogMetaTitle . ' | Alpha Health Group')
+@push('meta')
+    <meta name="description" content="{{ $blogMetaDesc }}">
+    @if(!empty($blogKeywords))<meta name="keywords" content="{{ $blogKeywords }}">@endif
+@endpush
+@push('og_tags')
+    <meta property="og:title" content="{{ $blogMetaTitle }}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:description" content="{{ $blogMetaDesc }}" />
+    <meta name="twitter:title" content="{{ $blogMetaTitle }}" />
+@endpush
+
 @section('custom_css')
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;800&display=swap');

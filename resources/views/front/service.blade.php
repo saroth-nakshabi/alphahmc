@@ -1,9 +1,9 @@
 @extends('front/layout-2')
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.css') }}?v=2">
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-detail.css') }}?v=3">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-detail.css') }}?v=4">
     {{-- Project Process section styles (shared with the category page) --}}
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-category.css') }}?v=1">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-category.css') }}?v=2">
     <style>
         /* Some service content was pasted from MS Word, which injects the
            "MsoNormal" class and inline near-black colour / Word fonts that
@@ -764,10 +764,9 @@ function toggleTransformationDesc() {
                         clickable: true,
                     },
                 });
-            }
 
-                        // AOS init
-                        if (typeof AOS !== 'undefined') {
+                // AOS init
+                if (typeof AOS !== 'undefined') {
                 AOS.init({
                     duration: 800,
                     once: true,

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\MainCategory;
 use App\Models\ServiceGroup;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -25,6 +26,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Super-admin safety net: anyone with the "Admin" role passes every
+        // permission/gate check, so adding permission: middleware can never
+        // lock the top administrator out of the dashboard. Returning null lets
+        // non-admins fall through to the normal Spatie permission check.
+        Gate::before(function ($user, $ability) {
+            return (method_exists($user, 'hasRole') && $user->hasRole('Admin')) ? true : null;
+        });
+
         // Share categories with all views
         // Check if the categories table exists
         if (Schema::hasTable('main_categories')) {

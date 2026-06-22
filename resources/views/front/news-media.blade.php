@@ -1,5 +1,10 @@
 @extends('front/layout-2')
 
+@push('page_title', 'News & Media | Alpha Health Group')
+@push('meta')
+    <meta name="description" content="Latest news, media coverage, and updates from Alpha Health Group — healthcare consultancy across the UAE and GCC.">
+@endpush
+
 @section('content')
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/blog-base.css') }}?v=2">
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/news-media.css') }}?v=5">

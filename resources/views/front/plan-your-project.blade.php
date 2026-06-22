@@ -1,8 +1,8 @@
 @extends('front/layout-2')
 
-@push('page_title', 'Alpha Blueprint AI — AI Healthcare Project Planner | Alpha Health Group')
+@push('page_title', 'Alpha Blueprint AI, AI Healthcare Project Planner | Alpha Health Group')
 
-@section('meta_description', 'Alpha Blueprint AI — an AI-powered healthcare project planner. Tell us your goal and it maps the right licensing, accreditation, quality and operational path, with the services best suited to you, in about a minute.')
+@section('meta_description', 'Alpha Blueprint AI, an AI-powered healthcare project planner. Tell us your goal and it maps the right licensing, accreditation, quality and operational path, with the services best suited to you, in about a minute.')
 
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/plan-your-project.css') }}?v=12">
@@ -14,7 +14,7 @@
         <div class="pp-head">
             <span class="pp-eyebrow"><span class="pp-ai-dot"></span> Alpha Blueprint AI &nbsp;·&nbsp; AI Healthcare Planner</span>
             <h1 class="pp-title">Plan your healthcare project, intelligently.</h1>
-            <p class="pp-sub">Answer a few quick questions and Alpha Blueprint AI maps out how we'd approach it —
+            <p class="pp-sub">Answer a few quick questions and Alpha Blueprint AI maps out how we'd approach it,
                 a tailored plan and the services best suited to you. About 60 seconds.</p>
         </div>
 
@@ -38,7 +38,7 @@
                 <div class="pp-start">
                     <div class="pp-start-icon"><i class="fa-solid fa-pen-ruler"></i></div>
                     <h2>Your healthcare project, mapped in 60 seconds.</h2>
-                    <p>Answer 5 quick questions and Alpha Blueprint AI builds your execution plan — the exact steps,
+                    <p>Answer 5 quick questions and Alpha Blueprint AI builds your execution plan, the exact steps,
                         realistic timelines, and the right services to make it happen. No calls. No forms upfront. No pressure.</p>
                     <div class="pp-value-row">
                         <span class="pp-value">Under 60 seconds</span>
@@ -100,9 +100,9 @@
                         yours to keep and share with your team. Prefer to talk it through? You can book a free call with an Alpha
                         specialist right below.</p>
                     <div class="pp-trust">
-                        <span><i class="fa-solid fa-building-shield"></i> DOH-approved consultancy</span>
-                        <span><i class="fa-solid fa-user-shield"></i> Private — your plan only, no spam</span>
-                        <span><i class="fa-solid fa-bolt"></i> Delivered in seconds</span>
+                        <span>DOH-approved consultancy</span>
+                        <span>Private, your plan only, no spam</span>
+                        <span>Your customized plan</span>
                     </div>
                 </div>
 
@@ -132,7 +132,7 @@
                         <label class="pp-switch">
                             <input type="checkbox" id="ppWantMeeting">
                             <span class="pp-switch-ui"></span>
-                            <span class="pp-switch-text"><strong>Book a free consultation</strong> — talk it through with an expert <span class="pp-opt-tag">optional</span></span>
+                            <span class="pp-switch-text"><strong>Book a free consultation</strong>, talk it through with an expert <span class="pp-opt-tag">optional</span></span>
                         </label>
                         <div class="pp-meeting-fields" id="ppMeetingFields" hidden>
                             <div class="pp-field">
@@ -203,11 +203,11 @@
                 {{-- Our list of services tailored to the client --}}
                 <div class="pp-tailored-head">
                     <h4 class="pp-block-title pp-block-title--lg">We've tailor-made these services for you</h4>
-                    <p class="pp-tailored-sub">Pulled from our catalogue and matched to your answers — these are where Alpha can help you most.</p>
+                    <p class="pp-tailored-sub">Pulled from our catalogue and matched to your answers, these are where Alpha can help you most.</p>
                 </div>
                 <div class="pp-recs" id="ppRecs"></div>
 
-                {{-- Single results contact band: step-5 style — captures details + an optional consultation --}}
+                {{-- Single results contact band: step-5 style, captures details + an optional consultation --}}
                 <div class="pp-results-band" id="ppResultsBand">
                     <div class="pp-results-band-head">
                         <h4>Want our experts to take it from here?</h4>
@@ -264,10 +264,10 @@
                     </form>
                 </div>
 
-                {{-- Follow-up (before-flow): we already have their details — only offer consent / a consultation --}}
+                {{-- Follow-up (before-flow): we already have their details, only offer consent / a consultation --}}
                 <div class="pp-followup" id="ppFollowup" style="display:none">
                     <div class="pp-followup-head">
-                        <h4>One more step — want us to reach out?</h4>
+                        <h4>One more step, want us to reach out?</h4>
                         <p>We already have your details. Give the go-ahead for a consultant to contact you, or book a free consultation to walk through your plan.</p>
                     </div>
                     <form id="ppFollowupForm" novalidate>
@@ -307,14 +307,14 @@
                 </div>
 
                 @if($showRaw)
-                {{-- Raw model output — rendered only when the admin enables the toggle in Settings --}}
+                {{-- Raw model output, rendered only when the admin enables the toggle in Settings --}}
                 <div class="pp-debug" id="ppDebug" style="display:none">
                     <div class="pp-debug-head">
                         <span class="pp-debug-tag">Gemini outcome (raw)</span>
                         <button type="button" class="pp-debug-copy" id="ppRawCopy">Copy</button>
                     </div>
                     <pre class="pp-raw" id="ppRaw"></pre>
-                    <p class="pp-debug-note">Testing panel — toggle this off in Settings to hide it from visitors. Engine: <span id="ppRawEngine"></span></p>
+                    <p class="pp-debug-note">Testing panel, toggle this off in Settings to hide it from visitors. Engine: <span id="ppRawEngine"></span></p>
                 </div>
                 @endif
             </div>
@@ -473,7 +473,7 @@
         fetch(URLS.analyze, { method:'POST', headers:{'X-CSRF-TOKEN':CSRF,'Content-Type':'application/json','Accept':'application/json'},
             body: JSON.stringify(Object.assign({ answers }, extra||{})) })
             .then(r=>r.json()).then(d=>{ renderResults(d); hideLoading(); })
-            .catch(()=>{ hideLoading(()=>{ if(btn){ btn.disabled=false; if(labelEl) labelEl.textContent=idleText; } renderToast('Something went wrong — please try again.'); }); });
+            .catch(()=>{ hideLoading(()=>{ if(btn){ btn.disabled=false; if(labelEl) labelEl.textContent=idleText; } renderToast('Something went wrong, please try again.'); }); });
     }
 
     function generate(){
@@ -496,7 +496,7 @@
         const pd=phone.replace(/[^0-9]/g,'').length;
         preForm.name.classList.toggle('is-invalid',!name); preForm.email.classList.toggle('is-invalid',!emailRe.test(email)); preForm.phone.classList.toggle('is-invalid',pd<7);
         const alertEl=document.getElementById('ppPreAlert');
-        if(!name||!emailRe.test(email)||pd<7){ alertEl.style.display=''; alertEl.textContent='Please complete all three fields — a valid name, email and mobile number.'; const fb=preForm.querySelector('.is-invalid'); if(fb) fb.focus(); return; }
+        if(!name||!emailRe.test(email)||pd<7){ alertEl.style.display=''; alertEl.textContent='Please complete all three fields, a valid name, email and mobile number.'; const fb=preForm.querySelector('.is-invalid'); if(fb) fb.focus(); return; }
         alertEl.style.display='none'; leadEmail=email;
         leadConsent = document.getElementById('ppConsent').checked ? 1 : 0;
         const extra={ name, email, phone, consent: leadConsent };
@@ -535,7 +535,7 @@
         var dbg = document.getElementById('ppDebug'); // only present when the admin toggle is on
         if (dbg) {
             dbg.style.display='';
-            document.getElementById('ppRaw').textContent = d.raw || '(No Gemini output — the planner fell back to smart-rules. Open Settings → Test connection to see why, e.g. quota/rate limit.)';
+            document.getElementById('ppRaw').textContent = d.raw || '(No Gemini output, the planner fell back to smart-rules. Open Settings → Test connection to see why, e.g. quota/rate limit.)';
             var re=document.getElementById('ppRawEngine'); if(re) re.textContent = d.engine || 'rules';
         }
         go('results'); progressWrap.style.display='none';
@@ -545,10 +545,10 @@
     function showResultsSuccess(headline){
         const band=document.getElementById('ppResultsBand'); if(!band) return;
         band.innerHTML='<div class="pp-contact-success"><i class="fa-solid fa-circle-check"></i><h4>'+headline+'</h4>'
-            + '<p>Check your inbox for your blueprint. Explore your recommended services above — a consultant will follow up if you asked us to.</p></div>';
+            + '<p>Check your inbox for your blueprint. Explore your recommended services above, a consultant will follow up if you asked us to.</p></div>';
     }
 
-    // Results contact form (after flow) — full details + an optional consultation
+    // Results contact form (after flow), full details + an optional consultation
     const rForm=document.getElementById('ppResultsForm');
     const resWantMeeting=document.getElementById('ppResWantMeeting');
     const resMeetingFields=document.getElementById('ppResMeetingFields');
@@ -563,7 +563,7 @@
             const pd=phone.replace(/[^0-9]/g,'').length;
             rForm.name.classList.toggle('is-invalid',!name); rForm.email.classList.toggle('is-invalid',!emailRe.test(email)); rForm.phone.classList.toggle('is-invalid',pd<7);
             const alertEl=document.getElementById('ppResAlert');
-            if(!name||!emailRe.test(email)||pd<7){ alertEl.style.display=''; alertEl.textContent='Please complete all three fields — a valid name, email and mobile number.'; const fb=rForm.querySelector('.is-invalid'); if(fb) fb.focus(); return; }
+            if(!name||!emailRe.test(email)||pd<7){ alertEl.style.display=''; alertEl.textContent='Please complete all three fields, a valid name, email and mobile number.'; const fb=rForm.querySelector('.is-invalid'); if(fb) fb.focus(); return; }
             alertEl.style.display='none';
             const btn=document.getElementById('ppResBtn'); const lbl=btn.querySelector('.pp-res-label');
             btn.disabled=true; lbl.textContent='Sending…';
@@ -572,7 +572,7 @@
             fetch(URLS.contact, { method:'POST', headers:{'X-CSRF-TOKEN':CSRF,'Content-Type':'application/json','Accept':'application/json'},
                 body: JSON.stringify(payload) })
                 .then(r=>r.json().then(j=>({ok:r.ok,j}))).then(res=>{
-                    if(res.ok && res.j.success){ showResultsSuccess(res.j.message||'Thank you — your details are in.'); if(typeof trackConversion==='function') trackConversion('ahg_planner_contact',{}); }
+                    if(res.ok && res.j.success){ showResultsSuccess(res.j.message||'Thank you, your details are in.'); if(typeof trackConversion==='function') trackConversion('ahg_planner_contact',{}); }
                     else { alertEl.style.display=''; alertEl.textContent=(res.j.message||'Please check your details.'); btn.disabled=false; lbl.textContent='Send my details'; }
                 }).catch(()=>{ alertEl.style.display=''; alertEl.textContent='Something went wrong. Please try again.'; btn.disabled=false; lbl.textContent='Send my details'; });
         });
@@ -590,7 +590,7 @@
     function showFollowupIfNeeded(){
         const needConsent = !leadConsent;
         const needMeeting = !meetingRequested;
-        if(!needConsent && !needMeeting) return;          // already consented AND booked — nothing to ask
+        if(!needConsent && !needMeeting) return;          // already consented AND booked, nothing to ask
         const fu=document.getElementById('ppFollowup'); if(!fu) return;
         fuConsentWrap.style.display = needConsent ? '' : 'none';
         fuMeetingWrap.style.display = needMeeting ? '' : 'none';

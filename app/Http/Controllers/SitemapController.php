@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
+use App\Models\Brand;
+use App\Models\Project;
 use App\Models\Service;
 use App\Models\ServiceGroup;
 use App\Models\MainCategory;
@@ -15,8 +18,13 @@ class SitemapController extends Controller
         $services    = $this->servicePages();
         $categories  = $this->categoryPages();
         $groups      = $this->serviceGroupPages();
+        $blogs       = $this->blogPages();
+        $projects    = $this->projectPages();
+        $brands      = $this->brandPages();
 
-        $xml = $this->buildXml(array_merge($staticPages, $groups, $categories, $services));
+        $xml = $this->buildXml(array_merge(
+            $staticPages, $groups, $categories, $services, $blogs, $projects, $brands
+        ));
 
         return response($xml, 200, [
             'Content-Type' => 'application/xml; charset=UTF-8',
@@ -35,6 +43,7 @@ class SitemapController extends Controller
             ['loc' => route('contact'),                   'priority' => '0.8', 'changefreq' => 'monthly'],
             ['loc' => route('front.project'),             'priority' => '0.6', 'changefreq' => 'monthly'],
             ['loc' => route('front.brands'),              'priority' => '0.5', 'changefreq' => 'monthly'],
+            ['loc' => route('front.ahg-updates'),         'priority' => '0.6', 'changefreq' => 'weekly'],
             ['loc' => route('service_calendar'),          'priority' => '0.6', 'changefreq' => 'weekly'],
         ];
     }
@@ -82,6 +91,57 @@ class SitemapController extends Controller
                     'loc'        => route('service-packages', $g->slug),
                     'lastmod'    => $g->updated_at?->toAtomString(),
                     'priority'   => '0.7',
+                    'changefreq' => 'monthly',
+                ];
+            });
+        } catch (\Throwable) {}
+
+        return $pages;
+    }
+
+    private function blogPages(): array
+    {
+        $pages = [];
+        try {
+            Blog::select('slug', 'updated_at')->whereNotNull('slug')->where('slug', '!=', '')->get()->each(function ($b) use (&$pages) {
+                $pages[] = [
+                    'loc'        => route('front.singleBlog', $b->slug),
+                    'lastmod'    => $b->updated_at?->toAtomString(),
+                    'priority'   => '0.6',
+                    'changefreq' => 'monthly',
+                ];
+            });
+        } catch (\Throwable) {}
+
+        return $pages;
+    }
+
+    private function projectPages(): array
+    {
+        $pages = [];
+        try {
+            Project::select('slug', 'updated_at')->whereNotNull('slug')->where('slug', '!=', '')->get()->each(function ($p) use (&$pages) {
+                $pages[] = [
+                    'loc'        => route('front.project_details', $p->slug),
+                    'lastmod'    => $p->updated_at?->toAtomString(),
+                    'priority'   => '0.6',
+                    'changefreq' => 'monthly',
+                ];
+            });
+        } catch (\Throwable) {}
+
+        return $pages;
+    }
+
+    private function brandPages(): array
+    {
+        $pages = [];
+        try {
+            Brand::select('slug', 'updated_at')->whereNotNull('slug')->where('slug', '!=', '')->get()->each(function ($b) use (&$pages) {
+                $pages[] = [
+                    'loc'        => route('front.singleBrand', $b->slug),
+                    'lastmod'    => $b->updated_at?->toAtomString(),
+                    'priority'   => '0.5',
                     'changefreq' => 'monthly',
                 ];
             });

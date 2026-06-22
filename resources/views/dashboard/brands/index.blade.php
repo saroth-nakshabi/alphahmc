@@ -259,6 +259,32 @@
                         </div>
                     </div>
 
+                    <div class="col-12"><hr class="my-2"><h6 class="fw-semibold mb-0">SEO</h6></div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="control-label mb-1">Meta Title</label>
+                            <input type="text" name="meta_title" class="form-control" maxlength="255">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="control-label mb-1">Service Area</label>
+                            <input type="text" name="areaServed" class="form-control" placeholder="e.g. United Arab Emirates">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label class="control-label mb-1">Meta Description</label>
+                            <textarea name="meta_description" rows="2" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label class="control-label mb-1">Meta Keywords</label>
+                            <textarea name="meta_keywords" rows="2" class="form-control" placeholder="comma, separated, keywords"></textarea>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="modal-footer">
@@ -330,6 +356,32 @@
                             <label class="control-label mb-1">What We Do (Expertise) <span class="text-danger">*</span></label>
                             <textarea id="edit_what_we_do" name="what_we_do" rows="5"
                                       class="rich-textarea form-control" placeholder="Describe brand expertise..." required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-12"><hr class="my-2"><h6 class="fw-semibold mb-0">SEO</h6></div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="control-label mb-1">Meta Title</label>
+                            <input type="text" id="edit_meta_title" name="meta_title" class="form-control" maxlength="255">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="control-label mb-1">Service Area</label>
+                            <input type="text" id="edit_areaServed" name="areaServed" class="form-control" placeholder="e.g. United Arab Emirates">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label class="control-label mb-1">Meta Description</label>
+                            <textarea id="edit_meta_description" name="meta_description" rows="2" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label class="control-label mb-1">Meta Keywords</label>
+                            <textarea id="edit_meta_keywords" name="meta_keywords" rows="2" class="form-control" placeholder="comma, separated, keywords"></textarea>
                         </div>
                     </div>
 
@@ -500,6 +552,10 @@ $(document).ready(function() {
                 $('#edit_address').val(d.address);
                 $('#edit_google_location').val(d.google_location || '');
                 $('#edit_description').val(d.description);
+                $('#edit_meta_title').val(d.meta_title || '');
+                $('#edit_meta_description').val(d.meta_description || '');
+                $('#edit_meta_keywords').val(d.meta_keywords || '');
+                $('#edit_areaServed').val(d.areaServed || '');
 
                 if (tinymce.get('edit_what_we_do')) {
                     tinymce.get('edit_what_we_do').setContent(d.what_we_do ?? '');

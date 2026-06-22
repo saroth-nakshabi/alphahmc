@@ -102,7 +102,7 @@ Route::get('/service-category/{slug}', [MainHomeController::class, 'serviceCateg
 Route::get('/all_services', [MainHomeController::class, 'allServices'])->name('front.all-services');
 Route::get('/services-by-facility-type', [MainHomeController::class, 'facilityTypes'])->name('front.facility-types');
 Route::redirect('/services', '/all_services', 301);
-Route::post('/inquiry/submit', [MainHomeController::class, 'submitInquiry'])->name('front.inquiry.submit');
+Route::post('/inquiry/submit', [MainHomeController::class, 'submitInquiry'])->middleware('throttle:10,1')->name('front.inquiry.submit');
 Route::get('/healthcare-management-update-insights', [MainHomeController::class, 'blog'])->name('front.new_blog');
 Route::redirect('/new_blog', '/healthcare-management-update-insights', 301);
 // Route::get('/blog_single/{slug}', [MainHomeController::class, 'singleBlog'])->name('front.singleBlog');
@@ -127,10 +127,11 @@ Route::get('/terms-of-service', function () {
 Route::get('/cookie-policy', function () {
     return view('front.cookie-policy');
 })->name('front.cookie-policy');
-Route::post('/share-your-experience/submit', [MainHomeController::class, 'submitTestimonial'])->name('front.testimonial.submit');
+Route::post('/share-your-experience/submit', [MainHomeController::class, 'submitTestimonial'])->middleware('throttle:10,1')->name('front.testimonial.submit');
 
 // Route::post('/ckeditor/upload', [TinyMCEUploadController::class, 'upload'])->name('ckeditor.upload');
-Route::post('/ckeditor/upload', [CkEditorUploadController::class, 'upload'])->name('ckeditor.upload');
+// Editor upload is only used inside the authenticated dashboard — require auth + throttle to stop anonymous disk-fill abuse.
+Route::post('/ckeditor/upload', [CkEditorUploadController::class, 'upload'])->middleware(['auth', 'throttle:30,1'])->name('ckeditor.upload');
 
 Route::get('/about-alpha-health-group', [MainHomeController::class, 'about'])->name('front.new-about');
 Route::redirect('/new-about', '/about-alpha-health-group', 301);
@@ -142,7 +143,7 @@ Route::redirect('/new-about', '/about-alpha-health-group', 301);
 
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
-Route::post('/contact/send', [MainHomeController::class, 'sendContact'])->name('contact.send');
+Route::post('/contact/send', [MainHomeController::class, 'sendContact'])->middleware('throttle:10,1')->name('contact.send');
 
 Route::get('/service-calendar', [HomeController::class, 'serviceCalendar'])->name('service_calendar');
 Route::post('/set-timezone', [TimezoneController::class, 'setTimezone'])->name('set_timezone');
@@ -154,16 +155,16 @@ Route::get('/how_alpha_work', [HomeController::class, 'how_alpha_work'])->name('
 
 // Interactive Project Planner (public)
 Route::get('/plan-your-project', [ProjectPlannerController::class, 'page'])->name('planner.page');
-Route::post('/plan-your-project/step', [ProjectPlannerController::class, 'step'])->name('planner.step');
-Route::post('/plan-your-project/analyze', [ProjectPlannerController::class, 'analyze'])->name('planner.analyze');
-Route::post('/plan-your-project/contact', [ProjectPlannerController::class, 'contact'])->name('planner.contact');
-Route::post('/plan-your-project/followup', [ProjectPlannerController::class, 'followup'])->name('planner.followup');
+Route::post('/plan-your-project/step', [ProjectPlannerController::class, 'step'])->middleware('throttle:30,1')->name('planner.step');
+Route::post('/plan-your-project/analyze', [ProjectPlannerController::class, 'analyze'])->middleware('throttle:10,1')->name('planner.analyze');
+Route::post('/plan-your-project/contact', [ProjectPlannerController::class, 'contact'])->middleware('throttle:10,1')->name('planner.contact');
+Route::post('/plan-your-project/followup', [ProjectPlannerController::class, 'followup'])->middleware('throttle:10,1')->name('planner.followup');
 Route::get('/healthcare_quality_assurance', [HomeController::class, 'healthcare_quality_assurance'])->name('healthcare_quality_assurance');
 
 // Search routes (public - no auth required)
 Route::get('/search', [SearchController::class, 'index'])->name('front.search');
 Route::get('/search/live', [SearchController::class, 'live'])->name('front.search.live');
-Route::post('/ai-assistant/chat', [ChatAssistantController::class, 'chat'])->name('ai.assistant.chat');
+Route::post('/ai-assistant/chat', [ChatAssistantController::class, 'chat'])->middleware('throttle:20,1')->name('ai.assistant.chat');
 
 
 Route::middleware(['auth', 'check_student_profile'])->group(function () {
@@ -202,14 +203,23 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::post('/admins/get', [AdminController::class, 'getAdmin'])->name('admins.get');
 
     // agent routes
-    Route::get('/agents', [AgentController::class, 'index'])->name('users.agents');
-    Route::post('/agents', [AgentController::class, 'store'])->name('agents.store');
-    Route::delete('/agents/delete/{id}', [AgentController::class, 'destroy'])->name('agents.destroy');
-    Route::post('/agents/update/{id}', [AgentController::class, 'update'])->name('agents.update');
-    Route::post('/agents/get', [AgentController::class, 'getAgent'])->name('agents.get');
+    Route::get('/agents', [AgentController::class, 'index'])->name('users.agents')->middleware('permission:view agents');
+    Route::post('/agents', [AgentController::class, 'store'])->name('agents.store')->middleware('permission:create agents');
+    Route::delete('/agents/delete/{id}', [AgentController::class, 'destroy'])->name('agents.destroy')->middleware('permission:delete agents');
+    Route::post('/agents/update/{id}', [AgentController::class, 'update'])->name('agents.update')->middleware('permission:edit agents');
+    Route::post('/agents/get', [AgentController::class, 'getAgent'])->name('agents.get')->middleware('permission:view agents');
 
     // all users routes
     Route::get('/all-users', [UserController::class, 'index'])->name('all_users.index')->middleware('permission:view users');
+    // Per-user access manager (roles + direct permissions)
+    Route::get('/users/{id}/permissions', [UserController::class, 'permissions'])->name('all_users.permissions')->middleware('permission:edit users');
+    Route::post('/users/{id}/permissions', [UserController::class, 'updatePermissions'])->name('all_users.permissions.update')->middleware('permission:edit users');
+
+    // SEO Overview — meta listings per content type, with inline editing (perms checked in controller)
+    Route::get('/dashboard/seo/{type}', [\App\Http\Controllers\SeoOverviewController::class, 'show'])
+        ->whereIn('type', ['services', 'service-groups', 'categories', 'blogs', 'brands'])->name('seo.overview');
+    Route::post('/dashboard/seo/{type}/{id}', [\App\Http\Controllers\SeoOverviewController::class, 'update'])
+        ->whereIn('type', ['services', 'service-groups', 'categories', 'blogs', 'brands'])->name('seo.update');
 
     //main category routes
     Route::get('/all-main-categories', [MainCategoryController::class, 'index'])->name('main_categories.index')->middleware('permission:view main categories');
@@ -239,64 +249,64 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::post('/categories/delete-gallery-image', [CategoryController::class, 'deleteGalleryImage'])->name('categories.delete-gallery-image');
 
     // service-group routes
-    Route::get('/service-group', [ServiceGroupController::class, 'index'])->name('service-group.index');
-    Route::get('/service-group/create', [ServiceGroupController::class, 'create'])->name('service-group.create');
-    Route::post('/service-group', [ServiceGroupController::class, 'store'])->name('service-group.store');
-    Route::post('/service-group/get', [ServiceGroupController::class, 'get'])->name('service-group.get');
-    Route::get('/service-group/{id}/edit', [ServiceGroupController::class, 'edit'])->name('service-group.edit');
-    Route::put('/service-group/{id}', [ServiceGroupController::class, 'update'])->name('service-group.update');
-    Route::post('/service-group/{id}', [ServiceGroupController::class, 'update'])->name('service-group.update.post');
-    Route::delete('/service-group/{id}', [ServiceGroupController::class, 'destroy'])->name('service-group.destroy');
-    Route::post('/service-group/{id}/toggle-status', [ServiceGroupController::class, 'toggleStatus'])->name('service-group.toggle-status');
-    Route::post('/service-group/{id}/toggle-featured', [ServiceGroupController::class, 'toggleFeatured'])->name('service-group.toggle-featured');
+    Route::get('/service-group', [ServiceGroupController::class, 'index'])->name('service-group.index')->middleware('permission:view service groups');
+    Route::get('/service-group/create', [ServiceGroupController::class, 'create'])->name('service-group.create')->middleware('permission:create service groups');
+    Route::post('/service-group', [ServiceGroupController::class, 'store'])->name('service-group.store')->middleware('permission:create service groups');
+    Route::post('/service-group/get', [ServiceGroupController::class, 'get'])->name('service-group.get')->middleware('permission:view service groups');
+    Route::get('/service-group/{id}/edit', [ServiceGroupController::class, 'edit'])->name('service-group.edit')->middleware('permission:edit service groups');
+    Route::put('/service-group/{id}', [ServiceGroupController::class, 'update'])->name('service-group.update')->middleware('permission:edit service groups');
+    Route::post('/service-group/{id}', [ServiceGroupController::class, 'update'])->name('service-group.update.post')->middleware('permission:edit service groups');
+    Route::delete('/service-group/{id}', [ServiceGroupController::class, 'destroy'])->name('service-group.destroy')->middleware('permission:delete service groups');
+    Route::post('/service-group/{id}/toggle-status', [ServiceGroupController::class, 'toggleStatus'])->name('service-group.toggle-status')->middleware('permission:edit service groups');
+    Route::post('/service-group/{id}/toggle-featured', [ServiceGroupController::class, 'toggleFeatured'])->name('service-group.toggle-featured')->middleware('permission:edit service groups');
 
 
     
 
     // inquiry routes
-    Route::get('/dashboard/inquiries', [AdminInquiryController::class, 'index'])->name('admin.inquiries.index');
-    Route::get('/dashboard/inquiries/{id}', [AdminInquiryController::class, 'show'])->name('admin.inquiries.show');
-    Route::post('/dashboard/inquiries/update/{id}', [AdminInquiryController::class, 'update'])->name('admin.inquiries.update');
-    Route::post('/dashboard/inquiries/reply/{id}', [AdminInquiryController::class, 'reply'])->name('admin.inquiries.reply');
-    Route::delete('/dashboard/inquiries/delete/{id}', [AdminInquiryController::class, 'destroy'])->name('admin.inquiries.destroy');
+    Route::get('/dashboard/inquiries', [AdminInquiryController::class, 'index'])->name('admin.inquiries.index')->middleware('permission:view inquiries');
+    Route::get('/dashboard/inquiries/{id}', [AdminInquiryController::class, 'show'])->name('admin.inquiries.show')->middleware('permission:view inquiries');
+    Route::post('/dashboard/inquiries/update/{id}', [AdminInquiryController::class, 'update'])->name('admin.inquiries.update')->middleware('permission:edit inquiries');
+    Route::post('/dashboard/inquiries/reply/{id}', [AdminInquiryController::class, 'reply'])->name('admin.inquiries.reply')->middleware('permission:edit inquiries');
+    Route::delete('/dashboard/inquiries/delete/{id}', [AdminInquiryController::class, 'destroy'])->name('admin.inquiries.destroy')->middleware('permission:delete inquiries');
 
     // Project Planner CRM
-    Route::get('/dashboard/planner', [AdminPlannerController::class, 'index'])->name('admin.planner.index');
-    Route::get('/dashboard/planner/{id}', [AdminPlannerController::class, 'show'])->name('admin.planner.show');
-    Route::post('/dashboard/planner/update/{id}', [AdminPlannerController::class, 'update'])->name('admin.planner.update');
-    Route::post('/dashboard/planner/{id}/confirm-meeting', [AdminPlannerController::class, 'confirmMeeting'])->name('admin.planner.confirmMeeting');
+    Route::get('/dashboard/planner', [AdminPlannerController::class, 'index'])->name('admin.planner.index')->middleware('permission:view planner');
+    Route::get('/dashboard/planner/{id}', [AdminPlannerController::class, 'show'])->name('admin.planner.show')->middleware('permission:view planner');
+    Route::post('/dashboard/planner/update/{id}', [AdminPlannerController::class, 'update'])->name('admin.planner.update')->middleware('permission:edit planner');
+    Route::post('/dashboard/planner/{id}/confirm-meeting', [AdminPlannerController::class, 'confirmMeeting'])->name('admin.planner.confirmMeeting')->middleware('permission:edit planner');
 
     // AI Planner workflow builder
-    Route::get('/dashboard/planner-builder', [AdminPlannerBuilderController::class, 'index'])->name('admin.planner.builder');
-    Route::post('/dashboard/planner-builder/reorder', [AdminPlannerBuilderController::class, 'reorder'])->name('admin.planner.builder.reorder');
-    Route::post('/dashboard/planner-builder/add', [AdminPlannerBuilderController::class, 'store'])->name('admin.planner.builder.add');
-    Route::post('/dashboard/planner-builder/{id}', [AdminPlannerBuilderController::class, 'update'])->name('admin.planner.builder.update');
-    Route::delete('/dashboard/planner-builder/{id}', [AdminPlannerBuilderController::class, 'destroy'])->name('admin.planner.builder.destroy');
-    Route::delete('/dashboard/planner/delete/{id}', [AdminPlannerController::class, 'destroy'])->name('admin.planner.destroy');
+    Route::get('/dashboard/planner-builder', [AdminPlannerBuilderController::class, 'index'])->name('admin.planner.builder')->middleware('permission:view planner builder');
+    Route::post('/dashboard/planner-builder/reorder', [AdminPlannerBuilderController::class, 'reorder'])->name('admin.planner.builder.reorder')->middleware('permission:edit planner builder');
+    Route::post('/dashboard/planner-builder/add', [AdminPlannerBuilderController::class, 'store'])->name('admin.planner.builder.add')->middleware('permission:create planner builder');
+    Route::post('/dashboard/planner-builder/{id}', [AdminPlannerBuilderController::class, 'update'])->name('admin.planner.builder.update')->middleware('permission:edit planner builder');
+    Route::delete('/dashboard/planner-builder/{id}', [AdminPlannerBuilderController::class, 'destroy'])->name('admin.planner.builder.destroy')->middleware('permission:delete planner builder');
+    Route::delete('/dashboard/planner/delete/{id}', [AdminPlannerController::class, 'destroy'])->name('admin.planner.destroy')->middleware('permission:delete planner');
 
     // Mega-menu promo slides (max 3, auto-rotating in the menu's default panel)
-    Route::get('/dashboard/menu-promos', [App\Http\Controllers\MenuPromoController::class, 'index'])->name('admin.menu-promos.index');
-    Route::post('/dashboard/menu-promos', [App\Http\Controllers\MenuPromoController::class, 'store'])->name('admin.menu-promos.store');
-    Route::post('/dashboard/menu-promos/{id}', [App\Http\Controllers\MenuPromoController::class, 'update'])->name('admin.menu-promos.update');
-    Route::delete('/dashboard/menu-promos/{id}', [App\Http\Controllers\MenuPromoController::class, 'destroy'])->name('admin.menu-promos.destroy');
+    Route::get('/dashboard/menu-promos', [App\Http\Controllers\MenuPromoController::class, 'index'])->name('admin.menu-promos.index')->middleware('permission:view menu promos');
+    Route::post('/dashboard/menu-promos', [App\Http\Controllers\MenuPromoController::class, 'store'])->name('admin.menu-promos.store')->middleware('permission:create menu promos');
+    Route::post('/dashboard/menu-promos/{id}', [App\Http\Controllers\MenuPromoController::class, 'update'])->name('admin.menu-promos.update')->middleware('permission:edit menu promos');
+    Route::delete('/dashboard/menu-promos/{id}', [App\Http\Controllers\MenuPromoController::class, 'destroy'])->name('admin.menu-promos.destroy')->middleware('permission:delete menu promos');
 
     // Pages & SEO — manage standard pages' SEO tags + hero content
-    Route::get('/dashboard/pages', [App\Http\Controllers\PageSettingController::class, 'index'])->name('admin.pages.index');
-    Route::get('/dashboard/pages/{key}/edit', [App\Http\Controllers\PageSettingController::class, 'edit'])->name('admin.pages.edit');
-    Route::post('/dashboard/pages/{key}', [App\Http\Controllers\PageSettingController::class, 'update'])->name('admin.pages.update');
+    Route::get('/dashboard/pages', [App\Http\Controllers\PageSettingController::class, 'index'])->name('admin.pages.index')->middleware('permission:view pages');
+    Route::get('/dashboard/pages/{key}/edit', [App\Http\Controllers\PageSettingController::class, 'edit'])->name('admin.pages.edit')->middleware('permission:edit pages');
+    Route::post('/dashboard/pages/{key}', [App\Http\Controllers\PageSettingController::class, 'update'])->name('admin.pages.update')->middleware('permission:edit pages');
 
     // Project Process Manager — reusable processes assigned to many categories / service groups
-    Route::get('/dashboard/project-process', [AdminProjectProcessController::class, 'index'])->name('admin.project-process.index');
-    Route::get('/dashboard/project-process/create', [AdminProjectProcessController::class, 'create'])->name('admin.project-process.create');
-    Route::post('/dashboard/project-process', [AdminProjectProcessController::class, 'store'])->name('admin.project-process.store');
-    Route::get('/dashboard/project-process/{id}/edit', [AdminProjectProcessController::class, 'edit'])->name('admin.project-process.edit');
-    Route::post('/dashboard/project-process/{id}', [AdminProjectProcessController::class, 'update'])->name('admin.project-process.update');
-    Route::delete('/dashboard/project-process/{id}', [AdminProjectProcessController::class, 'destroy'])->name('admin.project-process.destroy');
+    Route::get('/dashboard/project-process', [AdminProjectProcessController::class, 'index'])->name('admin.project-process.index')->middleware('permission:view project process');
+    Route::get('/dashboard/project-process/create', [AdminProjectProcessController::class, 'create'])->name('admin.project-process.create')->middleware('permission:create project process');
+    Route::post('/dashboard/project-process', [AdminProjectProcessController::class, 'store'])->name('admin.project-process.store')->middleware('permission:create project process');
+    Route::get('/dashboard/project-process/{id}/edit', [AdminProjectProcessController::class, 'edit'])->name('admin.project-process.edit')->middleware('permission:edit project process');
+    Route::post('/dashboard/project-process/{id}', [AdminProjectProcessController::class, 'update'])->name('admin.project-process.update')->middleware('permission:edit project process');
+    Route::delete('/dashboard/project-process/{id}', [AdminProjectProcessController::class, 'destroy'])->name('admin.project-process.destroy')->middleware('permission:delete project process');
 
     // App / AI settings
-    Route::get('/dashboard/settings', [AdminSettingsController::class, 'edit'])->name('admin.settings.edit');
-    Route::post('/dashboard/settings', [AdminSettingsController::class, 'save'])->name('admin.settings.save');
-    Route::post('/dashboard/settings/test', [AdminSettingsController::class, 'test'])->name('admin.settings.test');
+    Route::get('/dashboard/settings', [AdminSettingsController::class, 'edit'])->name('admin.settings.edit')->middleware('permission:view settings');
+    Route::post('/dashboard/settings', [AdminSettingsController::class, 'save'])->name('admin.settings.save')->middleware('permission:edit settings');
+    Route::post('/dashboard/settings/test', [AdminSettingsController::class, 'test'])->name('admin.settings.test')->middleware('permission:edit settings');
 
     // service routes
     Route::get('all-services', [ServiceController::class, 'index'])->name('services.index')->middleware('permission:view services');
@@ -313,22 +323,22 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::post('/services/upload-documents/{id}', [ServiceController::class, 'uploadDocuments'])->name('services.upload_documents');
 
     // -- Service Magazine (Insights) CRUD routes --
-    Route::get('/services/{serviceId}/magazines/create', [\App\Http\Controllers\ServiceMagazineController::class, 'create'])->name('service.magazines.create');
-    Route::post('/services/{serviceId}/magazines', [\App\Http\Controllers\ServiceMagazineController::class, 'store'])->name('service.magazines.store');
-    Route::get('/services/{serviceId}/magazines/{magazineId}/edit', [\App\Http\Controllers\ServiceMagazineController::class, 'edit'])->name('service.magazines.edit');
-    Route::put('/services/{serviceId}/magazines/{magazineId}', [\App\Http\Controllers\ServiceMagazineController::class, 'update'])->name('service.magazines.update');
-    Route::delete('/services/{serviceId}/magazines/{magazineId}', [\App\Http\Controllers\ServiceMagazineController::class, 'destroy'])->name('service.magazines.destroy');
+    Route::get('/services/{serviceId}/magazines/create', [\App\Http\Controllers\ServiceMagazineController::class, 'create'])->name('service.magazines.create')->middleware('permission:create magazines');
+    Route::post('/services/{serviceId}/magazines', [\App\Http\Controllers\ServiceMagazineController::class, 'store'])->name('service.magazines.store')->middleware('permission:create magazines');
+    Route::get('/services/{serviceId}/magazines/{magazineId}/edit', [\App\Http\Controllers\ServiceMagazineController::class, 'edit'])->name('service.magazines.edit')->middleware('permission:edit magazines');
+    Route::put('/services/{serviceId}/magazines/{magazineId}', [\App\Http\Controllers\ServiceMagazineController::class, 'update'])->name('service.magazines.update')->middleware('permission:edit magazines');
+    Route::delete('/services/{serviceId}/magazines/{magazineId}', [\App\Http\Controllers\ServiceMagazineController::class, 'destroy'])->name('service.magazines.destroy')->middleware('permission:delete magazines');
 
     // announcement routes
-    Route::get('/all-announcements', [\App\Http\Controllers\AnnouncementController::class, 'index'])->name('announcements.index');
+    Route::get('/all-announcements', [\App\Http\Controllers\AnnouncementController::class, 'index'])->name('announcements.index')->middleware('permission:view announcements');
     Route::get('/announcements', function () {
         return redirect()->route('announcements.index');
     });
-    Route::get('/announcements/create', [\App\Http\Controllers\AnnouncementController::class, 'create'])->name('announcements.create');
-    Route::post('/announcements', [\App\Http\Controllers\AnnouncementController::class, 'store'])->name('announcements.store');
-    Route::get('/announcements/edit/{announcement}', [\App\Http\Controllers\AnnouncementController::class, 'edit'])->name('announcements.edit');
-    Route::post('/announcements/update/{announcement}', [\App\Http\Controllers\AnnouncementController::class, 'update'])->name('announcements.update');
-    Route::delete('/announcements/delete/{announcement}', [\App\Http\Controllers\AnnouncementController::class, 'destroy'])->name('announcements.destroy');
+    Route::get('/announcements/create', [\App\Http\Controllers\AnnouncementController::class, 'create'])->name('announcements.create')->middleware('permission:create announcements');
+    Route::post('/announcements', [\App\Http\Controllers\AnnouncementController::class, 'store'])->name('announcements.store')->middleware('permission:create announcements');
+    Route::get('/announcements/edit/{announcement}', [\App\Http\Controllers\AnnouncementController::class, 'edit'])->name('announcements.edit')->middleware('permission:edit announcements');
+    Route::post('/announcements/update/{announcement}', [\App\Http\Controllers\AnnouncementController::class, 'update'])->name('announcements.update')->middleware('permission:edit announcements');
+    Route::delete('/announcements/delete/{announcement}', [\App\Http\Controllers\AnnouncementController::class, 'destroy'])->name('announcements.destroy')->middleware('permission:delete announcements');
 
     // profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -383,54 +393,54 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
 
     // Projects category
 
-    Route::get('/projects-category', [ProjectCategoryController::class, 'index'])->name('project.category.index');
-    Route::post('/projects-category', [ProjectCategoryController::class, 'store'])->name('project_categories.store');
-    Route::delete('/projects-category/delete/{id}', [ProjectCategoryController::class, 'destroy'])->name('project.category.destroy');
-    Route::post('/projects-category/update/{id}', [ProjectCategoryController::class, 'update'])->name('project.category.update');
-    Route::post('/projects-category/get', [ProjectCategoryController::class, 'getCategory'])->name('project.category.get');
+    Route::get('/projects-category', [ProjectCategoryController::class, 'index'])->name('project.category.index')->middleware('permission:view project categories');
+    Route::post('/projects-category', [ProjectCategoryController::class, 'store'])->name('project_categories.store')->middleware('permission:create project categories');
+    Route::delete('/projects-category/delete/{id}', [ProjectCategoryController::class, 'destroy'])->name('project.category.destroy')->middleware('permission:delete project categories');
+    Route::post('/projects-category/update/{id}', [ProjectCategoryController::class, 'update'])->name('project.category.update')->middleware('permission:edit project categories');
+    Route::post('/projects-category/get', [ProjectCategoryController::class, 'getCategory'])->name('project.category.get')->middleware('permission:view project categories');
 
 
     // Projects
-    Route::get('/projects', [ProjectController::class, 'index'])->name('project.index');
-    Route::post('/projects-store', [ProjectController::class, 'store'])->name('project.store');
-    Route::post('/projects/get', [ProjectController::class, 'getProject'])->name('project.getProject');
-    Route::post('/projects/update/{id}', [ProjectController::class, 'update'])->name('project.update');
-    Route::delete('/projects/destroy/{id}', [ProjectController::class, 'destroy'])->name('project.destroy');
+    Route::get('/projects', [ProjectController::class, 'index'])->name('project.index')->middleware('permission:view projects');
+    Route::post('/projects-store', [ProjectController::class, 'store'])->name('project.store')->middleware('permission:create projects');
+    Route::post('/projects/get', [ProjectController::class, 'getProject'])->name('project.getProject')->middleware('permission:view projects');
+    Route::post('/projects/update/{id}', [ProjectController::class, 'update'])->name('project.update')->middleware('permission:edit projects');
+    Route::delete('/projects/destroy/{id}', [ProjectController::class, 'destroy'])->name('project.destroy')->middleware('permission:delete projects');
 
 
     //About us page
 
     Route::prefix('about-us')->group(function () {
-        Route::get('/', [About_UsController::class, 'index'])->name('about_us.index');
-        Route::post('/', [About_UsController::class, 'store'])->name('about_us.store');
+        Route::get('/', [About_UsController::class, 'index'])->name('about_us.index')->middleware('permission:view about us');
+        Route::post('/', [About_UsController::class, 'store'])->name('about_us.store')->middleware('permission:create about us');
 
         // AJAX routes
-        Route::post('/get', [About_UsController::class, 'get'])->name('about_us.get');
-        Route::post('/update/{id}', [About_UsController::class, 'update'])->name('about_us.update');
-        Route::delete('/destroy/{id}', [About_UsController::class, 'destroy'])->name('about_us.destroy');
+        Route::post('/get', [About_UsController::class, 'get'])->name('about_us.get')->middleware('permission:view about us');
+        Route::post('/update/{id}', [About_UsController::class, 'update'])->name('about_us.update')->middleware('permission:edit about us');
+        Route::delete('/destroy/{id}', [About_UsController::class, 'destroy'])->name('about_us.destroy')->middleware('permission:delete about us');
     });
 
     // About us content routes
     Route::prefix('content')->group(function () {
-        Route::get('/', [About_UsContentController::class, 'index'])->name('about_us.content.index');
-        Route::post('/', [About_UsContentController::class, 'store'])->name('about_us.content.store');
-        Route::post('/get', [About_UsContentController::class, 'get'])->name('about_us.content.get');
-        Route::post('/update/{id}', [About_UsContentController::class, 'update'])->name('about_us.content.update');
-        Route::delete('/destroy/{id}', [About_UsContentController::class, 'destroy'])->name('about_us.content.destroy');
+        Route::get('/', [About_UsContentController::class, 'index'])->name('about_us.content.index')->middleware('permission:view about us');
+        Route::post('/', [About_UsContentController::class, 'store'])->name('about_us.content.store')->middleware('permission:create about us');
+        Route::post('/get', [About_UsContentController::class, 'get'])->name('about_us.content.get')->middleware('permission:view about us');
+        Route::post('/update/{id}', [About_UsContentController::class, 'update'])->name('about_us.content.update')->middleware('permission:edit about us');
+        Route::delete('/destroy/{id}', [About_UsContentController::class, 'destroy'])->name('about_us.content.destroy')->middleware('permission:delete about us');
     });
 
 
     //contact page
 
     Route::prefix('testimonial')->group(function() {
-        Route::get('/', [ContactController::class,'index'])->name('testimonial.index');
-        Route::post('/store', [ContactController::class, 'store'])->name('testimonial.store');
-        Route::post('/get', [ContactController::class, 'getTestimonial'])->name('testimonial.get');
-        Route::post('/update/{id}', [ContactController::class, 'update'])->name('testimonial.update');
-        Route::delete('/delete/{id}', [ContactController::class, 'destroy'])->name('testimonial.destroy');
-        Route::post('/toggle-featured/{id}', [ContactController::class, 'toggleFeatured'])->name('testimonial.toggleFeatured');
-        Route::post('/toggle-approved/{id}', [ContactController::class, 'toggleApproved'])->name('testimonial.toggleApproved');
-        Route::post('/settings', [ContactController::class, 'saveSettings'])->name('testimonial.saveSettings');
+        Route::get('/', [ContactController::class,'index'])->name('testimonial.index')->middleware('permission:view testimonials');
+        Route::post('/store', [ContactController::class, 'store'])->name('testimonial.store')->middleware('permission:create testimonials');
+        Route::post('/get', [ContactController::class, 'getTestimonial'])->name('testimonial.get')->middleware('permission:view testimonials');
+        Route::post('/update/{id}', [ContactController::class, 'update'])->name('testimonial.update')->middleware('permission:edit testimonials');
+        Route::delete('/delete/{id}', [ContactController::class, 'destroy'])->name('testimonial.destroy')->middleware('permission:delete testimonials');
+        Route::post('/toggle-featured/{id}', [ContactController::class, 'toggleFeatured'])->name('testimonial.toggleFeatured')->middleware('permission:edit testimonials');
+        Route::post('/toggle-approved/{id}', [ContactController::class, 'toggleApproved'])->name('testimonial.toggleApproved')->middleware('permission:edit testimonials');
+        Route::post('/settings', [ContactController::class, 'saveSettings'])->name('testimonial.saveSettings')->middleware('permission:edit testimonials');
     });
 
    
@@ -438,84 +448,84 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
 
     //clients route
     Route::prefix('dashboard/clients')->group(function () {
-        Route::get('/',[clientsController::class, 'index'])->name('dashboard.clients.index');
-        Route::post('/store',[clientsController::class, 'store'])->name('dashboard.clients.store');
-        Route::get('/get',[clientsController::class, 'getClient'])->name('dashboard.clients.get');
-        Route::post('/update/{id}',[clientsController::class, 'update'])->name('dashboard.clients.update');
-        Route::delete('/destroy/{id}',[clientsController::class, 'destroy'])->name('dashboard.clients.destroy');
-        Route::post('/reorder',[clientsController::class, 'reorder'])->name('dashboard.clients.reorder');
-        Route::post('/hero',[clientsController::class, 'updateHero'])->name('dashboard.clients.updateHero');
-        Route::post('/toggle-featured/{id}',[clientsController::class, 'toggleFeatured'])->name('dashboard.clients.toggle-featured');
-        Route::post('/toggle-status/{id}',[clientsController::class, 'toggleStatus'])->name('dashboard.clients.toggle-status');
+        Route::get('/',[clientsController::class, 'index'])->name('dashboard.clients.index')->middleware('permission:view clients');
+        Route::post('/store',[clientsController::class, 'store'])->name('dashboard.clients.store')->middleware('permission:create clients');
+        Route::get('/get',[clientsController::class, 'getClient'])->name('dashboard.clients.get')->middleware('permission:view clients');
+        Route::post('/update/{id}',[clientsController::class, 'update'])->name('dashboard.clients.update')->middleware('permission:edit clients');
+        Route::delete('/destroy/{id}',[clientsController::class, 'destroy'])->name('dashboard.clients.destroy')->middleware('permission:delete clients');
+        Route::post('/reorder',[clientsController::class, 'reorder'])->name('dashboard.clients.reorder')->middleware('permission:edit clients');
+        Route::post('/hero',[clientsController::class, 'updateHero'])->name('dashboard.clients.updateHero')->middleware('permission:edit clients');
+        Route::post('/toggle-featured/{id}',[clientsController::class, 'toggleFeatured'])->name('dashboard.clients.toggle-featured')->middleware('permission:edit clients');
+        Route::post('/toggle-status/{id}',[clientsController::class, 'toggleStatus'])->name('dashboard.clients.toggle-status')->middleware('permission:edit clients');
     });
 
     //brands route
     Route::prefix('dashboard/brands')->group(function () {
-        Route::get('/', [BrandController::class, 'index'])->name('dashboard.brands.index');
-        Route::post('/store', [BrandController::class, 'store'])->name('dashboard.brands.store');
-        Route::post('/reorder', [BrandController::class, 'reorder'])->name('dashboard.brands.reorder');
-        Route::get('/get', [BrandController::class, 'getBrand'])->name('dashboard.brands.get');
-        Route::post('/update/{id}', [BrandController::class, 'update'])->name('dashboard.brands.update');
-        Route::delete('/destroy/{id}', [BrandController::class, 'destroy'])->name('dashboard.brands.destroy');
-        Route::post('/update-hero', [BrandController::class, 'updateHero'])->name('dashboard.brands.updateHero');
+        Route::get('/', [BrandController::class, 'index'])->name('dashboard.brands.index')->middleware('permission:view brands');
+        Route::post('/store', [BrandController::class, 'store'])->name('dashboard.brands.store')->middleware('permission:create brands');
+        Route::post('/reorder', [BrandController::class, 'reorder'])->name('dashboard.brands.reorder')->middleware('permission:edit brands');
+        Route::get('/get', [BrandController::class, 'getBrand'])->name('dashboard.brands.get')->middleware('permission:view brands');
+        Route::post('/update/{id}', [BrandController::class, 'update'])->name('dashboard.brands.update')->middleware('permission:edit brands');
+        Route::delete('/destroy/{id}', [BrandController::class, 'destroy'])->name('dashboard.brands.destroy')->middleware('permission:delete brands');
+        Route::post('/update-hero', [BrandController::class, 'updateHero'])->name('dashboard.brands.updateHero')->middleware('permission:edit brands');
     });
 
     //About_quote routes
     Route::prefix('about-quote')->group(function () {
-        Route::get('/', [About_quoteController::class, 'index'])->name('about_quote.index');
-        Route::post('/store', [About_quoteController::class, 'store'])->name('about_quote.store');
-        Route::post('/get', [About_quoteController::class, 'get'])->name('about_quote.get');
-        Route::post('/update/{id}', [About_quoteController::class, 'update'])->name('about_quote.update');
-        Route::delete('/destroy/{id}', [About_quoteController::class, 'destroy'])->name('about_quote.destroy');
+        Route::get('/', [About_quoteController::class, 'index'])->name('about_quote.index')->middleware('permission:view about quote');
+        Route::post('/store', [About_quoteController::class, 'store'])->name('about_quote.store')->middleware('permission:create about quote');
+        Route::post('/get', [About_quoteController::class, 'get'])->name('about_quote.get')->middleware('permission:view about quote');
+        Route::post('/update/{id}', [About_quoteController::class, 'update'])->name('about_quote.update')->middleware('permission:edit about quote');
+        Route::delete('/destroy/{id}', [About_quoteController::class, 'destroy'])->name('about_quote.destroy')->middleware('permission:delete about quote');
     });
 
     //About counters (stats strip) routes
     Route::prefix('about-counters')->group(function () {
-        Route::get('/', [App\Http\Controllers\AboutCounterController::class, 'index'])->name('about_counters.index');
-        Route::post('/', [App\Http\Controllers\AboutCounterController::class, 'store'])->name('about_counters.store');
-        Route::post('/get', [App\Http\Controllers\AboutCounterController::class, 'get'])->name('about_counters.get');
-        Route::post('/reorder', [App\Http\Controllers\AboutCounterController::class, 'reorder'])->name('about_counters.reorder');
-        Route::post('/update/{id}', [App\Http\Controllers\AboutCounterController::class, 'update'])->name('about_counters.update');
-        Route::delete('/destroy/{id}', [App\Http\Controllers\AboutCounterController::class, 'destroy'])->name('about_counters.destroy');
+        Route::get('/', [App\Http\Controllers\AboutCounterController::class, 'index'])->name('about_counters.index')->middleware('permission:view about counters');
+        Route::post('/', [App\Http\Controllers\AboutCounterController::class, 'store'])->name('about_counters.store')->middleware('permission:create about counters');
+        Route::post('/get', [App\Http\Controllers\AboutCounterController::class, 'get'])->name('about_counters.get')->middleware('permission:view about counters');
+        Route::post('/reorder', [App\Http\Controllers\AboutCounterController::class, 'reorder'])->name('about_counters.reorder')->middleware('permission:edit about counters');
+        Route::post('/update/{id}', [App\Http\Controllers\AboutCounterController::class, 'update'])->name('about_counters.update')->middleware('permission:edit about counters');
+        Route::delete('/destroy/{id}', [App\Http\Controllers\AboutCounterController::class, 'destroy'])->name('about_counters.destroy')->middleware('permission:delete about counters');
     });
 
     //About staff / leadership team routes
     Route::prefix('about-staff')->group(function () {
-        Route::get('/', [App\Http\Controllers\AboutStaffController::class, 'index'])->name('about_staff.index');
-        Route::post('/', [App\Http\Controllers\AboutStaffController::class, 'store'])->name('about_staff.store');
-        Route::post('/get', [App\Http\Controllers\AboutStaffController::class, 'get'])->name('about_staff.get');
-        Route::post('/reorder', [App\Http\Controllers\AboutStaffController::class, 'reorder'])->name('about_staff.reorder');
-        Route::post('/update/{id}', [App\Http\Controllers\AboutStaffController::class, 'update'])->name('about_staff.update');
-        Route::delete('/destroy/{id}', [App\Http\Controllers\AboutStaffController::class, 'destroy'])->name('about_staff.destroy');
+        Route::get('/', [App\Http\Controllers\AboutStaffController::class, 'index'])->name('about_staff.index')->middleware('permission:view about staff');
+        Route::post('/', [App\Http\Controllers\AboutStaffController::class, 'store'])->name('about_staff.store')->middleware('permission:create about staff');
+        Route::post('/get', [App\Http\Controllers\AboutStaffController::class, 'get'])->name('about_staff.get')->middleware('permission:view about staff');
+        Route::post('/reorder', [App\Http\Controllers\AboutStaffController::class, 'reorder'])->name('about_staff.reorder')->middleware('permission:edit about staff');
+        Route::post('/update/{id}', [App\Http\Controllers\AboutStaffController::class, 'update'])->name('about_staff.update')->middleware('permission:edit about staff');
+        Route::delete('/destroy/{id}', [App\Http\Controllers\AboutStaffController::class, 'destroy'])->name('about_staff.destroy')->middleware('permission:delete about staff');
     });
 
     //tags routes
 
 
-Route::get('/global', [globalController::class, 'globaltag'])->name('globaltag');
-Route::post('/global/store',   [globalController::class, 'store'])->name('global.store');
-Route::post('/global/get',     [globalController::class, 'get'])->name('global.get');
-Route::post('/global/update/{id}', [globalController::class, 'update'])->name('global.update');
-Route::delete('/global/{id}',  [globalController::class, 'destroy'])->name('global.destroy');
+Route::get('/global', [globalController::class, 'globaltag'])->name('globaltag')->middleware('permission:view global tags');
+Route::post('/global/store',   [globalController::class, 'store'])->name('global.store')->middleware('permission:create global tags');
+Route::post('/global/get',     [globalController::class, 'get'])->name('global.get')->middleware('permission:view global tags');
+Route::post('/global/update/{id}', [globalController::class, 'update'])->name('global.update')->middleware('permission:edit global tags');
+Route::delete('/global/{id}',  [globalController::class, 'destroy'])->name('global.destroy')->middleware('permission:delete global tags');
 
 
 
 Route::prefix('google')->name('google.')->middleware(['auth'])->group(function () {
-    Route::get('/',          [googleController::class, 'googletag'])->name('index');
-    Route::post('/store',    [googleController::class, 'store'])->name('store');
-    Route::post('/get',      [googleController::class, 'get'])->name('get');
-    Route::post('/update/{id}',      [googleController::class, 'update'])->name('update');
-    Route::delete('/{id}',   [googleController::class, 'destroy'])->name('destroy');
+    Route::get('/',          [googleController::class, 'googletag'])->name('index')->middleware('permission:view google tags');
+    Route::post('/store',    [googleController::class, 'store'])->name('store')->middleware('permission:create google tags');
+    Route::post('/get',      [googleController::class, 'get'])->name('get')->middleware('permission:view google tags');
+    Route::post('/update/{id}',      [googleController::class, 'update'])->name('update')->middleware('permission:edit google tags');
+    Route::delete('/{id}',   [googleController::class, 'destroy'])->name('destroy')->middleware('permission:delete google tags');
 });
 
 
     //eco system routes
     Route::prefix('dashboard')->group(function () {
-        Route::get('/eco-systems', [eco_systemController::class, 'index'])->name('eco_system.index');
-        Route::post('/eco-systems', [eco_systemController::class, 'store'])->name('eco_system.store');
-        Route::post('/eco-systems/get', [eco_systemController::class, 'get'])->name('eco_system.get');
-        Route::post('/eco-systems/update/{id}', [eco_systemController::class, 'update'])->name('eco_system.update');
-        Route::delete('/eco-systems/destroy/{id}', [eco_systemController::class, 'destroy'])->name('eco_system.destroy');
+        Route::get('/eco-systems', [eco_systemController::class, 'index'])->name('eco_system.index')->middleware('permission:view eco system');
+        Route::post('/eco-systems', [eco_systemController::class, 'store'])->name('eco_system.store')->middleware('permission:create eco system');
+        Route::post('/eco-systems/get', [eco_systemController::class, 'get'])->name('eco_system.get')->middleware('permission:view eco system');
+        Route::post('/eco-systems/update/{id}', [eco_systemController::class, 'update'])->name('eco_system.update')->middleware('permission:edit eco system');
+        Route::delete('/eco-systems/destroy/{id}', [eco_systemController::class, 'destroy'])->name('eco_system.destroy')->middleware('permission:delete eco system');
     });
 
 

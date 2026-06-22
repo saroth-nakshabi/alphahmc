@@ -274,6 +274,58 @@
                             </a>
                         </li>
 
+                        {{-- SEO Overview: read-only meta listings per content type --}}
+                        <li class="sidebar-item">
+                            <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
+                                <span class="d-flex">
+                                    <i class="ti ti-list-search"></i>
+                                </span>
+                                <span class="hide-menu">SEO Overview</span>
+                            </a>
+                            <ul aria-expanded="false" class="collapse first-level">
+                                @can('view services')
+                                    <li class="sidebar-item">
+                                        <a class="sidebar-link" href="{{ route('seo.overview', 'services') }}" aria-expanded="false">
+                                            <span><i class="ti ti-circle"></i></span>
+                                            <span class="hide-menu">Services</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('view service groups')
+                                    <li class="sidebar-item">
+                                        <a class="sidebar-link" href="{{ route('seo.overview', 'service-groups') }}" aria-expanded="false">
+                                            <span><i class="ti ti-circle"></i></span>
+                                            <span class="hide-menu">Service Groups</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('view categories')
+                                    <li class="sidebar-item">
+                                        <a class="sidebar-link" href="{{ route('seo.overview', 'categories') }}" aria-expanded="false">
+                                            <span><i class="ti ti-circle"></i></span>
+                                            <span class="hide-menu">Categories</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('view blogs')
+                                    <li class="sidebar-item">
+                                        <a class="sidebar-link" href="{{ route('seo.overview', 'blogs') }}" aria-expanded="false">
+                                            <span><i class="ti ti-circle"></i></span>
+                                            <span class="hide-menu">Blogs</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('view brands')
+                                    <li class="sidebar-item">
+                                        <a class="sidebar-link" href="{{ route('seo.overview', 'brands') }}" aria-expanded="false">
+                                            <span><i class="ti ti-circle"></i></span>
+                                            <span class="hide-menu">Brands</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </li>
+
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin.menu-promos.index') }}" aria-expanded="false">
                                 <span>

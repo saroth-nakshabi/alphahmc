@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <path d="M10 22c0-4.4 3.6-8 8-8V10C9.2 10 3 16.2 3 24v2h7v-4zm16 0c0-4.4 3.6-8 8-8V10c-8.8 0-15 6.2-15 14v2h7v-4z" fill="currentColor"/>
                         </svg>
                     </div>
-                    <p class="testimonial-text">{!!$testimonial->content!!}</p> {{--{{ $testimonial->content }}--}}
+                    <p class="testimonial-text">{{ $testimonial->content }}</p>
                     <div class="testimonial-stars">
                         @for ($i = 1; $i <= 5; $i++)
                             <svg class="star {{ $i <= $testimonial->rating ? 'filled' : 'empty' }}" viewBox="0 0 20 20" fill="currentColor">

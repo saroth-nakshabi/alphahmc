@@ -40,13 +40,17 @@ class BrandController extends Controller
             'description' => 'required|string',
             'what_we_do'  => 'required|string',
             'google_location' => 'nullable|string',
+            'meta_title'       => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string',
+            'meta_keywords'    => 'nullable|string',
+            'areaServed'       => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $data = $request->only(['name', 'address', 'description', 'what_we_do', 'google_location']);
+        $data = $request->only(['name', 'address', 'description', 'what_we_do', 'google_location', 'meta_title', 'meta_description', 'meta_keywords', 'areaServed']);
         $data['slug'] = Str::slug($request->name);
         $data['sort_order'] = (int) Brand::max('sort_order') + 1; // new brands go to the end
 
@@ -85,6 +89,10 @@ class BrandController extends Controller
             'description' => 'required|string',
             'what_we_do'  => 'required|string',
             'google_location' => 'nullable|string',
+            'meta_title'       => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string',
+            'meta_keywords'    => 'nullable|string',
+            'areaServed'       => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -97,6 +105,10 @@ class BrandController extends Controller
         $brand->description     = $request->description;
         $brand->what_we_do      = $request->what_we_do;
         $brand->google_location = $request->google_location;
+        $brand->meta_title       = $request->meta_title;
+        $brand->meta_description = $request->meta_description;
+        $brand->meta_keywords    = $request->meta_keywords;
+        $brand->areaServed       = $request->areaServed;
 
         if ($request->hasFile('logo')) {
             if ($brand->logo && file_exists(public_path('uploads/brands/' . $brand->logo))) {

@@ -1,5 +1,10 @@
 ﻿@extends('front/layout-2')
 
+@push('page_title', $project->name . ' | Alpha Health Group')
+@push('meta')
+    <meta name="description" content="{{ \Illuminate\Support\Str::limit(strip_tags($project->description ?? ''), 160) }}">
+@endpush
+
 @section('custom_css')
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
