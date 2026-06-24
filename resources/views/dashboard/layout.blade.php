@@ -137,7 +137,7 @@
                                 </a>
                             </li>
                         @endcan
-                        @canany(['view users', 'view admins'])
+                        @canany(['view users', 'view admins', 'view agents'])
                             <li class="sidebar-item">
                                 <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
                                     <span class="d-flex">
@@ -166,14 +166,16 @@
                                             </a>
                                         </li>
                                     @endcan
-                                    <li class="sidebar-item">
-                                        <a href="{{ route('users.agents') }}" class="sidebar-link">
-                                            <div class="round-16 d-flex align-items-center justify-content-center">
-                                                <i class="ti ti-circle"></i>
-                                            </div>
-                                            <span class="hide-menu">Agents</span>
-                                        </a>
-                                    </li>
+                                    @can('view agents')
+                                        <li class="sidebar-item">
+                                            <a href="{{ route('users.agents') }}" class="sidebar-link">
+                                                <div class="round-16 d-flex align-items-center justify-content-center">
+                                                    <i class="ti ti-circle"></i>
+                                                </div>
+                                                <span class="hide-menu">Agents</span>
+                                            </a>
+                                        </li>
+                                    @endcan
                                 </ul>
                             </li>
                         @endcanany
@@ -216,12 +218,15 @@
                         <!-- ============================= -->
                         <!-- Apps -->
                         <!-- ============================= -->
+                        @canany(['view main categories', 'view categories', 'view services', 'view service groups', 'view pages', 'view menu promos', 'view project process', 'view inquiries', 'view planner', 'view planner builder', 'view settings', 'view home sliders', 'view announcements', 'view blogs', 'view tags', 'view projects', 'view project categories', 'view global tags', 'view google tags', 'view clients', 'view brands', 'view testimonials', 'view about us', 'view about quote', 'view eco system', 'view about counters', 'view about staff'])
                         <li class="nav-small-cap">
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu">Service</span>
                         </li>
+                        @endcanany
 
                         {{-- Service Manager: groups Categories, Services and Service Groups --}}
+                        @canany(['view main categories', 'view categories', 'view services', 'view service groups'])
                         <li class="sidebar-item">
                             <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
                                 <span class="d-flex">
@@ -254,7 +259,7 @@
                                         </a>
                                     </li>
                                 @endcan
-                                @can('view services')
+                                @can('view service groups')
                                     <li class="sidebar-item">
                                         <a class="sidebar-link" href="{{ route('service-group.index') }}" aria-expanded="false">
                                             <span><i class="ti ti-circle"></i></span>
@@ -264,7 +269,9 @@
                                 @endcan
                             </ul>
                         </li>
+                        @endcanany
 
+                        @can('view pages')
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin.pages.index') }}" aria-expanded="false">
                                 <span>
@@ -273,8 +280,10 @@
                                 <span class="hide-menu">Pages &amp; SEO</span>
                             </a>
                         </li>
+                        @endcan
 
                         {{-- SEO Overview: read-only meta listings per content type --}}
+                        @canany(['view services', 'view service groups', 'view categories', 'view blogs', 'view brands'])
                         <li class="sidebar-item">
                             <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
                                 <span class="d-flex">
@@ -325,7 +334,9 @@
                                 @endcan
                             </ul>
                         </li>
+                        @endcanany
 
+                        @can('view menu promos')
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin.menu-promos.index') }}" aria-expanded="false">
                                 <span>
@@ -334,7 +345,9 @@
                                 <span class="hide-menu">Menu Promos</span>
                             </a>
                         </li>
+                        @endcan
 
+                        @can('view project process')
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin.project-process.index') }}" aria-expanded="false">
                                 <span>
@@ -343,7 +356,9 @@
                                 <span class="hide-menu">Project Process Manager</span>
                             </a>
                         </li>
+                        @endcan
 
+                        @can('view inquiries')
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin.inquiries.index') }}" aria-expanded="false">
                                 <span>
@@ -352,8 +367,10 @@
                                 <span class="hide-menu">Service Inquiries</span>
                             </a>
                         </li>
+                        @endcan
 
                         <!-- ============== AI Planner =============== -->
+                        @canany(['view planner', 'view planner builder', 'view settings'])
                         <li class="sidebar-item">
                             <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
                                 <span class="d-flex">
@@ -362,6 +379,7 @@
                                 <span class="hide-menu">AI Planner</span>
                             </a>
                             <ul aria-expanded="false" class="collapse first-level">
+                                @can('view planner')
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="{{ route('admin.planner.index') }}" aria-expanded="false">
                                         <span>
@@ -370,7 +388,9 @@
                                         <span class="hide-menu">Planning Request</span>
                                     </a>
                                 </li>
+                                @endcan
 
+                                @can('view settings')
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="{{ route('admin.settings.edit') }}" aria-expanded="false">
                                         <span>
@@ -379,7 +399,9 @@
                                         <span class="hide-menu">Settings</span>
                                     </a>
                                 </li>
+                                @endcan
 
+                                @can('view planner builder')
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="{{ route('admin.planner.builder') }}" aria-expanded="false">
                                         <span>
@@ -388,9 +410,12 @@
                                         <span class="hide-menu">Planner Builder</span>
                                     </a>
                                 </li>
+                                @endcan
                             </ul>
                         </li>
+                        @endcanany
 
+                        @can('view home sliders')
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('sliders.home.index') }}" aria-expanded="false">
                                 <span>
@@ -399,8 +424,9 @@
                                 <span class="hide-menu">Sliders</span>
                             </a>
                         </li>
-                        {{-- @endcan --}}
+                        @endcan
 
+                        @can('view announcements')
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('announcements.index') }}" aria-expanded="false">
                                 <span>
@@ -409,10 +435,12 @@
                                 <span class="hide-menu">Announcements</span>
                             </a>
                         </li>
+                        @endcan
 
 
                         <!-- ============ Blogs ================= -->
 
+                        @canany(['view blogs', 'view tags'])
                         <li class="sidebar-item">
                             <a class="sidebar-link has-arrow" href="#" aria-expanded="false">
                                 <span class="d-flex">
@@ -421,6 +449,7 @@
                                 <span class="hide-menu">Blogs</span>
                             </a>
                             <ul aria-expanded="false" class="collapse first-level">
+                                @can('view blogs')
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="{{ route('blogs.index') }}" aria-expanded="false">
                                         <span>
@@ -429,7 +458,9 @@
                                         <span class="hide-menu">All Blogs</span>
                                     </a>
                                 </li>
+                                @endcan
 
+                                @can('view tags')
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="{{ route('blog.tags.index') }}" aria-expanded="false">
                                         <span>
@@ -438,14 +469,15 @@
                                         <span class="hide-menu">Blogs Category</span>
                                     </a>
                                 </li>
+                                @endcan
                             </ul>
                         </li>
-
-                        {{-- @endcan --}}
+                        @endcanany
 
 
                         <!-- ============== Projects =============== -->
 
+                        @canany(['view projects', 'view project categories'])
                         <li class="sidebar-item">
                             <a class="sidebar-link has-arrow" href="#" aria-expanded="false">
                                 <span class="d-flex">
@@ -454,6 +486,7 @@
                                 <span class="hide-menu">Project</span>
                             </a>
                             <ul aria-expanded="false" class="collapse first-level">
+                                @can('view projects')
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="{{ route('project.index') }}" aria-expanded="false">
                                         <span>
@@ -462,7 +495,9 @@
                                         <span class="hide-menu">New Projects</span>
                                     </a>
                                 </li>
+                                @endcan
 
+                                @can('view project categories')
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="{{ route('project.category.index') }}"
                                         aria-expanded="false">
@@ -472,11 +507,14 @@
                                         <span class="hide-menu">Projects Category</span>
                                     </a>
                                 </li>
+                                @endcan
                             </ul>
                         </li>
+                        @endcanany
 
 
                         <!-- Global Tag ============-->
+                        @canany(['view global tags', 'view google tags'])
                         <li class="sidebar-item">
                             <a class="sidebar-link has-arrow" href="#" aria-expanded="false">
                                 <span class="d-flex">
@@ -485,6 +523,7 @@
                                 <span class="hide-menu">Tags</span>
                             </a>
                             <ul aria-expanded="false" class="collapse first-level">
+                                @can('view global tags')
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="{{ route('globaltag') }}" aria-expanded="false">
                                         <span>
@@ -493,6 +532,8 @@
                                         <span class="hide-menu">Global Tags</span>
                                     </a>
                                 </li>
+                                @endcan
+                                @can('view google tags')
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="{{ route('google.index') }}" aria-expanded="false">
                                         <span>
@@ -501,16 +542,16 @@
                                         <span class="hide-menu">Google Tags</span>
                                     </a>
                                 </li>
-
-
+                                @endcan
                             </ul>
                         </li>
+                        @endcanany
 
 
 
                         <!-- ============== Our Client =============== -->
 
-
+                        @can('view clients')
                         <li class="sidebar-item">
                             <a class="sidebar-link has-arrow" href="#" aria-expanded="false">
                                 <span class="d-flex">
@@ -529,7 +570,9 @@
                                 </li>
                             </ul>
                         </li>
+                        @endcan
 
+                        @can('view brands')
                         <li class="sidebar-item">
                             <a class="sidebar-link has-arrow" href="#" aria-expanded="false">
                                 <span class="d-flex">
@@ -548,7 +591,9 @@
                                 </li>
                             </ul>
                         </li>
+                        @endcan
 
+                        @can('view testimonials')
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('testimonial.index') }}" aria-expanded="false">
                                 <span class="d-flex">
@@ -557,10 +602,12 @@
                                 <span class="hide-menu">Testimonials</span>
                             </a>
                         </li>
+                        @endcan
 
 
                         <!-- ============== About us =============== -->
 
+                        @canany(['view about us', 'view about quote', 'view eco system', 'view about counters', 'view about staff'])
                         <li class="sidebar-item">
                             <a class="sidebar-link has-arrow" href="#" aria-expanded="false">
                                 <span class="d-flex">
@@ -569,6 +616,7 @@
                                 <span class="hide-menu">About Us</span>
                             </a>
                             <ul aria-expanded="false" class="collapse first-level">
+                                @can('view about us')
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="{{ route('about_us.index') }}" aria-expanded="false">
                                         <span>
@@ -586,16 +634,9 @@
                                         <span class="hide-menu">About Content</span>
                                     </a>
                                 </li>
+                                @endcan
 
-                                <li class="sidebar-item">
-                                    <a class="sidebar-link" href="#" aria-expanded="false">
-                                        <span>
-                                            <i class="ti ti-circle"></i>
-                                        </span>
-                                        <span class="hide-menu">About Staffs</span>
-                                    </a>
-                                </li>
-
+                                @can('view about quote')
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="{{route('about_quote.index')}}" aria-expanded="false">
                                         <span>
@@ -604,7 +645,9 @@
                                         <span class="hide-menu">About Quotes</span>
                                     </a>
                                 </li>
+                                @endcan
 
+                                @can('view eco system')
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="{{route('eco_system.index')}}" aria-expanded="false">
                                         <span>
@@ -613,7 +656,9 @@
                                         <span class="hide-menu">Eco System</span>
                                     </a>
                                 </li>
+                                @endcan
 
+                                @can('view about counters')
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="{{ route('about_counters.index') }}" aria-expanded="false">
                                         <span>
@@ -622,7 +667,9 @@
                                         <span class="hide-menu">Counters / Stats</span>
                                     </a>
                                 </li>
+                                @endcan
 
+                                @can('view about staff')
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="{{ route('about_staff.index') }}" aria-expanded="false">
                                         <span>
@@ -631,8 +678,10 @@
                                         <span class="hide-menu">Leadership Team</span>
                                     </a>
                                 </li>
+                                @endcan
                             </ul>
                         </li>
+                        @endcanany
 
 
                         <!-- ============= End About Us ================ -->
