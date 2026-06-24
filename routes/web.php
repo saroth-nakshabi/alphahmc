@@ -118,7 +118,7 @@ Route::redirect('/healthcare-insurance-empanelment', '/service-category/insuranc
 Route::redirect('/careers', '/service-category/healthcare-professional-resourcing', 301);
 Route::redirect('/careers/apply-job', '/service-category/healthcare-professional-resourcing', 301);
 
-Route::post('/inquiry/submit', [MainHomeController::class, 'submitInquiry'])->middleware('throttle:10,1')->name('front.inquiry.submit');
+Route::post('/inquiry/submit', [MainHomeController::class, 'submitInquiry'])->middleware('throttle:5,1')->name('front.inquiry.submit');
 Route::get('/healthcare-management-update-insights', [MainHomeController::class, 'blog'])->name('front.new_blog');
 Route::redirect('/new_blog', '/healthcare-management-update-insights', 301);
 // Route::get('/blog_single/{slug}', [MainHomeController::class, 'singleBlog'])->name('front.singleBlog');

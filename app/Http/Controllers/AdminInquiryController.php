@@ -34,6 +34,7 @@ class AdminInquiryController extends Controller
             'pending' => Inquiry::where('status', 'pending')->orWhereNull('status')->count(),
             'replied' => Inquiry::where('status', 'replied')->count(),
             'closed'  => Inquiry::where('status', 'closed')->count(),
+            'spam'    => Inquiry::where('status', 'spam')->count(),
         ];
 
         return view('dashboard.inquiries.index', compact('inquiries', 'services', 'stats'));

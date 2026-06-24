@@ -187,8 +187,21 @@
                 Our consultants will reach out within one business day. For urgent medical-legal or operational inquiries, please contact our regional office.
             </p>
 
+            @php
+                $emailWaAgent = \App\Models\Agent::with('user')
+                    ->whereHas('user', fn($q) => $q->whereNotNull('phone')->where('phone','!=',''))
+                    ->first();
+                $emailWaPhone = $emailWaAgent && $emailWaAgent->user
+                    ? preg_replace('/[^0-9]/', '', $emailWaAgent->user->phone)
+                    : '97142724064';
+                $emailWaLink  = 'https://wa.me/' . $emailWaPhone . '?text=' . rawurlencode("Hi, I submitted inquiry #AHC-{$inquiry->id} and would like a faster response.");
+            @endphp
             <div class="action-area">
                 <a href="{{ route('home') }}" class="primary-btn">Review Client Dashboard</a>
+                <a href="{{ $emailWaLink }}"
+                   style="display:inline-block;margin-top:12px;background:#25D366;color:#fff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;padding:14px 28px;border-radius:100px;text-decoration:none;box-shadow:0 6px 18px rgba(37,211,102,.35);">
+                    &#128241; Chat on WhatsApp for a faster reply
+                </a>
             </div>
 
             <div class="signature">

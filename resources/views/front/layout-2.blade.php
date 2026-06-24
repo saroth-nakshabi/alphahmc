@@ -2185,4 +2185,41 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     });
 </script>
 
+@php
+    $floatWaAgent = \App\Models\Agent::with('user')
+        ->whereHas('user', fn($q) => $q->whereNotNull('phone')->where('phone','!=',''))
+        ->first();
+    $floatWaPhone = $floatWaAgent && $floatWaAgent->user
+        ? preg_replace('/[^0-9]/', '', $floatWaAgent->user->phone)
+        : '97142724064';
+@endphp
+{{-- ── Floating WhatsApp button ── --}}
+<a href="https://wa.me/{{ $floatWaPhone }}?text={{ rawurlencode("Hi, I'd like to enquire about Alpha Health Group's services.") }}"
+   class="ahg-float-wa"
+   target="_blank"
+   rel="noopener"
+   title="Chat with us on WhatsApp"
+   onclick="window.dataLayer=window.dataLayer||[];window.dataLayer.push({event:'ahg_whatsapp_click',source:'floating_button'});">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" fill="#fff">
+        <path d="M12 2C6.477 2 2 6.477 2 12c0 1.895.523 3.665 1.432 5.18L2 22l4.981-1.398A9.944 9.944 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a8 8 0 01-4.073-1.112l-.292-.17-3.017.847.848-3.073-.186-.303A7.955 7.955 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8zm4.29-5.835c-.232-.116-1.373-.677-1.585-.754-.213-.077-.367-.116-.522.116-.155.232-.598.754-.733.91-.135.154-.27.174-.502.058-.232-.116-.98-.361-1.867-1.15-.69-.615-1.156-1.375-1.292-1.607-.135-.232-.015-.358.101-.474.104-.104.232-.27.348-.406.116-.135.154-.232.232-.386.077-.155.038-.29-.019-.406-.058-.116-.522-1.259-.715-1.722-.188-.45-.38-.389-.522-.396l-.444-.008a.852.852 0 00-.618.29c-.212.232-.81.79-.81 1.926 0 1.136.83 2.233.945 2.388.116.155 1.634 2.494 3.96 3.498.553.24 1.03.382 1.382.49.58.18 1.107.154 1.524.093.465-.069 1.373-.56 1.567-1.1.193-.54.193-1.004.135-1.1-.058-.096-.213-.155-.445-.27z"/>
+    </svg>
+</a>
+<style>
+    .ahg-float-wa {
+        position: fixed; bottom: 28px; right: 28px;
+        width: 56px; height: 56px;
+        background: #25D366; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 4px 20px rgba(37,211,102,.45);
+        z-index: 9990;
+        transition: transform .25s ease, box-shadow .25s ease;
+        text-decoration: none;
+    }
+    .ahg-float-wa:hover { transform: scale(1.12) translateY(-2px); box-shadow: 0 8px 28px rgba(37,211,102,.55); }
+    @media (max-width: 768px) {
+        .ahg-float-wa { bottom: 20px; right: 18px; width: 50px; height: 50px; }
+        .ahg-float-wa svg { width: 24px; height: 24px; }
+    }
+</style>
+
 </html>

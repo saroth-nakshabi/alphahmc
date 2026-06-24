@@ -36,6 +36,10 @@
     .stat-closed  .stat-icon { background: #f1f5f9; color: #64748b; }
     .stat-closed  .stat-num  { color: #64748b; }
 
+    .stat-spam  { background: #fff1f2; border-color: #fecdd3; }
+    .stat-spam  .stat-icon { background: #fee2e2; color: #be123c; }
+    .stat-spam  .stat-num  { color: #be123c; }
+
     /* ── Filter card ─────────────────────────────────── */
     .filter-card {
         background: #fff;
@@ -88,6 +92,7 @@
     .badge-pending { background: #fff8e1; color: #b07d00; border: 1px solid #ffe082; padding: 4px 12px; border-radius: 50px; font-size: .75rem; font-weight: 700; }
     .badge-replied { background: #e6f9f0; color: #1a8a4a; border: 1px solid #a3e6c3; padding: 4px 12px; border-radius: 50px; font-size: .75rem; font-weight: 700; }
     .badge-closed  { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; padding: 4px 12px; border-radius: 50px; font-size: .75rem; font-weight: 700; }
+    .badge-spam    { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; padding: 4px 12px; border-radius: 50px; font-size: .75rem; font-weight: 700; }
 
     /* ── Status select ───────────────────────────────── */
     .status-select { font-size: .8rem; border-radius: 6px; border: 1px solid #e2e8f0; padding: 3px 8px; cursor: pointer; min-width: 100px; }
@@ -182,6 +187,21 @@
             </div>
         </div>
     </div>
+    @if(($stats['spam'] ?? 0) > 0)
+    <div class="col-6 col-xl-3">
+        <div class="card mb-0">
+            <div class="card-body p-0">
+                <div class="inq-stat stat-spam">
+                    <div class="stat-icon"><i class="ti ti-shield-x"></i></div>
+                    <div>
+                        <div class="stat-num">{{ $stats['spam'] }}</div>
+                        <div class="stat-lbl">Spam</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>
 
 {{-- ── Filter bar ── --}}
@@ -214,6 +234,7 @@
                     <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
                     <option value="replied" {{ request('status') == 'replied' ? 'selected' : '' }}>Replied</option>
                     <option value="closed"  {{ request('status') == 'closed'  ? 'selected' : '' }}>Closed</option>
+                    <option value="spam"    {{ request('status') == 'spam'    ? 'selected' : '' }}>Spam</option>
                 </select>
             </div>
             <div class="col-12 col-lg-3 d-flex gap-2">
@@ -289,8 +310,12 @@
                                     <option value="pending" {{ $st == 'pending' ? 'selected' : '' }}>Pending</option>
                                     <option value="replied" {{ $st == 'replied' ? 'selected' : '' }}>Replied</option>
                                     <option value="closed"  {{ $st == 'closed'  ? 'selected' : '' }}>Closed</option>
+                                    <option value="spam"    {{ $st == 'spam'    ? 'selected' : '' }}>Spam</option>
                                 </select>
                             </form>
+                            @if($st === 'spam')
+                                <span class="badge-spam d-block mt-1" style="display:inline-block;font-size:.72rem;">&#9888; Flagged</span>
+                            @endif
                         </td>
                         <td>
                             <div class="inq-actions">

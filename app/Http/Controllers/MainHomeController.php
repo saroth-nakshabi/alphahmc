@@ -34,6 +34,7 @@ use App\Mail\CustomerInquiryConfirmationMail;
 use App\Models\Brand;
 use App\Models\BrandHero;
 use App\Models\TestimonialSetting;
+use Illuminate\Support\Facades\Http;
 
 
 
@@ -411,14 +412,52 @@ class MainHomeController extends Controller
     public function submitInquiry(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:20',
-            'service_id' => 'nullable|exists:services,id',
-            'message' => 'nullable|string',
+            'name'         => 'required|string|max:255',
+            'email'        => 'required|email|max:255',
+            'phone'        => 'required|string|max:20',
+            'service_id'   => 'nullable|exists:services,id',
+            'message'      => 'nullable|string',
             'meeting_date' => 'nullable|date',
             'meeting_time' => 'nullable|string|max:10',
         ]);
+
+        $successMsg = 'Thank you! Your inquiry has been submitted successfully.';
+
+        // ── 1. Honeypot — bots fill this invisible field, humans never do.
+        //    Never block a submission; just flag as spam for admin review.
+        $isSuspicious = !empty($request->input('website_url'));
+
+        // ── 2. reCAPTCHA v3 soft-check (only runs when keys are configured).
+        //    Low score → spam flag, never a hard block — we never want to lose a lead.
+        if (!$isSuspicious && env('RECAPTCHA_V3_SECRET_KEY')) {
+            try {
+                $rc    = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                    'secret'   => env('RECAPTCHA_V3_SECRET_KEY'),
+                    'response' => $request->input('g-recaptcha-response', ''),
+                    'remoteip' => $request->ip(),
+                ]);
+                $score = $rc->json('score', 1.0);
+                if ($score < 0.3) {
+                    $isSuspicious = true;
+                }
+            } catch (\Exception $e) {
+                Log::warning('reCAPTCHA v3 check failed (submission allowed): ' . $e->getMessage());
+            }
+        }
+
+        // ── 3. Email dedup — same email submitted within the last 2 hours.
+        //    Return silent success (user already got a confirmation; just don't double-save).
+        if (!$isSuspicious) {
+            $recentExists = Inquiry::where('email', $request->input('email'))
+                ->where('created_at', '>=', now()->subHours(2))
+                ->exists();
+
+            if ($recentExists) {
+                return $request->ajax()
+                    ? response()->json(['success' => true, 'message' => $successMsg])
+                    : back()->with('success', $successMsg);
+            }
+        }
 
         // Combine the optional preferred date + time into a single datetime.
         $meetingAt = $request->filled('meeting_date')
@@ -431,7 +470,7 @@ class MainHomeController extends Controller
             $message = trim(($message ? $message . "\n" : '') . '— Consent: agreed to be contacted (privacy policy accepted).');
         }
 
-        // 1. Save to Database (CRM record)
+        // 1. Save to Database (CRM record) — spam submissions are saved but flagged.
         $inquiry = Inquiry::create([
             'name'       => $request->input('name'),
             'email'      => $request->input('email'),
@@ -439,27 +478,30 @@ class MainHomeController extends Controller
             'service_id' => $request->input('service_id') ?: null,
             'message'    => $message,
             'meeting_at' => $meetingAt,
-            'status'     => 'pending',
+            'status'     => $isSuspicious ? 'spam' : 'pending',
         ]);
 
-        // 2. Send Email Notification to Admin
-        try {
-            Mail::to('nisath.alphatsm@gmail.com')->send(new ServiceInquiryMail($inquiry));
-        } catch (\Exception $e) {
-            Log::error('Inquiry Admin Mail failed: ' . $e->getMessage());
-        }
+        // Skip notification emails for flagged spam — admin can still review in CRM.
+        if (!$isSuspicious) {
+            // 2. Send Email Notification to Admin
+            try {
+                Mail::to('nisath.alphatsm@gmail.com')->send(new ServiceInquiryMail($inquiry));
+            } catch (\Exception $e) {
+                Log::error('Inquiry Admin Mail failed: ' . $e->getMessage());
+            }
 
-        // 3. Send Confirmation Email to Customer
-        try {
-            Mail::to($inquiry->email)->send(new CustomerInquiryConfirmationMail($inquiry));
-        } catch (\Exception $e) {
-            Log::error('Inquiry Customer Mail failed: ' . $e->getMessage());
+            // 3. Send Confirmation Email to Customer
+            try {
+                Mail::to($inquiry->email)->send(new CustomerInquiryConfirmationMail($inquiry));
+            } catch (\Exception $e) {
+                Log::error('Inquiry Customer Mail failed: ' . $e->getMessage());
+            }
         }
 
         if ($request->ajax()) {
-            return response()->json(['success' => true, 'message' => 'Thank you! Your inquiry has been submitted successfully.']);
+            return response()->json(['success' => true, 'message' => $successMsg]);
         }
 
-        return back()->with('success', 'Thank you! Your inquiry has been submitted successfully.');
+        return back()->with('success', $successMsg);
     }
 }
