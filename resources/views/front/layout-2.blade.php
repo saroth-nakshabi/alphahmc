@@ -2072,10 +2072,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-695565753/wF9YCMud6cMcELn71csC' });
         };
         window.gtagReportWhatsAppClick = function () {
-            if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-695565753/__2wCM6d6cMcELn7lcsC', value: 1.0, currency: 'AED' });
+            if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-695565753/__2wCM6d6cMcELn71csC', value: 1.0, currency: 'AED' });
         };
         window.gtagReportCallClick = function () {
-            if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-695565753/QcGMCNGd6cMcELn7lcsC', value: 1.0, currency: 'AED' });
+            if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-695565753/QcGMCNGd6cMcELn71csC', value: 1.0, currency: 'AED' });
         };
 
         // ── Helper: push event to dataLayer + fire gtag directly ──────
