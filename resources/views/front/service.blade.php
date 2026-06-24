@@ -431,23 +431,35 @@ function toggleTransformationDesc() {
 
                                 <div class="leader-contact-links">
                                     @php
-                                        $agentUser = isset($service->agent) ? $service->agent->user : null;
-                                        $phone = $agentUser ? $agentUser->phone : '+971 4 272 4064';
-                                        $email = $agentUser ? $agentUser->email : 'info@alphahealth.com';
-                                        $whatsappPhone = preg_replace('/[^0-9]/', '', $phone);
+                                        $lAgent    = $service->agent ?? null;
+                                        $agentUser = $lAgent?->user;
+                                        $lPhone    = $agentUser?->phone ?? '+971 4 272 4064';
+                                        $showCall  = !$lAgent || $lAgent->hasMode('call');
+                                        $showEmail = !$lAgent || $lAgent->hasMode('email');
+                                        $_waNum    = ($lAgent && !empty($lAgent->whatsapp))
+                                            ? preg_replace('/[^0-9]/', '', $lAgent->whatsapp)
+                                            : (\App\Models\AppSetting::where('key','whatsapp_default_number')->value('value') ?? '97142724064');
+                                        $pageWaLink = $_waNum ? 'https://wa.me/' . $_waNum . '?text=' . rawurlencode("Hi, I'd like to enquire about Alpha Health Group's services.") : null;
+                                        $showWa    = (!$lAgent || $lAgent->hasMode('whatsapp')) && !empty($pageWaLink);
                                     @endphp
 
-                                    <a href="tel:{{ $phone }}" class="contact-link-icon" title="Call">
+                                    @if($showCall)
+                                    <a href="tel:{{ $lPhone }}" class="contact-link-icon" title="Call">
                                         <i class="fas fa-phone"></i>
                                     </a>
+                                    @endif
+                                    @if($showEmail)
                                     <a href="{{ route('contact') }}" class="contact-link-icon" title="Email"
                                         data-bs-toggle="modal" data-bs-target="#inquiryModal">
                                         <i class="fas fa-envelope"></i>
                                     </a>
-                                    <a href="https://wa.me/{{ $whatsappPhone }}" target="_blank"
+                                    @endif
+                                    @if($showWa)
+                                    <a href="{{ $pageWaLink }}" target="_blank"
                                         class="contact-link-icon whatsapp-color" title="WhatsApp">
                                         <i class="fab fa-whatsapp"></i>
                                     </a>
+                                    @endif
                                 </div>
                             </div>
                         </div>

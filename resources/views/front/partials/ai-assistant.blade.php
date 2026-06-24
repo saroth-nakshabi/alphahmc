@@ -41,14 +41,24 @@
         }
     }
 
-    if ($leader && !empty(trim((string) $leader->inq_officer_phone))) {
-        $targetPhone = trim($leader->inq_officer_phone);
-        if (!empty($leader->inq_officer_name)) {
-            $officerName = $leader->inq_officer_name;
+    if ($leader) {
+        // Prefer agent's dedicated WhatsApp number (new system).
+        $_agent = $leader->agent ?? null;
+        if ($_agent && !empty(trim((string) $_agent->whatsapp))) {
+            $targetPhone = trim($_agent->whatsapp);
+            if (!empty($_agent->title)) {
+                $officerName = $_agent->title;
+            }
+        } elseif (!empty(trim((string) $leader->inq_officer_phone))) {
+            // Legacy fallback: inq_officer_phone directly on the entity.
+            $targetPhone = trim($leader->inq_officer_phone);
+            if (!empty($leader->inq_officer_name)) {
+                $officerName = $leader->inq_officer_name;
+            }
         }
     }
 
-    // D. Normalise to digits only (strip +, spaces, dashes, brackets) so wa.me links never break.
+    // Normalise to digits only (strip +, spaces, dashes, brackets) so wa.me links never break.
     $targetPhone = preg_replace('/\D+/', '', (string) $targetPhone);
     if ($targetPhone === '') {
         $targetPhone = preg_replace('/\D+/', '', (string) $defaultPhone) ?: '97158128418';
@@ -118,8 +128,6 @@
             <div class="ava-chips" id="avaChips">
                 <button class="ava-chip" data-msg="Tell me about your services">Our Services</button>
                 <button class="ava-chip" data-msg="I have a general inquiry">General Inquiry</button>
-                <button class="ava-chip" data-msg="I'd like to give feedback">Feedback</button>
-                <button class="ava-chip" data-msg="I want to file a complaint">Complaint</button>
             </div>
 
             <!-- Messages will be injected here by JS -->

@@ -413,12 +413,16 @@ class MainHomeController extends Controller
     {
         $request->validate([
             'name'         => 'required|string|max:255',
-            'email'        => 'required|email|max:255',
-            'phone'        => 'required|string|max:20',
+            'email'        => 'required_without:phone|nullable|email|max:255',
+            'phone'        => ['required_without:email', 'nullable', 'string', 'max:20', 'regex:/^\+[\d\s\-]{7,17}$/'],
             'service_id'   => 'nullable|exists:services,id',
             'message'      => 'nullable|string',
             'meeting_date' => 'nullable|date',
             'meeting_time' => 'nullable|string|max:10',
+        ], [
+            'email.required_without' => 'Please provide at least an email address or mobile number.',
+            'phone.required_without' => 'Please provide at least a mobile number or email address.',
+            'phone.regex'            => 'Please enter a valid international number starting with + (e.g. +971 50 000 0000).',
         ]);
 
         $successMsg = 'Thank you! Your inquiry has been submitted successfully.';

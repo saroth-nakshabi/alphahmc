@@ -2,29 +2,32 @@
 
 namespace App\Mail;
 
+use App\Models\ProjectPlannerSession;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class CustomerInquiryConfirmationMail extends Mailable
+class PlannerConfirmationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $inquiry;
+    public ProjectPlannerSession $session;
+    public array $cards;
+    public array $brief;
 
-    public function __construct($inquiry)
+    public function __construct(ProjectPlannerSession $session, array $cards, array $brief)
     {
-        $this->inquiry = $inquiry->loadMissing(['service.agent.user']);
+        $this->session = $session;
+        $this->cards   = $cards;
+        $this->brief   = $brief;
     }
 
     public function envelope(): Envelope
     {
-        $service = $this->inquiry->service->name ?? 'General Enquiry';
         return new Envelope(
-            subject: 'Inquiry Confirmed: ' . $service . ' — Alpha Health Group',
+            subject: 'Your Healthcare Project Plan is Ready — Alpha Health Group',
             replyTo: [new \Illuminate\Mail\Mailables\Address('info@alphatsm.com', 'Alpha Health Group')],
         );
     }
@@ -32,7 +35,7 @@ class CustomerInquiryConfirmationMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.customer_confirmation',
+            view: 'emails.planner_confirmation',
         );
     }
 

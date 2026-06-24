@@ -9,14 +9,10 @@
 @php
     $inqServices = \App\Models\Service::published()->orderBy('name')->get(['id', 'name']);
 
-    // Default WhatsApp number: first agent with a phone number, fallback hardcoded.
-    $waAgent   = \App\Models\Agent::with('user')
-        ->whereHas('user', fn($q) => $q->whereNotNull('phone')->where('phone', '!=', ''))
-        ->first();
-    $waPhone   = $waAgent && $waAgent->user
-        ? preg_replace('/[^0-9]/', '', $waAgent->user->phone)
-        : '97142724064';
-    $waLink    = 'https://wa.me/' . $waPhone . '?text=' . rawurlencode("Hi, I'd like to enquire about Alpha Health Group's services.");
+    // Use the page-level unified WA number set by layout-2; fall back to AppSetting.
+    $waLink    = $pageWaLink ?? ('https://wa.me/' .
+        (\App\Models\AppSetting::where('key','whatsapp_default_number')->value('value') ?? '97142724064') .
+        '?text=' . rawurlencode("Hi, I'd like to enquire about Alpha Health Group's services."));
     $rcSiteKey = env('RECAPTCHA_V3_SITE_KEY', '');
 @endphp
 
@@ -56,7 +52,6 @@
 
             {{-- ── Modal header ── --}}
             <div class="ahg-im-head">
-                <span class="ahg-im-eyebrow">Get in touch</span>
                 <h2 class="ahg-im-title" id="inquiryModalTitle">Book a Consultation</h2>
                 <p class="ahg-im-sub">Share a few details and our healthcare consulting team will get back to you shortly.</p>
             </div>
@@ -83,12 +78,12 @@
                         <input type="text" id="im-name" name="name" required autocomplete="name" placeholder="Your name">
                     </div>
                     <div class="ahg-im-field">
-                        <label for="im-phone">Mobile Number <span>*</span></label>
-                        <input type="tel" id="im-phone" name="phone" required autocomplete="tel" placeholder="e.g. +971 50 000 0000">
+                        <label for="im-phone">Mobile Number <span id="im-phone-star">*</span></label>
+                        <input type="tel" id="im-phone" name="phone" required autocomplete="tel" placeholder="+971 50 000 0000">
                     </div>
                     <div class="ahg-im-field ahg-im-col2">
-                        <label for="im-email">Email <span>*</span></label>
-                        <input type="email" id="im-email" name="email" required autocomplete="email" placeholder="you@company.com">
+                        <label for="im-email">Email <span id="im-email-star" style="display:none;color:#e11d48">*</span><span id="im-email-opt" class="ahg-im-opt">(optional)</span></label>
+                        <input type="email" id="im-email" name="email" autocomplete="email" placeholder="you@provider.com">
                     </div>
                     <div class="ahg-im-field ahg-im-col2">
                         <label for="im-service">Service <span class="ahg-im-opt">(optional)</span></label>
@@ -99,17 +94,31 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="ahg-im-field">
-                        <label for="im-meeting-date">Preferred date <span class="ahg-im-opt">(optional)</span></label>
-                        <input type="date" id="im-meeting-date" name="meeting_date">
+                    {{-- ── Schedule toggle ── --}}
+                    <div class="ahg-im-col2 ahg-sched-row">
+                        <label class="ahg-sched-label" for="ahgSchedCheck">
+                            <span class="ahg-sched-sw">
+                                <input type="checkbox" id="ahgSchedCheck" style="position:absolute;opacity:0;width:0;height:0;">
+                                <span class="ahg-sched-knob"></span>
+                            </span>
+                            <span class="ahg-sched-text">Schedule a meeting</span>
+                        </label>
                     </div>
-                    <div class="ahg-im-field">
-                        <label for="im-meeting-time">Preferred time <span class="ahg-im-opt">(optional)</span></label>
-                        <input type="time" id="im-meeting-time" name="meeting_time" value="10:00">
+
+                    {{-- ── Date + time (hidden by default, !important removed so display:none works) ── --}}
+                    <div class="ahg-im-field ahg-im-col2 ahg-im-datetime" id="ahgSchedFields" style="display:none;">
+                        <div>
+                            <label for="im-meeting-date">Preferred date</label>
+                            <input type="date" id="im-meeting-date" name="meeting_date">
+                        </div>
+                        <div>
+                            <label for="im-meeting-time">Preferred time</label>
+                            <input type="time" id="im-meeting-time" name="meeting_time" value="10:00">
+                        </div>
                     </div>
                     <div class="ahg-im-field ahg-im-col2">
                         <label for="im-message">Message <span class="ahg-im-opt">(optional)</span></label>
-                        <textarea id="im-message" name="message" rows="3" placeholder="Tell us briefly about your facility or requirement..."></textarea>
+                        <textarea id="im-message" name="message" rows="2" placeholder="Tell us briefly about your facility or requirement..."></textarea>
                     </div>
                 </div>
                 <div class="ahg-im-consent">
@@ -145,91 +154,131 @@
 
 <style>
     .ahg-inquiry-modal { z-index: 10600; }
-    .ahg-inquiry-modal .modal-dialog { max-width: 560px; }
+    .ahg-inquiry-modal .modal-dialog { max-width: 540px; }
     .ahg-inquiry-modal .modal-content {
-        border: none; border-radius: 18px; position: relative;
-        padding: 30px 34px 30px; box-shadow: 0 30px 80px rgba(6,38,42,0.28);
+        border: none; border-radius: 16px; position: relative;
+        padding: 22px 28px 22px; box-shadow: 0 24px 70px rgba(6,38,42,0.26);
         max-height: calc(100dvh - 24px); overflow-y: auto; -webkit-overflow-scrolling: touch;
     }
+    /* Perfectly round close button — override Bootstrap padding/sizing */
     .ahg-im-close {
-        position: sticky; top: 0; float: right; margin: -6px -8px 0 0; z-index: 5;
-        width: 38px; height: 38px; border-radius: 50%; opacity: 1;
-        background: #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='%2314252a' d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center / 14px auto no-repeat;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+        position: sticky; top: 0; float: right; margin: -4px -6px 0 0; z-index: 5;
+        width: 32px; height: 32px; min-width: 32px; padding: 0 !important;
+        border-radius: 50% !important; opacity: 1; flex-shrink: 0;
+        background: #f1f5f9 url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='%2314252a' d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center / 12px auto no-repeat;
+        box-shadow: none; border: none;
     }
+    .ahg-im-close:hover { background-color: #e2e8f0; }
 
-    /* ── WhatsApp banner ── */
+    /* ── WhatsApp banner — flat teal, no gradient ── */
     .ahg-wa-banner {
-        background: linear-gradient(135deg, #075E54 0%, #128C7E 100%);
-        border-radius: 12px;
-        padding: 14px 16px;
+        background: #066D77;
+        border-radius: 10px;
+        padding: 11px 14px;
         margin-bottom: 0;
     }
-    .ahg-wa-banner-body {
-        display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-    }
+    .ahg-wa-banner-body { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .ahg-wa-banner-icon { color: #fff; flex-shrink: 0; display: flex; align-items: center; }
+    .ahg-wa-banner-icon svg { width: 24px; height: 24px; }
     .ahg-wa-banner-text { flex: 1; min-width: 0; }
-    .ahg-wa-banner-title { display: block; font-weight: 700; font-size: .9rem; color: #fff; line-height: 1.3; }
-    .ahg-wa-banner-sub   { display: block; font-size: .76rem; color: rgba(255,255,255,.85); margin-top: 1px; }
+    .ahg-wa-banner-title { display: block; font-weight: 700; font-size: .84rem; color: #fff; line-height: 1.3; }
+    .ahg-wa-banner-sub   { display: block; font-size: .73rem; color: rgba(255,255,255,.82); margin-top: 1px; }
     .ahg-wa-cta {
-        margin-left: auto; background: #fff; color: #075E54 !important;
-        font-weight: 700; font-size: .82rem; padding: 8px 18px;
+        margin-left: auto; background: #fff; color: #066D77 !important;
+        font-weight: 700; font-size: .78rem; padding: 6px 14px;
         border-radius: 100px; text-decoration: none; white-space: nowrap;
-        display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
+        display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0;
         transition: transform .2s, box-shadow .2s;
-        box-shadow: 0 2px 8px rgba(0,0,0,.15);
+        box-shadow: 0 2px 8px rgba(0,0,0,.12);
     }
-    .ahg-wa-cta:hover { transform: scale(1.04); box-shadow: 0 4px 14px rgba(0,0,0,.2); }
+    .ahg-wa-cta:hover { transform: scale(1.04); box-shadow: 0 4px 12px rgba(0,0,0,.18); }
 
     /* ── Divider ── */
     .ahg-or-divider {
-        text-align: center; margin: 14px 0 4px; position: relative;
-        color: #94a3b8; font-size: .76rem;
+        text-align: center; margin: 10px 0 2px; position: relative;
+        color: #94a3b8; font-size: .72rem;
     }
     .ahg-or-divider::before {
         content: ''; position: absolute; top: 50%; left: 0; right: 0;
         height: 1px; background: #e2e8f0;
     }
-    .ahg-or-divider span { background: #fff; padding: 0 12px; position: relative; }
+    .ahg-or-divider span { background: #fff; padding: 0 10px; position: relative; }
 
-    /* ── Head, form, fields (unchanged) ── */
-    .ahg-im-head { margin-bottom: 22px; margin-top: 16px; }
+    /* ── Head ── */
+    .ahg-im-head { margin-bottom: 14px; margin-top: 10px; }
     .ahg-im-eyebrow {
-        display: inline-block; text-transform: uppercase; font-size: .7rem; font-weight: 700;
-        letter-spacing: 1.6px; color: #066D77; background: rgba(6,109,119,.08);
-        padding: 5px 14px; border-radius: 100px; margin-bottom: 12px;
+        display: inline-block; text-transform: uppercase; font-size: .67rem; font-weight: 700;
+        letter-spacing: 1.4px; color: #066D77; background: rgba(6,109,119,.08);
+        padding: 3px 12px; border-radius: 100px; margin-bottom: 8px;
     }
-    .ahg-im-title { font-family: 'Libre Baskerville', serif; font-size: 1.7rem; color: #14252a; margin: 0 0 8px; }
-    .ahg-im-sub { font-size: .92rem; color: #5b6b73; line-height: 1.55; margin: 0; }
-    .ahg-im-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
+    .ahg-im-title { font-family: 'Libre Baskerville', serif; font-size: 1.4rem; color: #14252a; margin: 0 0 4px; }
+    .ahg-im-sub { font-size: .84rem; color: #5b6b73; line-height: 1.5; margin: 0; }
+
+    /* ── Form grid ── */
+    .ahg-im-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
     .ahg-im-col2 { grid-column: 1 / -1; }
-    .ahg-im-field label { display: block; font-size: .8rem; font-weight: 600; color: #14252a; margin-bottom: 6px; }
+
+    /* ── Date+time always side-by-side (no !important so display:none can hide it) ── */
+    .ahg-im-datetime { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .ahg-im-datetime > div { display: flex; flex-direction: column; }
+
+    /* ── Schedule meeting toggle switch ── */
+    .ahg-sched-row { display: flex; align-items: center; margin-top: -2px; }
+    .ahg-sched-label { display: inline-flex; align-items: center; gap: 9px; cursor: pointer; user-select: none; }
+    .ahg-sched-text { font-size: .78rem; font-weight: 600; color: #5b6b73; transition: color .2s; }
+    .ahg-sched-label:hover .ahg-sched-text { color: #066D77; }
+    .ahg-sched-sw {
+        position: relative; display: inline-block;
+        width: 34px; height: 18px; flex-shrink: 0;
+    }
+    .ahg-sched-knob {
+        position: absolute; inset: 0; border-radius: 18px;
+        background: #cbd5e1; transition: background .2s;
+    }
+    .ahg-sched-knob::after {
+        content: ''; position: absolute; top: 2px; left: 2px;
+        width: 14px; height: 14px; border-radius: 50%;
+        background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.2);
+        transition: transform .2s;
+    }
+    #ahgSchedCheck:checked ~ .ahg-sched-knob { background: #066D77; }
+    #ahgSchedCheck:checked ~ .ahg-sched-knob::after { transform: translateX(16px); }
+
+    /* ── Fields ── */
+    .ahg-im-field label { display: block; font-size: .77rem; font-weight: 600; color: #14252a; margin-bottom: 4px; }
     .ahg-im-field label span { color: #e11d48; }
     .ahg-im-field label .ahg-im-opt { color: #94a3b8; font-weight: 400; }
-    .ahg-im-field input, .ahg-im-field select, .ahg-im-field textarea {
-        width: 100%; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px 14px;
-        font-size: .92rem; color: #14252a; background: #fff; transition: border-color .2s, box-shadow .2s;
+    .ahg-im-field input, .ahg-im-field select, .ahg-im-field textarea,
+    .ahg-im-datetime input {
+        width: 100%; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 9px 12px;
+        font-size: .88rem; color: #14252a; background: #fff; transition: border-color .2s, box-shadow .2s;
     }
-    .ahg-im-field input:focus, .ahg-im-field select:focus, .ahg-im-field textarea:focus {
-        outline: none; border-color: #066D77; box-shadow: 0 0 0 3px rgba(6,109,119,.12);
+    .ahg-im-field input:focus, .ahg-im-field select:focus, .ahg-im-field textarea:focus,
+    .ahg-im-datetime input:focus {
+        outline: none; border-color: #066D77; box-shadow: 0 0 0 3px rgba(6,109,119,.1);
     }
-    .ahg-im-field textarea { resize: vertical; min-height: 80px; }
+    .ahg-im-field textarea { resize: vertical; min-height: 52px; }
+
+    /* ── Submit ── */
     .ahg-im-submit {
-        display: inline-flex; align-items: center; gap: 10px; border: none; cursor: pointer;
-        background: #066D77; color: #fff; font-weight: 700; font-size: .92rem; letter-spacing: .3px;
-        padding: 13px 28px; border-radius: 100px; transition: background .25s, box-shadow .25s, transform .2s;
-        box-shadow: 0 10px 24px rgba(6,109,119,.28);
+        display: inline-flex; align-items: center; gap: 8px; border: none; cursor: pointer;
+        background: #066D77; color: #fff; font-weight: 700; font-size: .88rem; letter-spacing: .3px;
+        padding: 11px 24px; border-radius: 100px; transition: background .25s, box-shadow .25s, transform .2s;
+        box-shadow: 0 8px 20px rgba(6,109,119,.26);
     }
-    .ahg-im-submit:hover { background: #055863; box-shadow: 0 14px 30px rgba(6,109,119,.38); }
+    .ahg-im-submit:hover { background: #055863; box-shadow: 0 12px 26px rgba(6,109,119,.36); }
     .ahg-im-submit:disabled { opacity: .65; cursor: not-allowed; }
-    .ahg-im-submit i { font-size: .8rem; transition: transform .3s; }
+    .ahg-im-submit i { font-size: .76rem; transition: transform .3s; }
     .ahg-im-submit:hover i { transform: translateX(4px); }
-    .ahg-im-consent { margin-bottom: 18px; }
-    .ahg-im-check { display: flex; align-items: flex-start; gap: 10px; font-size: .82rem; color: #5b6b73; line-height: 1.5; cursor: pointer; }
-    .ahg-im-check input { width: 18px; height: 18px; margin: 2px 0 0; flex-shrink: 0; accent-color: #066D77; cursor: pointer; }
+
+    /* ── Consent ── */
+    .ahg-im-consent { margin-bottom: 14px; }
+    .ahg-im-check { display: flex; align-items: flex-start; gap: 9px; font-size: .78rem; color: #5b6b73; line-height: 1.45; cursor: pointer; }
+    .ahg-im-check input { width: 16px; height: 16px; margin: 2px 0 0; flex-shrink: 0; accent-color: #066D77; cursor: pointer; }
     .ahg-im-check a { color: #066D77; text-decoration: underline; }
-    .ahg-im-alert { border-radius: 10px; padding: 12px 16px; font-size: .9rem; margin-bottom: 18px; }
+
+    /* ── Alert ── */
+    .ahg-im-alert { border-radius: 8px; padding: 10px 14px; font-size: .86rem; margin-bottom: 14px; }
     .ahg-im-alert.is-success { background: #e6f9f0; color: #1a8a4a; border: 1px solid #a3e6c3; }
     .ahg-im-alert.is-error   { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
 
@@ -240,39 +289,37 @@
     }
 
     /* ── Thank-you panel ── */
-    .ahg-im-thanks { text-align: center; padding: 16px 8px 8px; }
+    .ahg-im-thanks { text-align: center; padding: 12px 8px 8px; }
     .ahg-im-thanks-check {
-        width: 64px; height: 64px; background: #e6f9f0; border-radius: 50%;
+        width: 56px; height: 56px; background: #e6f9f0; border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
-        margin: 0 auto 20px; color: #1a8a4a;
+        margin: 0 auto 16px; color: #1a8a4a;
     }
-    .ahg-im-thanks-title { font-family: 'Libre Baskerville', serif; font-size: 1.6rem; color: #14252a; margin: 0 0 10px; }
-    .ahg-im-thanks-msg { font-size: .9rem; color: #5b6b73; margin: 0 0 28px; line-height: 1.65; }
+    .ahg-im-thanks-title { font-family: 'Libre Baskerville', serif; font-size: 1.4rem; color: #14252a; margin: 0 0 8px; }
+    .ahg-im-thanks-msg { font-size: .86rem; color: #5b6b73; margin: 0 0 22px; line-height: 1.6; }
     .ahg-wa-big-btn {
-        display: inline-flex; align-items: center; gap: 10px;
+        display: inline-flex; align-items: center; gap: 9px;
         background: #25D366; color: #fff !important;
-        font-weight: 700; font-size: .95rem;
-        padding: 14px 28px; border-radius: 100px; text-decoration: none;
-        margin-bottom: 16px; box-shadow: 0 8px 20px rgba(37,211,102,.35);
+        font-weight: 700; font-size: .9rem;
+        padding: 12px 24px; border-radius: 100px; text-decoration: none;
+        margin-bottom: 12px; box-shadow: 0 6px 18px rgba(37,211,102,.32);
         transition: transform .2s, box-shadow .2s;
     }
-    .ahg-wa-big-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(37,211,102,.45); }
+    .ahg-wa-big-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(37,211,102,.42); }
     .ahg-im-newreq-btn {
         display: block; background: none; border: none;
-        color: #94a3b8; font-size: .82rem; cursor: pointer;
-        text-decoration: underline; margin: 8px auto 0;
-        padding: 0;
+        color: #94a3b8; font-size: .78rem; cursor: pointer;
+        text-decoration: underline; margin: 6px auto 0; padding: 0;
     }
 
     /* ── Mobile ── */
     @media (max-width: 575px) {
-        .ahg-inquiry-modal .modal-content { padding: 22px 18px 22px; max-height: calc(100dvh - 16px); }
-        .ahg-im-grid { grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; }
-        .ahg-im-head { margin-bottom: 16px; margin-top: 12px; }
-        .ahg-im-title { font-size: 1.3rem; }
-        .ahg-im-sub { font-size: .86rem; }
-        .ahg-im-field input, .ahg-im-field select, .ahg-im-field textarea { padding: 10px 12px; }
-        .ahg-im-field textarea { min-height: 60px; }
+        .ahg-inquiry-modal .modal-content { padding: 16px 15px 18px; max-height: calc(100dvh - 12px); border-radius: 14px; }
+        .ahg-im-grid { grid-template-columns: 1fr; gap: 10px; margin-bottom: 12px; }
+        .ahg-im-datetime { grid-template-columns: 1fr 1fr !important; gap: 8px; } /* always 2-col */
+        .ahg-im-head { margin-bottom: 12px; margin-top: 8px; }
+        .ahg-im-title { font-size: 1.2rem; }
+        .ahg-im-sub { font-size: .82rem; }
         .ahg-im-submit { width: 100%; justify-content: center; }
         .ahg-wa-banner-body { gap: 8px; }
         .ahg-wa-cta { margin-left: 0; width: 100%; justify-content: center; }
@@ -317,6 +364,11 @@
         if (alertBox) alertBox.className     = 'ahg-im-alert d-none';
         if (thanksEl) thanksEl.classList.add('d-none');
         sessionStorage.removeItem('ahg_inq_sent');
+        // Reset either/or required state back to default (phone required)
+        if (typeof syncRequired === 'function') syncRequired();
+        // Reset schedule toggle to hidden
+        if (schedCheck)  schedCheck.checked = false;
+        if (schedFields) schedFields.style.display = 'none';
     };
 
     // "Submit another inquiry" button
@@ -335,9 +387,64 @@
         });
     }
 
+    // ── Either phone OR email required — dynamic ─────────────
+    var phoneInput  = document.getElementById('im-phone');
+    var emailInput  = document.getElementById('im-email');
+    var phoneStar   = document.getElementById('im-phone-star');
+    var emailStar   = document.getElementById('im-email-star');
+    var emailOpt    = document.getElementById('im-email-opt');
+
+    function syncRequired() {
+        var hasEmail = emailInput && emailInput.value.trim() !== '';
+        var hasPhone = phoneInput && phoneInput.value.trim() !== '';
+
+        // Phone: required only when email is empty
+        if (phoneInput) phoneInput.required = !hasEmail;
+        if (phoneStar)  phoneStar.style.display  = hasEmail ? 'none' : '';
+
+        // Email: required only when phone is empty
+        if (emailInput) emailInput.required = !hasPhone;
+        if (emailStar)  emailStar.style.display  = (!hasPhone && hasEmail) ? '' : (hasPhone ? 'none' : 'none');
+        if (emailOpt)   emailOpt.style.display   = hasPhone ? '' : (hasEmail ? 'none' : '');
+    }
+
+    // Phone format validation: must start with + followed by digits
+    function validatePhone() {
+        if (!phoneInput) return;
+        var val = phoneInput.value.trim();
+        if (val && !/^\+[\d\s\-]{7,17}$/.test(val)) {
+            phoneInput.setCustomValidity('Enter an international number starting with + (e.g. +971 50 000 0000)');
+        } else {
+            phoneInput.setCustomValidity('');
+        }
+    }
+
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function () { validatePhone(); syncRequired(); });
+        phoneInput.addEventListener('blur',  validatePhone);
+    }
+    if (emailInput) emailInput.addEventListener('input', syncRequired);
+
     // ── Min date ─────────────────────────────────────────────
     var mDate = document.getElementById('im-meeting-date');
     if (mDate) mDate.min = new Date().toISOString().split('T')[0];
+
+    // ── Schedule meeting toggle ───────────────────────────────
+    var schedCheck  = document.getElementById('ahgSchedCheck');
+    var schedFields = document.getElementById('ahgSchedFields');
+
+    if (schedCheck && schedFields) {
+        schedCheck.addEventListener('change', function () {
+            schedFields.style.display = this.checked ? '' : 'none';
+            // Clear values when hiding
+            if (!this.checked) {
+                var dInp = document.getElementById('im-meeting-date');
+                var tInp = document.getElementById('im-meeting-time');
+                if (dInp) dInp.value = '';
+                if (tInp) tInp.value = '10:00';
+            }
+        });
+    }
 
     // ── Global prefill helper ────────────────────────────────
     window.ahgPrefillInquiry = function (opts) {

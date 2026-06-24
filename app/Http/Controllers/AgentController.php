@@ -52,11 +52,14 @@ class AgentController extends Controller
         }
 
         // Insert data into the agents table
+        $modes = array_intersect($request->input('available_modes', ['call', 'email', 'whatsapp']), ['call', 'email', 'whatsapp']);
         $agent = Agent::create([
-            'user_id' => $user->id,
-            'title' => $request->title,
+            'user_id'         => $user->id,
+            'title'           => $request->title,
             'short_description' => $request->description,
-            'image' => $image_name ?? null,
+            'image'           => $image_name ?? null,
+            'whatsapp'        => $request->input('whatsapp') ?: null,
+            'available_modes' => implode(',', $modes ?: ['call', 'email', 'whatsapp']),
         ]);
 
         // Create or find the agent role
@@ -84,9 +87,12 @@ class AgentController extends Controller
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
 
+        $modes = array_intersect($request->input('available_modes', ['call', 'email', 'whatsapp']), ['call', 'email', 'whatsapp']);
         $attributes = [
-            'title' => $request->title,
+            'title'           => $request->title,
             'short_description' => $request->description,
+            'whatsapp'        => $request->input('whatsapp') ?: null,
+            'available_modes' => implode(',', $modes ?: ['call', 'email', 'whatsapp']),
         ];
 
         // Replace the profile image only when a new file is uploaded.

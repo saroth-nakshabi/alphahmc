@@ -1,27 +1,29 @@
 @php
     /* ── Agent resolution ─────────────────────────────────────── */
-    $emailAgent    = optional($inquiry->service)->agent;
-    if (!$emailAgent) {
-        $emailAgent = \App\Models\Agent::with('user')->whereNotNull('whatsapp')->first();
-    }
+    $emailAgent    = \App\Models\Agent::with('user')->whereNotNull('whatsapp')->first();
     $agentName     = $emailAgent?->title              ?? 'Our Consultant';
     $agentRole     = $emailAgent?->short_description  ?? 'Healthcare Advisory Specialist';
     $agentEmail    = $emailAgent?->user?->email       ?? 'info@alphatsm.com';
     $agentPhone    = $emailAgent?->user?->phone       ?? '+971 4 272 4064';
     $agentWaNum    = preg_replace('/[^0-9]/', '', $emailAgent?->whatsapp ?? '97142724064');
-    $agentWaLink   = 'https://wa.me/' . $agentWaNum  . '?text=' . rawurlencode("Hi, I submitted inquiry #AHC-{$inquiry->id} and would like a faster response.");
+    $agentWaLink   = 'https://wa.me/' . $agentWaNum  . '?text=' . rawurlencode("Hi, I submitted a project plan via Alpha Blueprint AI and would like to discuss it.");
     $agentPhotoUrl = ($emailAgent && $emailAgent->image)
         ? asset('public/uploads/about_staff/' . $emailAgent->image)
         : null;
 
-    /* ── Branding URLs ────────────────────────────────────────── */
-    $logoUrl       = asset('public/front/assets/img/alpha-logo.png');
-    $serviceName   = $inquiry->service->name ?? 'General Enquiry';
-    $refId         = '#AHC-' . str_pad($inquiry->id, 5, '0', STR_PAD_LEFT);
-    $dateFormatted = $inquiry->created_at->format('d F Y');
-    $meetingFmt    = $inquiry->meeting_at
-        ? \Illuminate\Support\Carbon::parse($inquiry->meeting_at)->format('l, d F Y · h:i A')
+    /* ── Session data ─────────────────────────────────────────── */
+    $logoUrl        = asset('public/front/assets/img/alpha-logo.png');
+    $phases         = $brief['phases']     ?? [];
+    $summaryText    = $brief['summary']    ?? '';
+    $serviceNames   = collect($cards)->pluck('name')->filter()->take(6);
+    $meetingFmt     = $session->meeting_at
+        ? \Illuminate\Support\Carbon::parse($session->meeting_at)->format('l, d F Y · h:i A')
         : null;
+    $regionLine     = implode(' · ', array_filter([
+        $session->intent        ?? null,
+        $session->facility_type ?? null,
+        $session->region        ?? null,
+    ]));
 @endphp
 <!DOCTYPE html>
 <html lang="en">
@@ -29,7 +31,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Inquiry Received — Alpha Health Group</title>
+    <title>Your Healthcare Project Plan — Alpha Health Group</title>
     <!--[if mso]>
     <noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
     <![endif]-->
@@ -50,9 +52,9 @@
 </head>
 <body style="margin:0;padding:0;background-color:#E2EEEF;font-family:Arial,Helvetica,sans-serif;">
 
-{{-- Preheader hidden text (controls inbox snippet) --}}
+{{-- Preheader --}}
 <div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;color:#E2EEEF;">
-    Inquiry {{ $refId }} confirmed. Your consultant will be in touch within one business day. — Alpha Health Group
+    Your AI-generated healthcare project plan is ready. A consultant will follow up personally. — Alpha Health Group
     &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
 </div>
 
@@ -71,30 +73,31 @@
         {{-- LOGO HEADER --}}
         <tr>
             <td class="pad" style="padding:32px 48px 28px;background-color:#ffffff;border-bottom:1px solid #D6E8EA;">
-                <img src="{{ $logoUrl }}" alt="Alpha Health Group" width="130" height="auto" style="display:block;max-width:130px;height:auto;" />
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                    <tr>
+                        <td style="vertical-align:middle;">
+                            <img src="{{ $logoUrl }}" alt="Alpha Health Group" width="130" height="auto" style="display:block;max-width:130px;height:auto;" />
+                        </td>
+                        <td style="vertical-align:middle;text-align:right;">
+                            <span style="display:inline-block;background-color:#EDF5F6;color:#066D77;font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:100px;border:1px solid #B2D9DC;">Alpha Blueprint AI</span>
+                        </td>
+                    </tr>
+                </table>
             </td>
         </tr>
 
         {{-- HERO GREETING --}}
         <tr>
             <td class="pad-hero" style="padding:40px 48px 36px;background-color:#EDF5F6;">
-                <table cellpadding="0" cellspacing="0" border="0" role="presentation">
-                    <tr>
-                        <td>
-                            <span style="display:inline-block;background-color:#066D77;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:20px;">Inquiry Confirmed</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h1 class="h1" style="margin:0 0 12px;font-family:Georgia,'Times New Roman',Times,serif;font-size:30px;font-weight:400;color:#0A2D32;line-height:1.25;letter-spacing:-0.01em;">Thank you, {{ $inquiry->name }}.</h1>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#5A7478;line-height:1.65;">Your inquiry about <strong style="color:#066D77;font-weight:700;">{{ $serviceName }}</strong> has been received and is now under executive review. We aim to respond within one business day.</p>
-                        </td>
-                    </tr>
-                </table>
+                <h1 class="h1" style="margin:0 0 14px;font-family:Georgia,'Times New Roman',Times,serif;font-size:28px;font-weight:400;color:#0A2D32;line-height:1.25;letter-spacing:-0.01em;">Your project plan is ready, {{ $session->name }}.</h1>
+                @if($summaryText)
+                <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#5A7478;line-height:1.7;">{{ $summaryText }}</p>
+                @else
+                <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#5A7478;line-height:1.7;">Thank you for using Alpha Blueprint AI. Below is a summary of your personalised healthcare project plan. Our consultants will follow up to discuss the recommendations in detail.</p>
+                @endif
+                @if($regionLine)
+                <p style="margin:14px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#7FA2A5;letter-spacing:0.04em;text-transform:uppercase;font-weight:600;">{{ $regionLine }}</p>
+                @endif
             </td>
         </tr>
 
@@ -102,54 +105,69 @@
         <tr>
             <td class="pad" style="padding:36px 48px;background-color:#ffffff;">
 
-                {{-- Reference detail box --}}
-                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #066D77;background-color:#F5FAFA;border-radius:0 6px 6px 0;" role="presentation">
-                    <tr>
-                        <td style="padding:22px 26px;">
+                {{-- Project phases --}}
+                @if(count($phases))
+                <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#7FA2A5;">Project Roadmap</p>
 
-                            {{-- Reference ID --}}
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
+                    @foreach($phases as $i => $phase)
+                    <tr>
+                        <td style="padding:0 0 12px;">
                             <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
                                 <tr>
-                                    <td style="padding-bottom:14px;border-bottom:1px solid #D6E8EA;">
-                                        <span style="font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#7FA2A5;display:block;margin-bottom:5px;">File Reference</span>
-                                        <span style="font-family:Georgia,'Times New Roman',Times,serif;font-size:20px;font-weight:700;color:#B08840;letter-spacing:0.02em;">{{ $refId }}</span>
+                                    <td style="width:32px;vertical-align:top;padding-top:2px;">
+                                        <div style="width:26px;height:26px;background-color:#066D77;border-radius:50%;text-align:center;font-family:Georgia,'Times New Roman',Times,serif;font-size:13px;font-weight:700;color:#ffffff;line-height:26px;mso-line-height-rule:exactly;">{{ $i + 1 }}</div>
+                                    </td>
+                                    <td style="padding-left:12px;vertical-align:top;padding-bottom:12px;{{ !$loop->last ? 'border-bottom:1px solid #D6E8EA;' : '' }}">
+                                        <strong style="display:block;font-family:Georgia,'Times New Roman',Times,serif;font-size:15px;font-weight:700;color:#0A2D32;margin-bottom:4px;">{{ $phase['title'] ?? '' }}</strong>
+                                        @if(!empty($phase['detail']))
+                                        <span style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#5A7478;line-height:1.6;">{{ $phase['detail'] }}</span>
+                                        @endif
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td style="padding:12px 0;border-bottom:1px solid #D6E8EA;">
-                                        <span style="font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7FA2A5;display:block;margin-bottom:4px;">Advisory Area</span>
-                                        <span style="font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:600;color:#0A2D32;">{{ $serviceName }}</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding:12px 0;{{ $meetingFmt ? 'border-bottom:1px solid #D6E8EA;' : '' }}">
-                                        <span style="font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7FA2A5;display:block;margin-bottom:4px;">Date Received</span>
-                                        <span style="font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:600;color:#0A2D32;">{{ $dateFormatted }}</span>
-                                    </td>
-                                </tr>
-                                @if($meetingFmt)
-                                <tr>
-                                    <td style="padding:12px 0;">
-                                        <span style="font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7FA2A5;display:block;margin-bottom:4px;">Requested Consultation</span>
-                                        <span style="font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:600;color:#066D77;">{{ $meetingFmt }}</span>
-                                    </td>
-                                </tr>
-                                @endif
                             </table>
+                        </td>
+                    </tr>
+                    @endforeach
+                </table>
+                @endif
 
+                {{-- Recommended services --}}
+                @if($serviceNames->count())
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:28px;border-top:1px solid #D6E8EA;" role="presentation">
+                    <tr>
+                        <td style="padding-top:24px;">
+                            <p style="margin:0 0 14px;font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#7FA2A5;">Recommended Services</p>
+                            @foreach($serviceNames as $sName)
+                            <span style="display:inline-block;background-color:#EDF5F6;color:#066D77;font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:600;padding:5px 13px;border-radius:100px;margin:0 6px 8px 0;border:1px solid #B2D9DC;">{{ $sName }}</span>
+                            @endforeach
                         </td>
                     </tr>
                 </table>
+                @endif
+
+                {{-- Meeting confirmation --}}
+                @if($meetingFmt)
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:24px;border-left:4px solid #B08840;background-color:#FEFAF2;border-radius:0 6px 6px 0;" role="presentation">
+                    <tr>
+                        <td style="padding:18px 22px;">
+                            <span style="font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#B08840;display:block;margin-bottom:5px;">Consultation Request</span>
+                            <span style="font-family:Georgia,'Times New Roman',Times,serif;font-size:15px;font-weight:700;color:#6B4F10;">{{ $meetingFmt }}</span>
+                            <span style="display:block;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#9A7D3A;margin-top:4px;">Our team will confirm this slot within 24 hours.</span>
+                        </td>
+                    </tr>
+                </table>
+                @endif
 
                 {{-- Body copy --}}
-                <p style="margin:28px 0 28px;font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#5A7478;line-height:1.7;">Please keep your reference number for any follow-up correspondence. Our consultants are reviewing your requirements and will be in touch with personalised recommendations.</p>
+                <p style="margin:28px 0 28px;font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#5A7478;line-height:1.7;">A specialist consultant will reach out to discuss your plan, answer questions, and outline the next steps tailored to your facility and region. You can also reach us immediately below.</p>
 
                 {{-- CTA Buttons --}}
                 <table class="btn-row" cellpadding="0" cellspacing="0" border="0" role="presentation">
                     <tr>
                         <td style="padding-right:12px;padding-bottom:4px;vertical-align:top;">
                             <a href="{{ $agentWaLink }}" target="_blank" style="display:inline-block;padding:13px 22px;background-color:#25D366;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:700;text-decoration:none;border-radius:6px;letter-spacing:0.01em;">
-                                &#x1F4AC;&nbsp; WhatsApp — Faster Reply
+                                &#x1F4AC;&nbsp; Discuss on WhatsApp
                             </a>
                         </td>
                         <td style="padding-bottom:4px;vertical-align:top;">
@@ -166,14 +184,13 @@
         {{-- CONSULTANT CARD --}}
         <tr>
             <td style="padding:0 48px;background-color:#ffffff;">
-                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid #D6E8EA;padding-top:30px;" role="presentation">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid #D6E8EA;" role="presentation">
                     <tr>
                         <td style="padding:30px 0 36px;">
-                            <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#7FA2A5;">Your Assigned Consultant</p>
+                            <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#7FA2A5;">Your Dedicated Consultant</p>
 
                             <table cellpadding="0" cellspacing="0" border="0" role="presentation">
                                 <tr>
-                                    {{-- Photo --}}
                                     @if($agentPhotoUrl)
                                     <td style="padding-right:18px;vertical-align:top;">
                                         <img src="{{ $agentPhotoUrl }}" alt="{{ $agentName }}" width="60" height="60"
@@ -181,12 +198,11 @@
                                     </td>
                                     @else
                                     <td style="padding-right:18px;vertical-align:top;">
-                                        <div style="width:60px;height:60px;border-radius:50%;background-color:#066D77;display:table-cell;text-align:center;vertical-align:middle;font-family:Georgia,serif;font-size:22px;color:#ffffff;font-weight:400;">
+                                        <div style="width:60px;height:60px;background-color:#066D77;border-radius:50%;text-align:center;font-family:Georgia,serif;font-size:22px;color:#ffffff;line-height:60px;mso-line-height-rule:exactly;">
                                             {{ strtoupper(substr($agentName, 0, 1)) }}
                                         </div>
                                     </td>
                                     @endif
-                                    {{-- Details --}}
                                     <td style="vertical-align:middle;">
                                         <strong style="display:block;font-family:Georgia,'Times New Roman',Times,serif;font-size:17px;font-weight:700;color:#0A2D32;margin-bottom:3px;">{{ $agentName }}</strong>
                                         <span style="display:block;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#7FA2A5;margin-bottom:10px;letter-spacing:0.02em;">{{ $agentRole }}</span>
@@ -226,8 +242,8 @@
                     <tr>
                         <td style="padding-top:16px;">
                             <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#4D7278;line-height:1.6;">
-                                This is a transactional confirmation email sent in response to your inquiry submission. &copy; {{ date('Y') }} Alpha Health Consultancies Group. All rights reserved.<br>
-                                This message and any attachments are confidential and intended solely for the named recipient.
+                                This email was sent because you submitted a project plan through Alpha Blueprint AI. &copy; {{ date('Y') }} Alpha Health Consultancies Group. All rights reserved.<br>
+                                This message is confidential and intended solely for the named recipient.
                             </p>
                         </td>
                     </tr>

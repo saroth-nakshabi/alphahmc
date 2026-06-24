@@ -2209,15 +2209,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </script>
 
 @php
-    $floatWaAgent = \App\Models\Agent::with('user')
-        ->whereHas('user', fn($q) => $q->whereNotNull('phone')->where('phone','!=',''))
-        ->first();
-    $floatWaPhone = $floatWaAgent && $floatWaAgent->user
-        ? preg_replace('/[^0-9]/', '', $floatWaAgent->user->phone)
-        : '97142724064';
+    // ── Unified page-level WhatsApp number ──────────────────────────────────
+    // Service, ServiceGroup and Category pages all pass their entity as $service.
+    // Priority: page agent's whatsapp field → AppSetting default
+    $_pageAgent  = $service->agent ?? null;
+    $_defaultWa  = \App\Models\AppSetting::where('key', 'whatsapp_default_number')->value('value') ?? '97142724064';
+    $pageWaPhone = ($_pageAgent && !empty($_pageAgent->whatsapp))
+        ? preg_replace('/[^0-9]/', '', $_pageAgent->whatsapp)
+        : $_defaultWa;
+    $pageWaLink  = 'https://wa.me/' . $pageWaPhone . '?text=' . rawurlencode("Hi, I'd like to enquire about Alpha Health Group's services.");
 @endphp
+
 {{-- ── Floating WhatsApp button ── --}}
-<a href="https://wa.me/{{ $floatWaPhone }}?text={{ rawurlencode("Hi, I'd like to enquire about Alpha Health Group's services.") }}"
+<a href="{{ $pageWaLink }}"
    class="ahg-float-wa"
    target="_blank"
    rel="noopener"

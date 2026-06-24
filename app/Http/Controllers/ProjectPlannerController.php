@@ -262,15 +262,8 @@ class ProjectPlannerController extends Controller
             Mail::raw($adminBody, fn ($m) => $m->to($admin)->subject('New Alpha Blueprint AI lead — ' . $session->name));
 
             if ($session->email) {
-                $custBody = "Hi {$session->name},\n\n"
-                    . "Thank you for using Alpha Blueprint AI. Here is a summary of your healthcare project plan:\n\n"
-                    . ($brief['summary'] ?? '') . "\n\n";
-                foreach (($brief['phases'] ?? []) as $i => $p) {
-                    $custBody .= ($i + 1) . '. ' . ($p['title'] ?? '') . ' — ' . ($p['detail'] ?? '') . "\n";
-                }
-                if ($services) $custBody .= "\nRecommended services: {$services}\n";
-                $custBody .= "\nOur consultants will follow up" . ($session->consent ? ' shortly.' : ' whenever you are ready.') . "\n\nAlpha Health Group";
-                Mail::raw($custBody, fn ($m) => $m->to($session->email)->subject('Your healthcare project plan — Alpha Health Group'));
+                Mail::to($session->email)
+                    ->send(new \App\Mail\PlannerConfirmationMail($session, $cards, $brief));
             }
         } catch (\Throwable $e) {
             Log::warning('Planner lead mail failed', ['msg' => $e->getMessage()]);

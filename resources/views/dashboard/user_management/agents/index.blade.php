@@ -197,8 +197,36 @@
                     <div class="row pt-3">
                         <div class="col-md-6">
                             <div class="mb-3">
+                                <label class="control-label mb-1">WhatsApp Number</label>
+                                <input type="tel" name="whatsapp" class="form-control" placeholder="e.g. +971 50 000 0000" />
+                                <small class="text-muted">Used for WhatsApp buttons across the site.</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
                                 <label class="control-label mb-1">Image <span class="text-danger">*</span></label>
-                                <input type="file" name="image" class="form-control" placeholder="12n" required />
+                                <input type="file" name="image" class="form-control" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pt-3">
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="control-label mb-2 d-block">Available Contact Modes</label>
+                                <div class="d-flex gap-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="available_modes[]" value="call" id="add_mode_call" checked>
+                                        <label class="form-check-label" for="add_mode_call"><i class="ti ti-phone me-1"></i>Call</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="available_modes[]" value="email" id="add_mode_email" checked>
+                                        <label class="form-check-label" for="add_mode_email"><i class="ti ti-mail me-1"></i>Email</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="available_modes[]" value="whatsapp" id="add_mode_whatsapp" checked>
+                                        <label class="form-check-label" for="add_mode_whatsapp"><i class="ti ti-brand-whatsapp me-1"></i>WhatsApp</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -286,12 +314,40 @@
                     </div>
                     <!--/row-->
                     <div class="row pt-3">
-                        <div class="col-12">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="control-label mb-1">WhatsApp Number</label>
+                                <input type="tel" name="whatsapp" id="edit_whatsapp" class="form-control" placeholder="e.g. +971 50 000 0000" />
+                                <small class="text-muted">Used for WhatsApp buttons across the site.</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
                             <div class="mb-2">
                                 <label class="control-label mb-1">Profile Image
-                                    <small class="text-muted">(leave empty to keep the current one)</small></label>
+                                    <small class="text-muted">(leave empty to keep current)</small></label>
                                 <input type="file" name="image" class="form-control" accept="image/*" />
                                 <div class="mt-2" id="edit_image_preview"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pt-3">
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="control-label mb-2 d-block">Available Contact Modes</label>
+                                <div class="d-flex gap-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="available_modes[]" value="call" id="edit_mode_call">
+                                        <label class="form-check-label" for="edit_mode_call"><i class="ti ti-phone me-1"></i>Call</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="available_modes[]" value="email" id="edit_mode_email">
+                                        <label class="form-check-label" for="edit_mode_email"><i class="ti ti-mail me-1"></i>Email</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="available_modes[]" value="whatsapp" id="edit_mode_whatsapp">
+                                        <label class="form-check-label" for="edit_mode_whatsapp"><i class="ti ti-brand-whatsapp me-1"></i>WhatsApp</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -634,15 +690,21 @@
                             'content') // Send CSRF token via header
                     },
                     success: function(response) {
-                        $('#edit_form').find('[name="first_name"]').val(response.data.user
-                            .first_name);
-                        $('#edit_form').find('[name="last_name"]').val(response.data.user
-                            .last_name);
+                        $('#edit_form').find('[name="first_name"]').val(response.data.user.first_name);
+                        $('#edit_form').find('[name="last_name"]').val(response.data.user.last_name);
                         $('#edit_form').find('[name="email"]').val(response.data.user.email);
-                        $('#edit_form').find('[name="phone_edit"]').val(response.data.user
-                            .phone);
+                        $('#edit_form').find('[name="phone_edit"]').val(response.data.user.phone);
                         $('#edit_form').find('[name="title"]').val(response.data.title);
                         $('#edit_form').find('[name="description"]').val(response.data.short_description);
+                        $('#edit_whatsapp').val(response.data.whatsapp || '');
+
+                        // Populate available_modes checkboxes
+                        const modes = response.data.available_modes
+                            ? response.data.available_modes.split(',')
+                            : ['call', 'email', 'whatsapp'];
+                        $('#edit_mode_call').prop('checked', modes.includes('call'));
+                        $('#edit_mode_email').prop('checked', modes.includes('email'));
+                        $('#edit_mode_whatsapp').prop('checked', modes.includes('whatsapp'));
 
                         // Reset the file input and show the current image (if any)
                         $('#edit_form').find('[name="image"]').val('');
