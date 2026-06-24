@@ -2067,6 +2067,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     (function () {
         'use strict';
 
+        // ── Google Ads conversion functions (exposed globally for inline calls) ──
+        window.gtagReportInquirySent = function () {
+            if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-695565753/wF9YCMud6cMcELn71csC' });
+        };
+        window.gtagReportWhatsAppClick = function () {
+            if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-695565753/__2wCM6d6cMcELn7lcsC', value: 1.0, currency: 'AED' });
+        };
+        window.gtagReportCallClick = function () {
+            if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-695565753/QcGMCNGd6cMcELn7lcsC', value: 1.0, currency: 'AED' });
+        };
+
         // ── Helper: push event to dataLayer + fire gtag directly ──────
         function trackConversion(eventName, params) {
             var payload = Object.assign({ event: eventName, page_url: window.location.href }, params || {});
@@ -2093,10 +2104,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             // ── Phone call ────────────────────────────────────────────
             if (href.indexOf('tel:') === 0) {
                 trackConversion('ahg_phone_call', {
-                    phone_number: href.replace('tel:', ''),
+                    phone_number: href.replace('tel:', '').replace(/\s/g, ''),
                     service_name: ctx.service_name || '',
                     element_label: label,
                 });
+                gtagReportCallClick();
                 return;
             }
 
@@ -2116,6 +2128,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     service_name: ctx.service_name || '',
                     element_label: label,
                 });
+                gtagReportWhatsAppClick();
                 return;
             }
 
@@ -2143,11 +2156,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             }
 
             // ── Contact page form ──────────────────────────────────────
-            if (form.id === 'contactForm' || form.classList.contains('contact-form')) {
+            if (form.id === 'contactForm' || form.id === 'mainContactForm' || form.classList.contains('contact-form')) {
                 trackConversion('ahg_contact_submitted', {
                     form_id: form.id || 'contact_form',
                 });
+                gtagReportInquirySent();
             }
+        });
+
+        // ── Normalize tel: hrefs — strip spaces so mobile dialers work ──
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('a[href^="tel:"]').forEach(function (el) {
+                var raw   = el.getAttribute('href') || '';
+                var clean = raw.replace(/\s/g, '');
+                if (clean !== raw) el.setAttribute('href', clean);
+            });
         });
 
     })();

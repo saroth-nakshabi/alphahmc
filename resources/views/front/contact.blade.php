@@ -334,7 +334,7 @@
                         <div class="contact-form-container">
                             <h3 class="contact-heading-main">Send us a Message</h3>
                             {{-- Add CSRF and correct action --}}
-                                <form action="{{ route('contact.send') }}" method="POST" id="mainContactForm">
+                                <form action="{{ route('contact.send') }}" method="POST" id="mainContactForm" onsubmit="if(typeof gtagReportInquirySent==='function')gtagReportInquirySent();">
     @csrf
 
     {{-- Success --}}

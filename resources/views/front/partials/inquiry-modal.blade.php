@@ -434,6 +434,8 @@
                     window.dataLayer = window.dataLayer || [];
                     window.dataLayer.push({ event: 'ahg_inquiry_submitted', form_id: 'inquiryForm' });
                     window.dataLayer.push({ event: 'inquiry_sent' });
+                    // Google Ads conversion — fires only on confirmed AJAX success
+                    if (typeof gtagReportInquirySent === 'function') gtagReportInquirySent();
 
                     // Lock this session against re-submission
                     sessionStorage.setItem('ahg_inq_sent', '1');
