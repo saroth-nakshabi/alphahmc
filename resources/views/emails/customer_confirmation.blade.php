@@ -147,14 +147,16 @@
                 {{-- CTA Buttons --}}
                 <table class="btn-row" cellpadding="0" cellspacing="0" border="0" role="presentation">
                     <tr>
-                        <td style="padding-right:12px;padding-bottom:4px;vertical-align:top;">
-                            <a href="{{ $agentWaLink }}" target="_blank" style="display:inline-block;padding:13px 22px;background-color:#25D366;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:700;text-decoration:none;border-radius:6px;letter-spacing:0.01em;">
-                                &#x1F4AC;&nbsp; WhatsApp — Faster Reply
+                        <td style="padding-right:10px;padding-bottom:4px;vertical-align:middle;">
+                            <a href="{{ $agentWaLink }}" target="_blank"
+                                style="display:inline-block;padding:8px 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:600;color:#1a7a3d;text-decoration:none;border:1px solid #7DD4A0;border-radius:4px;letter-spacing:0.02em;white-space:nowrap;">
+                                WhatsApp
                             </a>
                         </td>
-                        <td style="padding-bottom:4px;vertical-align:top;">
-                            <a href="tel:{{ preg_replace('/[^0-9+]/', '', $agentPhone) }}" style="display:inline-block;padding:12px 22px;background-color:transparent;color:#066D77;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:700;text-decoration:none;border-radius:6px;border:2px solid #066D77;letter-spacing:0.01em;">
-                                &#x1F4DE;&nbsp; Call Us
+                        <td style="padding-bottom:4px;vertical-align:middle;">
+                            <a href="tel:{{ preg_replace('/[^0-9+]/', '', $agentPhone) }}"
+                                style="display:inline-block;padding:8px 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:600;color:#066D77;text-decoration:none;border:1px solid #B2D9DC;border-radius:4px;letter-spacing:0.02em;white-space:nowrap;">
+                                Call Us
                             </a>
                         </td>
                     </tr>
@@ -190,20 +192,8 @@
                                     <td style="vertical-align:middle;">
                                         <strong style="display:block;font-family:Georgia,'Times New Roman',Times,serif;font-size:17px;font-weight:700;color:#0A2D32;margin-bottom:3px;">{{ $agentName }}</strong>
                                         <span style="display:block;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#7FA2A5;margin-bottom:10px;letter-spacing:0.02em;">{{ $agentRole }}</span>
-                                        <table cellpadding="0" cellspacing="0" border="0" role="presentation">
-                                            <tr>
-                                                <td style="padding-right:14px;">
-                                                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', $agentPhone) }}" style="font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:600;color:#066D77;text-decoration:none;">
-                                                        &#x1F4DE; {{ $agentPhone }}
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <a href="mailto:{{ $agentEmail }}" style="font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:600;color:#066D77;text-decoration:none;">
-                                                        &#x2709; {{ $agentEmail }}
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </table>
+                                        <a href="tel:{{ preg_replace('/[^0-9+]/','',$agentPhone) }}" style="font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:600;color:#066D77;text-decoration:none;margin-right:16px;">{{ $agentPhone }}</a>
+                                        <a href="mailto:{{ $agentEmail }}" style="font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:600;color:#066D77;text-decoration:none;">{{ $agentEmail }}</a>
                                     </td>
                                 </tr>
                             </table>
@@ -215,19 +205,21 @@
 
         {{-- FOOTER --}}
         <tr>
-            <td class="pad-foot" style="padding:30px 48px 32px;background-color:#0A2D32;border-radius:0 0 10px 10px;">
+            <td class="pad-foot" style="padding:22px 48px 26px;background-color:#0A2D32;border-radius:0 0 10px 10px;">
                 <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">
                     <tr>
-                        <td style="padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.08);">
-                            <strong style="font-family:Georgia,'Times New Roman',Times,serif;font-size:16px;font-weight:400;color:#ffffff;letter-spacing:0.02em;">Alpha Health Consultancies Group</strong>
-                            <span style="display:block;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#7FA2A5;margin-top:4px;">Dubai International Financial Centre (DIFC) &middot; United Arab Emirates</span>
+                        <td style="padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06);">
+                            <strong style="font-family:Georgia,'Times New Roman',Times,serif;font-size:13px;font-weight:400;color:#ffffff;display:block;margin-bottom:4px;">Alpha Health Group</strong>
+                            <span style="font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#4D7278;line-height:1.5;">1101, 11th Floor, Damas Tower, Al Maktoum Road, Dubai, UAE</span><br>
+                            <a href="mailto:info@alphatsm.com" style="font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#4D7278;text-decoration:none;">info@alphatsm.com</a>
+                            <span style="font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#2E5055;">&nbsp;&middot;&nbsp;</span>
+                            <a href="tel:+97142724064" style="font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#4D7278;text-decoration:none;">+971 4 272 4064</a>
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding-top:16px;">
-                            <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#4D7278;line-height:1.6;">
-                                This is a transactional confirmation email sent in response to your inquiry submission. &copy; {{ date('Y') }} Alpha Health Consultancies Group. All rights reserved.<br>
-                                This message and any attachments are confidential and intended solely for the named recipient.
+                        <td style="padding-top:12px;">
+                            <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:10px;color:#2E5055;line-height:1.6;">
+                                This is a transactional confirmation email sent in response to your inquiry submission. &copy; {{ date('Y') }} Alpha Health Group. All rights reserved. This message and any attachments are confidential and intended solely for the named recipient.
                             </p>
                         </td>
                     </tr>

@@ -41,6 +41,7 @@
     <meta name="twitter:site" content="@AlphaHealthGrp" />
     @stack('og_tags')
 
+    <link rel="icon" type="image/svg+xml" href="{{ asset('public/favicon.svg') }}">
     <link rel="shortcut icon" href="{{ asset('public/favicon.png') }}">
     <link rel="sitemap" type="application/xml" href="{{ url('/sitemap.xml') }}" />
     <link rel="alternate" type="text/plain" title="LLMs.txt" href="{{ asset('llms.txt') }}" />

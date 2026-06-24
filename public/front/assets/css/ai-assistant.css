@@ -127,8 +127,8 @@
 
 /* ----- HEADER ----- */
 .ava-header {
-    background: linear-gradient(135deg, var(--ava-teal) 0%, #1ea7a1 100%);
-    padding: 16px 20px;
+    background: var(--ava-teal);
+    padding: 14px 18px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -215,23 +215,26 @@
 
 /* ----- WELCOME BANNER ----- */
 .ava-welcome-banner {
-    background: linear-gradient(135deg, #044f57 0%, var(--ava-teal) 100%);
-    padding: 14px 20px;
+    background: #044E56;
+    padding: 8px 18px 10px;
     flex-shrink: 0;
+    border-top: 1px solid rgba(255,255,255,.08);
 }
 
 .ava-welcome-title {
-    font-size: 1rem;
+    font-size: .8rem;
     font-weight: 700;
     color: #fff;
-    margin: 0 0 2px;
+    margin: 0 0 1px;
+    letter-spacing: .3px;
+    text-transform: uppercase;
 }
 
 .ava-welcome-sub {
-    font-size: .78rem;
-    color: rgba(255,255,255,.8);
+    font-size: .72rem;
+    color: rgba(255,255,255,.65);
     margin: 0;
-    line-height: 1.4;
+    line-height: 1.35;
 }
 
 /* ----- CHAT BODY ----- */

@@ -109,8 +109,8 @@
 
         <!-- Welcome Banner -->
         <div class="ava-welcome-banner">
-            <p class="ava-welcome-title">Welcome to Alpha</p>
-            <p class="ava-welcome-sub">A Health Authority approved healthcare management consultancy</p>
+            <p class="ava-welcome-title">Alpha Health Group</p>
+            <p class="ava-welcome-sub">Health Authority approved healthcare management consultancy</p>
         </div>
 
         <!-- Chat Body -->
@@ -119,7 +119,7 @@
             <div class="ava-msg ava-msg-bot" id="avaIntroMsg">
                 <div class="ava-msg-avatar">α</div>
                 <div class="ava-msg-bubble">
-                    <p>Welcome to <strong>Alpha</strong>! You can chat with us about our services, general inquiries, customer feedback &amp; complaints.</p>
+                    <p>Welcome! This chat assistant is still learning — for an instant reply, send us a <strong>WhatsApp message</strong> using the button below.</p>
                     <span class="ava-msg-time">Just now</span>
                 </div>
             </div>
