@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\AppSetting;
 use App\Models\Category;
+use App\Models\PlannerOutcomeCache;
 use App\Models\PlannerWorkflowStep;
 use App\Models\Service;
 use App\Models\ServiceGroup;
@@ -65,6 +66,131 @@ class ProjectPlannerAI
         return $this->provider() === 'anthropic'
             ? AppSetting::get('ai_model', 'claude-haiku-4-5-20251001')
             : AppSetting::get('gemini_model', 'gemini-2.5-flash');
+    }
+
+    // ── Category → services map (for front-end step filtering) ───────
+    /** Returns ['Category Name' => ['Service A', 'Service B', ...], ...] */
+    public function categoryServicesMap(): array
+    {
+        return Cache::remember('planner_cat_svc_map_v1', 600, function () {
+            $map = [];
+            foreach ($this->catalog() as $s) {
+                foreach ($s['categories'] as $cat) {
+                    $map[$cat][] = $s['name'];
+                }
+            }
+            ksort($map);
+            return $map;
+        });
+    }
+
+    // ── Process context lookup ────────────────────────────────────────
+    /**
+     * Lookup hierarchy: service.project_process_id → category.project_process_id → null
+     * Returns ['intro', 'steps' (array of ['header','detail']), 'timeframe'] or null.
+     */
+    public function resolveProcessContext(array $serviceNames): ?array
+    {
+        if (empty($serviceNames)) return null;
+        $serviceNames = array_values(array_filter($serviceNames, fn ($n) => $n !== 'Not sure'));
+        if (empty($serviceNames)) return null;
+
+        // 1. Direct service mapping
+        $process = DB::table('project_processes')
+            ->join('services', 'services.project_process_id', '=', 'project_processes.id')
+            ->whereIn('services.name', $serviceNames)
+            ->whereNotNull('services.project_process_id')
+            ->select('project_processes.*')
+            ->first();
+
+        // 2. Category fallback
+        if (!$process) {
+            $process = DB::table('project_processes')
+                ->join('categories', 'categories.project_process_id', '=', 'project_processes.id')
+                ->join('service_categories', 'service_categories.category_id', '=', 'categories.id')
+                ->join('services', 'services.id', '=', 'service_categories.service_id')
+                ->whereIn('services.name', $serviceNames)
+                ->whereNotNull('categories.project_process_id')
+                ->select('project_processes.*')
+                ->first();
+        }
+
+        if (!$process) return null;
+
+        $headers = json_decode($process->process_header ?? '[]', true) ?: [];
+        $descs   = json_decode($process->process_description ?? '[]', true) ?: [];
+        $steps   = [];
+        for ($i = 0; $i < max(count($headers), count($descs)); $i++) {
+            $h = trim((string) ($headers[$i] ?? ''));
+            $d = trim(strip_tags((string) ($descs[$i] ?? '')));
+            if ($h !== '' || $d !== '') $steps[] = ['header' => $h, 'detail' => Str::limit($d, 200)];
+        }
+
+        return [
+            'intro'     => trim(strip_tags((string) ($process->process_intro ?? ''))),
+            'steps'     => $steps,
+            'timeframe' => trim((string) ($process->timeframe ?? '')),
+        ];
+    }
+
+    // ── Outcome cache ─────────────────────────────────────────────────
+    /** Find a consultant-approved outcome similar to the current request (≥50% category overlap). */
+    public function findSimilarOutcome(string $intent, string $region, array $categoryNames): ?array
+    {
+        try {
+            $intentKey = $this->normalizeKey($intent, 6);
+            $regionKey = $this->normalizeKey($region, 4);
+            if ($intentKey === '') return null;
+
+            $candidates = PlannerOutcomeCache::where('intent_key', $intentKey)
+                ->when($regionKey !== '', fn ($q) => $q->where('region_key', $regionKey))
+                ->get();
+
+            $reqCats = array_map('strtolower', $categoryNames);
+            foreach ($candidates as $cached) {
+                $cachedCats = json_decode($cached->category_fingerprint ?? '[]', true) ?: [];
+                if (empty($cachedCats) && !empty($reqCats)) continue;
+                if (!empty($reqCats)) {
+                    $intersection = array_intersect($reqCats, $cachedCats);
+                    if (count($intersection) / count($reqCats) < 0.5) continue;
+                }
+                return [
+                    'process_output'  => $cached->process_output,
+                    'timeline_output' => $cached->timeline_output,
+                    'cache_id'        => $cached->id,
+                ];
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Planner outcome cache lookup failed', ['msg' => $e->getMessage()]);
+        }
+        return null;
+    }
+
+    /** Persist a consultant-approved outcome for future reuse. */
+    public function cacheOutcome(int $sessionId, string $processOutput, ?string $timelineOutput, int $consultantId, string $intent, string $region, array $categoryNames): void
+    {
+        try {
+            PlannerOutcomeCache::create([
+                'intent_key'           => $this->normalizeKey($intent, 6),
+                'region_key'           => $this->normalizeKey($region, 4),
+                'category_fingerprint' => json_encode(array_values(array_map('strtolower', $categoryNames))),
+                'process_output'       => $processOutput,
+                'timeline_output'      => $timelineOutput,
+                'consultant_id'        => $consultantId,
+                'session_id'           => $sessionId,
+            ]);
+        } catch (\Throwable $e) {
+            Log::warning('Planner outcome cache write failed', ['msg' => $e->getMessage()]);
+        }
+    }
+
+    /** Strip stop-words, lowercase, take first N words — used for similarity fingerprints. */
+    public function normalizeKey(string $text, int $words = 6): string
+    {
+        $stop = ['the','and','for','with','our','your','a','to','of','in','on','we','i','is','it','at','an','be','do','my','us','or','as','by'];
+        $tokens = preg_split('/[^a-z0-9]+/', Str::lower($text)) ?: [];
+        $filtered = array_values(array_filter($tokens, fn ($t) => strlen($t) >= 3 && !in_array($t, $stop, true)));
+        return implode('_', array_slice($filtered, 0, $words));
     }
 
     // ── Knowledge base ────────────────────────────────────────────────
@@ -145,7 +271,11 @@ class ProjectPlannerAI
             ->map(function ($s) use ($categoryNames, $serviceNames) {
                 $options = $s->options ?? [];
                 if ($s->source === 'categories') $options = $categoryNames;
-                if ($s->source === 'services')   $options = $serviceNames;
+                if ($s->source === 'services') {
+                    $opts = $serviceNames;
+                    if (!in_array('Not sure', $opts, true)) $opts[] = 'Not sure';
+                    $options = $opts;
+                }
                 return [
                     'key'     => $s->step_key,
                     'label'   => $s->label,
@@ -172,13 +302,33 @@ class ProjectPlannerAI
     // ── Final structured brief + recommendations ───────────────────────
     public function finalBrief(array $answers): array
     {
-        $guidance = $this->adminGuidance();
+        $guidance   = $this->adminGuidance();
         $costWanted = $this->costRequested($answers);
+
+        // Strip "Not sure" before process/cache lookups
+        $serviceNames = array_values(array_filter(
+            (array) ($answers['selected_services'] ?? []),
+            fn ($n) => $n !== 'Not sure'
+        ));
+        $processCtx = $this->resolveProcessContext($serviceNames);
+
+        $categoryNames = array_values(array_filter((array) ($answers['category'] ?? $answers['selected_services'] ?? [])));
+        $cachedOutcome = $this->findSimilarOutcome(
+            $answers['intent'] ?? '',
+            $answers['region'] ?? '',
+            $categoryNames
+        );
+
         if ($this->enabled()) {
-            $ai = $this->claudeBrief($answers, $guidance, $costWanted);
-            if ($ai) return $ai + ['engine' => 'ai'];
+            $ai = $this->claudeBrief($answers, $guidance, $costWanted, $processCtx, $cachedOutcome);
+            if ($ai) {
+                $source = $cachedOutcome ? 'consultant_reviewed' : ($processCtx ? 'process_mapped' : 'ai_generated');
+                return $ai + ['engine' => 'ai', 'process_source' => $source];
+            }
         }
-        return $this->rulesBrief($answers, $guidance, $costWanted) + ['engine' => 'rules'];
+        $rules = $this->rulesBrief($answers, $guidance, $costWanted, $processCtx);
+        $source = $cachedOutcome ? 'consultant_reviewed' : ($processCtx ? 'process_mapped' : 'ai_generated');
+        return $rules + ['engine' => 'rules', 'process_source' => $source];
     }
 
     /** True only when the client actually asked about money — controls whether a Cost block appears. */
@@ -222,7 +372,7 @@ class ProjectPlannerAI
         ];
     }
 
-    private function claudeBrief(array $answers, array $guidance = [], bool $costWanted = false): ?array
+    private function claudeBrief(array $answers, array $guidance = [], bool $costWanted = false, ?array $processCtx = null, ?array $cachedOutcome = null): ?array
     {
         $catalog = $this->compactCatalogForPrompt();
         $guide = '';
@@ -255,7 +405,26 @@ class ProjectPlannerAI
             . "\"alpha_offer\": string (2-3 sentences — concretely what Alpha Health Group brings to THIS project: relevant experience, specialist teams, and how it de-risks their goal), "
             . "\"recommended\": [{\"service_id\": number from catalogue, \"reason\": string (1 sentence tying the service to their stated need)}] (3-5)}.";
 
+        $processBlock = '';
+        if ($processCtx) {
+            $processBlock = "\n[Mapped process for this request]:\n";
+            if ($processCtx['intro']) $processBlock .= "Intro: {$processCtx['intro']}\n";
+            foreach ($processCtx['steps'] as $step) {
+                $processBlock .= "- {$step['header']}: {$step['detail']}\n";
+            }
+            if ($processCtx['timeframe']) $processBlock .= "Internal timeframe hint: {$processCtx['timeframe']}\n";
+            $processBlock .= "Use this process as the backbone for your plan and regulatory sections.\n";
+        }
+
+        $cachedBlock = '';
+        if ($cachedOutcome) {
+            $cachedBlock = "\n[Consultant-approved prior outcome — use as a strong starting point, supplement as needed]:\n"
+                . Str::limit($cachedOutcome['process_output'], 1200) . "\n";
+        }
+
         $user = ($guide ? "Internal guidance (do not quote verbatim):\n{$guide}\n" : '')
+            . $processBlock
+            . $cachedBlock
             . $this->knowledgeForPrompt()
             . "Catalogue (id: name — overview):\n{$catalog}\n\n"
             . "Client brief: " . json_encode($facts, JSON_UNESCAPED_UNICODE);
@@ -477,7 +646,7 @@ class ProjectPlannerAI
         ];
     }
 
-    private function rulesBrief(array $answers, array $guidance = [], bool $costWanted = false): array
+    private function rulesBrief(array $answers, array $guidance = [], bool $costWanted = false, ?array $processCtx = null): array
     {
         $intent   = trim((string) ($answers['intent'] ?? '')) ?: 'your healthcare project';
         $region   = trim((string) ($answers['region'] ?? '')) ?: null;
@@ -503,7 +672,7 @@ class ProjectPlannerAI
 
         $regulatory = $this->regulatoryPathway($region, $type, $intent, $services);
 
-        [$cost, $timeline] = $this->rulesCostTimeline($answers, $guidance);
+        [$cost, $timeline] = $this->rulesCostTimeline($answers, $guidance, $processCtx);
 
         $recNames = collect($this->rulesRecommend($answers))->pluck('service_id')
             ->pipe(fn ($ids) => collect($this->catalog())->whereIn('id', $ids->all())->pluck('name'))->take(4)->all();
@@ -515,7 +684,7 @@ class ProjectPlannerAI
             'summary'     => $summary,
             'plan'        => $plan,
             'regulatory'  => $regulatory,
-            'phases'      => $this->defaultPhases($answers),
+            'phases'      => $this->defaultPhases($answers, $processCtx),
             'timeline'    => $timeline,
             'cost'        => $costWanted ? $cost : '',
             'alpha_offer' => $alphaOffer,
@@ -559,7 +728,7 @@ class ProjectPlannerAI
     }
 
     /** Derive cost & timeline lines from the admin "plan_details" guidance (rules mode). */
-    private function rulesCostTimeline(array $answers, array $guidance): array
+    private function rulesCostTimeline(array $answers, array $guidance, ?array $processCtx = null): array
     {
         $blocks = trim(implode("\n", $guidance));
         $cost = 'Indicative only and subject to a detailed scope — our team confirms figures after a short discovery call.';
@@ -574,13 +743,48 @@ class ProjectPlannerAI
             $cost = trim($m[1]);
         }
         // Trim a trailing internal note ("Position Alpha as…") that isn't client-facing.
-        $cost = trim(preg_replace('/\.\s*Position Alpha\b.*$/is', '.', $cost));
+        $cost     = trim(preg_replace('/\.\s*Position Alpha\b.*$/is', '.', $cost));
         $timeline = trim(preg_replace('/\.\s*Position Alpha\b.*$/is', '.', $timeline));
+
+        // Override timeline with the mapped process timeframe if available.
+        if ($processCtx && !empty($processCtx['timeframe'])) {
+            $timeline = $processCtx['timeframe'];
+        }
+
         return [Str::limit($cost, 400, ''), Str::limit($timeline, 400, '')];
     }
 
-    private function defaultPhases(array $answers): array
+    private function defaultPhases(array $answers, ?array $processCtx = null): array
     {
+        // If a mapped process has defined steps, map them onto the 4-phase structure.
+        if ($processCtx && !empty($processCtx['steps'])) {
+            $mapped = [
+                ['title' => 'Research', 'detail' => null],
+                ['title' => 'Plan',     'detail' => null],
+                ['title' => 'Execute',  'detail' => null],
+                ['title' => 'Results',  'detail' => null],
+            ];
+            $steps = array_values($processCtx['steps']);
+            foreach ($steps as $i => $step) {
+                $phaseIdx = min($i, 3);
+                $detail = ($step['header'] ? $step['header'] . ': ' : '') . $step['detail'];
+                if ($mapped[$phaseIdx]['detail'] === null) {
+                    $mapped[$phaseIdx]['detail'] = Str::limit($detail, 180);
+                }
+            }
+            // Fill any nulls with fallback text.
+            $fallbacks = [
+                'We evaluate your current position and identify the key milestones and authority requirements.',
+                'A dedicated account manager builds a standards-aligned plan and assigns the right specialist teams.',
+                'Our specialists execute each workstream with continuous monitoring of milestones.',
+                'Outcomes are reviewed against your baseline and sustained with ongoing improvement.',
+            ];
+            foreach ($mapped as $i => &$phase) {
+                if ($phase['detail'] === null) $phase['detail'] = $fallbacks[$i];
+            }
+            return $mapped;
+        }
+
         $kb = $this->processKnowledge();
         $hint = '';
         foreach (array_merge((array) ($answers['selected_services'] ?? []), [$answers['intent'] ?? '']) as $needle) {

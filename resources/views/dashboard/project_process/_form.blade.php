@@ -32,6 +32,15 @@
                         <textarea name="process_intro" id="process_intro" rows="4" class="form-control"
                             placeholder="e.g. From first call to licence in hand — describe your approach...">{{ old('process_intro', $process->process_intro) }}</textarea>
                     </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Project timeframe
+                            <span class="text-muted fw-normal">(internal — used only by AI planner)</span></label>
+                        <input type="text" name="timeframe" class="form-control"
+                            value="{{ old('timeframe', $process->timeframe) }}"
+                            placeholder="e.g. 8–12 weeks depending on authority readiness">
+                        <div class="form-text">Not shown to customers. Fed to the AI planner to improve timeline accuracy.</div>
+                    </div>
                 </div>
             </div>
 

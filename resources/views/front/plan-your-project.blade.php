@@ -351,6 +351,8 @@
     const CSRF = '{{ csrf_token() }}';
     const URLS = { step: '{{ route('planner.step') }}', analyze: '{{ route('planner.analyze') }}', contact: '{{ route('planner.contact') }}', followup: '{{ route('planner.followup') }}' };
     const TIMING = '{{ $contactTiming }}';
+    const CATEGORY_SERVICES = @json($categoryServicesMap);
+    const ALL_SERVICES = @json(collect($steps)->firstWhere('key', 'service')['options'] ?? []);
     const ORDER = @json(collect($steps)->pluck('key')->values());
     const answers = {};
     let leadEmail = '';
@@ -412,6 +414,31 @@
 
     document.getElementById('ppStart').addEventListener('click', ()=>{ if(ORDER.length) go(ORDER[0]); if(typeof trackConversion==='function') trackConversion('ahg_planner_started',{}); });
 
+    /** Filter the service-step chips to those belonging to the selected categories.
+     *  Accepts a string or an array. "Not sure" always stays visible. */
+    function filterServiceStep(categories) {
+        const serviceGroup = card.querySelector('.pp-options[data-field="service"]');
+        if (!serviceGroup) return;
+        const cats = Array.isArray(categories) ? categories : (categories ? [categories] : []);
+        let allowed = [];
+        if (cats.length) {
+            cats.forEach(function(cat) {
+                if (CATEGORY_SERVICES[cat]) allowed = allowed.concat(CATEGORY_SERVICES[cat]);
+            });
+        }
+        if (!allowed.length) allowed = ALL_SERVICES;
+        // deduplicate
+        allowed = allowed.filter(function(v, i, a) { return a.indexOf(v) === i; });
+        serviceGroup.querySelectorAll('.pp-opt').forEach(function(opt) {
+            const val = opt.dataset.value;
+            if (val === 'Not sure') { opt.style.display = ''; return; }
+            const visible = allowed.indexOf(val) !== -1;
+            opt.style.display = visible ? '' : 'none';
+            if (!visible) opt.classList.remove('selected');
+        });
+        answers['service'] = Array.from(serviceGroup.querySelectorAll('.pp-opt.selected')).map(function(o) { return o.dataset.value; });
+    }
+
     // Option clicks (single + multi)
     card.querySelectorAll('.pp-options').forEach(group=>{
         const field=group.dataset.field; const single=group.dataset.single==='1';
@@ -424,7 +451,9 @@
                     const otherWrap=group.parentElement.querySelector('[data-other]');
                     if(val==='Something else' && otherWrap){ otherWrap.style.display=''; answers[field]=''; otherWrap.querySelector('.pp-other-input').focus(); return; }
                     if(otherWrap) otherWrap.style.display='none';
-                    answers[field]=val; renderChoices(); ack(stepName,val); setTimeout(()=>advanceFrom(stepName),360);
+                    answers[field]=val; renderChoices();
+                    if(field==='category') filterServiceStep(val);
+                    ack(stepName,val); setTimeout(()=>advanceFrom(stepName),360);
                 } else {
                     opt.classList.toggle('selected');
                     answers[field]=Array.from(group.querySelectorAll('.pp-opt.selected')).map(o=>o.dataset.value);
@@ -440,6 +469,8 @@
         const textInput=step.querySelector('.pp-text-input');
         if(textInput) answers[key]=textInput.value.trim();
         renderChoices(); ack(key, Array.isArray(answers[key])?answers[key].join(', '):(answers[key]||''));
+        // Filter services step based on selected categories before advancing
+        if(key === 'category') filterServiceStep(answers['category']);
         advanceFrom(key);
     }));
 

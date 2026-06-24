@@ -102,6 +102,7 @@ class AdminProjectProcessController extends Controller
         return $request->validate([
             'name'                  => 'required|string|max:255',
             'process_intro'         => 'nullable|string',
+            'timeframe'             => 'nullable|string|max:500',
             'process_header'        => 'nullable|array',
             'process_header.*'      => 'nullable|string',
             'process_description'   => 'nullable|array',
@@ -139,6 +140,7 @@ class AdminProjectProcessController extends Controller
         return [
             'name'                => $request->input('name'),
             'process_intro'       => $request->input('process_intro'),
+            'timeframe'           => $request->input('timeframe') ?: null,
             'process_header'      => $headers,
             'process_description' => $descs,
             'process_service_ids' => $serviceIds,

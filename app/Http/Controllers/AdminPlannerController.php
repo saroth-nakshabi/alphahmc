@@ -114,4 +114,64 @@ class AdminPlannerController extends Controller
         ProjectPlannerSession::findOrFail($id)->delete();
         return back()->with('success', 'Planner session deleted.');
     }
+
+    // ── Outcomes tab ──────────────────────────────────────────────────
+
+    /** Outcomes tab: sessions pending consultant review + approved outcome cache. */
+    public function outcomes(Request $request)
+    {
+        $sessions = ProjectPlannerSession::whereNotNull('ai_process_output')
+            ->with('consultant')
+            ->latest()
+            ->paginate(20)
+            ->withQueryString();
+
+        $cache = \App\Models\PlannerOutcomeCache::latest()->paginate(10, ['*'], 'cache_page');
+
+        return view('dashboard.planner.outcomes', compact('sessions', 'cache'));
+    }
+
+    /** Save a consultant's edited outcome back to the session. */
+    public function saveOutcome(Request $request, $id)
+    {
+        $data = $request->validate([
+            'consultant_outcome' => 'nullable|string',
+            'consultant_notes'   => 'nullable|string|max:1000',
+        ]);
+
+        $session = ProjectPlannerSession::findOrFail($id);
+        $session->update([
+            'consultant_outcome'     => $data['consultant_outcome'] ?? null,
+            'consultant_notes'       => $data['consultant_notes'] ?? null,
+            'consultant_id'          => auth()->id(),
+            'consultant_reviewed_at' => now(),
+            'process_source'         => 'consultant_reviewed',
+        ]);
+
+        return back()->with('success', 'Outcome saved.');
+    }
+
+    /** Approve and push to the outcome cache for future reuse. */
+    public function cacheOutcome(Request $request, $id, ProjectPlannerAI $ai)
+    {
+        $session = ProjectPlannerSession::findOrFail($id);
+
+        if (empty($session->consultant_outcome)) {
+            return back()->with('error', 'Save a consultant outcome first before approving for reuse.');
+        }
+
+        $categoryNames = array_values(array_filter((array) $session->selected_services, fn ($n) => $n !== 'Not sure'));
+
+        $ai->cacheOutcome(
+            $session->id,
+            $session->consultant_outcome,
+            $session->timeline_estimate,
+            auth()->id(),
+            $session->intent ?? '',
+            $session->region ?? '',
+            $categoryNames
+        );
+
+        return back()->with('success', 'Outcome approved and added to the reuse cache.');
+    }
 }

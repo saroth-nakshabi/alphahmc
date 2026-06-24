@@ -169,6 +169,61 @@
         </div>
     </div>
 
+    {{-- Consultant review panel --}}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h5 class="fw-semibold mb-0">Consultant Review</h5>
+                        <span class="badge bg-{{ $session->process_source === 'consultant_reviewed' ? 'success' : ($session->process_source === 'process_mapped' ? 'primary' : 'secondary') }}">
+                            {{ str_replace('_', ' ', $session->process_source ?? 'ai_generated') }}
+                        </span>
+                    </div>
+
+                    @if($session->ai_process_output)
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-muted small text-uppercase">AI-generated output (read-only)</label>
+                        <div class="bg-light rounded p-3 border" style="max-height:200px;overflow-y:auto;font-size:0.82rem;white-space:pre-wrap;font-family:monospace;">{{ $session->ai_process_output }}</div>
+                    </div>
+                    @endif
+
+                    <form action="{{ route('admin.planner.saveOutcome', $session->id) }}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Consultant outcome <span class="text-muted fw-normal small">(edit and improve the AI plan)</span></label>
+                            <textarea name="consultant_outcome" rows="8" class="form-control" placeholder="Paste or write the refined outcome here…">{{ old('consultant_outcome', $session->consultant_outcome) }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Internal notes <span class="text-muted fw-normal small">(not shown to client)</span></label>
+                            <textarea name="consultant_notes" rows="3" class="form-control" placeholder="Notes for internal follow-up…">{{ old('consultant_notes', $session->consultant_notes) }}</textarea>
+                        </div>
+                        @if($session->consultant_reviewed_at)
+                        <p class="text-muted small mb-2">Last reviewed: {{ $session->consultant_reviewed_at->format('d M Y, H:i') }}
+                            @if($session->consultant) by {{ $session->consultant->first_name }} {{ $session->consultant->last_name }}@endif</p>
+                        @endif
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="bi bi-save me-1"></i> Save outcome
+                            </button>
+                        </div>
+                    </form>
+
+                    @if($session->consultant_outcome)
+                    <form action="{{ route('admin.planner.cacheOutcome', $session->id) }}" method="POST" class="mt-3">
+                        @csrf
+                        <button type="submit" class="btn btn-success btn-sm"
+                            onclick="return confirm('Approve this outcome for reuse on similar future requests?')">
+                            <i class="bi bi-check-circle me-1"></i> Approve for reuse
+                        </button>
+                        <span class="text-muted small ms-2">Stores this outcome in the similarity cache so future similar requests start from here.</span>
+                    </form>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         @if(session('success'))

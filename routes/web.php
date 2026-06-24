@@ -175,6 +175,7 @@ Route::post('/plan-your-project/step', [ProjectPlannerController::class, 'step']
 Route::post('/plan-your-project/analyze', [ProjectPlannerController::class, 'analyze'])->middleware('throttle:10,1')->name('planner.analyze');
 Route::post('/plan-your-project/contact', [ProjectPlannerController::class, 'contact'])->middleware('throttle:10,1')->name('planner.contact');
 Route::post('/plan-your-project/followup', [ProjectPlannerController::class, 'followup'])->middleware('throttle:10,1')->name('planner.followup');
+Route::get('/plan-your-project/services-by-category', [ProjectPlannerController::class, 'servicesByCategory'])->name('planner.servicesByCategory');
 Route::get('/healthcare_quality_assurance', [HomeController::class, 'healthcare_quality_assurance'])->name('healthcare_quality_assurance');
 
 // Search routes (public - no auth required)
@@ -291,6 +292,9 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::get('/dashboard/planner/{id}', [AdminPlannerController::class, 'show'])->name('admin.planner.show')->middleware('permission:view planner');
     Route::post('/dashboard/planner/update/{id}', [AdminPlannerController::class, 'update'])->name('admin.planner.update')->middleware('permission:edit planner');
     Route::post('/dashboard/planner/{id}/confirm-meeting', [AdminPlannerController::class, 'confirmMeeting'])->name('admin.planner.confirmMeeting')->middleware('permission:edit planner');
+    Route::get('/dashboard/planner-outcomes', [AdminPlannerController::class, 'outcomes'])->name('admin.planner.outcomes')->middleware('permission:view planner');
+    Route::post('/dashboard/planner/{id}/save-outcome', [AdminPlannerController::class, 'saveOutcome'])->name('admin.planner.saveOutcome')->middleware('permission:edit planner');
+    Route::post('/dashboard/planner/{id}/cache-outcome', [AdminPlannerController::class, 'cacheOutcome'])->name('admin.planner.cacheOutcome')->middleware('permission:edit planner');
 
     // AI Planner workflow builder
     Route::get('/dashboard/planner-builder', [AdminPlannerBuilderController::class, 'index'])->name('admin.planner.builder')->middleware('permission:view planner builder');

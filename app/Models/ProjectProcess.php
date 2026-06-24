@@ -15,6 +15,7 @@ class ProjectProcess extends Model
     protected $fillable = [
         'name',
         'process_intro',
+        'timeframe',
         'process_header',
         'process_description',
         'process_service_ids',

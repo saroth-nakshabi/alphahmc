@@ -18,13 +18,29 @@ class ProjectPlannerController extends Controller
     public function page()
     {
         return view('front.plan-your-project', [
-            'steps'         => $this->ai->customerSteps(),
-            'aiEnabled'     => $this->ai->enabled(),
-            // 'before' = capture contact before showing results; 'after' = results first, contact optional.
-            'contactTiming' => \App\Models\AppSetting::get('planner_contact_timing', 'before'),
-            // Admin toggle: whether to render the raw Gemini outcome panel on the results page.
-            'showRaw'       => \App\Models\AppSetting::bool('planner_show_raw', false),
+            'steps'              => $this->ai->customerSteps(),
+            'categoryServicesMap' => $this->ai->categoryServicesMap(),
+            'aiEnabled'          => $this->ai->enabled(),
+            'contactTiming'      => \App\Models\AppSetting::get('planner_contact_timing', 'before'),
+            'showRaw'            => \App\Models\AppSetting::bool('planner_show_raw', false),
         ]);
+    }
+
+    /** AJAX: return service names filtered by a selected category. */
+    public function servicesByCategory(Request $request)
+    {
+        $category = trim((string) $request->get('category', ''));
+        $map = $this->ai->categoryServicesMap();
+        $services = [];
+        if ($category && isset($map[$category])) {
+            $services = $map[$category];
+        } else {
+            foreach ($map as $names) {
+                foreach ($names as $n) { if (!in_array($n, $services, true)) $services[] = $n; }
+            }
+        }
+        if (!in_array('Not sure', $services, true)) $services[] = 'Not sure';
+        return response()->json(['services' => array_values($services)]);
     }
 
     /** Light, instant per-step acknowledgement (local, no LLM cost). */
@@ -109,6 +125,15 @@ class ProjectPlannerController extends Controller
 
         $engine = $brief['engine'] === 'ai' ? 'ai' : 'rules';
 
+        $aiProcessPayload = json_encode([
+            'plan'        => $brief['plan'] ?? '',
+            'regulatory'  => $brief['regulatory'] ?? '',
+            'phases'      => $brief['phases'],
+            'timeline'    => $brief['timeline'] ?? '',
+            'cost'        => $costWanted ? ($brief['cost'] ?? '') : '',
+            'alpha_offer' => $brief['alpha_offer'] ?? '',
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
         $session = ProjectPlannerSession::create([
             'uuid'                    => (string) Str::uuid(),
             'intent'                  => $ctx['intent'],
@@ -129,6 +154,8 @@ class ProjectPlannerController extends Controller
             'timeline_estimate'       => $brief['timeline'] ?? null,
             'recommended_service_ids' => collect($cards)->pluck('id')->all(),
             'engine'                  => $engine,
+            'process_source'          => $brief['process_source'] ?? 'ai_generated',
+            'ai_process_output'       => $aiProcessPayload,
             'name'                    => $data['name'] ?? null,
             'email'                   => $data['email'] ?? null,
             'phone'                   => $data['phone'] ?? null,

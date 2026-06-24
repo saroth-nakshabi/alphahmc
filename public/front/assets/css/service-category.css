@@ -1329,3 +1329,67 @@
 @media (max-width: 480px) {
     .hero-title { font-size: 1.85rem !important; }
 }
+
+/* ── premium-intro section: stack vertically on mobile ──────────────
+   On small screens the two-column grid crushed the description to ~110px.
+   Stack: full-width text first, then horizontal-scroll cards below.   */
+@media (max-width: 768px) {
+    .premium-intro.light-theme {
+        padding: 52px 0 40px;
+    }
+
+    .intro-layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .lead-text {
+        max-width: 100%;
+        font-size: 1rem;
+        margin-bottom: 24px;
+    }
+
+    /* Convert vertical auto-scroll to a draggable horizontal strip */
+    .scroll-wrapper {
+        height: auto;
+        overflow: visible;
+        mask-image: none;
+        -webkit-mask-image: none;
+    }
+
+    .scroll-track,
+    .scroll-track.no-scroll {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 12px;
+        animation: none !important;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 12px;     /* space for scrollbar on Android */
+        /* hide scrollbar visually */
+        scrollbar-width: none;
+    }
+    .scroll-track::-webkit-scrollbar { display: none; }
+
+    .feature-card {
+        flex: 0 0 74vw;           /* ~¾ viewport, shows peek of next card */
+        max-width: 280px;
+        scroll-snap-align: start;
+        /* reset hover-slide that clips cards on mobile */
+        transition: none;
+    }
+    .feature-card:hover {
+        transform: none;
+    }
+
+    /* Hide the duplicated cards (aria-hidden) on mobile — not needed without scroll animation */
+    .feature-card.aria-hidden {
+        display: none;
+    }
+
+    .cta-group {
+        margin-bottom: 8px;
+    }
+}
