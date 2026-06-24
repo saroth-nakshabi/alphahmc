@@ -1,382 +1,397 @@
 @extends('dashboard/layout')
 
+@section('custom_css')
+<style>
+    /* ── Stat cards ─────────────────────────────────── */
+    .inq-stat {
+        border-radius: 12px;
+        padding: 1.1rem 1.4rem;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        border: 1px solid transparent;
+    }
+    .inq-stat .stat-icon {
+        width: 44px; height: 44px;
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.3rem; flex-shrink: 0;
+    }
+    .inq-stat .stat-num  { font-size: 1.6rem; font-weight: 700; line-height: 1; }
+    .inq-stat .stat-lbl  { font-size: .78rem; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: #94a3b8; margin-top: 2px; }
+
+    .stat-total   { background: #f0f7ff; border-color: #cce3ff; }
+    .stat-total   .stat-icon { background: #dbeafe; color: #1d4ed8; }
+    .stat-total   .stat-num  { color: #1d4ed8; }
+
+    .stat-pending { background: #fffbeb; border-color: #fde68a; }
+    .stat-pending .stat-icon { background: #fef3c7; color: #b45309; }
+    .stat-pending .stat-num  { color: #b45309; }
+
+    .stat-replied { background: #f0fdf4; border-color: #bbf7d0; }
+    .stat-replied .stat-icon { background: #dcfce7; color: #15803d; }
+    .stat-replied .stat-num  { color: #15803d; }
+
+    .stat-closed  { background: #f8fafc; border-color: #e2e8f0; }
+    .stat-closed  .stat-icon { background: #f1f5f9; color: #64748b; }
+    .stat-closed  .stat-num  { color: #64748b; }
+
+    /* ── Filter card ─────────────────────────────────── */
+    .filter-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.1rem 1.4rem;
+        margin-bottom: 1.25rem;
+    }
+    .filter-card .form-label { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: #64748b; margin-bottom: 4px; }
+    .filter-card .form-control,
+    .filter-card .form-select { font-size: .88rem; border-radius: 8px; border-color: #e2e8f0; }
+    .filter-card .form-control:focus,
+    .filter-card .form-select:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79,70,229,.1); }
+
+    /* ── Table ───────────────────────────────────────── */
+    .inq-table-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 2px 10px rgba(0,0,0,.04);
+    }
+    .inq-table-card .card-header {
+        background: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+        padding: .85rem 1.3rem;
+        display: flex; align-items: center; justify-content: space-between;
+    }
+    #inq-table thead th {
+        background: #f8fafc;
+        font-size: .75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        color: #64748b;
+        border-bottom: 1px solid #e2e8f0;
+        white-space: nowrap;
+        padding: .75rem 1rem;
+    }
+    #inq-table tbody td {
+        vertical-align: middle;
+        padding: .75rem 1rem;
+        font-size: .88rem;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    #inq-table tbody tr:last-child td { border-bottom: none; }
+    #inq-table tbody tr:hover { background: #f9fafb; }
+
+    /* ── Status badges ───────────────────────────────── */
+    .badge-pending { background: #fff8e1; color: #b07d00; border: 1px solid #ffe082; padding: 4px 12px; border-radius: 50px; font-size: .75rem; font-weight: 700; }
+    .badge-replied { background: #e6f9f0; color: #1a8a4a; border: 1px solid #a3e6c3; padding: 4px 12px; border-radius: 50px; font-size: .75rem; font-weight: 700; }
+    .badge-closed  { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; padding: 4px 12px; border-radius: 50px; font-size: .75rem; font-weight: 700; }
+
+    /* ── Status select ───────────────────────────────── */
+    .status-select { font-size: .8rem; border-radius: 6px; border: 1px solid #e2e8f0; padding: 3px 8px; cursor: pointer; min-width: 100px; }
+    .status-select:focus { outline: none; border-color: #4f46e5; }
+
+    /* ── Action buttons ──────────────────────────────── */
+    .inq-actions { display: flex; gap: 5px; flex-wrap: wrap; }
+    .inq-btn { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: 7px; font-size: .8rem; font-weight: 600; text-decoration: none; border: 1px solid transparent; cursor: pointer; transition: all .2s; }
+    .inq-btn-view   { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+    .inq-btn-view:hover   { background: #dbeafe; }
+    .inq-btn-reply  { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+    .inq-btn-reply:hover  { background: #dcfce7; }
+    .inq-btn-delete { background: #fff1f2; color: #be123c; border-color: #fecdd3; }
+    .inq-btn-delete:hover { background: #ffe4e6; }
+
+    /* ── Pagination ──────────────────────────────────── */
+    .pagination .page-link { border-radius: 7px !important; margin: 0 2px; font-size: .85rem; }
+    .pagination .page-item.active .page-link { background: #4f46e5; border-color: #4f46e5; }
+
+    /* ── Reply modal ─────────────────────────────────── */
+    .reply-modal .modal-header { background: linear-gradient(135deg,#1e3a5f,#2563eb); }
+    .reply-modal .modal-footer { background: #f8fafc; border-top: 1px solid #e2e8f0; }
+</style>
+@endsection
+
 @section('content')
-    <div class="card bg-light-info shadow-none position-relative overflow-hidden" style="width: 1500px; left: -200px;">
-        <div class="card-body px-4 py-3">
-            <div class="row align-items-center">
-                <div class="col-9">
-                    <h4 class="fw-semibold mb-8">Service Inquiries</h4>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a class="text-muted " href="{{ route('dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item" aria-current="page">Inquiries</li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
-        </div>
+
+{{-- ── Breadcrumb ── --}}
+<div class="card bg-light-info shadow-none position-relative overflow-hidden mb-4">
+    <div class="card-body px-4 py-3">
+        <h4 class="fw-semibold mb-1"><i class="ti ti-mail me-2"></i>Service Inquiries</h4>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{{ route('dashboard') }}" class="text-muted">Dashboard</a></li>
+                <li class="breadcrumb-item active">Inquiries</li>
+            </ol>
+        </nav>
     </div>
+</div>
 
-    <section class="datatables" style="width: 1500px; margin-left: -200px;">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="mb-3 d-flex">
-                            <h5 class="mb-0">Recent Leads</h5>
-                        </div>
-                        <div class="table-responsive">
-                            <table id="items-table" class="table border table-striped table-bordered display text-nowrap">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Customer</th>
-                                        <th>Service</th>
-                                        <th>Contact</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($inquiries as $inquiry)
-                                        <tr>
-                                            <td>{{ $inquiry->created_at->format('M d, Y') }}</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div>
-                                                        <h6 class="fw-semibold mb-0">{{ $inquiry->name }}</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-light-primary text-primary fw-semibold">
-                                                    {{ $inquiry->service->name ?? 'N/A' }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <small class="d-block">{{ $inquiry->email }}</small>
-                                                <small class="text-muted">{{ $inquiry->phone }}</small>
-                                            </td>
-                                            <td>
-                                                <form action="{{ route('admin.inquiries.update', $inquiry->id) }}" method="POST">
-                                                    @csrf
-                                                    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
-                                                        <option value="pending" {{ $inquiry->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                                        <option value="replied" {{ $inquiry->status == 'replied' ? 'selected' : '' }}>Replied</option>
-                                                        <option value="closed" {{ $inquiry->status == 'closed' ? 'selected' : '' }}>Closed</option>
-                                                    </select>
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <div class="btn-group" role="group">
-                                                    <a href="{{ route('admin.inquiries.show', $inquiry->id) }}" class="btn btn-sm btn-info fw-semibold" style="border-radius: 6px; transition: all 0.3s ease; border: none; padding: 0.5rem 1rem; box-shadow: 0 2px 6px rgba(13, 110, 253, 0.15);" onmouseover="this.style.boxShadow='0 4px 12px rgba(13, 110, 253, 0.3)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.boxShadow='0 2px 6px rgba(13, 110, 253, 0.15)'; this.style.transform='translateY(0)';">
-                                                        <i class="bi bi-eye-fill"></i> View
-                                                    </a>
-                                                    <button class="btn btn-sm btn-primary fw-semibold" data-bs-toggle="modal" data-bs-target="#replyInquiry-{{ $inquiry->id }}" style="border-radius: 6px; transition: all 0.3s ease; border: none; padding: 0.5rem 1rem; box-shadow: 0 2px 6px rgba(13, 110, 253, 0.15); margin: 0 5px;" onmouseover="this.style.boxShadow='0 4px 12px rgba(13, 110, 253, 0.3)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.boxShadow='0 2px 6px rgba(13, 110, 253, 0.15)'; this.style.transform='translateY(0)';">
-                                                        <i class="bi bi-reply-fill"></i> Reply
-                                                    </button>
-                                                    <button type="button" class="btn btn-sm btn-danger fw-semibold" onclick="confirmDelete({{ $inquiry->id }})" style="border-radius: 6px; transition: all 0.3s ease; border: none; padding: 0.5rem 1rem; box-shadow: 0 2px 6px rgba(220, 53, 69, 0.15);" onmouseover="this.style.boxShadow='0 4px 12px rgba(220, 53, 69, 0.3)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.boxShadow='0 2px 6px rgba(220, 53, 69, 0.15)'; this.style.transform='translateY(0)';">
-                                                        <i class="bi bi-trash-fill"></i> Delete
-                                                    </button>
-                                                    <form id="deleteForm-{{ $inquiry->id }}" action="{{ route('admin.inquiries.destroy', $inquiry->id) }}" method="POST" style="display: none;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                    </form>
-                                                </div>
-
-                                                {{-- View Modal --}}
-                                                <div class="modal fade" id="viewInquiry-{{ $inquiry->id }}" tabindex="-1" role="dialog">
-                                                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                                                        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); overflow: hidden; transition: all 0.3s ease;">
-                                                            <div class="modal-header" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); border-radius: 16px 16px 0 0; padding: 2rem; border: none; box-shadow: 0 4px 20px rgba(30, 60, 114, 0.2);">
-                                                                <h5 class="modal-title fw-bold text-white" style="font-size: 1.5rem; letter-spacing: 0.5px; display: flex; align-items: center; gap: 10px;">
-                                                                    <span style="font-size: 1.8rem;">📋</span>
-                                                                    <span>Inquiry Details</span>
-                                                                </h5>
-                                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" style="filter: brightness(0.8);"></button>
-                                                            </div>
-                                                            <div class="modal-body text-wrap p-5" style="background: rgba(255,255,255,0.6); border-radius: 12px;">
-                                                                <div class="mb-4">
-                                                                    <p class="mb-3" style="font-weight: 700; color: #0d47a1; font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
-                                                                        <span style="font-size: 1.3rem;">💬</span>
-                                                                        <span>Message</span>
-                                                                    </p>
-                                                                    <div class="p-5 rounded-3 mb-4" style="background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%); border-left: 5px solid #1565c0; box-shadow: 0 4px 15px rgba(13, 71, 161, 0.08); transition: all 0.3s ease;">
-                                                                        <p class="mb-0" style="color: #1a237e; font-size: 1.05rem; line-height: 1.8; word-break: break-word;">{{ $inquiry->message ?? 'No message provided.' }}</p>
-                                                                    </div>
-                                                                </div>
-                                                                @if (!empty($inquiry->reply_history) && is_array($inquiry->reply_history))
-                                                                    <div>
-                                                                        <p class="mb-4" style="font-weight: 700; color: #0d47a1; font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
-                                                                            <span style="font-size: 1.3rem;">📧</span>
-                                                                            <span>Reply History</span>
-                                                                            <span class="badge bg-info text-white" style="margin-left: auto; font-size: 0.85rem;">{{ count($inquiry->reply_history) }}</span>
-                                                                        </p>
-                                                                        <div class="p-4 rounded-3" style="background-color: #f8f9fa; border: 2px solid #e8eef7; border-radius: 12px;">
-                                                                            @foreach ($inquiry->reply_history as $reply)
-                                                                                <div class="mb-4 pb-4" style="border-bottom: 1px dashed #d0d0d0;">
-                                                                                    <p class="mb-3"><small class="fw-semibold" style="font-size: 0.9rem; color: #5e5e5e; display: flex; align-items: center; gap: 6px;">
-                                                                        <span style="font-size: 1.1rem;">🕐</span>
-                                                                        <span>{{ \Carbon\Carbon::parse($reply['sent_at'] ?? now())->format('M d, Y · h:i A') }}</span>
-                                                                    </small></p>
-                                                                                    <div class="p-4 rounded-2" style="background: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%); border-left: 5px solid #4caf50; box-shadow: 0 2px 8px rgba(76, 175, 80, 0.1); transition: all 0.3s ease;">
-                                                                        <p class="mb-0" style="color: #1a1a1a; font-size: 0.95rem; line-height: 1.7; word-break: break-word;">{{ $reply['message'] ?? '' }}</p>
-                                                                    </div>
-                                                                </div>
-                                                            @endforeach
-                                                        </div>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                                {{-- Reply Modal --}}
-                                                <div class="modal fade" id="replyInquiry-{{ $inquiry->id }}" tabindex="-1" role="dialog">
-                                                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                                                        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); overflow: hidden; transition: all 0.3s ease;">
-                                                            <form action="{{ route('admin.inquiries.reply', $inquiry->id) }}" method="POST" id="replyForm-{{ $inquiry->id }}">
-                                                                @csrf
-                                                                <div class="modal-header" style="background: linear-gradient(135deg, #b71c1c 0%, #c62828 100%); border-radius: 16px 16px 0 0; padding: 2rem; border: none; box-shadow: 0 4px 20px rgba(183, 28, 28, 0.2);">
-                                                                    <h5 class="modal-title fw-bold text-white" style="font-size: 1.5rem; letter-spacing: 0.5px; display: flex; align-items: center; gap: 10px;">
-                                                                        <span style="font-size: 1.8rem;">📝</span>
-                                                                        <span>Reply to {{ $inquiry->name }}</span>
-                                                                    </h5>
-                                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" style="filter: brightness(0.8);"></button>
-                                                                </div>
-                                                                <div class="modal-body p-5" style="background: rgba(255,255,255,0.6); border-radius: 12px;">
-                                                                    <div class="mb-5">
-                                                                        <label class="form-label fw-bold mb-3" style="color: #d32f2f; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-                                                                            <span style="font-size: 1.3rem;">✍️</span>
-                                                                            <span>Reply Message <span class="text-danger">*</span></span>
-                                                                        </label>
-                                                                        <textarea name="reply_message" class="form-control" rows="7" required placeholder="Type your reply here..." style="border: 2px solid #e8eef7; border-radius: 12px; padding: 1.25rem; font-size: 0.95rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: all 0.3s ease; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;" onfocus="this.style.borderColor='#d32f2f'; this.style.boxShadow='0 4px 12px rgba(211, 47, 47, 0.1)';" onblur="this.style.borderColor='#e8eef7'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.05)';">{{ old('reply_message') }}</textarea>
-                                                                    </div>
-                                                                    <div class="p-5 rounded-3" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-left: 5px solid #ff9800; border-radius: 12px; box-shadow: 0 3px 10px rgba(255, 152, 0, 0.1);">
-                                                                        <p class="mb-3" style="color: #e65100; font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; margin: 0;">
-                                                                            <span style="font-size: 1.2rem;">📬</span>
-                                                                            <span><strong>To:</strong> <span style="color: #bf360c; font-weight: 700;">{{ $inquiry->email }}</span></span>
-                                                                        </p>
-                                                                        <p class="mb-0" style="color: #e65100; font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; margin: 0;">
-                                                                            <span style="font-size: 1.2rem;">🔧</span>
-                                                                            <span><strong>Service:</strong> <span style="color: #bf360c; font-weight: 700;">{{ $inquiry->service->name ?? 'N/A' }}</span></span>
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="modal-footer" style="background-color: #f8f9fa; border-top: 1px solid #e8eef7; padding: 1.5rem; border-radius: 0 0 16px 16px; gap: 10px;">
-                                                                    <button type="button" class="btn fw-semibold" data-bs-dismiss="modal" style="background-color: #757575; border: none; padding: 0.75rem 1.75rem; color: white; border-radius: 8px; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(117, 117, 117, 0.2);" onmouseover="this.style.backgroundColor='#616161'; this.style.boxShadow='0 4px 12px rgba(117, 117, 117, 0.3)';" onmouseout="this.style.backgroundColor='#757575'; this.style.boxShadow='0 2px 8px rgba(117, 117, 117, 0.2)';">Cancel</button>
-                                                                    <button type="submit" class="btn fw-semibold" style="background: linear-gradient(135deg, #388e3c 0%, #4caf50 100%); border: none; padding: 0.75rem 1.75rem; color: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3); transition: all 0.3s ease; font-size: 1rem;" onmouseover="this.style.boxShadow='0 6px 16px rgba(76, 175, 80, 0.4); transform: translateY(-2px);';" onmouseout="this.style.boxShadow='0 4px 12px rgba(76, 175, 80, 0.3); transform: translateY(0);';">✓ Send Reply</button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <div class="mt-3">
-                                {{ $inquiries->links() }}
-                            </div>
-                        </div>
+{{-- ── Stats row ── --}}
+<div class="row g-3 mb-4">
+    <div class="col-6 col-xl-3">
+        <div class="card mb-0">
+            <div class="card-body p-0">
+                <div class="inq-stat stat-total">
+                    <div class="stat-icon"><i class="ti ti-inbox"></i></div>
+                    <div>
+                        <div class="stat-num">{{ $stats['total'] }}</div>
+                        <div class="stat-lbl">Total</div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="card mb-0">
+            <div class="card-body p-0">
+                <div class="inq-stat stat-pending">
+                    <div class="stat-icon"><i class="ti ti-clock"></i></div>
+                    <div>
+                        <div class="stat-num">{{ $stats['pending'] }}</div>
+                        <div class="stat-lbl">Pending</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="card mb-0">
+            <div class="card-body p-0">
+                <div class="inq-stat stat-replied">
+                    <div class="stat-icon"><i class="ti ti-check"></i></div>
+                    <div>
+                        <div class="stat-num">{{ $stats['replied'] }}</div>
+                        <div class="stat-lbl">Replied</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="card mb-0">
+            <div class="card-body p-0">
+                <div class="inq-stat stat-closed">
+                    <div class="stat-icon"><i class="ti ti-circle-x"></i></div>
+                    <div>
+                        <div class="stat-num">{{ $stats['closed'] }}</div>
+                        <div class="stat-lbl">Closed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <style>
-        /* Custom styles for the inquiries page */
-        .table-responsive {
-            border: 1px solid #e8eef7;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
+{{-- ── Filter bar ── --}}
+<div class="filter-card">
+    <form method="GET" action="{{ route('admin.inquiries.index') }}" id="filterForm">
+        <div class="row g-2 align-items-end">
+            <div class="col-12 col-sm-6 col-lg-3">
+                <label class="form-label">Service</label>
+                <select name="service_id" class="form-select">
+                    <option value="">All Services</option>
+                    @foreach ($services as $svc)
+                        <option value="{{ $svc->id }}" {{ request('service_id') == $svc->id ? 'selected' : '' }}>
+                            {{ $svc->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-6 col-sm-4 col-lg-2">
+                <label class="form-label">Date From</label>
+                <input type="date" name="date_from" class="form-control" value="{{ request('date_from') }}">
+            </div>
+            <div class="col-6 col-sm-4 col-lg-2">
+                <label class="form-label">Date To</label>
+                <input type="date" name="date_to" class="form-control" value="{{ request('date_to') }}">
+            </div>
+            <div class="col-12 col-sm-4 col-lg-2">
+                <label class="form-label">Status</label>
+                <select name="status" class="form-select">
+                    <option value="">All Statuses</option>
+                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="replied" {{ request('status') == 'replied' ? 'selected' : '' }}>Replied</option>
+                    <option value="closed"  {{ request('status') == 'closed'  ? 'selected' : '' }}>Closed</option>
+                </select>
+            </div>
+            <div class="col-12 col-lg-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-grow-1">
+                    <i class="ti ti-filter me-1"></i>Apply
+                </button>
+                <a href="{{ route('admin.inquiries.index') }}" class="btn btn-outline-secondary">
+                    <i class="ti ti-x"></i>
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
 
-        .table thead th {
-            background-color: #f5f7fa;
-            color: #333;
-            font-weight: 600;
-            border-bottom: 2px solid #e8eef7;
-        }
+{{-- ── Table card ── --}}
+<div class="inq-table-card">
+    <div class="card-header">
+        <h6 class="fw-semibold mb-0">
+            Inquiries
+            <span class="badge bg-primary ms-1" style="font-size:.75rem;">{{ $inquiries->total() }}</span>
+            @if(request()->hasAny(['service_id','date_from','date_to','status']))
+                <span class="badge bg-warning text-dark ms-1" style="font-size:.72rem;">Filtered</span>
+            @endif
+        </h6>
+        <span class="text-muted" style="font-size:.82rem;">
+            Showing {{ $inquiries->firstItem() ?? 0 }}–{{ $inquiries->lastItem() ?? 0 }} of {{ $inquiries->total() }}
+        </span>
+    </div>
 
-        .table tbody tr:hover {
-            background-color: #f9f9f9;
-        }
+    <div class="table-responsive">
+        <table id="inq-table" class="table mb-0">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>Service</th>
+                    <th>Contact</th>
+                    <th>Status</th>
+                    <th style="width:200px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($inquiries as $inquiry)
+                    @php $st = $inquiry->status ?: 'pending'; @endphp
+                    <tr>
+                        <td class="text-nowrap text-muted" style="font-size:.82rem;">
+                            {{ $inquiry->created_at->format('M d, Y') }}<br>
+                            <span style="font-size:.75rem;">{{ $inquiry->created_at->format('h:i A') }}</span>
+                        </td>
+                        <td>
+                            <span class="fw-semibold d-block">{{ $inquiry->name }}</span>
+                            @if($inquiry->meeting_at)
+                                <small class="text-info"><i class="ti ti-calendar-event" style="font-size:.75rem;"></i> Meeting requested</small>
+                            @endif
+                        </td>
+                        <td>
+                            @if($inquiry->service)
+                                <span class="badge bg-light-primary text-primary fw-semibold" style="font-size:.78rem;">
+                                    {{ $inquiry->service->name }}
+                                </span>
+                            @else
+                                <span class="text-muted" style="font-size:.82rem;">General</span>
+                            @endif
+                        </td>
+                        <td>
+                            <a href="mailto:{{ $inquiry->email }}" class="d-block text-dark" style="font-size:.85rem;">{{ $inquiry->email }}</a>
+                            <a href="tel:{{ preg_replace('/[^0-9+]/', '', $inquiry->phone) }}" class="text-muted" style="font-size:.82rem;">{{ $inquiry->phone }}</a>
+                        </td>
+                        <td>
+                            <form action="{{ route('admin.inquiries.update', $inquiry->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                <select name="status" class="status-select" onchange="this.form.submit()">
+                                    <option value="pending" {{ $st == 'pending' ? 'selected' : '' }}>Pending</option>
+                                    <option value="replied" {{ $st == 'replied' ? 'selected' : '' }}>Replied</option>
+                                    <option value="closed"  {{ $st == 'closed'  ? 'selected' : '' }}>Closed</option>
+                                </select>
+                            </form>
+                        </td>
+                        <td>
+                            <div class="inq-actions">
+                                <a href="{{ route('admin.inquiries.show', $inquiry->id) }}" class="inq-btn inq-btn-view">
+                                    <i class="ti ti-eye"></i> View
+                                </a>
+                                <button class="inq-btn inq-btn-reply" data-bs-toggle="modal" data-bs-target="#replyModal-{{ $inquiry->id }}">
+                                    <i class="ti ti-send"></i> Reply
+                                </button>
+                                <button class="inq-btn inq-btn-delete" onclick="confirmDelete({{ $inquiry->id }})">
+                                    <i class="ti ti-trash"></i>
+                                </button>
+                                <form id="deleteForm-{{ $inquiry->id }}" action="{{ route('admin.inquiries.destroy', $inquiry->id) }}" method="POST" class="d-none">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
 
-        .customizer-btn{
-            
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1050;
-            background-color: #0d47a1;
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(13, 71, 161, 0.3);
-            transition: all 0.3s ease;
-        }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        // SweetAlert2 Delete Confirmation
-        function confirmDelete(inquiryId) {
-            Swal.fire({
-                title: 'Delete Inquiry',
-                html: '<p style="font-size: 1rem; color: #555;">Are you sure you want to delete this inquiry? <br><span style="color: #d32f2f; font-weight: 600;">This action cannot be undone.</span></p>',
-                icon: 'warning',
-                iconColor: '#d32f2f',
-                showCancelButton: true,
-                confirmButtonColor: '#d32f2f',
-                cancelButtonColor: '#757575',
-                confirmButtonText: '✓ Yes, Delete',
-                cancelButtonText: 'Cancel',
-                buttonsStyling: true,
-                allowOutsideClick: false,
-                didOpen: (modal) => {
-                    modal.style.borderRadius = '16px';
-                    const confirmBtn = modal.querySelector('.swal2-confirm');
-                    const cancelBtn = modal.querySelector('.swal2-cancel');
-                    confirmBtn.style.borderRadius = '8px';
-                    cancelBtn.style.borderRadius = '8px';
-                    confirmBtn.style.padding = '0.75rem 1.5rem';
-                    cancelBtn.style.padding = '0.75rem 1.5rem';
-                    confirmBtn.style.fontSize = '0.95rem';
-                    cancelBtn.style.fontSize = '0.95rem';
-                    confirmBtn.style.fontWeight = '600';
-                    cancelBtn.style.fontWeight = '600';
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Show loading state
-                    Swal.fire({
-                        title: 'Deleting...',
-                        html: '<div class="spinner-border text-danger" role="status"><span class="visually-hidden">Loading...</span></div>',
-                        icon: 'info',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        didOpen: (modal) => {
-                            modal.style.borderRadius = '16px';
-                        }
-                    });
-                    
-                    document.getElementById('deleteForm-' + inquiryId).submit();
-                }
-            });
-        }
+                    {{-- Reply modal --}}
+                    <div class="modal fade reply-modal" id="replyModal-{{ $inquiry->id }}" tabindex="-1">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content border-0 shadow-lg" style="border-radius:14px;overflow:hidden;">
+                                <form action="{{ route('admin.inquiries.reply', $inquiry->id) }}" method="POST">
+                                    @csrf
+                                    <div class="modal-header border-0 py-3 px-4">
+                                        <h5 class="modal-title text-white fw-semibold">
+                                            <i class="ti ti-send me-2"></i>Reply to {{ $inquiry->name }}
+                                        </h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body px-4 py-3">
+                                        <div class="p-3 rounded-3 mb-3" style="background:#f8fafc;border:1px solid #e2e8f0;font-size:.88rem;">
+                                            <span class="text-muted">To:</span> <strong>{{ $inquiry->email }}</strong>
+                                            @if($inquiry->service)
+                                                &nbsp;·&nbsp; <span class="text-muted">Service:</span> <strong>{{ $inquiry->service->name }}</strong>
+                                            @endif
+                                        </div>
+                                        <label class="form-label fw-semibold" style="font-size:.85rem;">Message <span class="text-danger">*</span></label>
+                                        <textarea name="reply_message" class="form-control" rows="7" required
+                                            placeholder="Type your reply here..."
+                                            style="border-radius:10px;font-size:.9rem;resize:vertical;"></textarea>
+                                    </div>
+                                    <div class="modal-footer px-4 py-3">
+                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-success px-4">
+                                            <i class="ti ti-send me-1"></i>Send Reply
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
 
-        // Form submission success message (if needed from server)
-        @if(session('success'))
-            Swal.fire({
-                title: 'Success!',
-                text: '{{ session('success') }}',
-                icon: 'success',
-                iconColor: '#4caf50',
-                confirmButtonColor: '#4caf50',
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (modal) => {
-                    modal.style.borderRadius = '16px';
-                    const confirmBtn = modal.querySelector('.swal2-confirm');
-                    confirmBtn.style.borderRadius = '8px';
-                    confirmBtn.style.padding = '0.75rem 1.5rem';
-                    confirmBtn.style.fontSize = '0.95rem';
-                    confirmBtn.style.fontWeight = '600';
-                }
-            });
-        @endif
+                @empty
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="ti ti-inbox-off" style="font-size:2.5rem;opacity:.3;display:block;margin-bottom:.5rem;"></i>
+                            No inquiries found.
+                            @if(request()->hasAny(['service_id','date_from','date_to','status']))
+                                <a href="{{ route('admin.inquiries.index') }}" class="d-block mt-2 small">Clear filters</a>
+                            @endif
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 
-        // Form submission error message (if needed from server)
-        @if(session('error'))
-            Swal.fire({
-                title: 'Error!',
-                text: '{{ session('error') }}',
-                icon: 'error',
-                iconColor: '#d32f2f',
-                confirmButtonColor: '#d32f2f',
-                didOpen: (modal) => {
-                    modal.style.borderRadius = '16px';
-                    const confirmBtn = modal.querySelector('.swal2-confirm');
-                    confirmBtn.style.borderRadius = '8px';
-                    confirmBtn.style.padding = '0.75rem 1.5rem';
-                    confirmBtn.style.fontSize = '0.95rem';
-                    confirmBtn.style.fontWeight = '600';
-                }
-            });
-        @endif
+    @if($inquiries->hasPages())
+        <div class="px-4 py-3 border-top">
+            {{ $inquiries->links() }}
+        </div>
+    @endif
+</div>
 
-        // Modal animation on show
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.addEventListener('show.bs.modal', function() {
-                this.style.animation = 'fadeInDown 0.3s ease';
-            });
-        });
+@endsection
 
-        // Add fade in animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fadeInDown {
-                from {
-                    opacity: 0;
-                    transform: translateY(-30px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
+@section('custom_js')
+<script>
+function confirmDelete(id) {
+    Swal.fire({
+        title: 'Delete Inquiry?',
+        text: 'This action cannot be undone.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#be123c',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Yes, Delete',
+    }).then(result => {
+        if (result.isConfirmed) document.getElementById('deleteForm-' + id).submit();
+    });
+}
 
-            .modal-content {
-                animation: fadeInDown 0.3s ease;
-            }
+@if(session('success'))
+    Toast.fire({ icon: 'success', title: @json(session('success')) });
+@endif
 
-            textarea.form-control:focus {
-                border-color: #d32f2f !important;
-                box-shadow: 0 0 0 0.2rem rgba(211, 47, 47, 0.25) !important;
-            }
-
-            .btn {
-                transition: all 0.3s ease !important;
-                position: relative;
-            }
-
-            .btn:active {
-                transform: scale(0.95) !important;
-            }
-
-            @media (max-width: 576px) {
-                .modal-lg {
-                    max-width: 95vw !important;
-                }
-
-                .modal-body {
-                    padding: 1.5rem !important;
-                }
-
-                .modal-header {
-                    padding: 1.25rem !important;
-                }
-
-                .modal-title {
-                    font-size: 1.2rem !important;
-                }
-
-                .btn-group {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 5px;
-                }
-
-                .btn-group .btn {
-                    flex: 1;
-                    min-width: 70px;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    </script>
+@if(session('error'))
+    Toast.fire({ icon: 'error', title: @json(session('error')) });
+@endif
+</script>
 @endsection
