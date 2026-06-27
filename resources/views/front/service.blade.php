@@ -1,6 +1,6 @@
 @extends('front/layout-2')
 @section('custom_css')
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.min.css') }}?v=3">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.min.css') }}?v=4">
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-detail.min.css') }}?v=5">
     {{-- Project Process section styles (shared with the category page) --}}
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-category.min.css') }}?v=3">
@@ -439,7 +439,11 @@ function toggleTransformationDesc() {
                                         $_waNum    = ($lAgent && !empty($lAgent->whatsapp))
                                             ? preg_replace('/[^0-9]/', '', $lAgent->whatsapp)
                                             : (\App\Models\AppSetting::where('key','whatsapp_default_number')->value('value') ?? '97142724064');
-                                        $pageWaLink = $_waNum ? 'https://wa.me/' . $_waNum . '?text=' . rawurlencode("Hi, I'd like to enquire about Alpha Health Group's services.") : null;
+                                        $_waService = trim(strip_tags($service->name ?? ''));
+                                        $_waMsg     = $_waService !== ''
+                                            ? "Hi, I'd like to enquire about \"{$_waService}\" — " . url()->current()
+                                            : "Hi, I'd like to enquire about Alpha Health Group's services. — " . url()->current();
+                                        $pageWaLink = $_waNum ? 'https://wa.me/' . $_waNum . '?text=' . rawurlencode($_waMsg) : null;
                                         $showWa    = (!$lAgent || $lAgent->hasMode('whatsapp')) && !empty($pageWaLink);
                                     @endphp
 

@@ -63,6 +63,11 @@
     if ($targetPhone === '') {
         $targetPhone = preg_replace('/\D+/', '', (string) $defaultPhone) ?: '97158128418';
     }
+
+    // C. Page context for WhatsApp messages — on a leader-bearing detail page we know the
+    //    specific service/category/package; everywhere else this stays blank.
+    $waPageName = $leader ? trim(strip_tags((string) ($leader->name ?? ''))) : '';
+    $waPageUrl  = url()->current();
 @endphp
 
 <!-- VIRTUAL ASSISTANT WIDGET -->
@@ -269,10 +274,19 @@
         input.value = '';
 
         const typing = showTyping();
-        
-        // Prepare WhatsApp URL
+
+        // Prepare WhatsApp URL — append the current page's name and link so the
+        // enquiry lands with context (e.g. the specific service the visitor is viewing).
         const phoneNumber = "{{ $targetPhone }}";
-        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(text)}`;
+        const pageName    = @json($waPageName);
+        const pageUrl     = @json($waPageUrl);
+        let   waText      = text;
+        if (pageName) {
+            waText += `\n\nRegarding: ${pageName}\n${pageUrl}`;
+        } else {
+            waText += `\n\n${pageUrl}`;
+        }
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(waText)}`;
 
         setTimeout(function () {
             typing.remove();

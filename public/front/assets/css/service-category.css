@@ -1343,6 +1343,26 @@
         gap: 32px;
     }
 
+    /* Let both grid tracks shrink below their content width. Without this the
+       card strip's intrinsic width (cards in a row) forces the whole grid —
+       and the text column with it — wider than the viewport, clipping the copy
+       on the right and pushing the last card off-screen. */
+    .intro-content,
+    .intro-visual {
+        min-width: 0;
+    }
+
+    /* Keep rich-text overview (and any long words / images) inside the column */
+    .intro-content {
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+    }
+    .lead-text img,
+    .lead-text table {
+        max-width: 100%;
+        height: auto;
+    }
+
     .lead-text {
         max-width: 100%;
         font-size: 1rem;
@@ -1363,15 +1383,25 @@
         flex-wrap: nowrap;
         gap: 12px;
         animation: none !important;
+        width: 100%;
+        max-width: 100%;
         overflow-x: auto;
         overflow-y: hidden;
         -webkit-overflow-scrolling: touch;
         scroll-snap-type: x mandatory;
+        scroll-padding: 0 16px;
         padding-bottom: 12px;     /* space for scrollbar on Android */
         /* hide scrollbar visually */
         scrollbar-width: none;
     }
     .scroll-track::-webkit-scrollbar { display: none; }
+    /* Trailing spacer so the final card can scroll fully clear of the edge
+       (padding-right on a flex scroll container is dropped at scroll-end in
+       several browsers, an ::after item is reliable). */
+    .scroll-track::after {
+        content: '';
+        flex: 0 0 4px;
+    }
 
     .feature-card {
         flex: 0 0 74vw;           /* ~¾ viewport, shows peek of next card */
