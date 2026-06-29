@@ -60,7 +60,7 @@
         <!-- Hero Section -->
         <section class="service-hero">
             <div class="hero-background"
-                style="background-image: linear-gradient(to right, rgba(0, 0, 0, 85%), rgba(202, 202, 202, 0.363)),url('{{ $service->hero_image ? \App\Support\Img::thumb('uploads/service_images/' . $service->hero_image, 1600) : (isset($service->images[0]) ? \App\Support\Img::thumb('uploads/service_images/' . $service->images[0]->image, 1600) : asset('public/front/assets/img/hero/service-details-bg.jpg')) }}');">
+                style="background-image: linear-gradient(to right, rgba(0, 0, 0, 25%), rgba(202, 202, 202, 0.163)),url('{{ $service->hero_image ? \App\Support\Img::thumb('uploads/service_images/' . $service->hero_image, 1600) : (isset($service->images[0]) ? \App\Support\Img::thumb('uploads/service_images/' . $service->images[0]->image, 1600) : asset('public/front/assets/img/hero/service-details-bg.jpg')) }}');">
             </div>
 
             <div class="container">
