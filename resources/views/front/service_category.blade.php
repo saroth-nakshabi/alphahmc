@@ -2,6 +2,20 @@
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.min.css') }}?v=4">
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-category.min.css') }}?v=8">
+    <style>
+        /* Internal/content links blend with body text — no color change, no underline. */
+        .hero-desc-wrapper a, .lead-text a, .quote-text a,
+        .sdb-header a, .sdb-desc a, .large-info a, .transformation-desc a,
+        .help-text-block a, .process-header a, .feature-card p a,
+        .process-card p a, .faq-body a,
+        .hero-desc-wrapper a:hover, .lead-text a:hover, .quote-text a:hover,
+        .sdb-header a:hover, .sdb-desc a:hover, .large-info a:hover, .transformation-desc a:hover,
+        .help-text-block a:hover, .process-header a:hover, .feature-card p a:hover,
+        .process-card p a:hover, .faq-body a:hover {
+            color: inherit;
+            text-decoration: none;
+        }
+    </style>
 @endsection
 @push('page_title')
     {!! $service->name !!}
@@ -46,7 +60,7 @@
                     <div class="col-lg-10">
                         <h1 class="hero-title">{{ $service->name }}</h1>
                         <div class="hero-desc-wrapper">
-                            {!! $service->description !!}
+                            {!! \App\Support\Html::fixLinks($service->description) !!}
                         </div>
                         <div class="hero-actions">
                             <button type="button"
@@ -107,7 +121,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
         <div class="quote-inner">
             {{-- <span class="quote-eyebrow">Our Approach</span> --}}
             <div class="quote-text">
-                {!! $service->overview !!}
+                {!! \App\Support\Html::fixLinks($service->overview) !!}
             </div>
             <div class="quote-divider"></div>
         </div>
@@ -129,7 +143,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
           <span class="primary-text">Preparation is everything.</span>
         </h2> --}}
         <div class="lead-text">
-          {!! $service->overview !!}
+          {!! \App\Support\Html::fixLinks($service->overview) !!}
         </div>
         
         {{-- <div class="stats-mini">
@@ -192,7 +206,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
                         <span class="card-num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
                         <h4>{{ $header }}</h4>
                       </div>
-                      <p>{!! $coreDescriptions[$index] ?? '' !!}</p>
+                      <p>{!! \App\Support\Html::fixLinks($coreDescriptions[$index] ?? '') !!}</p>
                     </div>
                 @endforeach
                 @if($coreSlider)
@@ -202,7 +216,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
                             <span class="card-num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
                             <h4>{{ $header }}</h4>
                           </div>
-                          <p>{!! $coreDescriptions[$index] ?? '' !!}</p>
+                          <p>{!! \App\Support\Html::fixLinks($coreDescriptions[$index] ?? '') !!}</p>
                         </div>
                     @endforeach
                 @endif
@@ -475,7 +489,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
       <div class="process-header" data-aos="fade-up">
         <span class="process-eyebrow">Our Process</span>
         @if(!empty($service->process_intro))
-            {!! $service->process_intro !!}
+            {!! \App\Support\Html::fixLinks($service->process_intro) !!}
         @else
             <h2 class="process-title">From first call to <em>license</em> in hand</h2>
             <p class="process-subtitle">A meticulously structured {{ $processCount }}-phase engagement model designed for absolute precision and regulatory speed.</p>
@@ -491,7 +505,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
               <div class="step-icon"></div>
             </div>
             <h4>{{ $processHeaders[$i] ?? 'Process Step' }}</h4>
-            <p>{!! $processDescriptions[$i] ?? '' !!}</p>
+            <p>{!! \App\Support\Html::fixLinks($processDescriptions[$i] ?? '') !!}</p>
             @php $stepService = !empty($processServiceIds[$i]) ? ($processServiceMap[$processServiceIds[$i]] ?? null) : null; @endphp
             @if ($stepService)
               <a href="{{ route('front.service', $stepService->slug) }}" class="process-svc">
@@ -752,7 +766,7 @@ function toggleTransformationDesc() {
                             {{-- <h4>{{ $service->name }} solution</h4> --}}
                             @if($service->info_four && trim($service->info_four) != '')
                                 <div class="mt-4">
-                                    {!! $service->info_four !!}
+                                    {!! \App\Support\Html::fixLinks($service->info_four) !!}
                                 </div>
                             @endif
                             <button type="button" class="help-enquiry-btn" data-bs-toggle="modal"
@@ -842,7 +856,7 @@ function toggleTransformationDesc() {
                                 </button>
                                 <div class="faq-content">
                                     <div class="faq-body">
-                                        {!! $faq->faq_answer !!}
+                                        {!! \App\Support\Html::fixLinks($faq->faq_answer) !!}
                                     </div>
                                 </div>
                             </div>

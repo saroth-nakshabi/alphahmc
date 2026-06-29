@@ -164,6 +164,14 @@
         margin-bottom: 2rem;
     }
 
+    /* Internal/content links blend with body text — no color change, no underline. */
+    .article-body-text a,
+    .article-body-text a:hover,
+    .article-body-text a:focus {
+        color: inherit;
+        text-decoration: none;
+    }
+
     /* GRID SECTION - OUR LATEST THINKING */
     .thinking-grid-section {
         padding: 120px 0;
@@ -348,7 +356,7 @@
             </div>
 
             <div class="article-body-text">
-                {!! $blog->content !!}
+                {!! \App\Support\Html::fixLinks($blog->content) !!}
             </div>
         </div>
     </article>

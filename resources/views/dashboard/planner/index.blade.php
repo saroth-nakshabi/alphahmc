@@ -211,7 +211,7 @@
         </div>
     </div>
 
-    <div class="mt-3">{{ $sessions->links() }}</div>
+    <div class="mt-3">{{ $sessions->links('partials.pagination-numbered') }}</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

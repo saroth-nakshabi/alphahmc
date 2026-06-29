@@ -48,6 +48,10 @@ class AdminInquiryController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'status' => 'required|in:pending,replied,closed,spam,assigned_hfl,assigned_hpl',
+        ]);
+
         $inquiry = Inquiry::findOrFail($id);
         $inquiry->update(['status' => $request->status]);
         return back()->with('success', 'Status updated.');

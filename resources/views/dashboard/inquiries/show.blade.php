@@ -16,6 +16,9 @@
         .st-pending { background:#fff8e1; color:#b07d00; border:1px solid #ffe082; }
         .st-replied { background:#e6f9f0; color:#1a8a4a; border:1px solid #a3e6c3; }
         .st-closed  { background:#f1f5f9; color:#64748b; border:1px solid #e2e8f0; }
+        .st-spam    { background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; }
+        .st-assigned_hfl { background:#ede9fe; color:#6d28d9; border:1px solid #ddd6fe; }
+        .st-assigned_hpl { background:#cffafe; color:#0e7490; border:1px solid #a5f3fc; }
         .inq-actions { display:flex; gap:10px; flex-wrap:wrap; }
         .inq-contact-btns { display:flex; gap:10px; flex-wrap:wrap; margin-top:6px; }
         .inq-contact-btns a { display:inline-flex; align-items:center; gap:7px; padding:9px 16px; border-radius:8px; font-size:.85rem; font-weight:600; text-decoration:none; }
@@ -53,8 +56,19 @@
             <div class="inq-card">
                 <div class="inq-head">
                     <h5 class="mb-0 fw-semibold">Lead Details</h5>
-                    @php $st = $inquiry->status ?: 'pending'; @endphp
-                    <span class="inq-status-badge st-{{ $st }}">{{ $st }}</span>
+                    @php
+                        $st = $inquiry->status ?: 'pending';
+                        $statusLabels = [
+                            'pending'      => 'Pending',
+                            'replied'      => 'Replied',
+                            'closed'       => 'Closed',
+                            'spam'         => 'Spam',
+                            'assigned_hfl' => 'Assigned: HFL Group',
+                            'assigned_hpl' => 'Assigned: HPL Team',
+                        ];
+                        $stLabel = $statusLabels[$st] ?? ucfirst($st);
+                    @endphp
+                    <span class="inq-status-badge st-{{ $st }}" style="text-transform:none;">{{ $stLabel }}</span>
                 </div>
                 <div class="inq-body">
                     <div class="inq-row">
@@ -126,6 +140,9 @@
                             <option value="pending" {{ $st == 'pending' ? 'selected' : '' }}>Pending</option>
                             <option value="replied" {{ $st == 'replied' ? 'selected' : '' }}>Replied</option>
                             <option value="closed"  {{ $st == 'closed'  ? 'selected' : '' }}>Closed</option>
+                            <option value="spam"    {{ $st == 'spam'    ? 'selected' : '' }}>Spam</option>
+                            <option value="assigned_hfl" {{ $st == 'assigned_hfl' ? 'selected' : '' }}>Assigned: HFL Group</option>
+                            <option value="assigned_hpl" {{ $st == 'assigned_hpl' ? 'selected' : '' }}>Assigned: HPL Team</option>
                         </select>
                     </form>
 

@@ -385,6 +385,9 @@
                     selector: selector,
                     plugins: 'code searchreplace autolink directionality visualblocks link media table charmap nonbreaking anchor advlist lists wordcount fullscreen',
                     toolbar: 'undo redo | blocks | bold italic underline forecolor backcolor | link | alignleft aligncenter alignright | bullist numlist | fullscreen code',
+                    // Keep links exactly as entered — don't rewrite absolute internal links into broken relative ones.
+                    relative_urls: false,
+                    convert_urls: false,
                     menubar: true,
                     height: 240,
                     automatic_uploads: true,

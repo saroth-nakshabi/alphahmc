@@ -596,6 +596,9 @@
                     selector: selector,
                     plugins: 'code searchreplace autolink directionality visualblocks link media codesample table charmap nonbreaking anchor insertdatetime advlist lists wordcount help emoticons autosave fullscreen',
                     toolbar: 'code undo redo | blocks fontfamily fontsize | bold italic underline forecolor backcolor | link | alignleft aligncenter alignright alignjustify | bullist numlist | fullscreen',
+                    // Keep links exactly as entered — don't rewrite absolute internal links into broken relative ones.
+                    relative_urls: false,
+                    convert_urls: false,
                     menubar: true,
                     height: 240,
                     automatic_uploads: true,

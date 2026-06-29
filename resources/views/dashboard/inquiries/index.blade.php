@@ -93,6 +93,8 @@
     .badge-replied { background: #e6f9f0; color: #1a8a4a; border: 1px solid #a3e6c3; padding: 4px 12px; border-radius: 50px; font-size: .75rem; font-weight: 700; }
     .badge-closed  { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; padding: 4px 12px; border-radius: 50px; font-size: .75rem; font-weight: 700; }
     .badge-spam    { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; padding: 4px 12px; border-radius: 50px; font-size: .75rem; font-weight: 700; }
+    .badge-assigned{ background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; padding: 4px 12px; border-radius: 50px; font-size: .75rem; font-weight: 700; }
+    .badge-assigned-hpl{ background: #cffafe; color: #0e7490; border: 1px solid #a5f3fc; padding: 4px 12px; border-radius: 50px; font-size: .75rem; font-weight: 700; }
 
     /* ── Status select ───────────────────────────────── */
     .status-select { font-size: .8rem; border-radius: 6px; border: 1px solid #e2e8f0; padding: 3px 8px; cursor: pointer; min-width: 100px; }
@@ -235,6 +237,8 @@
                     <option value="replied" {{ request('status') == 'replied' ? 'selected' : '' }}>Replied</option>
                     <option value="closed"  {{ request('status') == 'closed'  ? 'selected' : '' }}>Closed</option>
                     <option value="spam"    {{ request('status') == 'spam'    ? 'selected' : '' }}>Spam</option>
+                    <option value="assigned_hfl" {{ request('status') == 'assigned_hfl' ? 'selected' : '' }}>Assigned: HFL Group</option>
+                    <option value="assigned_hpl" {{ request('status') == 'assigned_hpl' ? 'selected' : '' }}>Assigned: HPL Team</option>
                 </select>
             </div>
             <div class="col-12 col-lg-3 d-flex gap-2">
@@ -311,10 +315,16 @@
                                     <option value="replied" {{ $st == 'replied' ? 'selected' : '' }}>Replied</option>
                                     <option value="closed"  {{ $st == 'closed'  ? 'selected' : '' }}>Closed</option>
                                     <option value="spam"    {{ $st == 'spam'    ? 'selected' : '' }}>Spam</option>
+                                    <option value="assigned_hfl" {{ $st == 'assigned_hfl' ? 'selected' : '' }}>Assigned: HFL Group</option>
+                                    <option value="assigned_hpl" {{ $st == 'assigned_hpl' ? 'selected' : '' }}>Assigned: HPL Team</option>
                                 </select>
                             </form>
                             @if($st === 'spam')
                                 <span class="badge-spam d-block mt-1" style="display:inline-block;font-size:.72rem;">&#9888; Flagged</span>
+                            @elseif($st === 'assigned_hfl')
+                                <span class="badge-assigned d-block mt-1" style="display:inline-block;font-size:.72rem;">&#10140; HFL Sales</span>
+                            @elseif($st === 'assigned_hpl')
+                                <span class="badge-assigned-hpl d-block mt-1" style="display:inline-block;font-size:.72rem;">&#10140; HPL Team</span>
                             @endif
                         </td>
                         <td>
@@ -388,7 +398,7 @@
 
     @if($inquiries->hasPages())
         <div class="px-4 py-3 border-top">
-            {{ $inquiries->links() }}
+            {{ $inquiries->links('partials.pagination-numbered') }}
         </div>
     @endif
 </div>

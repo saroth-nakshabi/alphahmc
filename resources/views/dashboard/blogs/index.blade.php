@@ -411,6 +411,10 @@
             menubar: false,
             branding: false,
             promotion: false,
+            // Keep links exactly as entered — do NOT rewrite absolute internal
+            // links into relative ones (that produced /blog_single/services/... ).
+            relative_urls: false,
+            convert_urls: false,
             image_title: true,
             automatic_uploads: true,
             images_upload_url: '/upload-image',

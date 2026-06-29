@@ -19,6 +19,19 @@
             line-height: inherit !important;
         }
         .MsoNormal { margin-bottom: 1rem !important; }
+
+        /* Internal/content links blend with body text — no color change, no underline. */
+        .hero-desc-wrapper a, .lead-text a, .quote-text a,
+        .sdb-header a, .sdb-desc a, .large-info a, .transformation-desc a,
+        .help-text-block a, .process-header a, .feature-card p a,
+        .process-card p a, .faq-body a,
+        .hero-desc-wrapper a:hover, .lead-text a:hover, .quote-text a:hover,
+        .sdb-header a:hover, .sdb-desc a:hover, .large-info a:hover, .transformation-desc a:hover,
+        .help-text-block a:hover, .process-header a:hover, .feature-card p a:hover,
+        .process-card p a:hover, .faq-body a:hover {
+            color: inherit;
+            text-decoration: none;
+        }
     </style>
 @endsection
 @push('page_title')
@@ -68,7 +81,7 @@
                     <div class="col-lg-10">
                         <h1 class="hero-title">{{ $service->name }}</h1>
                         <div class="hero-desc-wrapper">
-                            {!! $service->content !!}
+                            {!! \App\Support\Html::fixLinks($service->content) !!}
                         </div>
                         <div class="hero-actions">
                             <button type="button"
@@ -129,7 +142,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
         <div class="quote-inner">
             {{-- <span class="quote-eyebrow">Our Approach</span> --}}
             <div class="quote-text">
-                {!! $service->overview !!}
+                {!! \App\Support\Html::fixLinks($service->overview) !!}
             </div>
             <div class="quote-divider"></div>
         </div>
@@ -142,7 +155,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
                 <div class="row">
                     <div class="col-lg-4" data-aos="fade-right">
                         <div class="large-info">
-                            {!! $service->info_one !!}
+                            {!! \App\Support\Html::fixLinks($service->info_one) !!}
                         </div>
                         {{-- Left Read more removed as requested --}}
                         <p class="content-updated-meta" style="margin-top:18px;font-size:0.85rem;color:#6b7280;">
@@ -152,7 +165,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
                     <div class="col-lg-7 offset-lg-1" data-aos="fade-left">
                         <div class="transformation-desc-wrapper" id="transformation-desc-wrapper">
                             <div class="transformation-desc">
-                                {!! $service->info_two !!}
+                                {!! \App\Support\Html::fixLinks($service->info_two) !!}
                             </div>
                         </div>
                         <button class="transformation-read-more" id="transformation-toggle"
@@ -397,7 +410,7 @@ function toggleTransformationDesc() {
                         <div class="help-text-block">
                             {{-- <h4>{{ $service->name }} solution</h4> --}}
                             @if($service->info_three && trim($service->info_three) != '')
-                                {!! $service->info_three !!}
+                                {!! \App\Support\Html::fixLinks($service->info_three) !!}
                             @else
                                 <p>Our multidisciplinary team combines architectural excellence with deep clinical insights to
                                     deliver projects that are not just buildings, but platforms for healing.</p>
@@ -405,7 +418,7 @@ function toggleTransformationDesc() {
 
                             @if($service->info_four && trim($service->info_four) != '')
                                 <div class="mt-4">
-                                    {!! $service->info_four !!}
+                                    {!! \App\Support\Html::fixLinks($service->info_four) !!}
                                 </div>
                             @endif
                             <button type="button" class="help-enquiry-btn" data-bs-toggle="modal"
@@ -494,7 +507,7 @@ function toggleTransformationDesc() {
               <div class="process-header" data-aos="fade-up">
                 <span class="process-eyebrow">Our Process</span>
                 @if(!empty($service->process_intro))
-                    {!! $service->process_intro !!}
+                    {!! \App\Support\Html::fixLinks($service->process_intro) !!}
                 @else
                     <h2 class="process-title">How we deliver <em>{{ $service->name }}</em></h2>
                     <p class="process-subtitle">A structured {{ $processCount }}-phase engagement built for precision and speed.</p>
@@ -564,7 +577,7 @@ function toggleTransformationDesc() {
                             </button>
                             <div class="faq-content">
                                 <div class="faq-body">
-                                    {!! $faq->faq_answer !!}
+                                    {!! \App\Support\Html::fixLinks($faq->faq_answer) !!}
                                 </div>
                             </div>
                         </div>
