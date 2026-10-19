@@ -616,29 +616,6 @@ h1, .h1 { font-weight: 500 !important; }
             margin-bottom: 25px;
         }
 
-        .mission-highlight {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 20px;
-            background: rgba(76, 175, 80, 0.1);
-            border-left: 4px solid #4CAF50;
-            border-radius: 0 8px 8px 0;
-            font-weight: 500;
-            transition: transform 0.3s ease;
-            background: 0.3s ease;
-        }
-
-        .mission-highlight:hover {
-            transform: translateX(10px);
-            background: rgba(76, 175, 80, 0.2);
-        }
-
-        .mission-highlight i {
-            color: #4CAF50;
-            font-size: 1.2rem;
-        }
-
         /* Quick Links Grid */
         .quick-links-grid {
             display: grid;

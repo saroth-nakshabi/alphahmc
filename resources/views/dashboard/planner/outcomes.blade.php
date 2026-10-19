@@ -96,7 +96,7 @@
                 </table>
             </div>
             @if($sessions->hasPages())
-            <div class="mt-3">{{ $sessions->links('partials.pagination-numbered') }}</div>
+            <div class="mt-3">{{ $sessions->links('pagination::bootstrap-5') }}</div>
             @endif
         </div>
     </div>
@@ -139,7 +139,7 @@
                 </table>
             </div>
             @if($cache->hasPages())
-            <div class="mt-3">{{ $cache->links('partials.pagination-numbered') }}</div>
+            <div class="mt-3">{{ $cache->links('pagination::bootstrap-5') }}</div>
             @endif
             @endif
         </div>

@@ -26,6 +26,7 @@ class InquiryReplyMail extends Mailable
     {
         return new Envelope(
             subject: 'Response to your inquiry: ' . ($this->inquiry->service->name ?? 'Alpha Healthcare Inquiry'),
+            replyTo: [new \Illuminate\Mail\Mailables\Address('info@alphatsm.com', 'Alpha Health Group')],
         );
     }
 

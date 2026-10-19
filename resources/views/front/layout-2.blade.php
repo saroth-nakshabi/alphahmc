@@ -83,28 +83,33 @@
     // ── Set consent default BEFORE any tracking scripts load ──────
     var _savedConsent = getConsentWithExpiry();
 
+    // Countries where visitors must opt in before any cookie: EU and EEA, UK, Switzerland.
+    var OPT_IN_REGIONS = [
+        'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE',
+        'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE',
+        'IS', 'LI', 'NO',
+        'GB', 'CH'
+    ];
+    var GRANTED = { analytics_storage: 'granted', ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' };
+    var DENIED  = { analytics_storage: 'denied',  ad_storage: 'denied',  ad_user_data: 'denied',  ad_personalization: 'denied' };
+
     if (_savedConsent === 'accepted') {
-        gtag('consent', 'default', {
-            analytics_storage:  'granted',
-            ad_storage:         'granted',
-            ad_user_data:       'granted',
-            ad_personalization: 'granted',
-        });
+        gtag('consent', 'default', GRANTED);
+    } else if (_savedConsent === 'rejected') {
+        gtag('consent', 'default', DENIED);
+        gtag('set', 'ads_data_redaction', true);
     } else {
-        gtag('consent', 'default', {
-            analytics_storage:  'denied',
-            ad_storage:         'denied',
-            ad_user_data:       'denied',
-            ad_personalization: 'denied',
-            wait_for_update:    500,
-        });
-        // Consent Mode V2: model conversions even when ads consent denied
-        // url_passthrough disabled: it was appending the GA linker "?_gl=..." string to
-        // every internal link while consent was denied. Off = clean URLs (slightly less
-        // accurate cookieless attribution). ads_data_redaction stays on (no URL impact).
-        gtag('set', 'url_passthrough', false);
+        // No choice yet. Opt-in regions start denied; everywhere else starts granted.
+        // The banner still shows, and Reject switches everything to denied.
+        gtag('consent', 'default', Object.assign({}, DENIED, { region: OPT_IN_REGIONS, wait_for_update: 500 }));
+        gtag('consent', 'default', GRANTED);
         gtag('set', 'ads_data_redaction', true);
     }
+
+    // Keep the Google click ID across pages when cookies are denied, so an inquiry on a
+    // second page still credits the ad. Off today because it adds "?_gl=" to internal
+    // links; turn on only if that is acceptable.
+    // gtag('set', 'url_passthrough', true);
 </script>
 
 {{-- Global Tags from database (GA4, GTM, etc.) — fire AFTER consent default above --}}
@@ -1513,9 +1518,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         safety, compassion, and excellence. Partnering with facilities, health systems,
                         and government entities across the UAE to deliver exceptional care.
                     </p>
-                    <div class="mission-highlight">
-                        <span>Committed to innovating healthcare excellence since 2015</span>
-                    </div>
                 </div>
 
                 <!-- Quick Links -->
@@ -1732,18 +1734,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             logoIcon.addEventListener('mouseleave', () => {
                 logoIcon.style.transform = 'rotateY(0) scale(1)';
-            });
-        }
-
-        // Mission highlight animation
-        const missionHighlight = document.querySelector('.mission-highlight');
-        if (missionHighlight) {
-            missionHighlight.addEventListener('mouseenter', () => {
-                missionHighlight.style.transform = 'translateX(15px)';
-            });
-
-            missionHighlight.addEventListener('mouseleave', () => {
-                missionHighlight.style.transform = 'translateX(0)';
             });
         }
 
@@ -2177,7 +2167,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     })();
     </script>
 
-    @include('front.partials.ai-assistant')
+    {{-- "Chat with Alpha" AI widget stays only on Contact + About Us — everywhere
+         else it was high-click/low-inquiry friction, so the dwell popup + the
+         direct WhatsApp floating button (below) carry the CTA instead. --}}
+    @if(request()->routeIs('contact', 'front.new-about'))
+        @include('front.partials.ai-assistant')
+    @else
+        @include('front.partials.wa-dwell-popup')
+    @endif
 
     {{-- Reusable global inquiry modal: pages opt in via @push('inquiry_modal') --}}
     @stack('inquiry_modal')
@@ -2210,15 +2207,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </script>
 
 @php
-    // ── Unified page-level WhatsApp number ──────────────────────────────────
+    // ── Unified page-level WhatsApp number + context-aware message ──────────
     // Service, ServiceGroup and Category pages all pass their entity as $service.
-    // Priority: page agent's whatsapp field → AppSetting default
-    $_pageAgent  = $service->agent ?? null;
-    $_defaultWa  = \App\Models\AppSetting::where('key', 'whatsapp_default_number')->value('value') ?? '97142724064';
-    $pageWaPhone = ($_pageAgent && !empty($_pageAgent->whatsapp))
-        ? preg_replace('/[^0-9]/', '', $_pageAgent->whatsapp)
-        : $_defaultWa;
-    $pageWaLink  = 'https://wa.me/' . $pageWaPhone . '?text=' . rawurlencode("Hi, I'd like to enquire about Alpha Health Group's services.");
+    // See app/Support/WaContext.php (shared with the AI widget + dwell popup).
+    $pageWaLink = \App\Support\WaContext::link(null, $service ?? null);
 @endphp
 
 {{-- ── Floating WhatsApp button ── --}}

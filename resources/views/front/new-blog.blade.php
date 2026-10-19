@@ -235,7 +235,7 @@
                                 </div>
                                 <div class="project-row-thumb">
                                     @if($project->projects_images->first())
-                                        <img src="{{ asset($project->projects_images->first()->image) }}" alt="Impact">
+                                        <img src="{{ asset('public/' . $project->projects_images->first()->image) }}" alt="Impact">
                                     @else
                                         <img src="{{ asset('public/front-new/assets/images/section-3-1st-image.jpg') }}"
                                             alt="Impact">

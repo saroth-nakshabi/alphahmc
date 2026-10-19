@@ -72,7 +72,10 @@
                         <span class="badge bg-warning text-dark ms-2" id="pending-badge">
                             {{ $Projects->where('approved', false)->where('source','customer')->count() }} pending approval
                         </span>
-                        <button class="btn btn-success ms-auto" data-bs-toggle="modal" data-bs-target="#addNewModal">
+                        <button class="btn btn-danger ms-auto me-2 d-none" id="bulk-delete-btn">
+                            <i class="ti ti-trash me-1"></i> Delete Selected (<span id="bulk-delete-count">0</span>)
+                        </button>
+                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addNewModal">
                             <i class="ti ti-plus me-1"></i> Add New
                         </button>
                     </div>
@@ -81,6 +84,7 @@
                         <table id="items-table" class="table border table-striped table-bordered display">
                             <thead>
                                 <tr>
+                                    <th><input type="checkbox" id="select-all-testimonials"></th>
                                     <th>Author</th>
                                     <th>Rating</th>
                                     <th>Service</th>
@@ -93,6 +97,7 @@
                             <tbody>
                                 @foreach ($Projects as $t)
                                 <tr data-id="{{ $t->id }}">
+                                    <td><input type="checkbox" class="row-select-checkbox" value="{{ $t->id }}"></td>
                                     <td>
                                         <div class="fw-semibold">{{ $t->author_name }}</div>
                                         @if($t->email)<small class="text-muted">{{ $t->email }}</small>@endif
@@ -295,7 +300,8 @@ $(document).ready(function() {
     var items_table = $("#items-table").DataTable({
         dom: "Bfrtip",
         buttons: ["copy", "csv", "excel", "pdf", "print"],
-        order: [[0, 'asc']],
+        order: [[1, 'asc']],
+        columnDefs: [{ orderable: false, targets: 0 }],
     });
     $(".buttons-copy,.buttons-csv,.buttons-print,.buttons-pdf,.buttons-excel").addClass("btn btn-primary mr-1");
 
@@ -416,6 +422,45 @@ $(document).ready(function() {
                     error: function() { Swal.fire({ icon: 'error', title: 'Failed to delete' }); }
                 });
             }
+        });
+    });
+
+    // ── Bulk select / delete ────────────────────────────────
+    function updateBulkDeleteBtn() {
+        const n = $('.row-select-checkbox:checked').length;
+        $('#bulk-delete-count').text(n);
+        $('#bulk-delete-btn').toggleClass('d-none', n === 0);
+    }
+
+    $('#select-all-testimonials').on('change', function() {
+        $('#items-table tbody .row-select-checkbox').prop('checked', $(this).is(':checked'));
+        updateBulkDeleteBtn();
+    });
+
+    $(document).on('change', '.row-select-checkbox', function() {
+        if (!$(this).is(':checked')) $('#select-all-testimonials').prop('checked', false);
+        updateBulkDeleteBtn();
+    });
+
+    $('#bulk-delete-btn').on('click', function() {
+        const ids = $('.row-select-checkbox:checked').map(function() { return $(this).val(); }).get();
+        if (!ids.length) return;
+        Swal.fire({ title: `Delete ${ids.length} testimonial(s)?`, text: "This cannot be undone.", icon: 'warning',
+            showCancelButton: true, confirmButtonColor: '#3085d6', cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete them!' }).then(result => {
+            if (!result.isConfirmed) return;
+            $.ajax({
+                url: '{{ route("testimonial.destroyBulk") }}', method: 'POST',
+                data: { ids: ids, _token: '{{ csrf_token() }}' },
+                success: function(r) {
+                    Toast.fire({ icon: 'success', title: r.message });
+                    ids.forEach(id => items_table.row($(`tr[data-id="${id}"]`)).remove());
+                    items_table.draw();
+                    $('#select-all-testimonials').prop('checked', false);
+                    updateBulkDeleteBtn();
+                },
+                error: function() { Swal.fire({ icon: 'error', title: 'Failed to delete selected testimonials' }); }
+            });
         });
     });
 

@@ -87,18 +87,19 @@ class MainHomeController extends Controller
 
         $data = $request->only(['name', 'email', 'subject', 'message']);
 
+        // Spam has zero value here — silently "succeed" without sending mail
+        // rather than tipping the bot off that it was blocked.
+        if ($this->isSuspiciousSubmission($request, 'contact')) {
+            return back()->with('success', '✅ Your message has been sent successfully!');
+        }
+
         try {
-        Mail::to('info@alphatsm.com')->send(new ContactMail($data));
-        return back()->with('success', '✅ Your message has been sent successfully!');
+            Mail::to('info@alphatsm.com')->send(new ContactMail($data));
+            return back()->with('success', '✅ Your message has been sent successfully!');
         } catch (\Exception $e) {
-            // Log the error
             Log::error('Mail failed: ' . $e->getMessage());
             return back()->with('error', '❌ Failed to send message. Please try again.');
         }
-
-
-
-
     }
 
 
@@ -380,6 +381,37 @@ class MainHomeController extends Controller
         return view('front.facility-types', compact('facilityTypes', 'main', 'all_services'));
     }
 
+    /**
+     * Shared anti-spam check: honeypot field (bots fill it, humans never do) +
+     * a reCAPTCHA v3 score check (only runs when keys are configured). Threshold
+     * is per-caller since inquiries and testimonials/contact treat suspicion
+     * differently (fail-open vs. silent-drop).
+     */
+    private function isSuspiciousSubmission(Request $request, string $action, float $minScore = 0.3): bool
+    {
+        if (!empty($request->input('website_url'))) {
+            return true;
+        }
+
+        $secret = config('services.recaptcha.secret_key');
+        if (!$secret) {
+            return false;
+        }
+
+        try {
+            $rc = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                'secret'   => $secret,
+                'response' => $request->input('g-recaptcha-response', ''),
+                'remoteip' => $request->ip(),
+            ]);
+            $score = $rc->json('score', 1.0);
+            return $score < $minScore;
+        } catch (\Exception $e) {
+            Log::warning("reCAPTCHA v3 check failed for {$action} (submission allowed): " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function submitTestimonial(Request $request)
     {
         $request->validate([
@@ -390,23 +422,35 @@ class MainHomeController extends Controller
             'content'     => 'required|string|max:2000',
         ]);
 
-        Testimonial::create([
-            'author_name' => $request->author_name,
-            'email'       => $request->email,
-            'service_id'  => $request->service_id ?: null,
-            'rating'      => $request->rating,
-            'content'     => strip_tags($request->content),
-            'position'    => strip_tags($request->position ?? ''),
-            'company_name'=> strip_tags($request->company_name ?? ''),
-            'author_image'=> '',
-            'approved'    => false,
-            'source'      => 'customer',
-        ]);
+        $successMsg = 'Thank you! Your review has been submitted and is pending approval.';
+
+        // A fake testimonial has zero value (unlike an inquiry lead), so — unlike
+        // submitInquiry — suspicious submissions are silently dropped, not stored.
+        $isSuspicious = $this->isSuspiciousSubmission($request, 'testimonial');
+
+        $recentExists = Testimonial::where('email', $request->email)
+            ->where('created_at', '>=', now()->subHours(2))
+            ->exists();
+
+        if (!$isSuspicious && !$recentExists) {
+            Testimonial::create([
+                'author_name' => $request->author_name,
+                'email'       => $request->email,
+                'service_id'  => $request->service_id ?: null,
+                'rating'      => $request->rating,
+                'content'     => strip_tags($request->content),
+                'position'    => strip_tags($request->position ?? ''),
+                'company_name'=> strip_tags($request->company_name ?? ''),
+                'author_image'=> '',
+                'approved'    => false,
+                'source'      => 'customer',
+            ]);
+        }
 
         if ($request->ajax()) {
-            return response()->json(['success' => true, 'message' => 'Thank you! Your review has been submitted and is pending approval.']);
+            return response()->json(['success' => true, 'message' => $successMsg]);
         }
-        return back()->with('success', 'Thank you! Your review has been submitted and is pending approval.');
+        return back()->with('success', $successMsg);
     }
 
     public function submitInquiry(Request $request)
@@ -427,27 +471,10 @@ class MainHomeController extends Controller
 
         $successMsg = 'Thank you! Your inquiry has been submitted successfully.';
 
-        // ── 1. Honeypot — bots fill this invisible field, humans never do.
-        //    Never block a submission; just flag as spam for admin review.
-        $isSuspicious = !empty($request->input('website_url'));
-
-        // ── 2. reCAPTCHA v3 soft-check (only runs when keys are configured).
-        //    Low score → spam flag, never a hard block — we never want to lose a lead.
-        if (!$isSuspicious && env('RECAPTCHA_V3_SECRET_KEY')) {
-            try {
-                $rc    = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-                    'secret'   => env('RECAPTCHA_V3_SECRET_KEY'),
-                    'response' => $request->input('g-recaptcha-response', ''),
-                    'remoteip' => $request->ip(),
-                ]);
-                $score = $rc->json('score', 1.0);
-                if ($score < 0.3) {
-                    $isSuspicious = true;
-                }
-            } catch (\Exception $e) {
-                Log::warning('reCAPTCHA v3 check failed (submission allowed): ' . $e->getMessage());
-            }
-        }
+        // ── 1+2. Honeypot + reCAPTCHA v3 soft-check.
+        //    Never a hard block here — we never want to lose a lead; low-confidence
+        //    submissions are just flagged as spam for admin review.
+        $isSuspicious = $this->isSuspiciousSubmission($request, 'inquiry', 0.3);
 
         // ── 3. Email dedup — same email submitted within the last 2 hours.
         //    Return silent success (user already got a confirmation; just don't double-save).
@@ -489,7 +516,7 @@ class MainHomeController extends Controller
         if (!$isSuspicious) {
             // 2. Send Email Notification to Admin
             try {
-                Mail::to('nisath.alphatsm@gmail.com')->send(new ServiceInquiryMail($inquiry));
+                Mail::to('info@alphatsm.com')->send(new ServiceInquiryMail($inquiry));
             } catch (\Exception $e) {
                 Log::error('Inquiry Admin Mail failed: ' . $e->getMessage());
             }

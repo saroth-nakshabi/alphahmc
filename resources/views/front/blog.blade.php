@@ -12,8 +12,6 @@
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta name="twitter:card" content="summary_large_image" />
 @endpush
-    <meta property="og:url" content="{{ url()->current() }}">
-@endsection
 
 @section('custom_css')
     <style>

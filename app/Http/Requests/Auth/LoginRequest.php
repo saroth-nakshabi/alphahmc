@@ -41,6 +41,14 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
+        // Honeypot: bots fill this invisible field, humans never do. Reject
+        // before Auth::attempt() so we skip the bcrypt verify cost per bot hit.
+        if (!empty($this->input('website_url'))) {
+            throw ValidationException::withMessages([
+                'email' => trans('auth.failed'),
+            ]);
+        }
+
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 

@@ -1,73 +1,11 @@
 @php
-    // A. Global default number — admin-editable in Dashboard → Settings (no code change to update).
-    $defaultPhone = \App\Models\AppSetting::get('whatsapp_default_number', '97158128418');
-    $targetPhone  = $defaultPhone;
-    $officerName  = 'our experts';
-
-    // B. On leader-bearing detail pages, use that page's connected leader (Inquiry Officer WhatsApp).
-    //    Each of these models carries inq_officer_phone / inq_officer_name.
-    $leaderRoutes = [
-        'front.service'          => \App\Models\Service::class,
-        'front.service-category' => \App\Models\Category::class,
-        'service-packages'       => \App\Models\ServiceGroup::class,
-    ];
-
-    $currentRouteName = request()->route() ? request()->route()->getName() : null;
-    $leader = null;
-
-    if ($currentRouteName && isset($leaderRoutes[$currentRouteName])) {
-        $modelClass = $leaderRoutes[$currentRouteName];
-        $route      = request()->route();
-
-        // Prefer an already-bound model instance on the route.
-        foreach ($route->parameters() as $param) {
-            if ($param instanceof $modelClass) {
-                $leader = $param;
-                break;
-            }
-        }
-
-        // Otherwise resolve by the {slug} route parameter.
-        if (!$leader) {
-            $slug = $route->parameter('slug');
-            if (is_string($slug) && $slug !== '') {
-                $leader = $modelClass::where('slug', $slug)->first();
-            }
-        }
-
-        // Last resort: a model object injected into the view.
-        if (!$leader) {
-            $leader = $service ?? $category ?? ($data['service'] ?? null);
-        }
-    }
-
-    if ($leader) {
-        // Prefer agent's dedicated WhatsApp number (new system).
-        $_agent = $leader->agent ?? null;
-        if ($_agent && !empty(trim((string) $_agent->whatsapp))) {
-            $targetPhone = trim($_agent->whatsapp);
-            if (!empty($_agent->title)) {
-                $officerName = $_agent->title;
-            }
-        } elseif (!empty(trim((string) $leader->inq_officer_phone))) {
-            // Legacy fallback: inq_officer_phone directly on the entity.
-            $targetPhone = trim($leader->inq_officer_phone);
-            if (!empty($leader->inq_officer_name)) {
-                $officerName = $leader->inq_officer_name;
-            }
-        }
-    }
-
-    // Normalise to digits only (strip +, spaces, dashes, brackets) so wa.me links never break.
-    $targetPhone = preg_replace('/\D+/', '', (string) $targetPhone);
-    if ($targetPhone === '') {
-        $targetPhone = preg_replace('/\D+/', '', (string) $defaultPhone) ?: '97158128418';
-    }
-
-    // C. Page context for WhatsApp messages — on a leader-bearing detail page we know the
-    //    specific service/category/package; everywhere else this stays blank.
-    $waPageName = $leader ? trim(strip_tags((string) ($leader->name ?? ''))) : '';
-    $waPageUrl  = url()->current();
+    // Shared leader/phone/page-context resolution — see app/Support/WaContext.php
+    // (also used by the floating WhatsApp button and the dwell-popup).
+    $_waCtx      = \App\Support\WaContext::resolve($service ?? $category ?? ($data['service'] ?? null));
+    $targetPhone = $_waCtx['phone'];
+    $officerName = $_waCtx['officerName'];
+    $waPageName  = $_waCtx['pageName'];
+    $waPageUrl   = $_waCtx['pageUrl'];
 @endphp
 
 <!-- VIRTUAL ASSISTANT WIDGET -->

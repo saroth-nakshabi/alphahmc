@@ -24,6 +24,7 @@ class ServiceInquiryMail extends Mailable
     {
         return new Envelope(
             subject: 'New Service Inquiry: ' . ($this->inquiry->service->name ?? 'General Enquiry'),
+            replyTo: !empty($this->inquiry->email) ? [new \Illuminate\Mail\Mailables\Address($this->inquiry->email)] : [],
         );
     }
 

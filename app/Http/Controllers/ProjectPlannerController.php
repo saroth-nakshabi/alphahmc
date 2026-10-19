@@ -274,7 +274,8 @@ class ProjectPlannerController extends Controller
     private function notifyLead(ProjectPlannerSession $session, array $cards): void
     {
         try {
-            $admin    = config('mail.from.address') ?: 'nisath.alphatsm@gmail.com';
+            // Not mail.from.address: that is noreply@alphahmc.com, which nobody reads.
+            $admin    = 'info@alphatsm.com';
             $services = collect($cards)->pluck('name')->take(6)->implode(', ');
             $brief    = json_decode((string) $session->brief, true) ?: [];
 
@@ -286,7 +287,12 @@ class ProjectPlannerController extends Controller
                 . "Areas: " . implode(', ', (array) $session->selected_services) . "\n"
                 . "Challenge: " . ($session->free_text ?? '-') . "\n"
                 . "Recommended: {$services}\n";
-            Mail::raw($adminBody, fn ($m) => $m->to($admin)->subject('New Alpha Blueprint AI lead — ' . $session->name));
+            Mail::raw($adminBody, function ($m) use ($admin, $session) {
+                $m->to($admin)->subject('New Alpha Blueprint AI lead — ' . $session->name);
+                if ($session->email) {
+                    $m->replyTo($session->email, $session->name);
+                }
+            });
 
             if ($session->email) {
                 Mail::to($session->email)

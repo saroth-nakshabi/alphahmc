@@ -133,6 +133,22 @@ class ContactController extends Controller
         ]);
     }
 
+    // Delete multiple testimonials at once (spam cleanup)
+    public function destroyBulk(Request $request)
+    {
+        $request->validate([
+            'ids'   => 'required|array|min:1',
+            'ids.*' => 'integer|exists:testimonials,id',
+        ]);
+
+        $count = Testimonial::whereIn('id', $request->ids)->delete();
+
+        return response()->json([
+            'message' => "{$count} testimonial(s) deleted successfully",
+            'count'   => $count,
+        ]);
+    }
+
     public function toggleFeatured(Request $request, $id)
     {
         $testimonial = Testimonial::findOrFail($id);

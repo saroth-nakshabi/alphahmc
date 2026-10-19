@@ -22,6 +22,7 @@ class ContactMail extends Mailable
     {
         return new Envelope(
             subject: 'New Contact Message: ' . $this->data['subject'],
+            replyTo: !empty($this->data['email']) ? [new \Illuminate\Mail\Mailables\Address($this->data['email'], $this->data['name'] ?? null)] : [],
         );
     }
 

@@ -13,7 +13,7 @@
     $waLink    = $pageWaLink ?? ('https://wa.me/' .
         (\App\Models\AppSetting::where('key','whatsapp_default_number')->value('value') ?? '97142724064') .
         '?text=' . rawurlencode("Hi, I'd like to enquire about Alpha Health Group's services."));
-    $rcSiteKey = env('RECAPTCHA_V3_SITE_KEY', '');
+    $rcSiteKey = config('services.recaptcha.site_key', '');
 @endphp
 
 {{-- Optional: load reCAPTCHA v3 only when a key is configured --}}

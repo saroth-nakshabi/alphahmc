@@ -67,14 +67,6 @@ class HomeController extends Controller
     }
 
 
-    public function serviceCalendar()
-    {
-        $data = [];
-        $data['services'] = Service::published()->with(['upComingSchedules'])->get();
-
-        return view('front.service_calendar', $data);
-    }
-
     public function blog(Request $request)
     {
         $data = [];

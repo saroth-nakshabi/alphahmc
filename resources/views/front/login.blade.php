@@ -197,6 +197,13 @@
 
                 <form id="login_form" method="post" action="{{ route('login.store') }}">
                     @csrf
+
+                    {{-- Honeypot: bots fill this, humans never see it --}}
+                    <div style="position:absolute;left:-99999px;width:0;height:0;overflow:hidden;opacity:0;" aria-hidden="true">
+                        <label for="login_website_url">Website</label>
+                        <input type="text" id="login_website_url" name="website_url" tabindex="-1" autocomplete="off">
+                    </div>
+
                     <div class="mb-3">
                         <label class="form-label" for="email">Email Address</label>
                         <input type="email" id="email" name="email" class="form-control"

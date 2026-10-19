@@ -104,7 +104,7 @@ Route::get('/services-by-facility-type', [MainHomeController::class, 'facilityTy
 Route::redirect('/services', '/all_services', 301);
 
 // ── Legacy URL 301 redirects — old indexed pages → current pages ──
-Route::redirect('/new-professional-license', '/services/uae-healthcare-professional-licensing', 301);
+Route::redirect('/new-professional-license', '/services/healthcare-professional-licensing-uae', 301);
 Route::redirect('/uae-healthcare-professional-licensing', '/services/uae-healthcare-professional-licensing', 301);
 Route::redirect('/transfer-professional-license', '/service-category/healthcare-professional-licensing', 301);
 Route::redirect('/healthcare-professional-licensing', '/service-category/healthcare-professional-licensing', 301);
@@ -143,7 +143,7 @@ Route::get('/terms-of-service', function () {
 Route::get('/cookie-policy', function () {
     return view('front.cookie-policy');
 })->name('front.cookie-policy');
-Route::post('/share-your-experience/submit', [MainHomeController::class, 'submitTestimonial'])->middleware('throttle:10,1')->name('front.testimonial.submit');
+Route::post('/share-your-experience/submit', [MainHomeController::class, 'submitTestimonial'])->middleware('throttle:5,1')->name('front.testimonial.submit');
 
 // Route::post('/ckeditor/upload', [TinyMCEUploadController::class, 'upload'])->name('ckeditor.upload');
 // Editor upload is only used inside the authenticated dashboard — require auth + throttle to stop anonymous disk-fill abuse.
@@ -159,9 +159,8 @@ Route::redirect('/new-about', '/about-alpha-health-group', 301);
 
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
-Route::post('/contact/send', [MainHomeController::class, 'sendContact'])->middleware('throttle:10,1')->name('contact.send');
+Route::post('/contact/send', [MainHomeController::class, 'sendContact'])->middleware('throttle:5,1')->name('contact.send');
 
-Route::get('/service-calendar', [HomeController::class, 'serviceCalendar'])->name('service_calendar');
 Route::post('/set-timezone', [TimezoneController::class, 'setTimezone'])->name('set_timezone');
 Route::get('/blog', [HomeController::class, 'blog'])->name('front.blog');
 Route::get('/blogs/{tag_name}', [HomeController::class, 'viewTag'])->name('view_tag');
@@ -459,6 +458,7 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
         Route::post('/get', [ContactController::class, 'getTestimonial'])->name('testimonial.get')->middleware('permission:view testimonials');
         Route::post('/update/{id}', [ContactController::class, 'update'])->name('testimonial.update')->middleware('permission:edit testimonials');
         Route::delete('/delete/{id}', [ContactController::class, 'destroy'])->name('testimonial.destroy')->middleware('permission:delete testimonials');
+        Route::post('/delete-bulk', [ContactController::class, 'destroyBulk'])->name('testimonial.destroyBulk')->middleware('permission:delete testimonials');
         Route::post('/toggle-featured/{id}', [ContactController::class, 'toggleFeatured'])->name('testimonial.toggleFeatured')->middleware('permission:edit testimonials');
         Route::post('/toggle-approved/{id}', [ContactController::class, 'toggleApproved'])->name('testimonial.toggleApproved')->middleware('permission:edit testimonials');
         Route::post('/settings', [ContactController::class, 'saveSettings'])->name('testimonial.saveSettings')->middleware('permission:edit testimonials');

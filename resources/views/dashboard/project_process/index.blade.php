@@ -70,7 +70,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="mt-3">{{ $processes->links('partials.pagination-numbered') }}</div>
+            <div class="mt-3">{{ $processes->links('pagination::bootstrap-5') }}</div>
         </div>
     </div>
 

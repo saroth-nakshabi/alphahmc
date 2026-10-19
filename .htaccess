@@ -5,6 +5,14 @@
 
     RewriteEngine On
 
+    # --- Harden: block direct access to app internals (docroot = project root) ---
+    # Dotfiles (.env, .git, etc.) — but keep ACME/SSL challenges reachable
+    RewriteRule (^|/)\.(?!well-known/) - [F,L]
+    # Sensitive project files
+    RewriteRule ^(composer\.(json|lock)|package(-lock)?\.json|phpunit\.xml|artisan|README\.md|\.cpanel\.yml|.*\.(config|mix)\.js)$ - [F,L]
+    # Framework directories (public/ is NOT listed, so assets & uploads still work)
+    RewriteRule ^(app|bootstrap|config|database|resources|routes|storage|tests|vendor|scripts)/ - [F,L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

@@ -305,6 +305,12 @@
             .touch-split-section { flex-direction: column; }
             .touch-left, .touch-right { width: 100%; padding: 60px 5%; }
         }
+
+        /* Honeypot trap — invisible to humans, bots fill every field */
+        .contact-hp-trap {
+            position: absolute; left: -99999px; top: auto;
+            width: 0; height: 0; overflow: hidden; opacity: 0; pointer-events: none;
+        }
     </style>
 
     <div class="contact-page-wrapper">
@@ -333,9 +339,20 @@
                     <div class="col-lg-7" data-aos="fade-right">
                         <div class="contact-form-container">
                             <h3 class="contact-heading-main">Send us a Message</h3>
+                            @php $rcSiteKey = config('services.recaptcha.site_key', ''); @endphp
+                            @if($rcSiteKey)
+                                <script src="https://www.google.com/recaptcha/api.js?render={{ $rcSiteKey }}" async defer></script>
+                            @endif
                             {{-- Add CSRF and correct action --}}
-                                <form action="{{ route('contact.send') }}" method="POST" id="mainContactForm" onsubmit="if(typeof gtagReportInquirySent==='function')gtagReportInquirySent();">
+                                <form action="{{ route('contact.send') }}" method="POST" id="mainContactForm" data-recaptcha-key="{{ $rcSiteKey }}">
     @csrf
+
+    {{-- Honeypot: bots fill this, humans never see it --}}
+    <div class="contact-hp-trap" aria-hidden="true">
+        <label for="contact_website_url">Website</label>
+        <input type="text" id="contact_website_url" name="website_url" tabindex="-1" autocomplete="off" placeholder="https://">
+    </div>
+    <input type="hidden" id="contact-recaptcha-token" name="g-recaptcha-response" value="">
 
     {{-- Success --}}
     @if(session('success'))
@@ -1083,6 +1100,31 @@
                 });
             }
         });
+
+        // ── reCAPTCHA v3 token acquisition before the real (non-AJAX) POST ──
+        (function () {
+            var form = document.getElementById('mainContactForm');
+            if (!form || form.dataset.rcBound) return;
+            form.dataset.rcBound = '1';
+
+            form.addEventListener('submit', function (e) {
+                var key = form.dataset.recaptchaKey;
+                if (!key || typeof grecaptcha === 'undefined') {
+                    if (typeof gtagReportInquirySent === 'function') gtagReportInquirySent();
+                    return; // no key configured — submit normally
+                }
+                e.preventDefault();
+                grecaptcha.ready(function () {
+                    grecaptcha.execute(key, { action: 'contact' }).then(function (token) {
+                        document.getElementById('contact-recaptcha-token').value = token;
+                        if (typeof gtagReportInquirySent === 'function') gtagReportInquirySent();
+                        form.submit();
+                    }).catch(function () {
+                        form.submit();
+                    });
+                });
+            });
+        })();
 
         /* Global Offices slider — init AFTER Swiper's bundle has loaded (it is
            included near the end of the layout, so run on window load). */

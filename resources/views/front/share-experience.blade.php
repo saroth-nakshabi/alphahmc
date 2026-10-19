@@ -82,6 +82,12 @@
         .feedback-hero { padding: 140px 0 56px; margin-top: -85px; }
         .feedback-card { padding: 28px 22px; }
     }
+
+    /* Honeypot trap — invisible to humans, bots fill every field */
+    .fb-hp-trap {
+        position: absolute; left: -99999px; top: auto;
+        width: 0; height: 0; overflow: hidden; opacity: 0; pointer-events: none;
+    }
 </style>
 
 <div class="feedback-page">
@@ -100,8 +106,20 @@
             <div class="feedback-card">
                 <div id="fb-form-wrap">
                     <h2>Write a Review</h2>
-                    <form id="fb-form" novalidate>
+                    @php $rcSiteKey = config('services.recaptcha.site_key', ''); @endphp
+                    @if($rcSiteKey)
+                        <script src="https://www.google.com/recaptcha/api.js?render={{ $rcSiteKey }}" async defer></script>
+                    @endif
+                    <form id="fb-form" novalidate data-recaptcha-key="{{ $rcSiteKey }}">
                         @csrf
+
+                        {{-- Honeypot: bots fill this, humans never see it --}}
+                        <div class="fb-hp-trap" aria-hidden="true">
+                            <label for="fb_website_url">Website</label>
+                            <input type="text" id="fb_website_url" name="website_url" tabindex="-1" autocomplete="off" placeholder="https://">
+                        </div>
+                        <input type="hidden" id="fb-recaptcha-token" name="g-recaptcha-response" value="">
+
                         <div class="row g-0">
                             <div class="col-md-6 pe-md-2">
                                 <div class="fb-field">
@@ -186,6 +204,16 @@
 </div>
 
 <script>
+function fbGetRecaptchaToken(form) {
+    var key = form.dataset.recaptchaKey;
+    if (!key || typeof grecaptcha === 'undefined') return Promise.resolve('');
+    return new Promise(function (resolve) {
+        grecaptcha.ready(function () {
+            grecaptcha.execute(key, { action: 'testimonial' }).then(resolve).catch(function () { resolve(''); });
+        });
+    });
+}
+
 document.getElementById('fb-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     const form = this;
@@ -210,6 +238,9 @@ document.getElementById('fb-form').addEventListener('submit', async function(e) 
     btn.disabled = true;
     document.getElementById('fb-btn-text').style.display    = 'none';
     document.getElementById('fb-btn-loading').style.display = 'inline';
+
+    const token = await fbGetRecaptchaToken(form);
+    document.getElementById('fb-recaptcha-token').value = token;
 
     const data = new FormData(form);
     try {

@@ -178,14 +178,14 @@
     .bc-logo-panel {
         background: var(--soft);
         border-bottom: 1px solid var(--border);
-        height: 180px;
+        height: 220px;
         display: flex; align-items: center; justify-content: center;
         padding: 32px 40px;
         transition: background 0.3s ease;
     }
     .brand-card:hover .bc-logo-panel { background: #f0fafa; }
     .bc-logo-panel img {
-        max-width: 100%; max-height: 100px; object-fit: contain;
+        max-width: 100%; max-height: 150px; object-fit: contain;
         transition: transform 0.4s ease;
     }
     .brand-card:hover .bc-logo-panel img { transform: scale(1.06); }
@@ -244,7 +244,7 @@
 
     @media (max-width: 767px) {
         .brands-grid { grid-template-columns: 1fr; gap: 20px; }
-        .bc-logo-panel { height: 140px; }
+        .bc-logo-panel { height: 200px; }
         .bc-body { padding: 24px 24px 16px; }
         .bc-footer { padding: 0 24px 24px; }
         .bc-name { font-size: 1.3rem; }
