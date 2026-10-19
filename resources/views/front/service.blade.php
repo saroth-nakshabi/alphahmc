@@ -39,6 +39,12 @@
     // name; meta_description feeds the layout's description and og:description.
     $seoTitle = \App\Support\Seo::title($service->meta_title, $service->name);
     $seoDesc  = trim((string) $service->meta_description);
+    // Hero image: one URL for the preload and the background, so it downloads once.
+    $heroImg = $service->hero_image
+        ? \App\Support\Img::thumb('uploads/service_images/' . $service->hero_image, 1600)
+        : (isset($service->images[0])
+            ? \App\Support\Img::thumb('uploads/service_images/' . $service->images[0]->image, 1600)
+            : asset('public/front/assets/img/hero/service-details-bg.jpg'));
 @endphp
 @push('page_title', e($seoTitle))
 @if($seoDesc !== '')
@@ -51,13 +57,8 @@
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
           onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
-    {{-- Preload hero image so browser fetches it at highest priority --}}
-    @php
-        $heroPreload = $service->hero_image
-            ? asset('public/uploads/service_images/' . $service->hero_image)
-            : asset('public/front/assets/img/hero/service-details-bg.jpg');
-    @endphp
-    <link rel="preload" as="image" href="{{ $heroPreload }}" fetchpriority="high">
+    {{-- Preload the same hero URL the background uses, at highest priority --}}
+    <link rel="preload" as="image" href="{{ $heroImg }}" fetchpriority="high">
 @endpush
 @push('og_tags')
     {{-- og:site_name/title/description/url/type and twitter:card come from the layout. --}}
@@ -75,7 +76,7 @@
         <!-- Hero Section -->
         <section class="service-hero">
             <div class="hero-background"
-                style="background-image: linear-gradient(to right, rgba(0, 0, 0, 25%), rgba(202, 202, 202, 0.163)),url('{{ $service->hero_image ? \App\Support\Img::thumb('uploads/service_images/' . $service->hero_image, 1600) : (isset($service->images[0]) ? \App\Support\Img::thumb('uploads/service_images/' . $service->images[0]->image, 1600) : asset('public/front/assets/img/hero/service-details-bg.jpg')) }}');">
+                style="background-image: linear-gradient(to right, rgba(0, 0, 0, 25%), rgba(202, 202, 202, 0.163)),url('{{ $heroImg }}');">
             </div>
 
             <div class="container">
@@ -196,7 +197,7 @@
                                         : \App\Support\Img::thumb('uploads/magazines/' . $firstMag->image, 720))
                                     : '';
                             @endphp
-                            <img src="{{ $firstImg }}" alt="Magazine Feature" id="mag-main-image">
+                            <img src="{{ $firstImg }}" alt="{{ strip_tags($firstMag->title ?? '') }}" id="mag-main-image" @if($_sz = \App\Support\Img::size($firstImg)) width="{{ $_sz[0] }}" height="{{ $_sz[1] }}" @endif loading="lazy" decoding="async">
 
                             <!-- Manual Nav Buttons -->
                             <div class="mag-img-nav">
@@ -362,8 +363,9 @@ function toggleTransformationDesc() {
                         <span class="leader-label">Service Leader</span>
                         <hr class="leader-hr">
                         <div class="leader-profile">
-                            <img src="{{ isset($service->agent) && $service->agent->image ? \App\Support\Img::thumb('uploads/agent_images/' . $service->agent->image, 250) : asset('public/front-new/assets/images/blog_images/Doctor-image/2.webp') }}"
-                                alt="Leader" class="leader-circle-img">
+                            @php $leaderImg = isset($service->agent) && $service->agent->image ? \App\Support\Img::thumb('uploads/agent_images/' . $service->agent->image, 250) : asset('public/front-new/assets/images/blog_images/Doctor-image/2.webp'); @endphp
+                            <img src="{{ $leaderImg }}"
+                                alt="{{ isset($service->agent) ? trim($service->agent->user->first_name . ' ' . $service->agent->user->last_name) : 'Service leader' }}" class="leader-circle-img" @if($_sz = \App\Support\Img::size($leaderImg)) width="{{ $_sz[0] }}" height="{{ $_sz[1] }}" @endif loading="lazy" decoding="async">
                             <div class="leader-meta">
                                 <div class="leader-name-bold">
                                     {{ isset($service->agent) ? ($service->agent->user->first_name . ' ' . $service->agent->user->last_name) : 'Dr. Vikram Singh' }}
@@ -553,8 +555,9 @@ function toggleTransformationDesc() {
                                 <a href="{{ route('front.service', $related->slug) }}" class="interest-card-link">
                                     <div class="interest-card">
                                         <div class="interest-img-wrapper">
-                                            <img src="{{ $related->hero_image ? \App\Support\Img::thumb('uploads/service_images/' . $related->hero_image, 800) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}"
-                                                alt="{{ $related->name }}">
+                                            @php $relImg = $related->hero_image ? \App\Support\Img::thumb('uploads/service_images/' . $related->hero_image, 800) : asset('public/front/assets/img/hero/service-details-bg.jpg'); @endphp
+                                            <img src="{{ $relImg }}"
+                                                alt="{{ $related->name }}" @if($_sz = \App\Support\Img::size($relImg)) width="{{ $_sz[0] }}" height="{{ $_sz[1] }}" @endif loading="lazy" decoding="async">
                                         </div>
                                         <div class="interest-content">
                                             <span class="text-uppercase small fw-bold text-muted mb-2 d-block">
@@ -591,8 +594,9 @@ function toggleTransformationDesc() {
                                     <div class="ey-case-card">
                                         <div class="ey-case-img-wrapper">
                                             @if(isset($project->projects_images[0]))
-                                                <img src="{{ \App\Support\Img::thumb($project->projects_images[0]->image, 800) }}"
-                                                    class="ey-case-img" alt="{{ $project->name }}">
+                                                @php $caseImg = \App\Support\Img::thumb($project->projects_images[0]->image, 800); @endphp
+                                                <img src="{{ $caseImg }}"
+                                                    class="ey-case-img" alt="{{ $project->name }}" @if($_sz = \App\Support\Img::size($caseImg)) width="{{ $_sz[0] }}" height="{{ $_sz[1] }}" @endif loading="lazy" decoding="async">
                                             @endif
                                         </div>
                                         <div class="ey-case-body">
@@ -615,12 +619,13 @@ function toggleTransformationDesc() {
 
                     @if ($blog)
                     <!-- Right Column: Related article -->
-                    <div class="{{ $projects->count() ? 'col-lg-5' : 'col-lg-12' }}" data-aos="fade-left">
+                    <div class="{{ $projects->count() ? 'col-lg-5' : 'col-lg-8' }}" data-aos="fade-left">
                         <div class="related-content-block">
                             <h2 class="ey-section-title">Related Article</h2>
                                 <a href="{{ route('front.singleBlog', $blog->slug) }}" class="ey-related-card">
-                                    <img src="{{ isset($blog->image) && $blog->image ? \App\Support\Img::thumb('uploads/blog_images/' . $blog->image, 800) : asset('public/front-new/assets/images/blog_images/Doctor-image/2.webp') }}"
-                                        class="rc-bg-img" alt="{{ $blog->title }}">
+                                    @php $blogImg = isset($blog->image) && $blog->image ? \App\Support\Img::thumb('uploads/blog_images/' . $blog->image, 800) : asset('public/front-new/assets/images/blog_images/Doctor-image/2.webp'); @endphp
+                                    <img src="{{ $blogImg }}"
+                                        class="rc-bg-img" alt="{{ $blog->title }}" @if($_sz = \App\Support\Img::size($blogImg)) width="{{ $_sz[0] }}" height="{{ $_sz[1] }}" @endif loading="lazy" decoding="async">
 
                                     <div class="ey-related-content">
                                         <h3 class="rc-title">{{ $blog->title }}</h3>

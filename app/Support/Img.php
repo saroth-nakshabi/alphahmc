@@ -91,6 +91,34 @@ class Img
         }
     }
 
+    /**
+     * Pixel size of a local image given its public URL (as returned by thumb() or
+     * asset('public/...')), for <img width height> so the layout does not jump while
+     * images load. Returns null for remote URLs, missing files or non-images.
+     *
+     * @return array{0:int,1:int}|null
+     */
+    public static function size(?string $url): ?array
+    {
+        static $memo = [];
+        if ($url === null || $url === '') {
+            return null;
+        }
+        if (array_key_exists($url, $memo)) {
+            return $memo[$url];
+        }
+
+        $path = parse_url($url, PHP_URL_PATH) ?: '';
+        $base = parse_url(url('/'), PHP_URL_PATH) ?: '';
+        $rel  = ltrim(substr($path, strlen(rtrim($base, '/'))), '/');
+        $rel  = rawurldecode(preg_replace('#^public/#', '', $rel));
+        $file = public_path($rel);
+
+        $info = (str_starts_with($path, rtrim($base, '/')) && is_file($file)) ? @getimagesize($file) : false;
+
+        return $memo[$url] = ($info && $info[0] > 0 && $info[1] > 0) ? [$info[0], $info[1]] : null;
+    }
+
     /** Create the resized derivative with GD. Returns true on success. */
     private static function generate(string $src, string $dest, string $cacheRel, string $ext, int $width, int $quality): bool
     {
