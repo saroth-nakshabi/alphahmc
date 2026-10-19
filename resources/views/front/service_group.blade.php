@@ -616,8 +616,8 @@ function toggleTransformationDesc() {
                                             : (\App\Models\AppSetting::where('key','whatsapp_default_number')->value('value') ?? '97142724064');
                                         $_waService = trim(strip_tags($service->name ?? ''));
                                         $_waMsg     = $_waService !== ''
-                                            ? "Hi, I'd like to enquire about \"{$_waService}\" — " . url()->current()
-                                            : "Hi, I'd like to enquire about Alpha Health Group's services. — " . url()->current();
+                                            ? "Hi, I'd like to enquire about \"{$_waService}\".\n" . url()->current()
+                                            : "Hi, I'd like to enquire about Alpha Health Group's services.\n" . url()->current();
                                         $pageWaLink = $_waNum ? 'https://wa.me/' . $_waNum . '?text=' . rawurlencode($_waMsg) : null;
                                         $showWa    = (!$lAgent || $lAgent->hasMode('whatsapp')) && !empty($pageWaLink);
                                     @endphp

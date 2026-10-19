@@ -62,7 +62,7 @@
             <div class="ava-msg ava-msg-bot" id="avaIntroMsg">
                 <div class="ava-msg-avatar">α</div>
                 <div class="ava-msg-bubble">
-                    <p>Welcome! This chat assistant is still learning — for an instant reply, send us a <strong>WhatsApp message</strong> using the button below.</p>
+                    <p>Welcome! This chat assistant is still learning. For an instant reply, send us a <strong>WhatsApp message</strong> using the button below.</p>
                     <span class="ava-msg-time">Just now</span>
                 </div>
             </div>

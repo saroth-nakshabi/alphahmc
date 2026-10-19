@@ -101,7 +101,7 @@ class WaContext
         $ctx = self::resolve($fallbackLeader);
 
         $text = $customText ?? ($ctx['pageName'] !== ''
-            ? "Hi, I'd like to enquire about \"{$ctx['pageName']}\" — {$ctx['pageUrl']}"
+            ? "Hi, I'd like to enquire about \"{$ctx['pageName']}\".\n{$ctx['pageUrl']}"
             : "Hi, I'd like to enquire about Alpha Health Group's services.");
 
         return 'https://wa.me/' . $ctx['phone'] . '?text=' . rawurlencode($text);
