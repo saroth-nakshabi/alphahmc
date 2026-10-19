@@ -1,6 +1,6 @@
 @extends('front/layout-2')
 @section('custom_css')
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.min.css') }}?v=5">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.min.css') }}?v=6">
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-detail.min.css') }}?v=5">
     {{-- Project Process section styles (shared with the category page) --}}
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-category.min.css') }}?v=3">
@@ -523,7 +523,7 @@ function toggleTransformationDesc() {
                       <span class="step-num">{{ str_pad((string) ($i + 1), 2, '0', STR_PAD_LEFT) }}</span>
                       <div class="step-icon"></div>
                     </div>
-                    <h4>{{ $processHeaders[$i] ?? 'Process Step' }}</h4>
+                    <h3>{{ $processHeaders[$i] ?? 'Process Step' }}</h3>
                     <p>{!! $processDescriptions[$i] ?? '' !!}</p>
                     @php $stepService = !empty($processServiceIds[$i]) ? ($processServiceMap[$processServiceIds[$i]] ?? null) : null; @endphp
                     @if ($stepService)
@@ -574,7 +574,7 @@ function toggleTransformationDesc() {
                         <div class="faq-item {{ $index === 0 ? 'active' : '' }}" data-aos="fade-up"
                             data-aos-delay="{{ min($index * 100, 500) }}">
                             <button class="faq-header" onclick="toggleFaq(this)">
-                                <h4 class="faq-question">{{ $faq->faq_question }}</h4>
+                                <h3 class="faq-question">{{ $faq->faq_question }}</h3>
                                 <span class="faq-icon"><i class="fa-solid fa-chevron-down"></i></span>
                             </button>
                             <div class="faq-content">
@@ -618,7 +618,7 @@ function toggleTransformationDesc() {
         @if ($displayServices->count())
             <section class="bottom-interests">
                 <div class="container">
-                    <h3 class="mb-5 text-center" style="font-size: 2.8rem; font-weight: 700; color: #1a1a1a;">Related services you might be interested in</h3>
+                    <h2 class="mb-5 text-center" style="font-size: 2.8rem; font-weight: 700; color: #1a1a1a;">Related services you might be interested in</h2>
                     <div class="row g-4">
                         @foreach ($displayServices as $related)
                             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
@@ -632,7 +632,7 @@ function toggleTransformationDesc() {
                                             <span class="text-uppercase small fw-bold text-muted mb-2 d-block">
                                                 Related Service
                                             </span>
-                                            <h4>{{ $related->name }}</h4>
+                                            <h3>{{ $related->name }}</h3>
                                             <div class="interest-meta">
                                                 <span>View Service</span>
                                                 <i class="fa-solid fa-arrow-right"></i>
@@ -666,7 +666,7 @@ function toggleTransformationDesc() {
                                         </div>
                                         <div class="ey-case-body">
                                             <span class="ey-case-cat">{{ $project->project_category->name }}</span>
-                                            <h4 class="ey-case-title">{{ $project->name }}</h4>
+                                            <h3 class="ey-case-title">{{ $project->name }}</h3>
                                             <div class="ey-case-meta" style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 15px; display: flex; gap: 10px;">
                                                 <span><i class="far fa-calendar-alt"></i> {{ $project->created_at->format('M d, Y') }}</span>
                                                 <span><i class="fas fa-history"></i> {{ $project->updated_at->format('M d, Y') }}</span>

@@ -916,3 +916,43 @@
 .glass-btn:hover::after {
     opacity: 1;
 }
+
+/* Headings inside CMS content blocks (info_one to info_four). Section titles are H2,
+   sub-sections H3; these beat the 1rem ".transformation-desc *" rule and the large
+   ".help-info h2" display size so the outline stays readable. */
+.transformation-desc h2 {
+            font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+            font-weight: 600;
+            line-height: 1.3;
+            color: #ffffff;
+            margin: 28px 0 12px;
+        }
+.transformation-desc h3 {
+            font-size: clamp(1.15rem, 1.8vw, 1.35rem);
+            font-weight: 600;
+            line-height: 1.35;
+            color: #ffffff;
+            margin: 22px 0 10px;
+        }
+.transformation-desc h2:first-child,
+.transformation-desc h3:first-child { margin-top: 0; }
+.help-text-block h2 {
+            font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+            font-weight: 600;
+            line-height: 1.25;
+            color: #2e2e2e;
+            margin: 36px 0 16px;
+        }
+.help-text-block h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            line-height: 1.35;
+            color: #2e2e2e;
+            margin: 28px 0 12px;
+        }
+.help-text-block h2:first-child,
+.help-text-block h3:first-child { margin-top: 0; }
+
+/* Card titles moved from h4 to h3 for the outline; same look as before. */
+.interest-content h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 20px; color: #1a1a1a; line-height: 1.4; }
+.process-card h3 { font-size: 0.96rem; font-weight: 700; margin-bottom: 8px; line-height: 1.3; color: #102a43; }

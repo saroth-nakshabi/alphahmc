@@ -1,6 +1,6 @@
 @extends('front/layout-2')
 @section('custom_css')
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.min.css') }}?v=5">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.min.css') }}?v=6">
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-group.css') }}?v=5">
     <style>
         /* Internal/content links blend with body text — no color change, no underline. */
