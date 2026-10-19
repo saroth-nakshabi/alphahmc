@@ -365,7 +365,7 @@
         @endif
     @endforeach
 
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/front-global.min.css') }}?v=11">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/front-global.min.css') }}?v=12">
 
 {{-- Consent update functions (called by banner buttons) --}}
     <script>

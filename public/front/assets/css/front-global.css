@@ -1203,3 +1203,16 @@ h1, .h1 { font-weight: 500 !important; }
 @media (prefers-reduced-motion: no-preference) {
     html { scroll-behavior: smooth; }
 }
+
+/* Phones: compact cookie bar. Title hidden, smaller text, both choices the same size
+   and equally visible (Reject is outlined in dark slate, Accept solid teal). */
+@media (max-width: 600px) {
+    #cookie-consent-banner { padding: 12px 16px; gap: 10px; }
+    #cookie-consent-banner .cookie-title { display: none; }
+    #cookie-consent-banner .cookie-content { padding-right: 28px; }
+    #cookie-consent-banner .cookie-text { font-size: 0.8rem; line-height: 1.4; color: #475569; }
+    #cookie-consent-banner .cookie-btn { padding: 10px 12px; min-height: 44px; }
+    #cookie-consent-banner .cookie-btn-reject { background: #ffffff; color: #1e293b; border: 1px solid #475569; }
+    #cookie-consent-banner .cookie-btn-accept { background: #006e72; border: 1px solid #006e72; box-shadow: none; }
+    #cookie-consent-banner .cookie-close { top: 6px; right: 6px; min-width: 32px; min-height: 32px; }
+}

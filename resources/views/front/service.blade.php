@@ -1,7 +1,7 @@
 @extends('front/layout-2')
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.min.css') }}?v=6">
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-detail.min.css') }}?v=5">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-detail.min.css') }}?v=6">
     {{-- Project Process section styles (shared with the category page) --}}
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-category.min.css') }}?v=3">
     <style>
@@ -85,13 +85,19 @@
                         <div class="hero-desc-wrapper">
                             {!! \App\Support\Html::fixLinks($service->content) !!}
                         </div>
+                        {{-- First-screen actions: the page's WhatsApp link (same number and message as
+                             the floating button) and the inquiry modal. The site's click tracking picks
+                             both up by their wa.me href and #inquiryModal target. --}}
                         <div class="hero-actions">
-                            <button type="button"
-    class="glass-btn"
-    id="scrollToHelp">
-    <span>Contact Us</span>
-    <i class="fa-solid fa-arrow-right"></i>
-</button>
+                            <a href="{{ \App\Support\WaContext::link(null, $service) }}" class="hero-cta-primary"
+                                target="_blank" rel="noopener">
+                                <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                                <span>Message us on WhatsApp</span>
+                            </a>
+                            <button type="button" class="glass-btn" data-bs-toggle="modal" data-bs-target="#inquiryModal">
+                                <span>Book a consultation</span>
+                                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -108,33 +114,6 @@
         </section>
 
         
-        <script>
-            document.getElementById('scrollToHelp').addEventListener('click', function () {
-    const target = document.getElementById('how-alpha-can-help');
-
-    if (target) {
-        target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        });
-    }
-});
-
-document.getElementById('scrollToHelp').addEventListener('click', function () {
-    const target = document.getElementById('how-alpha-can-help');
-
-    if (target) {
-        const offset = 100; // adjust based on navbar height
-        const elementPosition = target.getBoundingClientRect().top;
-        const offsetPosition = window.pageYOffset + elementPosition - offset;
-
-        window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth"
-        });
-    }
-});
-</script>
 
 
 
