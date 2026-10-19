@@ -21,6 +21,7 @@ class AdminSettingsController extends Controller
             'contactTiming' => AppSetting::get('planner_contact_timing', 'before'),
             'showRaw'       => AppSetting::bool('planner_show_raw', false),
             'whatsappNumber'=> AppSetting::get('whatsapp_default_number', '97158128418'),
+            'siteDescription' => AppSetting::get('site_meta_description', ''),
         ]);
     }
 
@@ -34,7 +35,11 @@ class AdminSettingsController extends Controller
             'gemini_api_key'         => 'nullable|string|max:255',
             'planner_contact_timing' => 'nullable|in:before,after',
             'whatsapp_default_number'=> 'nullable|string|max:25',
+            'site_meta_description'  => 'nullable|string|max:160',
         ]);
+
+        // Site-wide fallback description (pages without their own meta description).
+        AppSetting::set('site_meta_description', trim(preg_replace('/\s+/u', ' ', (string) $request->input('site_meta_description'))));
 
         AppSetting::set('ai_planner_enabled', $request->boolean('ai_planner_enabled') ? '1' : '0');
         AppSetting::set('ai_provider', $request->input('ai_provider') === 'anthropic' ? 'anthropic' : 'gemini');

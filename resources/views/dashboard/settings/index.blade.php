@@ -128,6 +128,22 @@
                                    value="{{ $whatsappNumber }}" placeholder="97158128418" inputmode="numeric">
                         </div>
 
+                        <hr class="my-4">
+                        <label class="form-label fw-semibold" for="site_meta_description">Site description</label>
+                        <p class="text-muted small mb-2" id="site_meta_description_help">Shown in search results for pages that have no description of their own, and used as the company description for search engines. Up to 160 characters.</p>
+                        <textarea class="form-control mb-1 @error('site_meta_description') is-invalid @enderror" id="site_meta_description" name="site_meta_description"
+                                  rows="3" maxlength="160" style="max-width:640px" aria-describedby="site_meta_description_help site_meta_description_count">{{ old('site_meta_description', $siteDescription) }}</textarea>
+                        @error('site_meta_description')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                        <p class="text-muted small mb-4" id="site_meta_description_count" aria-live="polite"></p>
+                        <script>
+                            (function () {
+                                var ta = document.getElementById('site_meta_description');
+                                var out = document.getElementById('site_meta_description_count');
+                                function upd() { out.textContent = ta.value.length + ' of 160 characters'; }
+                                ta.addEventListener('input', upd); upd();
+                            })();
+                        </script>
+
                         <button type="submit" class="btn btn-success"><i class="ti ti-device-floppy me-1"></i> Save settings</button>
                     </form>
                 </div>

@@ -12,13 +12,16 @@
         $pmDesc  = (isset($pageMeta) && $pageMeta && $pageMeta->meta_description) ? $pageMeta->meta_description : null;
         $pmKeys  = (isset($pageMeta) && $pageMeta && $pageMeta->meta_keywords) ? $pageMeta->meta_keywords : null;
         $pmOg    = (isset($pageMeta) && $pageMeta && $pageMeta->og_image) ? asset('public/uploads/page_images/' . $pageMeta->og_image) : null;
+        // Page's own description section (already escaped), else the site-wide one from Settings.
+        $siteDesc = trim((string) \App\Models\AppSetting::get('site_meta_description', ''));
+        $metaDesc = trim($__env->yieldContent('meta_description')) ?: e($siteDesc);
     @endphp
 
     @if($pmTitle)<title>{{ $pmTitle }}</title>@else<title>@stack('page_title')</title>@endif
     @if($pmDesc)
         <meta name="description" content="{{ $pmDesc }}">
-    @else
-        <meta name="description" content="@yield('meta_description', 'Alpha Health Group helps healthcare facilities and professionals in the UAE and GCC with facility setup and licensing, professional licensing, accreditation and quality, and healthcare management consultancy.')">
+    @elseif($metaDesc !== '')
+        <meta name="description" content="{!! $metaDesc !!}">
     @endif
     @if($pmKeys)<meta name="keywords" content="{{ $pmKeys }}">@endif
     @stack('meta')
@@ -33,8 +36,8 @@
     <meta property="og:title" content="{{ $pmTitle ?? '' }}@unless($pmTitle)@stack('page_title')@endunless" />
     @if($pmDesc)
         <meta property="og:description" content="{{ $pmDesc }}" />
-    @else
-        <meta property="og:description" content="@yield('meta_description', 'Alpha Health Group helps healthcare facilities and professionals in the UAE and GCC with facility setup and licensing, professional licensing, accreditation and quality, and healthcare management consultancy.')" />
+    @elseif($metaDesc !== '')
+        <meta property="og:description" content="{!! $metaDesc !!}" />
     @endif
     @if($pmOg)<meta property="og:image" content="{{ $pmOg }}" /><meta name="twitter:image" content="{{ $pmOg }}" />@endif
     <meta name="twitter:card" content="summary_large_image" />
@@ -264,7 +267,7 @@
     {{-- Global Organization Schema --}}
     <script type="application/ld+json">
     {!!
-        json_encode([
+        json_encode(array_filter([
             '@context'     => 'https://schema.org',
             '@type'        => 'Organization',
             'name'         => 'Alpha Health Group',
@@ -274,7 +277,7 @@
                 '@type' => 'ImageObject',
                 'url'   => asset('public/front-new/assets/images/alpha-logo.svg'),
             ],
-            'description'  => 'Alpha Health Group helps healthcare facilities and professionals in the UAE and GCC with facility setup and licensing, professional licensing, accreditation and quality, and healthcare management consultancy.',
+            'description'  => $siteDesc !== '' ? $siteDesc : null,
             'areaServed'   => [
                 ['@type' => 'Country', 'name' => 'United Arab Emirates'],
             ],
@@ -290,7 +293,7 @@
                 'https://www.facebook.com/alphatsm',
                 'https://x.com/alphatsm_',
             ],
-        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+        ], fn ($v) => $v !== null), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
     !!}
     </script>
 
