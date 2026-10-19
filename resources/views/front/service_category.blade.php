@@ -27,12 +27,14 @@
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
           onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
+    {{-- Was preloading the original upload while the background used the 1600px thumb: two downloads. --}}
     @php
-        $heroPreload = $service->hero_image
-            ? asset('public/' . ltrim($service->hero_image, '/'))
-            : asset('public/front/assets/img/hero/service-details-bg.jpg');
+        $hero = \App\Support\Img::hero(
+            $service->hero_image ?: ($service->images[0]->image ?? null),
+            asset('public/front/assets/img/hero/service-details-bg.jpg')
+        );
     @endphp
-    <link rel="preload" as="image" href="{{ $heroPreload }}" fetchpriority="high">
+    @include('front.partials.hero-preload', ['hero' => $hero])
 @endpush
 @push('og_tags')
     {{-- <link rel="canonical" href="{{ url('/' . $service->slug) }}"> --}}
@@ -52,7 +54,7 @@
         <!-- Hero Section -->
         <section class="service-hero">
             <div class="hero-background"
-                style="background-image: linear-gradient(to right, rgba(0, 0, 0, 25%), rgba(202, 202, 202, 0.163)),url('{{ $service->hero_image ? \App\Support\Img::thumb(ltrim($service->hero_image, '/'), 1600) : (isset($service->images[0]) ? \App\Support\Img::thumb(ltrim($service->images[0]->image, '/'), 1600) : asset('public/front/assets/img/hero/service-details-bg.jpg')) }}');">
+                style="background-image: linear-gradient(to right, rgba(0, 0, 0, 25%), rgba(202, 202, 202, 0.163)),url('{{ $hero[0] }}');">
             </div>
 
             <div class="container">

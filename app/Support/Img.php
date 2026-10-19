@@ -26,6 +26,23 @@ class Img
     private const RASTER = ['jpg', 'jpeg', 'png'];
 
     /**
+     * Hero background URLs: [desktop 1600px, phone 828px]. Phones (390px at 2x) do not need
+     * the desktop file, and the hero image is the LCP element on service-type pages.
+     *
+     * @param  string|null $path      Upload path as for thumb(), or null when there is none.
+     * @param  string      $fallback  Absolute URL used for both sizes when $path is empty.
+     * @return array{0: string, 1: string}
+     */
+    public static function hero(?string $path, string $fallback): array
+    {
+        if ($path === null || trim($path) === '') {
+            return [$fallback, $fallback];
+        }
+
+        return [self::thumb($path, 1600), self::thumb($path, 828)];
+    }
+
+    /**
      * @param  string $path     Path relative to the public dir, e.g. "uploads/service_images/x.jpg"
      *                          (a leading "public/" or "/" is tolerated and stripped).
      * @param  int    $width    Max width in px. The image is only ever scaled DOWN.

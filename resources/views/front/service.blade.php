@@ -39,12 +39,14 @@
     // name; meta_description feeds the layout's description and og:description.
     $seoTitle = \App\Support\Seo::title($service->meta_title, $service->name);
     $seoDesc  = trim((string) $service->meta_description);
-    // Hero image: one URL for the preload and the background, so it downloads once.
-    $heroImg = $service->hero_image
-        ? \App\Support\Img::thumb('uploads/service_images/' . $service->hero_image, 1600)
-        : (isset($service->images[0])
-            ? \App\Support\Img::thumb('uploads/service_images/' . $service->images[0]->image, 1600)
-            : asset('public/front/assets/img/hero/service-details-bg.jpg'));
+    // Hero image: the same URLs for the preloads and the background, so each viewport downloads one file.
+    $hero = \App\Support\Img::hero(
+        $service->hero_image
+            ? 'uploads/service_images/' . $service->hero_image
+            : (isset($service->images[0]) ? 'uploads/service_images/' . $service->images[0]->image : null),
+        asset('public/front/assets/img/hero/service-details-bg.jpg')
+    );
+    $heroImg = $hero[0];
 @endphp
 @push('page_title', e($seoTitle))
 @if($seoDesc !== '')
@@ -57,8 +59,7 @@
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
           onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
-    {{-- Preload the same hero URL the background uses, at highest priority --}}
-    <link rel="preload" as="image" href="{{ $heroImg }}" fetchpriority="high">
+    @include('front.partials.hero-preload', ['hero' => $hero])
 @endpush
 @push('og_tags')
     {{-- og:site_name/title/description/url/type and twitter:card come from the layout. --}}
