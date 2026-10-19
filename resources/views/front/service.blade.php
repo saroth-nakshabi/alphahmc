@@ -1,6 +1,6 @@
 @extends('front/layout-2')
 @section('custom_css')
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.min.css') }}?v=6">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.min.css') }}?v=7">
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-detail.min.css') }}?v=6">
     {{-- Project Process section styles (shared with the category page) --}}
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-category.min.css') }}?v=3">
@@ -150,7 +150,7 @@
                                 {!! \App\Support\Html::fixLinks($service->info_two) !!}
                             </div>
                         </div>
-                        <button class="transformation-read-more" id="transformation-toggle"
+                        <button type="button" class="transformation-read-more" id="transformation-toggle" aria-expanded="false" aria-controls="transformation-desc-wrapper"
                             onclick="toggleTransformationDesc()">
                             Read more <i class="fa-solid fa-arrow-down"></i>
                         </button>
@@ -322,11 +322,15 @@ function toggleTransformationDesc() {
     const isExpanded = wrapper.classList.contains('expanded');
     if (isExpanded) {
         wrapper.classList.remove('expanded');
+        wrapper.style.maxHeight = '';
         btn.innerHTML = 'Read more <i class="fa-solid fa-arrow-down"></i>';
     } else {
         wrapper.classList.add('expanded');
+        // Open to the real content height; the CSS cap (800px) cut off longer content.
+        wrapper.style.maxHeight = wrapper.scrollHeight + 'px';
         btn.innerHTML = 'Read less <i class="fa-solid fa-arrow-up"></i>';
     }
+    btn.setAttribute('aria-expanded', String(!isExpanded));
 }
 </script>
 
