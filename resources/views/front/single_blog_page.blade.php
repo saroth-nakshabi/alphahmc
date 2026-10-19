@@ -9,17 +9,18 @@
         $blogKeywords = optional($blog->tags)->pluck('name')->filter()->implode(', ');
     }
     $blogMetaDesc = $blog->meta_description ?: \Illuminate\Support\Str::limit(strip_tags($blog->description ?? $blog->content ?? ''), 160);
+    // <title>: cut to 60 at a word; the brand suffix only when it still fits.
+    $blogSeoTitle = \App\Support\Seo::title($blog->meta_title, $blog->title, 'Alpha Health Group');
 @endphp
-@push('page_title', $blogMetaTitle . ' | Alpha Health Group')
+@push('page_title', e($blogSeoTitle))
+@section('og_type', 'article')
+@section('meta_description', trim(preg_replace('/\s+/u', ' ', html_entity_decode($blogMetaDesc, ENT_QUOTES | ENT_HTML5, 'UTF-8'))))
 @push('meta')
-    <meta name="description" content="{{ $blogMetaDesc }}">
     @if(!empty($blogKeywords))<meta name="keywords" content="{{ $blogKeywords }}">@endif
 @endpush
 @push('og_tags')
-    <meta property="og:title" content="{{ $blogMetaTitle }}" />
-    <meta property="og:type" content="article" />
-    <meta property="og:description" content="{{ $blogMetaDesc }}" />
-    <meta name="twitter:title" content="{{ $blogMetaTitle }}" />
+    {{-- og:title/description/url come from the layout (one of each per page). --}}
+    <meta name="twitter:title" content="{{ $blogSeoTitle }}" />
 @endpush
 
 @section('custom_css')

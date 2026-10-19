@@ -34,12 +34,18 @@
         }
     </style>
 @endsection
-@push('page_title')
-    {!! $service->name !!}
-@endpush
+@php
+    // One title and one description per page: meta_title (cut to 60 at a word) else the
+    // name; meta_description feeds the layout's description and og:description.
+    $seoTitle = \App\Support\Seo::title($service->meta_title, $service->name);
+    $seoDesc  = trim((string) $service->meta_description);
+@endphp
+@push('page_title', e($seoTitle))
+@if($seoDesc !== '')
+    @section('meta_description', $seoDesc)
+@endif
 @push('meta')
-    <meta name="description" content="{{ $service->meta_description }}">
-    <meta name="keywords" content="{{ $service->meta_keywords }}">
+    @if(!empty($service->meta_keywords))<meta name="keywords" content="{{ $service->meta_keywords }}">@endif
     {{-- Non-blocking Inter font (moved out of body to prevent render-block) --}}
     <link rel="preload" as="style"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
@@ -54,17 +60,13 @@
     <link rel="preload" as="image" href="{{ $heroPreload }}" fetchpriority="high">
 @endpush
 @push('og_tags')
-    {{-- <link rel="canonical" href="{{ url('/' . $service->slug) }}"> --}}
+    {{-- og:site_name/title/description/url/type and twitter:card come from the layout. --}}
     <meta name="author" content="Alpha Health Group">
-    <meta property="og:site_name" content="Alpha Health Group" />
-    <meta property="og:title" content="{{ $service->meta_title }}" />
-    <meta property="og:description" content="{{ $service->meta_description }}" />
-    <meta property="og:image" content="{{ asset('public/uploads/service_images/' . $service->hero_image) }}" />
-    <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="{{ $service->meta_title }}" />
-    <meta name="twitter:description" content="{{ $service->meta_description }}" />
+    @if($service->hero_image)
+        <meta property="og:image" content="{{ asset('public/uploads/service_images/' . $service->hero_image) }}" />
+    @endif
+    <meta name="twitter:title" content="{{ $seoTitle }}" />
+    @if($seoDesc !== '')<meta name="twitter:description" content="{{ $seoDesc }}" />@endif
 @endpush
 @section('content')
     

@@ -18,7 +18,7 @@
     @if($pmDesc)
         <meta name="description" content="{{ $pmDesc }}">
     @else
-        <meta name="description" content="@yield('meta_description', 'Alpha Health Group delivers expert healthcare consultancy, DOH compliance, quality assurance, and operational excellence for healthcare facilities in the UAE.')">
+        <meta name="description" content="@yield('meta_description', 'Alpha Health Group helps healthcare facilities and professionals in the UAE and GCC with facility setup and licensing, professional licensing, accreditation and quality, and healthcare management consultancy.')">
     @endif
     @if($pmKeys)<meta name="keywords" content="{{ $pmKeys }}">@endif
     @stack('meta')
@@ -28,13 +28,13 @@
     {{-- Default Open Graph tags — pages can override via @push('og_tags') --}}
     <meta property="og:site_name" content="Alpha Health Group" />
     <meta property="og:locale" content="en_US" />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content="@yield('og_type', 'website')" />
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="og:title" content="{{ $pmTitle ?? '' }}@unless($pmTitle)@stack('page_title')@endunless" />
     @if($pmDesc)
         <meta property="og:description" content="{{ $pmDesc }}" />
     @else
-        <meta property="og:description" content="@yield('meta_description', 'Alpha Health Group delivers expert healthcare consultancy, DOH compliance, quality assurance, and operational excellence for healthcare facilities in the UAE.')" />
+        <meta property="og:description" content="@yield('meta_description', 'Alpha Health Group helps healthcare facilities and professionals in the UAE and GCC with facility setup and licensing, professional licensing, accreditation and quality, and healthcare management consultancy.')" />
     @endif
     @if($pmOg)<meta property="og:image" content="{{ $pmOg }}" /><meta name="twitter:image" content="{{ $pmOg }}" />@endif
     <meta name="twitter:card" content="summary_large_image" />
@@ -274,7 +274,7 @@
                 '@type' => 'ImageObject',
                 'url'   => asset('public/front-new/assets/images/alpha-logo.svg'),
             ],
-            'description'  => 'Alpha Health Group delivers expert healthcare consultancy, DOH compliance, accreditation support, quality assurance, and operational excellence for healthcare facilities across the UAE.',
+            'description'  => 'Alpha Health Group helps healthcare facilities and professionals in the UAE and GCC with facility setup and licensing, professional licensing, accreditation and quality, and healthcare management consultancy.',
             'areaServed'   => [
                 ['@type' => 'Country', 'name' => 'United Arab Emirates'],
             ],
