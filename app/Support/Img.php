@@ -58,6 +58,13 @@ class Img
                 return asset('public/' . $cacheRel);
             }
 
+            // Marker left when a derivative came out no smaller than the source: serve the
+            // original without re-running GD on every page view.
+            $skipAbs = $cacheAbs . '.skip';
+            if (is_file($skipAbs)) {
+                return $original;
+            }
+
             $dir = dirname($cacheAbs);
             if (!is_dir($dir)) {
                 @mkdir($dir, 0775, true);
@@ -74,6 +81,7 @@ class Img
             // (can happen re-encoding an already-optimised image with no downscale).
             if (@filesize($cacheAbs) >= @filesize($src)) {
                 @unlink($cacheAbs);
+                @touch($skipAbs);
                 return $original;
             }
 
