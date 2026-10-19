@@ -94,6 +94,13 @@ Route::get('/service-group/{slug}/all-services', [ServiceGroupController::class,
 // Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/', [MainHomeController::class, 'index'])->name('home');
 Route::get('/load-more-categories', [MainHomeController::class, 'loadMoreCategories'])->name('front.load-more-categories');
+// The UAE licensing service became a package page (Part E). Registered before /services/{slug};
+// keeps the query string so ad clicks keep their gclid and utm_* values (Route::redirect drops it).
+$toUaeLicensing = fn (\Illuminate\Http\Request $r) => redirect()->to(
+    route('service-packages', 'healthcare-professional-licensing-uae') . ($r->getQueryString() ? '?' . $r->getQueryString() : ''),
+    301
+);
+Route::get('/services/healthcare-professional-licensing-uae', $toUaeLicensing);
 Route::get('/services/{slug}', [MainHomeController::class, 'Service'])->name('front.service');
 Route::get('/new_service/{slug}', function ($slug) {
     return redirect()->route('front.service', $slug, 301);
@@ -104,7 +111,7 @@ Route::get('/services-by-facility-type', [MainHomeController::class, 'facilityTy
 Route::redirect('/services', '/all_services', 301);
 
 // ── Legacy URL 301 redirects — old indexed pages → current pages ──
-Route::redirect('/new-professional-license', '/services/healthcare-professional-licensing-uae', 301);
+Route::get('/new-professional-license', $toUaeLicensing);
 Route::redirect('/uae-healthcare-professional-licensing', '/services/uae-healthcare-professional-licensing', 301);
 Route::redirect('/transfer-professional-license', '/service-category/healthcare-professional-licensing', 301);
 Route::redirect('/healthcare-professional-licensing', '/service-category/healthcare-professional-licensing', 301);

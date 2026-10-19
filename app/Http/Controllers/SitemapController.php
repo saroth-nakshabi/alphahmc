@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Blog;
 use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Project;
 use App\Models\Service;
 use App\Models\ServiceGroup;
-use App\Models\MainCategory;
 use Illuminate\Http\Response;
 
 class SitemapController extends Controller
@@ -50,7 +50,7 @@ class SitemapController extends Controller
     {
         $pages = [];
         try {
-            Service::select('slug', 'updated_at')->get()->each(function ($s) use (&$pages) {
+            Service::published()->select('slug', 'updated_at')->get()->each(function ($s) use (&$pages) {
                 $pages[] = [
                     'loc'        => route('front.service', $s->slug),
                     'lastmod'    => $s->updated_at?->toAtomString(),
@@ -67,7 +67,8 @@ class SitemapController extends Controller
     {
         $pages = [];
         try {
-            MainCategory::select('slug', 'updated_at')->get()->each(function ($c) use (&$pages) {
+            // /service-category/{slug} serves Category; main_categories has no slug column.
+            Category::select('slug', 'updated_at')->get()->each(function ($c) use (&$pages) {
                 $pages[] = [
                     'loc'        => route('front.service-category', $c->slug),
                     'lastmod'    => $c->updated_at?->toAtomString(),
@@ -84,7 +85,7 @@ class SitemapController extends Controller
     {
         $pages = [];
         try {
-            ServiceGroup::select('slug', 'updated_at')->get()->each(function ($g) use (&$pages) {
+            ServiceGroup::where('status', 'published')->select('slug', 'updated_at')->get()->each(function ($g) use (&$pages) {
                 $pages[] = [
                     'loc'        => route('service-packages', $g->slug),
                     'lastmod'    => $g->updated_at?->toAtomString(),
