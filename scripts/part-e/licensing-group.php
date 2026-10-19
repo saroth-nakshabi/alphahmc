@@ -22,9 +22,13 @@ use App\Models\ServiceGroup;
 $dryRun = in_array('--dry-run', $argv, true);
 $slug = 'healthcare-professional-licensing-uae';
 
-// Services the group links to today; DOH and MOHAP pages are added as they go live.
+// Authority pages: listed and linked only once their script has run and the page is published,
+// so this script can be re-run before the next authority page goes live.
+$authorityPages = [
+    'Dubai Health Authority (DHA)' => ['dha-license-healthcare-professionals-dubai', 'Working in Dubai? See <a href="/services/%s">DHA licensing for healthcare professionals</a>.'],
+    'Department of Health (DOH)' => ['doh-license-healthcare-professionals-abu-dhabi', 'Working in Abu Dhabi? See <a href="/services/%s">DOH licensing for healthcare professionals</a>.'],
+];
 $serviceSlugs = [
-    'dha-license-healthcare-professionals-dubai',     // DHA (Dubai), Part E step 4: run licensing-dha.php first
     'healthcare-professional-license-registration',   // New healthcare professional license
     'healthcare-professional-license-transfer',       // Transfer between authorities
     'activate-your-uae-healthcare-license',           // Activation with a new employer
@@ -42,7 +46,7 @@ $fields = [
 <div class="table-scroll"><table>
 <thead><tr><th>Authority</th><th>Emirates</th><th>Apply through</th><th>Licensing exam</th><th>License activated by</th></tr></thead>
 <tbody>
-<tr><td><a href="/services/dha-license-healthcare-professionals-dubai">Dubai Health Authority (DHA)</a></td><td>Dubai</td><td>Sheryan</td><td>Prometric</td><td>Your DHA-licensed employer</td></tr>
+<tr><td>Dubai Health Authority (DHA)</td><td>Dubai</td><td>Sheryan</td><td>Prometric</td><td>Your DHA-licensed employer</td></tr>
 <tr><td>Department of Health (DOH)</td><td>Abu Dhabi</td><td>TAMM</td><td>Pearson VUE</td><td>Your DOH-licensed employer</td></tr>
 <tr><td>Ministry of Health and Prevention (MOHAP)</td><td>Northern Emirates</td><td>MOHAP website or app</td><td>Prometric</td><td>Your employer, which applies for the license</td></tr>
 </tbody>
@@ -60,7 +64,7 @@ $fields = [
 <p>DHA, DOH and MOHAP follow the same six steps.</p>',
     'info_four' => '<h2>How Alpha Health Group helps</h2>
 <p>Our licensing team handles the work around your application: we check your eligibility against the PQR for your title and authority, prepare and check your documents, open and follow your DataFlow verification, guide you on the exam, and follow the application through to approval.</p>
-<p>Working in Dubai? See <a href="/services/dha-license-healthcare-professionals-dubai">DHA licensing for healthcare professionals</a>. Applying for the first time? See <a href="/services/healthcare-professional-license-registration">new healthcare professional licenses</a>. Changing emirate? See <a href="/services/healthcare-professional-license-transfer">license transfers between DHA, DOH and MOHAP</a>. Joining a new employer? See <a href="/services/activate-your-uae-healthcare-license">license activation</a>.</p>
+<p>{authority_links}Applying for the first time? See <a href="/services/healthcare-professional-license-registration">new healthcare professional licenses</a>. Changing emirate? See <a href="/services/healthcare-professional-license-transfer">license transfers between DHA, DOH and MOHAP</a>. Joining a new employer? See <a href="/services/activate-your-uae-healthcare-license">license activation</a>.</p>
 <p>Planning to work elsewhere in the GCC? See <a href="/services/saudi-healthcare-professional-licensing">SCFHS licensing in Saudi Arabia</a>, <a href="/services/healthcare-professional-licensing-qatar">DHP licensing in Qatar</a> and <a href="/services/healthcare-professional-licensing-oman">licensing in Oman</a>.</p>',
     'status' => 'published',
     'is_featured' => 0,
@@ -106,6 +110,19 @@ if ($missing) {
     fwrite(STDERR, "Missing services: " . implode(', ', $missing) . "\n");
     exit(1);
 }
+
+// Live authority pages go first in the group's list and get linked from the table and help block.
+$authorityLive = Service::published()->whereIn('slug', array_column($authorityPages, 0))->get()->keyBy('slug');
+$authorityLinks = '';
+foreach ($authorityPages as $cell => [$pageSlug, $sentence]) {
+    if (!isset($authorityLive[$pageSlug])) {
+        continue;
+    }
+    $fields['overview'] = str_replace("<td>{$cell}</td>", "<td><a href=\"/services/{$pageSlug}\">{$cell}</a></td>", $fields['overview']);
+    $authorityLinks .= sprintf($sentence, $pageSlug) . ' ';
+}
+$fields['info_four'] = str_replace('{authority_links}', $authorityLinks, $fields['info_four']);
+$services = $authorityLive->toBase()->merge($services->toBase()); // base merge keeps the slug keys
 
 // Hero image and inquiry officer carry over from the UAE service page.
 if ($source) {
