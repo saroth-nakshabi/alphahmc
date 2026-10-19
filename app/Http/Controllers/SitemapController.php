@@ -43,6 +43,7 @@ class SitemapController extends Controller
             ['loc' => route('front.project'),             'priority' => '0.6', 'changefreq' => 'monthly'],
             ['loc' => route('front.brands'),              'priority' => '0.5', 'changefreq' => 'monthly'],
             ['loc' => route('front.ahg-updates'),         'priority' => '0.6', 'changefreq' => 'weekly'],
+            ['loc' => route('front.privacy-policy'),      'priority' => '0.3', 'changefreq' => 'yearly'],
         ];
     }
 

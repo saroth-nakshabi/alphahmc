@@ -150,6 +150,11 @@ Route::get('/terms-of-service', function () {
 Route::get('/cookie-policy', function () {
     return view('front.cookie-policy');
 })->name('front.cookie-policy');
+
+// Linked from the footer and the inquiry form consent; also the privacy URL for the Google Cloud and Meta apps.
+Route::get('/alpha-privacy-policy', function () {
+    return view('front.privacy-policy');
+})->name('front.privacy-policy');
 Route::post('/share-your-experience/submit', [MainHomeController::class, 'submitTestimonial'])->middleware('throttle:5,1')->name('front.testimonial.submit');
 
 // Route::post('/ckeditor/upload', [TinyMCEUploadController::class, 'upload'])->name('ckeditor.upload');
