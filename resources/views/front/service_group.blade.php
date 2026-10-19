@@ -1,7 +1,7 @@
 @extends('front/layout-2')
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.min.css') }}?v=7">
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-group.css') }}?v=5">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-group.css') }}?v=7">
     <style>
         /* Internal/content links blend with body text — no color change, no underline. */
         .hero-desc-wrapper a, .lead-text a, .quote-text a,
@@ -17,33 +17,38 @@
         }
     </style>
 @endsection
-@push('page_title')
-    {!! $service->name !!}
-@endpush
+@php
+    // Same rules as service pages: meta_title (cut to 60 at a word) else the name; one
+    // description; the hero URL computed once for the preload and the background.
+    $seoTitle = \App\Support\Seo::title($service->meta_title, $service->name);
+    $seoDesc  = trim((string) $service->meta_description);
+    $heroImg  = $service->hero_image
+        ? \App\Support\Img::thumb(ltrim($service->hero_image, '/'), 1600)
+        : (isset($service->images[0])
+            ? \App\Support\Img::thumb(ltrim($service->images[0]->image, '/'), 1600)
+            : asset('public/front/assets/img/hero/service-details-bg.jpg'));
+@endphp
+@push('page_title', e($seoTitle))
+@if($seoDesc !== '')
+    @section('meta_description', $seoDesc)
+@endif
 @push('meta')
-    <meta name="description" content="{{ $service->meta_description }}">
-    <meta name="keywords" content="{{ $service->meta_keywords }}">
+    @if(!empty($service->meta_keywords))<meta name="keywords" content="{{ $service->meta_keywords }}">@endif
     <link rel="preload" as="style"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
           onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
-    @php
-        $heroPreload = $service->hero_image
-            ? asset('public/' . ltrim($service->hero_image, '/'))
-            : asset('public/front/assets/img/hero/service-details-bg.jpg');
-    @endphp
-    <link rel="preload" as="image" href="{{ $heroPreload }}" fetchpriority="high">
+    {{-- Preload the same hero URL the background uses, at highest priority --}}
+    <link rel="preload" as="image" href="{{ $heroImg }}" fetchpriority="high">
 @endpush
 @push('og_tags')
-    {{-- <link rel="canonical" href="{{ url('/' . $service->slug) }}"> --}}
-    <meta name="author" content="Alpha Health Management Consultancy">
-    <meta property="og:title" content="{{ $service->meta_title }}" />
-    <meta property="og:description" content="{{ $service->meta_description }}" />
-    <meta property="og:image" content="{{ $service->hero_image ? asset('public/' . ltrim($service->hero_image, '/')) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}" />
-    <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="{{ strip_tags($service->content)}}">
-    {{-- <meta name="twitter:description" content="{{ strip_tags($service->meta_description ?? $service->overview) }}"> --}}
+    {{-- og:site_name/title/description/url/type and twitter:card come from the layout. --}}
+    <meta name="author" content="Alpha Health Group">
+    @if($service->hero_image)
+        <meta property="og:image" content="{{ asset('public/' . ltrim($service->hero_image, '/')) }}" />
+    @endif
+    <meta name="twitter:title" content="{{ $seoTitle }}" />
+    @if($seoDesc !== '')<meta name="twitter:description" content="{{ $seoDesc }}" />@endif
 @endpush
 @section('content')
     
@@ -52,7 +57,7 @@
         <!-- Hero Section -->
         <section class="service-hero">
             <div class="hero-background"
-                style="background-image: linear-gradient(to right, rgba(0, 0, 0, 25%), rgba(202, 202, 202, 0.163)),url('{{ $service->hero_image ? \App\Support\Img::thumb(ltrim($service->hero_image, '/'), 1600) : (isset($service->images[0]) ? \App\Support\Img::thumb(ltrim($service->images[0]->image, '/'), 1600) : asset('public/front/assets/img/hero/service-details-bg.jpg')) }}');">
+                style="background-image: linear-gradient(to right, rgba(0, 0, 0, 25%), rgba(202, 202, 202, 0.163)),url('{{ $heroImg }}');">
             </div>
 
             <div class="container">
@@ -62,13 +67,19 @@
                         <div class="hero-desc-wrapper">
                             {!! \App\Support\Html::fixLinks($service->content) !!}
                         </div>
+                        {{-- First-screen actions, as on service pages: the page's WhatsApp link
+                             (WaContext resolves package pages) and the inquiry modal. The site's
+                             click tracking picks both up by their wa.me href and #inquiryModal. --}}
                         <div class="hero-actions">
-                            <button type="button"
-    class="glass-btn"
-    id="scrollToHelp">
-    <span>Contact Us</span>
-    <i class="fa-solid fa-arrow-right"></i>
-</button>
+                            <a href="{{ \App\Support\WaContext::link(null, $service) }}" class="hero-cta-primary"
+                                target="_blank" rel="noopener">
+                                <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                                <span>Message us on WhatsApp</span>
+                            </a>
+                            <button type="button" class="glass-btn" data-bs-toggle="modal" data-bs-target="#inquiryModal">
+                                <span>Book a consultation</span>
+                                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -85,33 +96,6 @@
         </section>
 
         
-        <script>
-            document.getElementById('scrollToHelp').addEventListener('click', function () {
-    const target = document.getElementById('how-alpha-can-help');
-
-    if (target) {
-        target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        });
-    }
-});
-
-document.getElementById('scrollToHelp').addEventListener('click', function () {
-    const target = document.getElementById('how-alpha-can-help');
-
-    if (target) {
-        const offset = 100; // adjust based on navbar height
-        const elementPosition = target.getBoundingClientRect().top;
-        const offsetPosition = window.pageYOffset + elementPosition - offset;
-
-        window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth"
-        });
-    }
-});
-</script>
 
 
 
@@ -315,7 +299,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
               <span class="step-num">{{ str_pad((string) ($i + 1), 2, '0', STR_PAD_LEFT) }}</span>
               <div class="step-icon"></div>
             </div>
-            <h4>{{ $processHeaders[$i] ?? 'Process Step' }}</h4>
+            <h3>{{ $processHeaders[$i] ?? 'Process Step' }}</h3>
             <p>{!! \App\Support\Html::fixLinks($processDescriptions[$i] ?? '') !!}</p>
             @php $stepService = !empty($processServiceIds[$i]) ? ($processServiceMap[$processServiceIds[$i]] ?? null) : null; @endphp
             @if ($stepService)
@@ -700,12 +684,15 @@ function toggleTransformationDesc() {
             });
         </script>
 
-        <!-- Case Studies & Related Content Split Section -->
+        <!-- Case Studies & Related Content Split Section (only related items; hidden when none) -->
+        @php $blog = $relatedBlog ?? null; @endphp
+        @if ($projects->count() || $blog)
         <section class="split-section-ey">
             <div class="container">
                 <div class="row">
+                    @if ($projects->count())
                     <!-- Left Column: Case Studies -->
-                    <div class="col-lg-7" data-aos="fade-right">
+                    <div class="{{ $blog ? 'col-lg-7' : 'col-lg-12' }}" data-aos="fade-right">
                         <h2 class="ey-section-title">Case Studies</h2>
                         <div class="row g-4">
                             @foreach ($projects->take(2) as $project)
@@ -719,7 +706,7 @@ function toggleTransformationDesc() {
                                         </div>
                                         <div class="ey-case-body">
                                             <span class="ey-case-cat">{{ $project->project_category->name }}</span>
-                                            <h4 class="ey-case-title">{{ $project->name }}</h4>
+                                            <h3 class="ey-case-title">{{ $project->name }}</h3>
                                             <a href="{{ route('front.project_details', $project->slug) }}" class="text-dark fw-bold text-decoration-none">
                                 VIEW CASE STUDY <i class="fas fa-arrow-right ms-2"></i>
                             </a>
@@ -729,15 +716,13 @@ function toggleTransformationDesc() {
                             @endforeach
                         </div>
                     </div>
+                    @endif
 
-                    <!-- Right Column: Blog Posts -->
-                    <div class="col-lg-5" data-aos="fade-left">
+                    @if ($blog)
+                    <!-- Right Column: Related article -->
+                    <div class="{{ $projects->count() ? 'col-lg-5' : 'col-lg-8' }}" data-aos="fade-left">
                         <div class="related-content-block">
                             <h2 class="ey-section-title">Related Article</h2>
-                            @php
-                                $blog = $latest_blogs->first();
-                            @endphp
-                            @if($blog)
                                 <a href="{{ route('front.singleBlog', $blog->slug) }}" class="ey-related-card">
                                     <img src="{{ isset($blog->image) && $blog->image ? \App\Support\Img::thumb('uploads/blog_images/' . $blog->image, 800) : asset('public/front-new/assets/images/blog_images/Doctor-image/2.webp') }}"
                                         class="rc-bg-img" alt="{{ $blog->title }}">
@@ -749,16 +734,13 @@ function toggleTransformationDesc() {
                                         </div>
                                     </div>
                                 </a>
-                            @else
-                                <div class="text-center py-5">
-                                    <p class="text-muted">No related content available.</p>
-                                </div>
-                            @endif
                         </div>
                     </div>
+                    @endif
                 </div>
             </div>
         </section>
+        @endif
 
 
 
@@ -770,8 +752,8 @@ function toggleTransformationDesc() {
         <!-- Bottom Interests -->
         <section class="bottom-interests" id="related-services">
             <div class="container">
-                <h3 class="mb-5 text-center" style="font-size: 2.8rem; font-weight: 700; color: #1a1a1a;">You might be
-                    interested in</h3>
+                <h2 class="mb-5 text-center" style="font-size: 2.8rem; font-weight: 700; color: #1a1a1a;">You might be
+                    interested in</h2>
                 <div class="row g-4">
                     @php
                         $displayServices = isset($featuredServices) ? $featuredServices->take(3) : collect();
@@ -788,7 +770,7 @@ function toggleTransformationDesc() {
                                         <span class="text-uppercase small fw-bold text-muted mb-2 d-block">
                                             Featured Service
                                         </span>
-                                        <h4>{{ $related->name }}</h4>
+                                        <h3>{{ $related->name }}</h3>
                                         <div class="interest-meta">
                                             <span>View Service</span>
                                             <i class="fa-solid fa-arrow-right"></i>
@@ -936,5 +918,15 @@ function toggleTransformationDesc() {
                 }
             }
         </script>
+    @endpush
+    {{-- Page context for the conversion tracker (service pages send page_type 'service'). --}}
+    @push('scripts')
+    <script>
+        window._ahgPage = {
+            service_name: @json($service->name ?? ''),
+            service_slug: @json($service->slug ?? ''),
+            page_type:    'service_group',
+        };
+    </script>
     @endpush
 @endsection

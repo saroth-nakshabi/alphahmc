@@ -1082,7 +1082,8 @@
     letter-spacing: 0.02em;
   }
 
-.process-card h4 {
+.process-card h4,
+.process-card h3 {
     font-size: 0.96rem;
     font-weight: 700;
     margin-bottom: 8px;
@@ -1246,3 +1247,29 @@
 @media (max-width: 480px) {
     .hero-title { font-size: 1.85rem !important; }
 }
+
+/* Hero actions on package pages, as on service pages: WhatsApp (primary, white on
+   #006e72 is 6.2:1) and the consultation modal; stacked full width on phones. */
+.hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 25px; }
+.hero-actions .glass-btn { top: 0; }
+.hero-cta-primary { display: inline-flex; align-items: center; gap: 10px; padding: 14px 30px; font-size: 15px; font-weight: 600; letter-spacing: 0.4px; color: #fff; background: #006e72; border: 1px solid #006e72; border-radius: 50px; text-decoration: none; transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; }
+.hero-cta-primary i { font-size: 1.2em; }
+.hero-cta-primary:hover, .hero-cta-primary:focus-visible { color: #fff; background: #005a5e; transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); }
+.hero-actions a:focus-visible, .hero-actions button:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+@media (max-width: 576px) {
+    .hero-actions { flex-direction: column; align-items: stretch; }
+    .hero-actions .hero-cta-primary, .hero-actions .glass-btn { justify-content: center; min-height: 52px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hero-cta-primary, .hero-actions .glass-btn { transition: none; }
+    .hero-cta-primary:hover, .hero-cta-primary:focus-visible { transform: none; }
+}
+
+/* Comparison tables in CMS text (e.g. DHA, DOH and MOHAP side by side). Scrolls sideways
+   on narrow screens instead of squeezing the columns. */
+.sdb-desc table { width: 100%; border-collapse: collapse; margin: 18px 0 22px; font-size: 0.95rem; }
+.sdb-desc th, .sdb-desc td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+.sdb-desc thead th { font-weight: 600; color: #102a43; border-bottom: 2px solid #102a43; }
+.sdb-desc .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.sdb-desc .table-scroll table { min-width: 560px; }
+.sdb-desc h3 { font-size: 1.3rem; font-weight: 600; margin: 24px 0 10px; color: #102a43; }

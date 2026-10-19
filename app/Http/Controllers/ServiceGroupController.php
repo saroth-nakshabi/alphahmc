@@ -39,8 +39,12 @@ class ServiceGroupController extends Controller
         $data['service'] = $service;
         $data['featuredServices'] = Service::published()->where('featured', true)->take(3)->get();
         $data['all_services'] = Service::published()->get();
-        $data['projects'] = Project::with('projects_images', 'projects_videos', 'projects_documents', 'project_category')->paginate(3);
-        $data['latest_blogs'] = Blog::orderBy('sort_order')->orderBy('id')->take(3)->get();
+        // Case studies and the related article, as on service pages: projects that list one of
+        // the package's services (else a service in its categories), and the best-matching blog
+        // in its categories. None related hides the section.
+        $categoryIds = $service->categories()->pluck('categories.id')->all();
+        $data['projects'] = \App\Support\RelatedContent::projects($service->services->pluck('id')->all(), $categoryIds);
+        $data['relatedBlog'] = \App\Support\RelatedContent::blog($service->name . ' ' . $service->meta_title, $categoryIds);
         $data['globaltag'] = globaltag::all();
         $data['googletag'] = googletag::all();
         $data['service_groups'] = ServiceGroup::all();
