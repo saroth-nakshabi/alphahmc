@@ -2,7 +2,7 @@
 
 @push('page_title', 'Cookie Policy | Alpha Health Group')
 
-@section('meta_description', 'Alpha Health Group\'s Cookie Policy — what cookies we use on our website, how they work, and how you can manage your cookie preferences.')
+@section('meta_description', 'Alpha Health Group\'s Cookie Policy: which cookies and browser storage our website uses, what they do and how you can change your choice.')
 
 @push('og_tags')
     <meta property="og:type" content="website" />
@@ -336,20 +336,21 @@
 
 @section('content')
 
+@php $privacyEmail = 'info@alphatsm.com'; @endphp
+
 {{-- HERO --}}
 <section class="cookie-hero">
     <div class="container">
         <div class="row">
             <div class="col-lg-9">
-                <span class="cookie-hero-badge"><i class="fas fa-cookie-bite me-2"></i>Cookie Policy</span>
+                <span class="cookie-hero-badge">Cookie Policy</span>
                 <h1>Cookie Policy</h1>
                 <p class="lead">
-                    This policy explains how Alpha Health Group uses cookies and similar technologies on our website, what data they collect, and how you can manage your preferences.
+                    Which cookies and browser storage alphahmc.com uses, what they do, and how you control them.
                 </p>
                 <div class="cookie-hero-pills">
-                    <span class="cookie-hero-pill"><i class="fas fa-calendar-check"></i>Effective: 1 January 2025</span>
-                    <span class="cookie-hero-pill"><i class="fas fa-sync-alt"></i>Last Reviewed: {{ date('F Y') }}</span>
-                    <span class="cookie-hero-pill"><i class="fas fa-flag"></i>Applies: All website visitors</span>
+                    <span class="cookie-hero-pill">Last updated: 19 October 2026</span>
+                    <span class="cookie-hero-pill">Applies to all visitors of alphahmc.com</span>
                 </div>
             </div>
         </div>
@@ -363,19 +364,16 @@
 
             {{-- Sidebar ToC --}}
             <div class="col-lg-3 d-none d-lg-block">
-                <nav class="cookie-toc">
-                    <h4>On This Page</h4>
+                <nav class="cookie-toc" aria-label="On this page">
+                    <h4>On this page</h4>
                     <ol>
-                        <li><a href="#c1">What Are Cookies?</a></li>
-                        <li><a href="#c2">Why We Use Cookies</a></li>
-                        <li><a href="#c3">Types of Cookies</a></li>
-                        <li><a href="#c4">Cookies We Use</a></li>
-                        <li><a href="#c5">Third-Party Cookies</a></li>
-                        <li><a href="#c6">Managing Preferences</a></li>
-                        <li><a href="#c7">Browser Controls</a></li>
-                        <li><a href="#c8">Do Not Track</a></li>
-                        <li><a href="#c9">Policy Updates</a></li>
-                        <li><a href="#c10">Contact Us</a></li>
+                        <li><a href="#c1">What cookies are</a></li>
+                        <li><a href="#c2">Types we use</a></li>
+                        <li><a href="#c3">Cookies and storage we use</a></li>
+                        <li><a href="#c4">Your choices</a></li>
+                        <li><a href="#c5">Browser controls</a></li>
+                        <li><a href="#c6">Changes</a></li>
+                        <li><a href="#c7">Contact</a></li>
                     </ol>
                 </nav>
             </div>
@@ -384,273 +382,178 @@
             <div class="col-lg-9">
 
                 <div class="cookie-info-box">
-                    <p><i class="fas fa-cookie-bite me-2"></i>
-                        When you visit our website, we may place small data files called "cookies" on your device. This policy explains exactly what cookies we use, why we use them, and the choices available to you. Our use of cookies complies with applicable laws including the UAE Federal Decree-Law No. 45 of 2021 on Personal Data Protection (PDPL) and EU ePrivacy Directive.
+                    <p>
+                        This page explains the cookies and similar technologies on our website. How we handle personal
+                        data in general is set out in our <a href="{{ route('front.privacy-policy') }}">privacy policy</a>.
                     </p>
                 </div>
 
-                {{-- 1. What Are Cookies --}}
                 <div class="cookie-section" id="c1">
-                    <span class="cookie-section-label"><i class="fas fa-question-circle"></i>Section 1</span>
-                    <h2>What Are Cookies?</h2>
+                    <span class="cookie-section-label">Section 1</span>
+                    <h2>What cookies are</h2>
                     <p>
-                        Cookies are small text files placed on your computer, tablet, or mobile device when you visit a website. They are widely used to make websites work efficiently, to remember your preferences, and to provide basic reporting information to website owners.
+                        Cookies are small text files a website stores in your browser. Websites also use browser storage
+                        (localStorage and sessionStorage) for the same kind of purpose. Some last only until you close the
+                        browser; others stay for a set time. First-party cookies are set by alphahmc.com; third-party
+                        cookies are set by other services, such as Google, that run on our pages.
                     </p>
-                    <p>
-                        Cookies cannot run programmes, carry viruses, or harm your device. They are unique to your browser and are not transferable between devices. Cookies may be:
-                    </p>
-                    <ul>
-                        <li><strong>Session cookies</strong> — temporary files that expire when you close your browser.</li>
-                        <li><strong>Persistent cookies</strong> — remain on your device for a set period or until manually deleted.</li>
-                        <li><strong>First-party cookies</strong> — set directly by Alpha Health Group.</li>
-                        <li><strong>Third-party cookies</strong> — set by third-party services operating on our website (e.g., analytics providers).</li>
-                    </ul>
                     <hr class="cookie-divider">
                 </div>
 
-                {{-- 2. Why We Use Cookies --}}
                 <div class="cookie-section" id="c2">
-                    <span class="cookie-section-label"><i class="fas fa-question-circle"></i>Section 2</span>
-                    <h2>Why We Use Cookies</h2>
-                    <p>We use cookies to:</p>
-                    <ul>
-                        <li>Ensure our website functions correctly and securely</li>
-                        <li>Remember your preferences and personalise your visit</li>
-                        <li>Understand how visitors use our website so we can improve it</li>
-                        <li>Measure the effectiveness of our content and service information</li>
-                        <li>Deliver relevant information about our healthcare consultancy services</li>
-                        <li>Maintain session security and prevent fraudulent activity</li>
-                    </ul>
-                    <p>We do <strong>not</strong> use cookies to collect or process sensitive personal health data, nor do we sell cookie data to any third party.</p>
-                    <hr class="cookie-divider">
-                </div>
-
-                {{-- 3. Types of Cookies --}}
-                <div class="cookie-section" id="c3">
-                    <span class="cookie-section-label"><i class="fas fa-layer-group"></i>Section 3</span>
-                    <h2>Types of Cookies We Use</h2>
-
+                    <span class="cookie-section-label">Section 2</span>
+                    <h2>Types we use</h2>
                     <div class="cookie-type-grid">
                         <div class="cookie-type-card necessary">
-                            <div class="cookie-type-icon"><i class="fas fa-lock"></i></div>
-                            <h5>Strictly Necessary</h5>
-                            <span class="cookie-type-badge badge-required">Always Active</span>
-                            <p>Essential for the website to function. They enable core features like page navigation, security, and session management. The website cannot function properly without these cookies.</p>
+                            <h5>Strictly necessary</h5>
+                            <span class="cookie-type-badge badge-required">Always on</span>
+                            <p>Keep the site working and secure: your session, form security, spam protection and remembering your cookie choice.</p>
                         </div>
                         <div class="cookie-type-card analytics">
-                            <div class="cookie-type-icon"><i class="fas fa-chart-bar"></i></div>
-                            <h5>Performance &amp; Analytics</h5>
-                            <span class="cookie-type-badge badge-consent">Consent Required</span>
-                            <p>Help us understand how visitors interact with our website by collecting anonymous data on pages visited, time spent, and traffic sources. Improves overall website performance.</p>
-                        </div>
-                        <div class="cookie-type-card functional">
-                            <div class="cookie-type-icon"><i class="fas fa-sliders-h"></i></div>
-                            <h5>Functional</h5>
-                            <span class="cookie-type-badge badge-consent">Consent Required</span>
-                            <p>Allow the website to remember choices you make (such as language or region preferences) and provide enhanced, personalised features to improve your experience.</p>
+                            <h5>Analytics</h5>
+                            <span class="cookie-type-badge badge-consent">Controlled by your choice</span>
+                            <p>Google Analytics measures which pages people visit and how they reach us, so we can improve the site.</p>
                         </div>
                         <div class="cookie-type-card marketing">
-                            <div class="cookie-type-icon"><i class="fas fa-bullhorn"></i></div>
-                            <h5>Marketing</h5>
-                            <span class="cookie-type-badge badge-optional">Optional</span>
-                            <p>Used to track visitors across websites and deliver relevant advertisements for our healthcare services. These do not store personal health data.</p>
+                            <h5>Advertising</h5>
+                            <span class="cookie-type-badge badge-consent">Controlled by your choice</span>
+                            <p>Google Ads measures whether a visit from one of our ads led to an inquiry or a WhatsApp message.</p>
                         </div>
                     </div>
                     <hr class="cookie-divider">
                 </div>
 
-                {{-- 4. Cookies We Use --}}
-                <div class="cookie-section" id="c4">
-                    <span class="cookie-section-label"><i class="fas fa-list"></i>Section 4</span>
-                    <h2>Specific Cookies We Use</h2>
-                    <p>The following table lists the main cookies placed by our website:</p>
-
+                <div class="cookie-section" id="c3">
+                    <span class="cookie-section-label">Section 3</span>
+                    <h2>Cookies and storage we use</h2>
                     <div class="cookie-table-wrap">
                         <table class="cookie-table">
                             <thead>
                                 <tr>
-                                    <th>Cookie Name</th>
-                                    <th>Provider</th>
-                                    <th>Type</th>
-                                    <th>Purpose</th>
-                                    <th>Duration</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Set by</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Purpose</th>
+                                    <th scope="col">Lasts</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><code>XSRF-TOKEN</code></td>
+                                    <td><code>alpha_main_website_session</code></td>
                                     <td>Alpha Health Group</td>
                                     <td><span class="tag-essential">Necessary</span></td>
-                                    <td>Prevents cross-site request forgery attacks. Ensures form submissions are secure.</td>
-                                    <td>Session</td>
-                                </tr>
-                                <tr>
-                                    <td><code>alphahmc_session</code></td>
-                                    <td>Alpha Health Group</td>
-                                    <td><span class="tag-essential">Necessary</span></td>
-                                    <td>Maintains your user session and enables navigation across pages without re-authenticating.</td>
+                                    <td>Keeps your session while you move between pages and submit forms.</td>
                                     <td>2 hours</td>
                                 </tr>
                                 <tr>
-                                    <td><code>cookie_consent</code></td>
+                                    <td><code>XSRF-TOKEN</code></td>
                                     <td>Alpha Health Group</td>
                                     <td><span class="tag-essential">Necessary</span></td>
-                                    <td>Stores your cookie consent preferences so you are not shown the banner on every visit.</td>
-                                    <td>6 months</td>
+                                    <td>Protects forms against cross-site request forgery.</td>
+                                    <td>2 hours</td>
                                 </tr>
                                 <tr>
-                                    <td><code>_ga</code></td>
-                                    <td>Google Analytics</td>
-                                    <td><span class="tag-analytics">Analytics</span></td>
-                                    <td>Distinguishes unique users. Generates statistical data on how visitors use the website (IP anonymised).</td>
-                                    <td>2 years</td>
-                                </tr>
-                                <tr>
-                                    <td><code>_ga_*</code></td>
-                                    <td>Google Analytics</td>
-                                    <td><span class="tag-analytics">Analytics</span></td>
-                                    <td>Used to persist session state across Google Analytics 4 measurement sessions.</td>
-                                    <td>2 years</td>
-                                </tr>
-                                <tr>
-                                    <td><code>_gid</code></td>
-                                    <td>Google Analytics</td>
-                                    <td><span class="tag-analytics">Analytics</span></td>
-                                    <td>Distinguishes users. Used to throttle request rate.</td>
-                                    <td>24 hours</td>
-                                </tr>
-                                <tr>
-                                    <td><code>_gat</code></td>
-                                    <td>Google Analytics</td>
-                                    <td><span class="tag-analytics">Analytics</span></td>
-                                    <td>Used to throttle the request rate to Google Analytics servers.</td>
-                                    <td>1 minute</td>
-                                </tr>
-                                <tr>
-                                    <td><code>lang_pref</code></td>
+                                    <td><code>cookie_consent</code> (browser storage)</td>
                                     <td>Alpha Health Group</td>
-                                    <td><span class="tag-functional">Functional</span></td>
-                                    <td>Stores your language or region preference for your next visit.</td>
-                                    <td>1 year</td>
+                                    <td><span class="tag-essential">Necessary</span></td>
+                                    <td>Remembers whether you accepted or rejected analytics and advertising.</td>
+                                    <td>30 days</td>
+                                </tr>
+                                <tr>
+                                    <td>Session storage items</td>
+                                    <td>Alpha Health Group</td>
+                                    <td><span class="tag-essential">Necessary</span></td>
+                                    <td>Remember, for this visit only, that you sent an inquiry or closed a message, so we do not show it again.</td>
+                                    <td>Until you close the tab</td>
+                                </tr>
+                                <tr>
+                                    <td>reCAPTCHA data</td>
+                                    <td>Google reCAPTCHA</td>
+                                    <td><span class="tag-essential">Necessary</span></td>
+                                    <td>Set on pages with a form, to tell people from spam bots.</td>
+                                    <td>Set by Google</td>
+                                </tr>
+                                <tr>
+                                    <td><code>_ga</code>, <code>_ga_*</code></td>
+                                    <td>Google Analytics</td>
+                                    <td><span class="tag-analytics">Analytics</span></td>
+                                    <td>Count visits and pages, and tell returning visitors from new ones.</td>
+                                    <td>2 years</td>
+                                </tr>
+                                <tr>
+                                    <td><code>_gcl_au</code></td>
+                                    <td>Google Ads</td>
+                                    <td><span class="tag-marketing">Advertising</span></td>
+                                    <td>Links an inquiry or WhatsApp message to the ad click that led to it.</td>
+                                    <td>90 days</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-
                     <p class="mt-3" style="font-size:0.88rem; color: var(--muted);">
-                        <i class="fas fa-info-circle me-1"></i> This list may not be exhaustive and is subject to change as we update or add services. We will update this table accordingly.
+                        Google may also set its own cookies on google.com domains when its services load. These are covered by
+                        <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener">Google's cookie policy</a>.
                     </p>
                     <hr class="cookie-divider">
                 </div>
 
-                {{-- 5. Third-Party Cookies --}}
+                <div class="cookie-section" id="c4">
+                    <span class="cookie-section-label">Section 4</span>
+                    <h2>Your choices</h2>
+                    <p>Our cookie banner offers two choices:</p>
+                    <ul>
+                        <li><strong>Accept All:</strong> allows analytics and advertising cookies.</li>
+                        <li><strong>Reject All:</strong> keeps only the strictly necessary cookies and storage.</li>
+                    </ul>
+                    <p>
+                        For visitors in the EU, EEA, UK and Switzerland, analytics and advertising stay off until you click
+                        Accept All. For visitors elsewhere, they are on until you click Reject All. Google tags follow your
+                        choice through Google Consent Mode.
+                    </p>
+                    <p>Your choice is saved for 30 days. Use the button at the end of this page to change it.</p>
+                    <hr class="cookie-divider">
+                </div>
+
                 <div class="cookie-section" id="c5">
-                    <span class="cookie-section-label"><i class="fas fa-external-link-alt"></i>Section 5</span>
-                    <h2>Third-Party Cookies</h2>
-                    <p>
-                        Some cookies on our website are placed by third-party services. We do not control these cookies and their use is governed by the privacy policies of the respective providers. These include:
-                    </p>
-                    <ul>
-                        <li><strong>Google Analytics</strong> — website traffic analysis. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a></li>
-                        <li><strong>Google Tag Manager</strong> — tag management for analytics and marketing pixels.</li>
-                        <li><strong>LinkedIn Insight Tag</strong> (if active) — professional audience analytics and retargeting.</li>
-                        <li><strong>Meta Pixel</strong> (if active) — audience analytics for healthcare service promotion on Facebook and Instagram.</li>
-                    </ul>
-                    <p>
-                        We ensure that all third-party providers we engage are bound by data processing agreements and comply with applicable data protection laws. We do not share identifiable patient data, clinical records, or health-related personal data with any third-party advertising platform.
-                    </p>
-                    <hr class="cookie-divider">
-                </div>
-
-                {{-- 6. Managing Preferences --}}
-                <div class="cookie-section" id="c6">
-                    <span class="cookie-section-label"><i class="fas fa-sliders-h"></i>Section 6</span>
-                    <h2>Managing Your Cookie Preferences</h2>
-                    <p>
-                        When you first visit our website, you are presented with a cookie consent banner. You may choose to:
-                    </p>
-                    <ul>
-                        <li><strong>Accept All Cookies</strong> — enables all cookie categories including analytics and marketing.</li>
-                        <li><strong>Reject Non-Essential</strong> — only strictly necessary cookies will be placed.</li>
-                    </ul>
-                    <p>You can revisit your preferences at any time:</p>
-                    <hr class="cookie-divider">
-                </div>
-
-                {{-- 7. Browser Controls --}}
-                <div class="cookie-section" id="c7">
-                    <span class="cookie-section-label"><i class="fas fa-globe"></i>Section 7</span>
-                    <h2>Browser Cookie Controls</h2>
-                    <p>
-                        Most web browsers allow you to control cookies through their settings. You can typically:
-                    </p>
-                    <ul>
-                        <li>View all cookies stored on your device and delete them individually or in bulk</li>
-                        <li>Block all cookies or only third-party cookies</li>
-                        <li>Clear all cookies when you close your browser</li>
-                        <li>Set up notifications when a website tries to place a cookie</li>
-                    </ul>
-                    <p>Instructions for common browsers:</p>
+                    <span class="cookie-section-label">Section 5</span>
+                    <h2>Browser controls</h2>
+                    <p>You can also block or delete cookies in your browser settings:</p>
                     <ul>
                         <li><a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener">Google Chrome</a></li>
                         <li><a href="https://support.mozilla.org/en-US/kb/cookies-information-websites-store-on-your-computer" target="_blank" rel="noopener">Mozilla Firefox</a></li>
                         <li><a href="https://support.apple.com/en-ae/guide/safari/sfri11471/mac" target="_blank" rel="noopener">Apple Safari</a></li>
                         <li><a href="https://support.microsoft.com/en-us/windows/delete-and-manage-cookies-168dab11-0753-043d-7c16-ede5947fc64d" target="_blank" rel="noopener">Microsoft Edge</a></li>
                     </ul>
-                    <div class="cookie-info-box">
-                        <p><i class="fas fa-exclamation-circle me-2"></i>
-                            Please note: restricting or deleting strictly necessary cookies may impair the functionality of our website, including contact forms and secure page navigation.
-                        </p>
-                    </div>
+                    <p>If you block strictly necessary cookies, forms on the site may not work.</p>
+                    <p>Our site does not respond to "Do Not Track" browser signals. Use the cookie banner instead.</p>
                     <hr class="cookie-divider">
                 </div>
 
-                {{-- 8. Do Not Track --}}
-                <div class="cookie-section" id="c8">
-                    <span class="cookie-section-label"><i class="fas fa-user-secret"></i>Section 8</span>
-                    <h2>Do Not Track Signals</h2>
-                    <p>
-                        Some browsers include a "Do Not Track" (DNT) feature that sends a signal to websites requesting that your browsing not be tracked. There is currently no universally accepted standard for how websites should respond to DNT signals. Our website does not currently respond to DNT browser signals; however, you can manage your preferences directly using the cookie consent options described in Section 6.
-                    </p>
+                <div class="cookie-section" id="c6">
+                    <span class="cookie-section-label">Section 6</span>
+                    <h2>Changes</h2>
+                    <p>We update this page when the cookies on our site change. The date at the top shows the latest version.</p>
                     <hr class="cookie-divider">
                 </div>
 
-                {{-- 9. Policy Updates --}}
-                <div class="cookie-section" id="c9">
-                    <span class="cookie-section-label"><i class="fas fa-sync-alt"></i>Section 9</span>
-                    <h2>Policy Updates</h2>
-                    <p>
-                        We may update this Cookie Policy from time to time to reflect changes in technology, regulation, or our service offering. The "Last Reviewed" date at the top of this page will be updated accordingly. Where changes are material, we will display a prominent notice on our website. Your continued use of the website following any update constitutes acceptance of the revised policy.
-                    </p>
-                    <hr class="cookie-divider">
-                </div>
-
-                {{-- 10. Contact --}}
-                <div class="cookie-section" id="c10">
-                    <span class="cookie-section-label"><i class="fas fa-envelope"></i>Section 10</span>
-                    <h2>Contact Us</h2>
-                    <p>If you have questions about this Cookie Policy or how we handle your data, please contact:</p>
+                <div class="cookie-section" id="c7">
+                    <span class="cookie-section-label">Section 7</span>
+                    <h2>Contact</h2>
                     <ul>
-                        <li><strong>Alpha Health Group — Data Protection Officer</strong></li>
-                        <li><strong>Email:</strong> <a href="mailto:dpo@alphahmc.com">dpo@alphahmc.com</a></li>
-                        <li><strong>Address:</strong> UAE (Abu Dhabi &amp; Dubai offices)</li>
-                        <li><strong>Phone:</strong> +971 3 780 2818</li>
+                        <li><strong>Email:</strong> <a href="mailto:{{ $privacyEmail }}">{{ $privacyEmail }}</a></li>
+                        <li><strong>Phone:</strong> <a href="tel:+97142724064">+971 4 272 4064</a></li>
+                        <li><strong>Address:</strong> 1101, 11th Floor, Damas Tower, Al Maktoum Road, Dubai, United Arab Emirates</li>
                     </ul>
-                    <p>
-                        For broader data protection information, see our <a href="{{ route('front.gdpr-terms') }}">GDPR &amp; Data Protection Policy</a>.
-                    </p>
                 </div>
 
                 {{-- CTA --}}
                 <div class="cookie-cta-box">
-                    <h3>Manage Your Cookie Preferences</h3>
-                    <p>You can update your cookie consent at any time. Your preference will be saved for 6 months.</p>
-                    <button class="btn-cp" onclick="document.getElementById('cookie-consent-banner') && (document.getElementById('cookie-consent-banner').style.display='flex'); localStorage.removeItem('cookie_consent');">
-                        <i class="fas fa-sliders-h"></i> Update Preferences
+                    <h3>Change your cookie choice</h3>
+                    <p>Open the cookie banner again and pick Accept All or Reject All.</p>
+                    <button type="button" class="btn-cp" onclick="try { localStorage.removeItem('cookie_consent'); } catch (e) {} var b = document.getElementById('cookie-consent-banner'); if (b) { b.style.display = 'flex'; }">
+                        Change cookie choice
                     </button>
-                    <a href="mailto:dpo@alphahmc.com" class="btn-cp">
-                        <i class="fas fa-envelope"></i> Contact DPO
-                    </a>
+                    <a href="mailto:{{ $privacyEmail }}" class="btn-cp">Email us</a>
                 </div>
 
             </div>

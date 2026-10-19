@@ -258,7 +258,7 @@
                     <p>
                         You can change your choice at any time through the cookie banner or by clearing your browser storage.
                         We remember your choice in your browser for 30 days. Our site also uses strictly necessary cookies,
-                        such as a session cookie and a cookie with your time zone, which the site needs to work.
+                        such as a session cookie and a form security cookie, which the site needs to work.
                         Details are in our <a href="{{ route('front.cookie-policy') }}">cookie policy</a>.
                     </p>
                     <p>

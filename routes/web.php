@@ -139,9 +139,8 @@ Route::get('/brand/{slug}', [MainHomeController::class, 'singleBrand'])->name('f
 Route::get('/our-clients', [MainHomeController::class, 'ourClients'])->name('front.our-clients');
 Route::get('/client-reviews', [MainHomeController::class, 'testimonials'])->name('front.testimonials');
 Route::get('/share-your-experience', [MainHomeController::class, 'feedbackForm'])->name('front.feedback');
-Route::get('/gdpr-data-protection', function () {
-    return view('front.gdpr-terms');
-})->name('front.gdpr-terms');
+// The privacy policy covers GDPR and the UAE PDPL; one policy avoids conflicting statements.
+Route::get('/gdpr-data-protection', fn () => redirect()->route('front.privacy-policy', [], 301))->name('front.gdpr-terms');
 
 Route::get('/terms-of-service', function () {
     return view('front.terms-of-service');

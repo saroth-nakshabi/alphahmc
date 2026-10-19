@@ -123,8 +123,8 @@
                     </div>
 
                     <label class="pp-consent">
-                        <input type="checkbox" id="ppConsent" checked>
-                        <span>It's okay for an Alpha consultant to contact me about my project.</span>
+                        <input type="checkbox" id="ppConsent">
+                        <span>It's okay for an Alpha consultant to contact me about my project. See our <a href="{{ url('/alpha-privacy-policy') }}" target="_blank" rel="noopener">privacy policy</a>.</span>
                     </label>
 
                     {{-- Optional: book a free consultation --}}
@@ -232,8 +232,8 @@
                         </div>
 
                         <label class="pp-consent">
-                            <input type="checkbox" id="ppResConsent" checked>
-                            <span>It's okay for an Alpha consultant to contact me about my project.</span>
+                            <input type="checkbox" id="ppResConsent">
+                            <span>It's okay for an Alpha consultant to contact me about my project. See our <a href="{{ url('/alpha-privacy-policy') }}" target="_blank" rel="noopener">privacy policy</a>.</span>
                         </label>
 
                         <div class="pp-meeting">
