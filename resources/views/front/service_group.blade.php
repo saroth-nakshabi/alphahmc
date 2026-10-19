@@ -665,7 +665,7 @@ function toggleTransformationDesc() {
                             <div class="faq-item {{ $index === 0 ? 'active' : '' }}" data-aos="fade-up"
                                 data-aos-delay="{{ min($index * 100, 500) }}">
                                 <button class="faq-header" onclick="toggleFaq(this)">
-                                    <h4 class="faq-question">{{ $faq->faq_question }}</h4>
+                                    <h3 class="faq-question">{{ $faq->faq_question }}</h3>
                                     <span class="faq-icon"><i class="fa-solid fa-chevron-down"></i></span>
                                 </button>
                                 <div class="faq-content">

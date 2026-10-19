@@ -142,9 +142,15 @@
     }
 
     // Build FAQ schema
+    // Package (service group) pages share this block: their URL is /service-packages/{slug}
+    // and their FAQs are the `faqs` relation, not a service's `faq`.
+    $isServiceGroup = $service instanceof \App\Models\ServiceGroup;
+    $schemaPageUrl  = $isServiceGroup ? route('service-packages', $service->slug) : route('front.service', $service->slug);
+    $schemaFaqs     = $isServiceGroup ? $service->faqs : $service->faq;
+
     $faqSchema = [];
-    if ($service->faq && $service->faq->count()) {
-        foreach ($service->faq as $faq) {
+    if ($schemaFaqs && $schemaFaqs->count()) {
+        foreach ($schemaFaqs as $faq) {
             $faqSchema[] = [
                 '@type'          => 'Question',
                 'name'           => $faq->faq_question,
@@ -167,7 +173,7 @@
         'description' => trim((string) $service->meta_description) !== ''
             ? trim((string) $service->meta_description)
             : trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags((string) $service->content), ENT_QUOTES | ENT_HTML5, 'UTF-8'))),
-        'url'         => route('front.service', $service->slug),
+        'url'         => $schemaPageUrl,
         'provider'    => [
             '@type' => 'Organization',
             'name'  => 'Alpha Health Group',
@@ -227,7 +233,7 @@
                 '@type'    => 'ListItem',
                 'position' => 3,
                 'name'     => $service->name,
-                'item'     => route('front.service', $service->slug),
+                'item'     => $schemaPageUrl,
             ],
         ],
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
