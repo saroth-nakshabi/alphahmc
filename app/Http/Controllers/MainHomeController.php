@@ -138,8 +138,30 @@ class MainHomeController extends Controller
 
         $data['featuredServices'] = Service::published()->where('featured', true)->take(3)->get();
         $data['all_services'] = Service::published()->get();
-        $data['projects'] = Project::with('projects_images', 'projects_videos', 'projects_documents', 'project_category')->paginate(3);
-        $data['latest_blogs'] = Blog::orderBy('sort_order')->orderBy('id')->take(3)->get();
+
+        // Case studies: projects that list this service, else projects that list another
+        // service from the same categories. None related means the section is hidden.
+        $serviceId = (string) $data['service']->id;
+        $siblingIds = Service::published()
+            ->whereHas('categories', fn ($q) => $q->whereIn('categories.id', $categoryIds))
+            ->pluck('id')->map(fn ($id) => (string) $id)->all();
+        $allProjects = Project::with('projects_images', 'project_category')->orderBy('sort_order')->orderBy('id')->get();
+        $listsAny = fn ($project, array $ids) => (bool) array_intersect(array_map('strval', (array) $project->service_ids), $ids);
+        $caseStudies = $allProjects->filter(fn ($p) => $listsAny($p, [$serviceId]));
+        if ($caseStudies->isEmpty()) {
+            $caseStudies = $allProjects->filter(fn ($p) => $listsAny($p, $siblingIds));
+        }
+        $data['projects'] = $caseStudies->take(2)->values();
+
+        // Related article: a blog in one of the service's categories whose title best
+        // matches the service; none means the section is hidden.
+        $blogCandidates = Blog::whereIn('category_id', $categoryIds)->orderBy('sort_order')->orderBy('id')->get()->keyBy('id');
+        $bestBlogId = \App\Support\Related::bestTitleMatch(
+            $data['service']->name . ' ' . $data['service']->meta_title,
+            $blogCandidates->map(fn ($b) => $b->title)->all()
+        );
+        $data['relatedBlog'] = $bestBlogId !== null ? $blogCandidates[$bestBlogId] : null;
+
         $data['globaltag'] = globaltag::all();
         $data['googletag'] = googletag::all();
         $data['service_groups'] = ServiceGroup::all();

@@ -596,12 +596,15 @@ function toggleTransformationDesc() {
             </section>
         @endif
 
-        <!-- Case Studies & Related Content Split Section -->
+        <!-- Case Studies & Related Content Split Section (only related items; hidden when none) -->
+        @php $blog = $relatedBlog ?? null; @endphp
+        @if ($projects->count() || $blog)
         <section class="split-section-ey">
             <div class="container">
                 <div class="row">
+                    @if ($projects->count())
                     <!-- Left Column: Case Studies -->
-                    <div class="col-lg-7" data-aos="fade-right">
+                    <div class="{{ $blog ? 'col-lg-7' : 'col-lg-12' }}" data-aos="fade-right">
                         <h2 class="ey-section-title">Case Studies</h2>
                         <div class="row g-4">
                             @foreach ($projects->take(2) as $project)
@@ -629,15 +632,13 @@ function toggleTransformationDesc() {
                             @endforeach
                         </div>
                     </div>
+                    @endif
 
-                    <!-- Right Column: Blog Posts -->
-                    <div class="col-lg-5" data-aos="fade-left">
+                    @if ($blog)
+                    <!-- Right Column: Related article -->
+                    <div class="{{ $projects->count() ? 'col-lg-5' : 'col-lg-12' }}" data-aos="fade-left">
                         <div class="related-content-block">
                             <h2 class="ey-section-title">Related Article</h2>
-                            @php
-                                $blog = $latest_blogs->first();
-                            @endphp
-                            @if($blog)
                                 <a href="{{ route('front.singleBlog', $blog->slug) }}" class="ey-related-card">
                                     <img src="{{ isset($blog->image) && $blog->image ? \App\Support\Img::thumb('uploads/blog_images/' . $blog->image, 800) : asset('public/front-new/assets/images/blog_images/Doctor-image/2.webp') }}"
                                         class="rc-bg-img" alt="{{ $blog->title }}">
@@ -662,16 +663,13 @@ function toggleTransformationDesc() {
                                         </div>
                                     </div>
                                 </a>
-                            @else
-                                <div class="text-center py-5">
-                                    <p class="text-muted">No related content available.</p>
-                                </div>
-                            @endif
                         </div>
                     </div>
+                    @endif
                 </div>
             </div>
         </section>
+        @endif
 
 
 
