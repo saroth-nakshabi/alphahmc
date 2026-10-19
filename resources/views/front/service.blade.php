@@ -1,6 +1,6 @@
 @extends('front/layout-2')
 @section('custom_css')
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.min.css') }}?v=7">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.min.css') }}?v=8">
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-detail.min.css') }}?v=6">
     {{-- Project Process section styles (shared with the category page) --}}
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-category.min.css') }}?v=3">

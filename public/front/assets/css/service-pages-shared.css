@@ -959,3 +959,7 @@
 
 /* Expanded "Read more" text: no fade over the last lines (only .active hid it before). */
 .transformation-desc-wrapper.expanded::after { display: none; }
+
+/* In-text links in page copy: underlined so they read as links on dark and light bands (same colour as the text before). */
+.large-info :is(p, li, td) a, .transformation-desc :is(p, li, td) a, .help-text-block :is(p, li, td) a, .sdb-desc :is(p, li, td) a, .quote-text :is(p, li) a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.large-info :is(p, li, td) a:hover, .transformation-desc :is(p, li, td) a:hover, .help-text-block :is(p, li, td) a:hover, .sdb-desc :is(p, li, td) a:hover, .quote-text :is(p, li) a:hover { text-decoration-thickness: 2px; }
