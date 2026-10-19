@@ -222,7 +222,7 @@
         </div>
     </section>
 
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/home.css') }}?v=6">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/home.css') }}?v=7">
 
 
     <script>
@@ -245,10 +245,10 @@
             function startProgress() {
                 clearInterval(progressTimer);
                 var pct = 0;
-                if (progressBar) progressBar.style.width = '0%';
+                if (progressBar) progressBar.style.transform = 'scaleX(0)';
                 progressTimer = setInterval(function () {
                     pct += 100 / (DURATION / 100);
-                    if (progressBar) progressBar.style.width = pct + '%';
+                    if (progressBar) progressBar.style.transform = 'scaleX(' + Math.min(pct, 100) / 100 + ')';
                     if (pct >= 100) advanceSlide();
                 }, 100);
             }
@@ -1235,12 +1235,12 @@
                     // Clear existing progress logic
                     clearInterval(progressInterval);
                     let progress = 0;
-                    if (progressBar) progressBar.style.width = '0%';
+                    if (progressBar) progressBar.style.transform = 'scaleX(0)';
 
                     // Progress Bar Animation
                     progressInterval = setInterval(() => {
                         progress += (100 / (slideDuration / 100));
-                        if (progressBar) progressBar.style.width = `${progress}% `;
+                        if (progressBar) progressBar.style.transform = `scaleX(${Math.min(progress, 100) / 100})`;
 
                         if (progress >= 100) {
                             nextSlide();

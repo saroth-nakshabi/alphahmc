@@ -22,8 +22,9 @@
   width: 65%;
   max-width: 1730px;
   background: var(--glass-bg);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
+  /* 12px, not 30px: same frosted look, far cheaper to repaint while content scrolls under it */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
   border-radius: 60px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
@@ -813,4 +814,12 @@
     font-size: 0.9rem;
     box-shadow: 0 10px 28px rgba(6, 109, 119, 0.45);
   }
+}
+
+/* Glass controls inside the navbar already sit on its blurred layer; a second
+   blur there is invisible but doubles the repaint cost on every scroll frame. */
+.navbar-content .glass-search-container,
+.navbar-content .nav-contact-cta {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }

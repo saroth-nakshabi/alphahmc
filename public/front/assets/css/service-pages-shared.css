@@ -39,9 +39,30 @@
             animation: cinematicFocus 25s ease-out infinite alternate;
         }
 
+/* Brightness 0.8 -> 1 is done with a black overlay fading 0.2 -> 0 (identical
+   result) instead of animating `filter`, which repainted the whole hero every frame. */
+.hero-background::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: #000;
+            pointer-events: none;
+            animation: cinematicDim 25s ease-out infinite alternate;
+        }
+
 @keyframes cinematicFocus {
-            0%   { transform: scale(1);   filter: brightness(0.8); }
-            100% { transform: scale(1.1); filter: brightness(1);   }
+            0%   { transform: scale(1);   }
+            100% { transform: scale(1.1); }
+        }
+
+@keyframes cinematicDim {
+            0%   { opacity: 0.2; }
+            100% { opacity: 0;   }
+        }
+
+/* Phones keep the static brightness(0.8) set in the page stylesheets; no overlay. */
+@media (max-width: 768px) {
+            .hero-background::after { display: none; }
         }
 
 .service-hero::before {

@@ -16,8 +16,8 @@ transform: translateX(-50%);
 width: 65%;
 max-width: 1730px;
 background: var(--glass-bg);
-backdrop-filter: blur(30px);
--webkit-backdrop-filter: blur(30px);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
 border: 1px solid var(--glass-border);
 border-radius: 60px;
 box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
@@ -659,4 +659,9 @@ font-weight: 600;
 font-size: 0.9rem;
 box-shadow: 0 10px 28px rgba(6, 109, 119, 0.45);
 }
+}
+.navbar-content .glass-search-container,
+.navbar-content .nav-contact-cta {
+backdrop-filter: none;
+-webkit-backdrop-filter: none;
 }

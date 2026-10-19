@@ -320,7 +320,7 @@
 
     <!-- Site CSS — blocking (critical nav + layout styles) -->
     <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/style.min.css') }}?v=3">
-    <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/slide-menu.min.css') }}?v=16">
+    <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/slide-menu.min.css') }}?v=17">
 
     <!-- Icon fonts + animation libs — deferred (not needed for first paint) -->
     <link rel="preload" as="style"
@@ -367,7 +367,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         @endif
     @endforeach
 
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/front-global.min.css') }}?v=10">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/front-global.min.css') }}?v=11">
 
 {{-- Consent update functions (called by banner buttons) --}}
     <script>
@@ -1657,27 +1657,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         const goToTopBtn = document.getElementById('goToTopBtn');
 
         if (footerGoToTopBtn && goToTopBtn) {
-            // Show/hide button based on scroll position
-            window.addEventListener('scroll', () => {
+            // Show/hide button based on scroll position. Batched to one check per frame
+            // so scrolling never forces a layout on every scroll event.
+            let goToTopTicking = false;
+            const updateGoToTop = () => {
+                goToTopTicking = false;
                 const scrollPosition = window.pageYOffset;
                 const windowHeight = window.innerHeight;
                 const documentHeight = document.documentElement.scrollHeight;
+                const shown = scrollPosition > 300;
 
-                // Show button when scrolled down a bit
-                if (scrollPosition > 300) {
-                    footerGoToTopBtn.classList.add('show');
-
-                    // Add pulse animation when near bottom
-                    if (documentHeight - (scrollPosition + windowHeight) < 100) {
-                        goToTopBtn.classList.add('pulse');
-                    } else {
-                        goToTopBtn.classList.remove('pulse');
-                    }
-                } else {
-                    footerGoToTopBtn.classList.remove('show');
-                    goToTopBtn.classList.remove('pulse');
+                // Show button when scrolled down a bit; pulse when near bottom
+                footerGoToTopBtn.classList.toggle('show', shown);
+                goToTopBtn.classList.toggle('pulse', shown && documentHeight - (scrollPosition + windowHeight) < 100);
+            };
+            window.addEventListener('scroll', () => {
+                if (!goToTopTicking) {
+                    goToTopTicking = true;
+                    requestAnimationFrame(updateGoToTop);
                 }
-            });
+            }, { passive: true });
 
             // Scroll to top when button is clicked
             goToTopBtn.addEventListener('click', () => {
@@ -1768,17 +1767,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             });
         });
 
-        // Add subtle parallax effect to background elements
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const bgCircles = document.querySelectorAll('.bg-circle');
-
-            bgCircles.forEach((circle, index) => {
-                const speed = 0.1 + (index * 0.05);
-                const yPos = -(scrolled * speed);
-                circle.style.transform = `translateY(${yPos}px)`;
-            });
-        });
+        // (Removed a scroll "parallax" on .bg-circle: their CSS `float` animation
+        // already owns `transform`, so the inline value never showed and only cost
+        // a style recalc on every scroll event.)
     </script>
 
 
