@@ -179,9 +179,8 @@
     if (!empty($service->areaServed)) {
         $professionalService['areaServed'] = $service->areaServed;
     }
-    if (!empty($service->serviceType)) {
-        $professionalService['serviceType'] = $service->serviceType;
-    }
+    // serviceType is not a ProfessionalService property (schema.org warns); the
+    // service is already named in 'name'.
 
     $schema[] = $professionalService;
 
