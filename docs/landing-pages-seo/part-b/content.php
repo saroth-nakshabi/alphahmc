@@ -16,13 +16,12 @@ $svc = [];
 $svc[67] = [
     'ready' => [
         'meta_title' => 'DHA, DOH and MOHAP License Consultants | Alpha Health Group',
-        // "free" left out until confirmed; add "free" back if the team confirms it.
-        'meta_description' => 'Licensing help for doctors, nurses and allied staff: DHA, DOH and MOHAP eligibility, DataFlow, exams and applications. Book a consultation.',
+        // Saroth 19 Oct: H1 rename approved; initial consultation is free, the process is charged.
+        'name' => 'Healthcare Professional Licensing in the UAE: DHA, DOH and MOHAP',
+        'meta_description' => 'Licensing help for doctors, nurses and allied staff: DHA, DOH and MOHAP eligibility, DataFlow, exams and applications. Book a free consultation.',
         'areaServed' => 'United Arab Emirates',
     ],
     'confirm' => [
-        // H1 change also changes the breadcrumb.
-        'name' => "Healthcare Professional Licensing in the UAE: DHA, DOH and MOHAP $C",
         'content' => '<p>We guide doctors, nurses, pharmacists and allied health staff through DHA, DOH and MOHAP licensing, from eligibility to your license.</p>',
         'overview' => '<p>Alpha Health Group handles healthcare professional licensing with DHA, DOH and MOHAP: eligibility assessment, DataFlow primary source verification, exam guidance, the application and license transfers, for doctors, nurses, pharmacists, dentists and allied health professionals.</p>',
         'info_one' => '<h2>Who needs a UAE healthcare license</h2>
@@ -45,7 +44,7 @@ $svc[67] = [
 <h2>Timeline</h2>
 <p>$C a typical range per authority, from real cases. The time depends mainly on how quickly DataFlow completes your verification, the next available exam date and how complete your documents are.</p>
 <h2>Costs</h2>
-<p>You pay the health authority's application and licensing fees, the DataFlow verification fee and, where it applies, the exam fee. These are set by the authorities and DataFlow and are paid separately. Alpha Health Group's service fee is quoted after your eligibility review. $C how the fee is quoted.</p>",
+<p>You pay the health authority's application and licensing fees, the DataFlow verification fee and, where it applies, the exam fee. These are set by the authorities and DataFlow and are paid separately. Your first consultation with Alpha Health Group is free. The licensing process itself is a paid service.</p>",
         'info_three' => '<h2>How Alpha Health Group helps</h2>
 <p>Our licensing team handles the work around your application:</p>
 <ul>
@@ -63,7 +62,7 @@ $svc[67] = [
         134 => ["How long does DHA or DOH licensing take?",
             "$C a typical range per authority, from real cases. The time depends mainly on DataFlow verification, the next available exam date and how complete your documents are. We give you an estimate for your title after the eligibility review."],
         135 => ["How much does it cost, and what is included in Alpha's fee?",
-            "The authority's licensing fees, the DataFlow fee and any exam fee are set by them and paid separately. Alpha's fee covers the eligibility review, document preparation, DataFlow follow-up, exam guidance and the application, and is quoted after the review. $C how the fee is quoted."],
+            "The authority's licensing fees, the DataFlow fee and any exam fee are set by them and paid separately. Alpha's fee covers the eligibility review, document preparation, DataFlow follow-up, exam guidance and the application. Your first consultation is free; the licensing process itself is charged."],
         136 => ["Do I need to pass an exam, and which one?",
             "Most titles must pass the authority's licensing exam, delivered at Prometric centres. Some applicants qualify for an exemption. $C the exemption criteria to state. We confirm whether you need the exam in your eligibility review, before you book anything."],
         137 => ["What documents do I need for DataFlow?",
@@ -79,6 +78,7 @@ $svc[67] = [
 $svc[112] = [
     'ready' => [
         'meta_title' => 'Move Your License Between DHA, DOH and MOHAP | Alpha Health',
+        'areaServed' => 'Abu Dhabi, Dubai, Sharjah',
         'meta_description' => "Moving between Dubai, Abu Dhabi and the other emirates? We handle the new authority's license, DataFlow reuse and good standing. Book a consultation.",
     ],
     'confirm' => [
@@ -123,7 +123,7 @@ $svc[112] = [
         412 => ["How long does a license transfer take?",
             "$C a typical range, from real cases. Most of the time goes on the DataFlow redirect and the exam exemption decision. Once eligibility is confirmed, your new employer activates the license. Applying while your current license is still valid avoids a gap between the two."],
         413 => ["How much does a transfer cost, and what is included in Alpha's fee?",
-            "The receiving authority's fees and the DataFlow transfer fee are set by them and paid separately. Alpha's fee covers the assessment, good standing certificate, portal application, DataFlow redirect, exemption request and activation follow-up. $C how the fee is quoted."],
+            "The receiving authority's fees and the DataFlow transfer fee are set by them and paid separately. Alpha's fee covers the assessment, good standing certificate, portal application, DataFlow redirect, exemption request and activation follow-up. Your first consultation is free; the transfer itself is charged."],
         414 => ["Can I hold DHA, DOH and MOHAP licenses at the same time?",
             "Yes. You may hold licenses from more than one authority at once, but each license must be activated and kept active by a separate licensed facility. This suits professionals who work across emirates, for example a part-time role in Dubai alongside a main role in Abu Dhabi."],
     ],
@@ -152,7 +152,7 @@ $svc[66] = [
 <h2>Timeline</h2>
 <p>$C a typical range, from real cases. The time depends on your classification category, how quickly DataFlow completes and whether you need an exam.</p>
 <h2>Costs</h2>
-<p>SCFHS fees, the DataFlow fee and any exam fee are set by them and paid separately. Alpha Health Group's service fee is quoted after we review your profile. $C how the fee is quoted.</p>
+<p>SCFHS fees, the DataFlow fee and any exam fee are set by them and paid separately. Your first consultation with Alpha Health Group is free. The licensing process itself is a paid service.</p>
 <h2>Renewal</h2>
 <p>Licenses are renewed through Mumaris Plus. $C the renewal period and requirements, such as continuing education hours.</p>",
         'info_three' => '<h2>How Alpha helps</h2>
@@ -173,7 +173,7 @@ $svc[66] = [
         123 => ["How long does SCFHS licensing take?",
             "$C a typical range, from real cases. The time depends on your classification category, how quickly DataFlow completes your verification and whether you need an exam. We give you an estimate after reviewing your profile and tell you which documents to prepare first."],
         124 => ["How much does it cost, and what is included in Alpha's fee?",
-            "SCFHS fees, the DataFlow fee and any exam fee are set by them and paid separately. Alpha's fee covers the eligibility and classification review, documents, DataFlow follow-up, the Mumaris Plus application and exam guidance. $C how the fee is quoted."],
+            "SCFHS fees, the DataFlow fee and any exam fee are set by them and paid separately. Alpha's fee covers the eligibility and classification review, documents, DataFlow follow-up, the Mumaris Plus application and exam guidance. Your first consultation is free; the licensing process itself is charged."],
         125 => ["Do I need to pass an exam, and which one?",
             "Most categories sit the SCFHS exam for their classification. $C which categories are exempt. We confirm what applies to your title in the eligibility review, before you book, and guide you on the exam and its booking as part of the SCFHS process."],
         126 => ["What documents do I need for DataFlow and SCFHS?",
@@ -206,7 +206,7 @@ $svc[65] = [
 <h2>Timeline</h2>
 <p>$C a typical range, from real cases. DataFlow verification and exam availability take most of the time.</p>
 <h2>Costs</h2>
-<p>DHP fees, the DataFlow fee and the exam fee are set by them and paid separately. Alpha Health Group's service fee is quoted after we review your profile. $C how the fee is quoted.</p>
+<p>DHP fees, the DataFlow fee and the exam fee are set by them and paid separately. Your first consultation with Alpha Health Group is free. The licensing process itself is a paid service.</p>
 <h2>Why applications are delayed</h2>
 <p>The most common causes are name mismatches across documents, an expired good standing certificate, a degree from an institution DHP does not recognise, and too little post-qualification clinical experience. We check for each of these before you apply.</p>",
         'info_three' => '<h2>How Alpha helps</h2>
@@ -229,7 +229,7 @@ $svc[65] = [
         118 => ["How long does Qatar DHP licensing take?",
             "$C a typical range, from real cases. DataFlow verification and the next available exam date take most of the time, followed by the DHP evaluation. We give you an estimate after reviewing your profile, and you can complete DataFlow and the exam before you move."],
         119 => ["How much does it cost, and what is included in Alpha's fee?",
-            "DHP fees, the DataFlow fee and the exam fee are set by them and paid separately. Alpha's fee covers the eligibility review, documents, DataFlow follow-up, exam guidance and the application. $C how the fee is quoted."],
+            "DHP fees, the DataFlow fee and the exam fee are set by them and paid separately. Alpha's fee covers the eligibility review, documents, DataFlow follow-up, exam guidance and the application. Your first consultation is free; the licensing process itself is charged."],
         120 => ["Can I apply from outside Qatar?",
             "Yes. You can complete DataFlow verification and the Prometric exam before you move. License activation needs employer sponsorship and your presence in Qatar. $C whether the exam can be taken outside Qatar. We tell you which steps to finish from home and what to bring when you arrive."],
         121 => ["Can I reuse my Qatar DataFlow report in another country?",
@@ -262,7 +262,7 @@ $svc[64] = [
 <h2>Timeline</h2>
 <p>$C a typical range, from real cases. DataFlow verification, exam dates and how complete your documents are decide most of the time.</p>
 <h2>Costs</h2>
-<p>MOH and OMSB fees, the DataFlow fee and the exam fee are set by them and paid separately. Alpha Health Group's service fee is quoted after we review your profile. $C how the fee is quoted.</p>
+<p>MOH and OMSB fees, the DataFlow fee and the exam fee are set by them and paid separately. Your first consultation with Alpha Health Group is free. The licensing process itself is a paid service.</p>
 <h2>The 2025 Public Health Law</h2>
 <p>Royal Decree No. 43/2025, the new Public Health Law, updates licensing and accreditation standards in Oman. $C what changes for individual professional licensing.</p>",
         'info_three' => '<h2>How Alpha helps</h2>
@@ -283,7 +283,7 @@ $svc[64] = [
         111 => ["Who needs an OMSB-approved license in Oman?",
             "Every healthcare professional, including doctors, nurses, pharmacists, dentists and allied health technicians, must hold an OMSB-approved license to practise in any public or private facility in Oman. Registration with the Ministry of Health follows through the Hakeem portal."],
         112 => ["How much does it cost, and what is included in Alpha's fee?",
-            "MOH and OMSB fees, the DataFlow fee and the exam fee are set by them and paid separately. Alpha's fee covers the eligibility review, attestation and documents, DataFlow follow-up, exam guidance and the application. $C how the fee is quoted."],
+            "MOH and OMSB fees, the DataFlow fee and the exam fee are set by them and paid separately. Alpha's fee covers the eligibility review, attestation and documents, DataFlow follow-up, exam guidance and the application. Your first consultation is free; the licensing process itself is charged."],
         113 => ["Do I need to pass the Prometric exam?",
             "For most categories, yes. OMSB requires the Prometric exam, with limited exemptions for highly experienced specialists who meet specific OMSB criteria. We confirm what applies to your title before you book, and guide you on preparation and booking."],
         114 => ["What experience do I need for an Oman medical license?",
@@ -310,4 +310,30 @@ $pageSettings = [
 ];
 $aboutHeroDescription = 'Alpha Health Group provides consulting, regulatory, operational and engineering services that help healthcare organisations build, operate and grow with confidence.';
 
-return compact('svc', 'blog38', 'pageSettings', 'aboutHeroDescription');
+/* Saroth 19 Oct: author for every blog without one; every blog mapped to the service
+   category whose pages should show it as the related article (one category per blog). */
+$blogAuthor = 'Saroth Nakshabi';
+$blogCategories = [
+    1  => [8, 9, 17, 18, 19, 48],                         // Facility Licensing & Setup
+    2  => [69, 70, 72],                                   // Healthcare Professional Resourcing
+    3  => [10, 60, 62, 63, 76],                           // Healthcare Design & Build
+    5  => [2, 13, 24, 34, 55, 56],                        // Healthcare Management Outsourcing
+    6  => [14, 16, 25, 49],                               // Healthcare Feasibility Evaluation
+    7  => [57],                                           // Training & Education
+    8  => [27, 40, 41, 42, 43, 46, 78, 79, 80, 81],       // Pharmaceutical & Product Services
+    9  => [12, 26],                                       // Engineering & Design Approvals
+    17 => [37],                                           // Medical Centers & Polyclinics (specialty expansion)
+    20 => [44],                                           // Drugstores
+    24 => [39, 47, 52],                                   // Telehealth
+    25 => [11, 35, 50],                                   // Regulatory & Quality
+    40 => [32],                                           // Hospital Design & Master Planning
+    41 => [6, 7, 15, 20, 29, 30, 54],                     // Audit Consultation
+    42 => [36, 51, 53],                                   // Healthcare Information Security Consultation
+    44 => [21, 22, 23, 38, 67, 68, 71],                   // Healthcare Professional Licensing
+    45 => [28, 45, 61, 73, 74],                           // Bio Medical Engineering
+    46 => [3, 4, 58],                                     // HIE Integration
+    47 => [31, 33, 64, 65],                               // Insurance Empanelment
+    48 => [1, 5, 59, 66, 75, 77],                         // Healthcare Accreditations & Certifications
+];
+
+return compact('svc', 'blog38', 'pageSettings', 'aboutHeroDescription', 'blogAuthor', 'blogCategories');

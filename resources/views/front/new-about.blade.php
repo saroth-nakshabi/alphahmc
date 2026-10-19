@@ -651,7 +651,7 @@
                     <h2 class="team-title">Executive &amp; Quality Leadership Team</h2>
                     <p class="team-intro">
                         Our leadership team brings together <strong>50+ years</strong> of combined experience in
-                        healthcare management, regulatory compliance, engineering, quality assurance, information
+                        healthcare management, regulatory affairs, engineering, quality assurance, information
                         security, accreditation, and healthcare planning across the <strong>UAE and the wider GCC</strong>.
                         With proven expertise in establishing, operating, and scaling healthcare facilities under
                         DOH, DHA, and MOHAP regulations, the team delivers strategic direction aligned with

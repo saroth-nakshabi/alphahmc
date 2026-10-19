@@ -7,7 +7,8 @@
  */
 
 $data = require __DIR__ . '/content.php';
-['svc' => $svc, 'blog38' => $blog38, 'pageSettings' => $pageSettings, 'aboutHeroDescription' => $aboutHero] = $data;
+['svc' => $svc, 'blog38' => $blog38, 'pageSettings' => $pageSettings, 'aboutHeroDescription' => $aboutHero,
+ 'blogAuthor' => $blogAuthor, 'blogCategories' => $blogCategories] = $data;
 
 $pdo = new PDO('mysql:host=127.0.0.1;dbname=alphahmc_webnext;charset=utf8mb4', 'root', '', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 $q = fn ($v) => $pdo->quote($v);
@@ -45,6 +46,16 @@ foreach ($svc as $id => $s) {
     foreach (array_keys($s['faqs']) as $fid) if (!in_array($fid, $ids)) $errors[] = "faq $fid is not a row of service $id";
 }
 
+// Every blog mapped exactly once, to an existing category.
+$seen = [];
+foreach ($blogCategories as $cat => $ids) foreach ($ids as $b) $seen[$b][] = $cat;
+foreach ($seen as $b => $cats) if (count($cats) > 1) $errors[] = "blog $b mapped to categories " . implode(',', $cats);
+$allBlogs = $pdo->query('SELECT id FROM blogs')->fetchAll(PDO::FETCH_COLUMN);
+foreach (array_diff($allBlogs, array_keys($seen)) as $b) $errors[] = "blog $b has no category";
+foreach (array_diff(array_keys($seen), $allBlogs) as $b) $errors[] = "blog $b does not exist";
+$catIds = $pdo->query('SELECT id FROM categories')->fetchAll(PDO::FETCH_COLUMN);
+foreach (array_keys($blogCategories) as $cat) if (!in_array($cat, $catIds)) $errors[] = "category $cat does not exist";
+
 if ($errors) { fwrite(STDERR, "COPY CHECK FAILED\n  " . implode("\n  ", $errors) . "\n"); exit(1); }
 
 /* ── SQL ───────────────────────────────────────────────────────────── */
@@ -57,6 +68,10 @@ foreach ($svc as $id => $s) {
 }
 $ready[] = "\n-- Blog 38 (B7): title, and section headings H3 -> H2 (only while it has no H2 yet)";
 $ready[] = "UPDATE blogs SET meta_title = " . $q($blog38['meta_title']) . ", content = REPLACE(REPLACE(content, '<h3>', '<h2>'), '</h3>', '</h2>') WHERE id = 38 AND content NOT LIKE '%<h2%';";
+$ready[] = "\n-- Blog authors (Saroth 19 Oct): only blogs without an author";
+$ready[] = "UPDATE blogs SET author_name = " . $q($blogAuthor) . " WHERE author_name IS NULL OR author_name = '';";
+$ready[] = "\n-- Blog categories: every blog to the service category whose pages show it as the related article";
+foreach ($blogCategories as $cat => $ids) $ready[] = "UPDATE blogs SET category_id = $cat WHERE id IN (" . implode(', ', $ids) . ");";
 $ready[] = "\n-- page_settings descriptions: no compliance claims, no dashes, 155 characters or fewer";
 foreach ($pageSettings as $id => $d) $ready[] = "UPDATE page_settings SET meta_description = " . $q($d) . ", updated_at = NOW() WHERE id = $id;";
 $ready[] = "UPDATE page_settings SET hero_description = " . $q($aboutHero) . ", updated_at = NOW() WHERE id = 2;";

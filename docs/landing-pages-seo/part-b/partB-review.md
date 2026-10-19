@@ -8,17 +8,17 @@ Every [confirm] needs a fact from the licensing team before Part 2 goes live. Te
 
 DHA, DOH and MOHAP License Consultants | Alpha Health Group
 
+**name**
+
+Healthcare Professional Licensing in the UAE: DHA, DOH and MOHAP
+
 **meta_description**
 
-Licensing help for doctors, nurses and allied staff: DHA, DOH and MOHAP eligibility, DataFlow, exams and applications. Book a consultation.
+Licensing help for doctors, nurses and allied staff: DHA, DOH and MOHAP eligibility, DataFlow, exams and applications. Book a free consultation.
 
 **areaServed**
 
 United Arab Emirates
-
-**name**
-
-Healthcare Professional Licensing in the UAE: DHA, DOH and MOHAP [confirm]
 
 **content**
 
@@ -72,7 +72,7 @@ We work with you on WhatsApp and online calls, tell you which documents to colle
 
 ### Costs
 
-You pay the health authority's application and licensing fees, the DataFlow verification fee and, where it applies, the exam fee. These are set by the authorities and DataFlow and are paid separately. Alpha Health Group's service fee is quoted after your eligibility review. [confirm] how the fee is quoted.
+You pay the health authority's application and licensing fees, the DataFlow verification fee and, where it applies, the exam fee. These are set by the authorities and DataFlow and are paid separately. Your first consultation with Alpha Health Group is free. The licensing process itself is a paid service.
 
 **info_three**
 
@@ -105,7 +105,7 @@ Planning to work elsewhere in the GCC? See <a href="/services/saudi-healthcare-p
 - **How long does DHA or DOH licensing take?** (faq 134, 38 words)  
   [confirm] a typical range per authority, from real cases. The time depends mainly on DataFlow verification, the next available exam date and how complete your documents are. We give you an estimate for your title after the eligibility review.
 - **How much does it cost, and what is included in Alpha's fee?** (faq 135, 44 words)  
-  The authority's licensing fees, the DataFlow fee and any exam fee are set by them and paid separately. Alpha's fee covers the eligibility review, document preparation, DataFlow follow-up, exam guidance and the application, and is quoted after the review. [confirm] how the fee is quoted.
+  The authority's licensing fees, the DataFlow fee and any exam fee are set by them and paid separately. Alpha's fee covers the eligibility review, document preparation, DataFlow follow-up, exam guidance and the application. Your first consultation is free; the licensing process itself is charged.
 - **Do I need to pass an exam, and which one?** (faq 136, 38 words)  
   Most titles must pass the authority's licensing exam, delivered at Prometric centres. Some applicants qualify for an exemption. [confirm] the exemption criteria to state. We confirm whether you need the exam in your eligibility review, before you book anything.
 - **What documents do I need for DataFlow?** (faq 137, 40 words)  
@@ -120,6 +120,10 @@ Planning to work elsewhere in the GCC? See <a href="/services/saudi-healthcare-p
 **meta_title**
 
 Move Your License Between DHA, DOH and MOHAP | Alpha Health
+
+**areaServed**
+
+Abu Dhabi, Dubai, Sharjah
 
 **meta_description**
 
@@ -205,8 +209,8 @@ Send us your current license and the emirate you are moving to, and we will conf
   Yes. In the DataFlow portal you open a Report Transfer or Reissuance case, link your existing primary source verification report to the new authority and pay the transfer fee. Your documents are not verified again from the start.
 - **How long does a license transfer take?** (faq 412, 44 words)  
   [confirm] a typical range, from real cases. Most of the time goes on the DataFlow redirect and the exam exemption decision. Once eligibility is confirmed, your new employer activates the license. Applying while your current license is still valid avoids a gap between the two.
-- **How much does a transfer cost, and what is included in Alpha's fee?** (faq 413, 38 words)  
-  The receiving authority's fees and the DataFlow transfer fee are set by them and paid separately. Alpha's fee covers the assessment, good standing certificate, portal application, DataFlow redirect, exemption request and activation follow-up. [confirm] how the fee is quoted.
+- **How much does a transfer cost, and what is included in Alpha's fee?** (faq 413, 43 words)  
+  The receiving authority's fees and the DataFlow transfer fee are set by them and paid separately. Alpha's fee covers the assessment, good standing certificate, portal application, DataFlow redirect, exemption request and activation follow-up. Your first consultation is free; the transfer itself is charged.
 - **Can I hold DHA, DOH and MOHAP licenses at the same time?** (faq 414, 47 words)  
   Yes. You may hold licenses from more than one authority at once, but each license must be activated and kept active by a separate licensed facility. This suits professionals who work across emirates, for example a part-time role in Dubai alongside a main role in Abu Dhabi.
 
@@ -262,7 +266,7 @@ Every doctor, nurse, pharmacist, dentist and allied health professional must hol
 
 ### Costs
 
-SCFHS fees, the DataFlow fee and any exam fee are set by them and paid separately. Alpha Health Group's service fee is quoted after we review your profile. [confirm] how the fee is quoted.
+SCFHS fees, the DataFlow fee and any exam fee are set by them and paid separately. Your first consultation with Alpha Health Group is free. The licensing process itself is a paid service.
 
 ### Renewal
 
@@ -298,8 +302,8 @@ Also considering the UAE or Qatar? See <a href="/services/healthcare-professiona
   Every doctor, nurse, pharmacist, dentist and allied health professional must hold a valid SCFHS professional license before practising in any healthcare facility in Saudi Arabia, public or private. Registration, classification and renewal all run through Mumaris Plus.
 - **How long does SCFHS licensing take?** (faq 123, 42 words)  
   [confirm] a typical range, from real cases. The time depends on your classification category, how quickly DataFlow completes your verification and whether you need an exam. We give you an estimate after reviewing your profile and tell you which documents to prepare first.
-- **How much does it cost, and what is included in Alpha's fee?** (faq 124, 39 words)  
-  SCFHS fees, the DataFlow fee and any exam fee are set by them and paid separately. Alpha's fee covers the eligibility and classification review, documents, DataFlow follow-up, the Mumaris Plus application and exam guidance. [confirm] how the fee is quoted.
+- **How much does it cost, and what is included in Alpha's fee?** (faq 124, 45 words)  
+  SCFHS fees, the DataFlow fee and any exam fee are set by them and paid separately. Alpha's fee covers the eligibility and classification review, documents, DataFlow follow-up, the Mumaris Plus application and exam guidance. Your first consultation is free; the licensing process itself is charged.
 - **Do I need to pass an exam, and which one?** (faq 125, 42 words)  
   Most categories sit the SCFHS exam for their classification. [confirm] which categories are exempt. We confirm what applies to your title in the eligibility review, before you book, and guide you on the exam and its booking as part of the SCFHS process.
 - **What documents do I need for DataFlow and SCFHS?** (faq 126, 47 words)  
@@ -359,7 +363,7 @@ Every doctor, nurse, pharmacist, dentist and allied health practitioner must hol
 
 ### Costs
 
-DHP fees, the DataFlow fee and the exam fee are set by them and paid separately. Alpha Health Group's service fee is quoted after we review your profile. [confirm] how the fee is quoted.
+DHP fees, the DataFlow fee and the exam fee are set by them and paid separately. Your first consultation with Alpha Health Group is free. The licensing process itself is a paid service.
 
 ### Why applications are delayed
 
@@ -397,8 +401,8 @@ Your Qatar DataFlow report can be reused elsewhere. See <a href="/services/healt
   Yes. DHP Circular 2025/24 made DataFlow primary source verification mandatory for all applicants from January 2026, with no exceptions. DataFlow checks your degree, license and experience directly with the institutions that issued them, and the report can later be transferred to other GCC regulators.
 - **How long does Qatar DHP licensing take?** (faq 118, 44 words)  
   [confirm] a typical range, from real cases. DataFlow verification and the next available exam date take most of the time, followed by the DHP evaluation. We give you an estimate after reviewing your profile, and you can complete DataFlow and the exam before you move.
-- **How much does it cost, and what is included in Alpha's fee?** (faq 119, 35 words)  
-  DHP fees, the DataFlow fee and the exam fee are set by them and paid separately. Alpha's fee covers the eligibility review, documents, DataFlow follow-up, exam guidance and the application. [confirm] how the fee is quoted.
+- **How much does it cost, and what is included in Alpha's fee?** (faq 119, 41 words)  
+  DHP fees, the DataFlow fee and the exam fee are set by them and paid separately. Alpha's fee covers the eligibility review, documents, DataFlow follow-up, exam guidance and the application. Your first consultation is free; the licensing process itself is charged.
 - **Can I apply from outside Qatar?** (faq 120, 47 words)  
   Yes. You can complete DataFlow verification and the Prometric exam before you move. License activation needs employer sponsorship and your presence in Qatar. [confirm] whether the exam can be taken outside Qatar. We tell you which steps to finish from home and what to bring when you arrive.
 - **Can I reuse my Qatar DataFlow report in another country?** (faq 121, 41 words)  
@@ -460,7 +464,7 @@ General practitioners need five years of post-qualification clinical experience 
 
 ### Costs
 
-MOH and OMSB fees, the DataFlow fee and the exam fee are set by them and paid separately. Alpha Health Group's service fee is quoted after we review your profile. [confirm] how the fee is quoted.
+MOH and OMSB fees, the DataFlow fee and the exam fee are set by them and paid separately. Your first consultation with Alpha Health Group is free. The licensing process itself is a paid service.
 
 ### The 2025 Public Health Law
 
@@ -496,8 +500,8 @@ Also considering the UAE or Saudi Arabia? See <a href="/services/healthcare-prof
   [confirm] a typical range, from real cases. The time from DataFlow submission to MOH registration depends on your profession, DataFlow verification and exam dates. We give you an estimate after reviewing your profile and tell you which documents to prepare and attest first.
 - **Who needs an OMSB-approved license in Oman?** (faq 111, 38 words)  
   Every healthcare professional, including doctors, nurses, pharmacists, dentists and allied health technicians, must hold an OMSB-approved license to practise in any public or private facility in Oman. Registration with the Ministry of Health follows through the Hakeem portal.
-- **How much does it cost, and what is included in Alpha's fee?** (faq 112, 39 words)  
-  MOH and OMSB fees, the DataFlow fee and the exam fee are set by them and paid separately. Alpha's fee covers the eligibility review, attestation and documents, DataFlow follow-up, exam guidance and the application. [confirm] how the fee is quoted.
+- **How much does it cost, and what is included in Alpha's fee?** (faq 112, 45 words)  
+  MOH and OMSB fees, the DataFlow fee and the exam fee are set by them and paid separately. Alpha's fee covers the eligibility review, attestation and documents, DataFlow follow-up, exam guidance and the application. Your first consultation is free; the licensing process itself is charged.
 - **Do I need to pass the Prometric exam?** (faq 113, 38 words)  
   For most categories, yes. OMSB requires the Prometric exam, with limited exemptions for highly experienced specialists who meet specific OMSB criteria. We confirm what applies to your title before you book, and guide you on preparation and booking.
 - **What experience do I need for an Oman medical license?** (faq 114, 42 words)  
@@ -507,14 +511,11 @@ Also considering the UAE or Saudi Arabia? See <a href="/services/healthcare-prof
 
 ## Open [confirm] items
 
-- id 67 name: Healthcare Professional Licensing in the UAE: DHA, DOH and MOHAP [confirm]
 - id 67 info_two: [confirm] the steps and their wording.
 - id 67 info_two: [confirm] the main differences to state.
 - id 67 info_two: [confirm] whether the exam can be taken outside the UAE, and which documents must be attested in the issuing country.
 - id 67 info_two: Timeline [confirm] a typical range per authority, from real cases.
-- id 67 info_two: [confirm] how the fee is quoted.
 - faq 134: [confirm] a typical range per authority, from real cases.
-- faq 135: [confirm] how the fee is quoted.
 - faq 136: [confirm] the exemption criteria to state.
 - faq 137: [confirm] the standard list.
 - faq 138: [confirm] whether the exam can be taken outside the UAE.
@@ -525,26 +526,19 @@ Also considering the UAE or Saudi Arabia? See <a href="/services/healthcare-prof
 - id 112 info_two: Documents you need Your current, valid UAE license A good standing certificate from your current authority Your existing DataFlow report An offer or employment from a facility in the new emirate [confirm] any other documents the receiving authority asks for Timeline [confirm] a typical range, from real cases.
 - faq 409: [confirm] the exact rule.
 - faq 412: [confirm] a typical range, from real cases.
-- faq 413: [confirm] how the fee is quoted.
 - id 66 info_two: [confirm] which categories are exempt.
 - id 66 info_two: Timeline [confirm] a typical range, from real cases.
-- id 66 info_two: [confirm] how the fee is quoted.
 - id 66 info_two: [confirm] the renewal period and requirements, such as continuing education hours.
 - faq 123: [confirm] a typical range, from real cases.
-- faq 124: [confirm] how the fee is quoted.
 - faq 125: [confirm] which categories are exempt.
 - faq 127: [confirm] whether the exam can be taken outside Saudi Arabia, and when employer sponsorship is needed.
 - id 65 info_two: [confirm] Evaluation.
 - id 65 info_two: Timeline [confirm] a typical range, from real cases.
-- id 65 info_two: [confirm] how the fee is quoted.
 - faq 118: [confirm] a typical range, from real cases.
-- faq 119: [confirm] how the fee is quoted.
 - faq 120: [confirm] whether the exam can be taken outside Qatar.
 - id 64 info_two: [confirm] these figures are current.
 - id 64 info_two: Timeline [confirm] a typical range, from real cases.
-- id 64 info_two: [confirm] how the fee is quoted.
 - id 64 info_two: [confirm] what changes for individual professional licensing.
 - faq 110: [confirm] a typical range, from real cases.
-- faq 112: [confirm] how the fee is quoted.
 - faq 114: [confirm] these figures are current.
 - faq 115: [confirm] whether the exam can be taken outside Oman, and when the employer must be in place.
