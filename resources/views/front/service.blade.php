@@ -194,31 +194,12 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
 }
         </script>
 
-        <!-- Dynamic Magazine / Insights Section -->
+        <!-- Dynamic Magazine / Insights Section (only when the service has magazine rows) -->
+        @php $displayMagazines = $service->magazines; @endphp
+        @if ($displayMagazines->count())
         <section class="magazine-section" id="magazine-insights">
             <div class="container">
                 @php
-                    $displayMagazines = $service->magazines;
-                    if ($displayMagazines->count() == 0) {
-                        $displayMagazines = collect([
-                            (object) [
-                                'title' => 'Strategic Foundation',
-                                'description' => 'We begin by understanding the healthcare model, service mix, patient volumes, and future growth strategy. This information is translated into high-level planning concepts.',
-                                'image' => 'https://images.unsplash.com/photo-1559839734-2b71f1536785?q=80&w=1200'
-                            ],
-                            (object) [
-                                'title' => 'Strategic Approach',
-                                'description' => 'Transform vision into structured, compliant, and scalable healthcare concepts setting the direction for successful projects.',
-                                'image' => 'https://images.unsplash.com/photo-1576091160550-217359f4ecf8?q=80&w=1200'
-                            ],
-                            (object) [
-                                'title' => 'Excellence in Care',
-                                'description' => 'Our designs prioritize efficient patient and staff movement, separation of clean and dirty flows, emergency access, and compliance.',
-                                'image' => 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=1200'
-                            ]
-                        ]);
-                    }
-
                     $firstMag = $displayMagazines->first();
                     $hasFirstImg = $firstMag && $firstMag->image;
                 @endphp
@@ -270,34 +251,6 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
         </div>
     @endforeach
 
-    {{-- Duplicate slides so loop never runs dry (repeat twice) --}}
-    @foreach ($displayMagazines as $mag)
-        @php
-            $currImg = $mag->image ? ((strpos($mag->image, 'http') === 0)
-                ? $mag->image
-                : \App\Support\Img::thumb('uploads/magazines/' . $mag->image, 720)) : '';
-        @endphp
-        <div class="swiper-slide">
-            <div class="mag-card" data-img="{{ $currImg }}">
-                <span class="mag-card-eyebrow">{{ $mag->title }}</span>
-                <div class="mag-desc">{!! strip_tags($mag->description) !!}</div>
-            </div>
-        </div>
-    @endforeach
-
-    @foreach ($displayMagazines as $mag)
-        @php
-            $currImg = $mag->image ? ((strpos($mag->image, 'http') === 0)
-                ? $mag->image
-                : \App\Support\Img::thumb('uploads/magazines/' . $mag->image, 720)) : '';
-        @endphp
-        <div class="swiper-slide">
-            <div class="mag-card" data-img="{{ $currImg }}">
-                <span class="mag-card-eyebrow">{{ $mag->title }}</span>
-                <div class="mag-desc">{!! strip_tags($mag->description) !!}</div>
-            </div>
-        </div>
-    @endforeach
 </div>
                         </div>
                         <div class="swiper-pagination mag-pagination"></div>
@@ -305,21 +258,17 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
                 </div>
             </div>
         </section>
+        @endif
 
         <!-- Slider Script (Screenshot Style) -->
   <script>
 document.addEventListener('DOMContentLoaded', function () {
     const mainImage = document.getElementById('mag-main-image');
 
-    // Collect only ORIGINAL images (first set before duplicates)
+    // Each magazine is rendered once; Swiper clones slides itself for the loop.
     const allCards = document.querySelectorAll('.mag-card');
-    const totalOriginal = allCards.length / 3;
-    const magazineImages = [];
-    allCards.forEach((card, i) => {
-        if (i < totalOriginal) {
-            magazineImages.push(card.getAttribute('data-img') || '');
-        }
-    });
+    if (!allCards.length) return;
+    const magazineImages = [...allCards].map(card => card.getAttribute('data-img') || '');
 
     function syncImage(realIndex) {
         if (!mainImage) return;
@@ -337,8 +286,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const magSwiper = new Swiper('.mag-swiper-container', {
         slidesPerView: 1,
         spaceBetween: 0,
-        loop: true,
-        loopedSlides: totalOriginal,
+        loop: allCards.length > 2,
+        rewind: allCards.length <= 2,
         speed: 800,
         grabCursor: true,
         allowTouchMove: true,
