@@ -26,29 +26,31 @@ We guide doctors, nurses, pharmacists and allied health staff through DHA, DOH a
 
 **overview**
 
-Alpha Health Group handles healthcare professional licensing with DHA, DOH and MOHAP: eligibility assessment, DataFlow primary source verification, exam guidance, the application and license transfers, for doctors, nurses, pharmacists, dentists and allied health professionals.
+Alpha Health Group handles healthcare professional licensing with DHA, DOH and MOHAP: credential evaluation, DataFlow primary source verification, exam guidance, the application and license transfers, for doctors, nurses, pharmacists, dentists and allied health professionals.
 
 **info_one**
 
 ### Who needs a UAE healthcare license
 
-Every doctor, nurse, pharmacist, dentist and allied health professional needs a license from the health authority of the emirate where they will work: the <a href="https://www.dha.gov.ae" target="_blank" rel="noopener">Dubai Health Authority (DHA)</a> for Dubai, the <a href="https://www.doh.gov.ae" target="_blank" rel="noopener">Department of Health (DOH)</a> for Abu Dhabi, and the <a href="https://mohap.gov.ae/en" target="_blank" rel="noopener">Ministry of Health and Prevention (MOHAP)</a> for the Northern Emirates. Sharjah also has its own regulator, the Sharjah Health Authority (SHA).
+Every doctor, nurse, pharmacist, dentist and allied health professional needs a license from the health authority of the emirate where they will work: the <a href="https://www.dha.gov.ae" target="_blank" rel="noopener">Dubai Health Authority (DHA)</a> for Dubai, the <a href="https://www.doh.gov.ae" target="_blank" rel="noopener">Department of Health (DOH)</a> for Abu Dhabi, and the <a href="https://mohap.gov.ae/en" target="_blank" rel="noopener">Ministry of Health and Prevention (MOHAP)</a> for the Northern Emirates. Sharjah has its own regulator, the Sharjah Health Authority (SHA).
 
 **info_two**
 
 ### How DHA licensing works
 
-The DHA license follows five steps. [confirm] the steps and their wording.
+DHA licensing runs through Sheryan, the DHA licensing system, in six steps.
 
 
 
-- <strong>Eligibility check.</strong> Your degree, license and experience are checked against the DHA Professional Qualification Requirements (PQR) for your title.
+- <strong>Registration.</strong> You open your application in Sheryan.
 
-- <strong>DataFlow verification.</strong> DataFlow checks your degree, license and experience directly with the institutions that issued them. This is primary source verification.
+- <strong>Credential evaluation.</strong> DHA evaluates your qualifications and experience against the Unified Healthcare Professional Qualification Requirements (PQR) for your title.
 
-- <strong>Licensing exam or exemption.</strong> Most titles sit the DHA licensing exam at a Prometric centre. Some applicants qualify for an exemption.
+- <strong>DataFlow verification.</strong> DataFlow verifies your education, experience, professional licenses and good standing certificate directly with the institutions that issued them. This is primary source verification.
 
-- <strong>Registration.</strong> Once you pass or are exempted, DHA confirms your eligibility to be licensed.
+- <strong>Exam or exemption.</strong> Most titles sit the DHA licensing exam at a Prometric centre. The PQR exempts some applicants, for example holders of listed qualifications or registrations from countries such as the UK and the USA.
+
+- <strong>Eligibility.</strong> DHA issues your registration, often called the eligibility letter. It is valid for one year.
 
 - <strong>Activation by your employer.</strong> Your license becomes active when a DHA-licensed facility employs you and <a href="/services/activate-your-uae-healthcare-license">activates it</a>.
 
@@ -56,19 +58,19 @@ The DHA license follows five steps. [confirm] the steps and their wording.
 
 ### How DOH and MOHAP licensing differ
 
-<strong>DOH (Abu Dhabi)</strong> follows the same pattern of eligibility, DataFlow verification, an exam or exemption, and activation by an employer. You apply through TAMM, and DOH applies its own qualification requirements and exam rules. [confirm] the main differences to state.
+<strong>MOHAP</strong> follows the same steps as DHA. You apply on the MOHAP website or app for the Evaluation of Health Professional service, sit the exam at a Prometric centre, and once you are hired, your employer applies for your license.
 
-<strong>MOHAP</strong> licenses professionals for the Northern Emirates through MOHAP eServices, with its own qualification requirements and exam. [confirm] the main differences to state.
+<strong>DOH (Abu Dhabi)</strong> follows the same steps as well, but you apply through TAMM and sit the DOH licensing exam with Pearson VUE, booked from your TAMM account.
 
 ### Applying from India and other countries
 
-You can start before you move. The eligibility check, DataFlow verification and exam booking are all done online, so most of the work happens while you are still in India or your home country. [confirm] whether the exam can be taken outside the UAE, and which documents must be attested in the issuing country.
+You can complete most of the process before you move. Registration, credential evaluation and DataFlow verification are done online, and Prometric and Pearson VUE run exam centres in many countries, so you can usually sit the exam close to home. Your good standing certificate must be no older than six months when you apply.
 
 We work with you on WhatsApp and online calls, tell you which documents to collect, and check them before anything is submitted. The license is activated once a UAE facility employs you.
 
 ### Timeline
 
-[confirm] a typical range per authority, from real cases. The time depends mainly on how quickly DataFlow completes your verification, the next available exam date and how complete your documents are.
+Most applications with DHA, DOH or MOHAP take 6 to 8 weeks. The time depends mainly on DataFlow verification, the next available exam date and how complete your documents are.
 
 ### Costs
 
@@ -82,7 +84,7 @@ Our licensing team handles the work around your application:
 
 
 
-- Checks your eligibility against the current requirements for your title and authority
+- Checks your eligibility against the PQR for your title and authority
 
 - Prepares your documents and checks them before submission
 
@@ -102,18 +104,18 @@ Planning to work elsewhere in the GCC? See <a href="/services/saudi-healthcare-p
 
 **FAQs**
 
-- **How long does DHA or DOH licensing take?** (faq 134, 38 words)  
-  [confirm] a typical range per authority, from real cases. The time depends mainly on DataFlow verification, the next available exam date and how complete your documents are. We give you an estimate for your title after the eligibility review.
+- **How long does DHA or DOH licensing take?** (faq 134, 40 words)  
+  Most applications take 6 to 8 weeks with DHA, DOH or MOHAP. The time depends mainly on DataFlow verification, the next available exam date and how complete your documents are. We give you an estimate for your title after the eligibility review.
 - **How much does it cost, and what is included in Alpha's fee?** (faq 135, 44 words)  
   The authority's licensing fees, the DataFlow fee and any exam fee are set by them and paid separately. Alpha's fee covers the eligibility review, document preparation, DataFlow follow-up, exam guidance and the application. Your first consultation is free; the licensing process itself is charged.
-- **Do I need to pass an exam, and which one?** (faq 136, 38 words)  
-  Most titles must pass the authority's licensing exam, delivered at Prometric centres. Some applicants qualify for an exemption. [confirm] the exemption criteria to state. We confirm whether you need the exam in your eligibility review, before you book anything.
-- **What documents do I need for DataFlow?** (faq 137, 40 words)  
-  Usually your degree, your professional license or registration, experience certificates and your passport. [confirm] the standard list. DataFlow verifies each one with the institution that issued it, so names and dates must match across documents. We check them before you submit.
-- **Can I apply from outside the UAE?** (faq 138, 41 words)  
-  Yes. The eligibility check, DataFlow verification and exam booking are done online, so you can start from India or anywhere else. Your license is activated once a UAE healthcare facility employs you. [confirm] whether the exam can be taken outside the UAE.
-- **What happens after I pass the exam?** (faq 139, 51 words)  
-  The authority confirms your eligibility to be licensed. Your license is then issued and activated when a licensed facility in that emirate employs you, so you can sign an offer with eligibility already in hand. You can practise only once the license is active. [confirm] how long eligibility stays valid before activation.
+- **Do I need to pass an exam, and which one?** (faq 136, 48 words)  
+  Most titles must pass the authority's licensing exam: Prometric for DHA and MOHAP, Pearson VUE for DOH. The PQR exempts some applicants, including holders of listed international qualifications or registrations, such as UK and US boards, PLAB, USMLE or NCLEX. We check your exemption in the eligibility review.
+- **What documents do I need for DataFlow?** (faq 137, 47 words)  
+  DataFlow verifies your educational qualifications, experience certificates, professional licenses and good standing certificate with the institutions that issued them. Your passport is uploaded to the authority, not verified. Names and dates must match across documents, and the good standing certificate must be no older than six months.
+- **Can I apply from outside the UAE?** (faq 138, 42 words)  
+  Yes. Registration, credential evaluation and DataFlow verification are done online, and Prometric and Pearson VUE run exam centres in many countries, so you can usually sit the exam close to home. Your license is activated once a UAE healthcare facility employs you.
+- **What happens after I pass the exam?** (faq 139, 43 words)  
+  The authority issues your eligibility. With DHA it is a registration, often called the eligibility letter, valid for one year, and validity at the other authorities is usually similar. Your license is then activated when a licensed facility in that emirate employs you.
 
 ## /services/healthcare-professional-license-transfer (id 112)
 
@@ -131,31 +133,31 @@ Moving between Dubai, Abu Dhabi and the other emirates? We handle the new author
 
 **content**
 
-There is no automatic transfer between DHA, DOH and MOHAP. You apply to the new authority while your current license is still valid, reuse your DataFlow report where it is accepted, provide a good standing certificate and an employer in the new emirate, and sit an exam only if your title requires one. [confirm] the exact rule.
+There is no automatic transfer between DHA, DOH and MOHAP. You apply to the new authority for a transfer while your current license is valid, DataFlow carries out an additional verification on your existing report, and the authority approves your license. Most transfers take 4 to 6 weeks.
 
 **overview**
 
-Offered a role in another emirate? We move your DHA, DOH, MOHAP or SHA professional license to the right authority, redirect your DataFlow report and request exam exemption, so you do not repeat the full licensing process.
+Offered a role in another emirate? We move your DHA, DOH, MOHAP or SHA professional license to the right authority, transfer your DataFlow report and request exam exemption, so you do not repeat the full licensing process.
 
 **info_one**
 
 ### One license, one authority
 
-A UAE healthcare license belongs to the authority that issued it. A DHA license does not let you practise in Abu Dhabi, and a DOH license does not cover Sharjah or Ajman. When you change emirate, you apply to the new authority. Getting your first UAE license instead? See <a href="/services/healthcare-professional-licensing-uae">healthcare professional licensing in the UAE</a>.
+A UAE healthcare license belongs to the authority that issued it. A DHA license does not let you practise in Abu Dhabi, and a DOH license does not cover Sharjah or Ajman. When you change emirate, you apply to the new authority. Getting your first UAE license instead? See <a href="/services/healthcare-professional-license-registration">new healthcare professional licenses</a>.
 
 **info_two**
 
 ### DHA to DOH
 
-Apply to DOH through TAMM, request exam exemption on the strength of your valid DHA license, and redirect your existing DataFlow report to DOH instead of verifying again. Your Abu Dhabi employer activates the DOH license once eligibility is confirmed. [confirm]
+Apply to DOH for a transfer through TAMM while your DHA license is valid. Your DataFlow report is transferred to DOH, which may ask for additional verification. With a valid license, a valid good standing certificate and a full DataFlow report, the PQR makes you eligible for exam exemption for the same title. DOH specialist titles also need your residency programme documents. Your Abu Dhabi employer then activates the license.
 
 ### DOH to DHA
 
-The same steps in the other direction: apply to DHA through Sheryan with your valid DOH license, request exam exemption, redirect your DataFlow report to DHA, and your Dubai facility activates the license. [confirm]
+The same steps in the other direction: apply to DHA through Sheryan, transfer your DataFlow report to DHA and request exam exemption for the same title. DHA accepts DataFlow reports transferred from DOH, MOHAP and SHA, and may ask for further verification. Your Dubai facility then activates the license.
 
-### MOHAP and the other emirates
+### MOHAP and Sharjah
 
-MOHAP licenses professionals for the Northern Emirates through MOHAP eServices. Sharjah has its own regulator, the Sharjah Health Authority (SHA), which issues licenses through its own portal. The pattern is the same: a new application, exam exemption where your current license qualifies, and a redirected DataFlow report.
+For the Northern Emirates, you apply on the MOHAP website or app for the Evaluation of Health Professional service, and your new employer then applies for your license. Sharjah has its own regulator, the Sharjah Health Authority (SHA), with its own license transfer service. The pattern is the same: a new application, a transferred DataFlow report and exam exemption where your current license qualifies.
 
 ### Documents you need
 
@@ -163,19 +165,19 @@ MOHAP licenses professionals for the Northern Emirates through MOHAP eServices. 
 
 - Your current, valid UAE license
 
-- A good standing certificate from your current authority
+- A good standing certificate from your current authority, no older than six months
 
 - Your existing DataFlow report
 
 - An offer or employment from a facility in the new emirate
 
-- [confirm] any other documents the receiving authority asks for
+- For DOH specialist titles, your residency programme documents
 
 
 
 ### Timeline
 
-[confirm] a typical range, from real cases. The time depends on how quickly the DataFlow redirect and the exam exemption are approved. Your new employer then activates the license.
+Most transfers take 4 to 6 weeks. The DataFlow report transfer itself usually takes 5 to 7 days when no new documents are added. Your new employer then activates the license.
 
 **info_three**
 
@@ -187,9 +189,9 @@ Send us your current license and the emirate you are moving to. We confirm your 
 
 - Good standing certificate from your current authority
 
-- Account and application on the right portal: Sheryan, TAMM, MOHAP eServices or the SHA portal
+- Application on the right channel: Sheryan, TAMM, the MOHAP website or app, or SHA
 
-- DataFlow report redirected rather than repeated
+- DataFlow report transferred rather than verified from the start
 
 - Exam exemption requested on the basis of your current license
 
@@ -201,18 +203,18 @@ Send us your current license and the emirate you are moving to, and we will conf
 
 **FAQs**
 
-- **Is there an automatic transfer between DHA and DOH?** (faq 409, 41 words)  
-  No. You apply to the new authority while your current license is still valid. A valid DHA or DOH license usually qualifies you for exam exemption, and you can redirect your existing DataFlow report instead of verifying again. [confirm] the exact rule.
-- **Do I need to sit the licensing exam again?** (faq 410, 45 words)  
-  Usually not. Professionals with a valid, active UAE license can request exam exemption from the receiving authority, subject to its eligibility criteria. We confirm whether your title qualifies in the first assessment, before you sign the new offer or give notice in your current role.
-- **Can I reuse my DataFlow report?** (faq 411, 38 words)  
-  Yes. In the DataFlow portal you open a Report Transfer or Reissuance case, link your existing primary source verification report to the new authority and pay the transfer fee. Your documents are not verified again from the start.
-- **How long does a license transfer take?** (faq 412, 44 words)  
-  [confirm] a typical range, from real cases. Most of the time goes on the DataFlow redirect and the exam exemption decision. Once eligibility is confirmed, your new employer activates the license. Applying while your current license is still valid avoids a gap between the two.
-- **How much does a transfer cost, and what is included in Alpha's fee?** (faq 413, 43 words)  
-  The receiving authority's fees and the DataFlow transfer fee are set by them and paid separately. Alpha's fee covers the assessment, good standing certificate, portal application, DataFlow redirect, exemption request and activation follow-up. Your first consultation is free; the transfer itself is charged.
-- **Can I hold DHA, DOH and MOHAP licenses at the same time?** (faq 414, 47 words)  
-  Yes. You may hold licenses from more than one authority at once, but each license must be activated and kept active by a separate licensed facility. This suits professionals who work across emirates, for example a part-time role in Dubai alongside a main role in Abu Dhabi.
+- **Is there an automatic transfer between DHA and DOH?** (faq 409, 52 words)  
+  No. You apply to the new authority for a transfer while your current license is valid. DataFlow transfers your existing report and may carry out an additional verification, and the new authority approves the license. With a valid license, good standing certificate and full DataFlow report, you are eligible for exam exemption.
+- **Do I need to sit the licensing exam again?** (faq 410, 51 words)  
+  Usually not. Under the Unified PQR, a professional with a valid license from any UAE authority, a valid good standing certificate and a full DataFlow report is eligible for exam exemption for the same title, provided the exam attempts have not been used up. A higher title needs the full requirements.
+- **Can I reuse my DataFlow report?** (faq 411, 46 words)  
+  Yes. DataFlow calls this a Report Transfer. You sign a new letter of authorisation, link your existing report to the new authority and pay the transfer fee. It usually takes 5 to 7 days when no new documents are added, though the authority may ask for additional verification.
+- **How long does a license transfer take?** (faq 412, 43 words)  
+  Most transfers take 4 to 6 weeks. The DataFlow report transfer usually takes 5 to 7 days, then the new authority reviews and approves the transfer, and your new employer activates the license. Applying while your current license is still valid avoids a gap between the two.
+- **How much does a transfer cost, and what is included in Alpha's fee?** (faq 413, 42 words)  
+  The receiving authority's fees and the DataFlow transfer fee are set by them and paid separately. Alpha's fee covers the assessment, good standing certificate, application, DataFlow transfer, exemption request and activation follow-up. Your first consultation is free; the transfer itself is charged.
+- **Can I hold DHA, DOH and MOHAP licenses at the same time?** (faq 414, 41 words)  
+  Yes. You can hold licenses from more than one UAE authority, and each must be activated by a licensed facility under that authority. A suspension or revocation by one authority also applies with the other authorities where you hold a license.
 
 ## /services/saudi-healthcare-professional-licensing (id 66)
 
@@ -240,7 +242,7 @@ Alpha Health Group handles SCFHS licensing for doctors, nurses, pharmacists, den
 
 ### Who needs SCFHS registration
 
-Every doctor, nurse, pharmacist, dentist and allied health professional must hold a valid professional license from the <a href="https://www.scfhs.org.sa" target="_blank" rel="noopener">Saudi Commission for Health Specialties (SCFHS)</a> before practising in any healthcare facility in Saudi Arabia.
+Every doctor, nurse, pharmacist, dentist and allied health professional must hold a valid professional registration from the <a href="https://www.scfhs.org.sa" target="_blank" rel="noopener">Saudi Commission for Health Specialties (SCFHS)</a> before practising in any healthcare facility in Saudi Arabia.
 
 **info_two**
 
@@ -248,21 +250,21 @@ Every doctor, nurse, pharmacist, dentist and allied health professional must hol
 
 
 
-- <strong>Mumaris Plus.</strong> Applications, registration, classification and renewals all go through Mumaris Plus, the SCFHS licensing platform.
+- <strong>Mumaris Plus.</strong> Classification, registration and renewal all run through Mumaris Plus, the SCFHS platform. You can apply for classification from outside Saudi Arabia, without a work permit.
 
-- <strong>DataFlow verification.</strong> DataFlow verifies your academic and professional credentials with the institutions that issued them. Every applicant needs it.
+- <strong>DataFlow verification.</strong> DataFlow verifies foreign qualifications, licenses and experience letters with the institutions that issued them. Qualifications issued in Saudi Arabia do not need it.
 
-- <strong>Professional classification.</strong> SCFHS classifies you by title and level based on your qualifications and experience.
+- <strong>Professional classification.</strong> SCFHS classifies you by title and level based on your qualification and country of training. Some classifications are decided directly; others need a written exam or a practical evaluation.
 
-- <strong>Exam.</strong> You sit the SCFHS exam for your classification where one applies. [confirm] which categories are exempt.
+- <strong>Exam.</strong> Where an exam applies, you sit it at a Prometric or Pearson VUE centre, in Saudi Arabia or abroad.
 
-- <strong>Registration.</strong> SCFHS registers you and issues your professional license.
+- <strong>Registration.</strong> With lawful residence and a letter from your Saudi employer, SCFHS registers you and issues your professional license.
 
 
 
 ### Timeline
 
-[confirm] a typical range, from real cases. The time depends on your classification category, how quickly DataFlow completes and whether you need an exam.
+SCFHS publishes its own service times: about 7 working days for a classification decided directly, 30 working days for one that needs a written exam, and 5 working days for registration. DataFlow verification usually takes 15 to 25 working days, plus the time to book and sit the exam.
 
 ### Costs
 
@@ -270,7 +272,7 @@ SCFHS fees, the DataFlow fee and any exam fee are set by them and paid separatel
 
 ### Renewal
 
-Licenses are renewed through Mumaris Plus. [confirm] the renewal period and requirements, such as continuing education hours.
+Professional registration lasts two years and is renewed through Mumaris Plus, from three months before it expires. Each renewal needs continuing professional development hours: 60 for physicians, 40 for pharmacists and specialists, and 20 for technicians.
 
 **info_three**
 
@@ -294,22 +296,22 @@ Our licensing team works through each step with you:
 
 Send us your qualification, years of experience and the role you are applying for in Saudi Arabia. We will tell you your likely classification, what you need and what to do next.
 
-Also considering the UAE or Qatar? See <a href="/services/healthcare-professional-licensing-uae">UAE licensing with DHA, DOH and MOHAP</a> and <a href="/services/healthcare-professional-licensing-qatar">DHP licensing in Qatar</a>.
+Also considering Qatar? See <a href="/services/healthcare-professional-licensing-qatar">DHP licensing in Qatar</a>.
 
 **FAQs**
 
-- **Who needs SCFHS registration to work in Saudi Arabia?** (faq 122, 37 words)  
-  Every doctor, nurse, pharmacist, dentist and allied health professional must hold a valid SCFHS professional license before practising in any healthcare facility in Saudi Arabia, public or private. Registration, classification and renewal all run through Mumaris Plus.
-- **How long does SCFHS licensing take?** (faq 123, 42 words)  
-  [confirm] a typical range, from real cases. The time depends on your classification category, how quickly DataFlow completes your verification and whether you need an exam. We give you an estimate after reviewing your profile and tell you which documents to prepare first.
+- **Who needs SCFHS registration to work in Saudi Arabia?** (faq 122, 40 words)  
+  Every doctor, nurse, pharmacist, dentist and allied health professional must hold a valid SCFHS professional registration before practising in any healthcare facility in Saudi Arabia, public or private. Classification, registration and renewal all run through Mumaris Plus, the SCFHS platform.
+- **How long does SCFHS licensing take?** (faq 123, 43 words)  
+  SCFHS publishes its service times: about 7 working days for a classification decided directly, 30 working days for one that needs a written exam, and 5 working days for registration. DataFlow verification usually takes 15 to 25 working days. We give you an estimate after reviewing your profile.
 - **How much does it cost, and what is included in Alpha's fee?** (faq 124, 45 words)  
   SCFHS fees, the DataFlow fee and any exam fee are set by them and paid separately. Alpha's fee covers the eligibility and classification review, documents, DataFlow follow-up, the Mumaris Plus application and exam guidance. Your first consultation is free; the licensing process itself is charged.
-- **Do I need to pass an exam, and which one?** (faq 125, 42 words)  
-  Most categories sit the SCFHS exam for their classification. [confirm] which categories are exempt. We confirm what applies to your title in the eligibility review, before you book, and guide you on the exam and its booking as part of the SCFHS process.
-- **What documents do I need for DataFlow and SCFHS?** (faq 126, 47 words)  
-  Typically your academic transcripts and degree, professional certificates, passport, a good standing certificate and employer details. Requirements vary by professional category. DataFlow verifies your qualifications and experience directly with the issuing institutions, so names and dates must match across every document. We check them before you submit.
-- **Can I apply from outside Saudi Arabia?** (faq 127, 48 words)  
-  Yes. Mumaris Plus registration and DataFlow verification are online, so you can start from your home country while you look for a role. [confirm] whether the exam can be taken outside Saudi Arabia, and when employer sponsorship is needed. We tell you which steps to finish before you travel.
+- **Do I need to pass an exam, and which one?** (faq 125, 47 words)  
+  It depends on how SCFHS classifies your qualification and country of training. Some classifications are decided directly; others need a written exam, delivered by Prometric or Pearson VUE, or a practical evaluation. Anyone with a break in practice of two years or more must sit the exam.
+- **What documents do I need for DataFlow and SCFHS?** (faq 126, 44 words)  
+  Typically your degree and transcripts, professional licenses, experience letters, passport, a good standing certificate and, at registration, a letter from your Saudi employer. DataFlow verifies foreign qualifications, licenses and experience letters with the issuing institutions; qualifications issued in Saudi Arabia do not need it.
+- **Can I apply from outside Saudi Arabia?** (faq 127, 41 words)  
+  Yes. Classification through Mumaris Plus can start from outside Saudi Arabia without a work permit, and SCFHS-approved exam centres operate internationally. Registration needs lawful residence in Saudi Arabia and a letter from your Saudi employer issued within the last three months.
 
 ## /services/healthcare-professional-licensing-qatar (id 65)
 
@@ -331,39 +333,39 @@ We guide doctors, nurses, pharmacists and allied health staff through DHP licens
 
 **overview**
 
-Alpha Health Group handles Qatar licensing for doctors, nurses, pharmacists, dentists and allied health professionals with the Department of Healthcare Professions (DHP) at the Ministry of Public Health (MOPH): eligibility, DataFlow verification, Prometric exam guidance and the application.
+Alpha Health Group handles Qatar licensing for doctors, nurses, pharmacists, dentists and allied health professionals with the Department of Healthcare Professions (DHP) at the Ministry of Public Health (MOPH): eligibility, primary source verification, Prometric exam guidance and the application.
 
 **info_one**
 
 ### Who needs a DHP license
 
-Every doctor, nurse, pharmacist, dentist and allied health practitioner must hold a license from the Department of Healthcare Professions (DHP), part of the <a href="https://www.moph.gov.qa" target="_blank" rel="noopener">Ministry of Public Health (MOPH)</a>, before practising in Qatar.
+Every doctor, nurse, pharmacist, dentist and allied health practitioner must hold a license from the Department of Healthcare Professions (DHP), part of the <a href="https://www.moph.gov.qa" target="_blank" rel="noopener">Ministry of Public Health (MOPH)</a>, before practising in Qatar. DHP replaced the Qatar Council for Healthcare Practitioners (QCHP) in 2019, so you may still see the old name.
 
 **info_two**
 
-### Steps: eligibility, DataFlow, exam, evaluation, license
+### Steps: eligibility, verification, exam, evaluation, license
 
 
 
-- <strong>Eligibility.</strong> Your profile is checked against the current DHP classification criteria for your title.
+- <strong>Eligibility.</strong> Your qualification and experience are checked against the DHP requirements for your title.
 
-- <strong>Primary source verification.</strong> DataFlow verifies your degree, license and experience with the issuing institutions. Under DHP Circular 2025/24, DataFlow verification is required for all applicants from January 2026.
+- <strong>Primary source verification.</strong> Verification is mandatory for all practitioners and is done through a DHP-approved provider: DataFlow, Quadrabay or AVS.
 
-- <strong>Prometric exam.</strong> Most titles sit the DHP qualifying exam at a Prometric centre. DHP was previously known as QCHP, and older references still use that name. [confirm]
+- <strong>Exam.</strong> Most titles sit the DHP qualifying exam, a computer-based test delivered at Prometric centres in Qatar and abroad.
 
 - <strong>Evaluation.</strong> DHP evaluates your application and credentials.
 
-- <strong>License and activation.</strong> The license is issued, and activation needs employer sponsorship and your presence in Qatar.
+- <strong>License.</strong> DHP issues your license, and activation is completed with your Qatar employer.
 
 
 
 ### Timeline
 
-[confirm] a typical range, from real cases. DataFlow verification and exam availability take most of the time.
+DHP sets its own service targets, counted from a complete application with verified documents: 25 working days for evaluation and 15 for licensing for physicians and dentists, and 15 and 10 working days for nursing, allied health and pharmacy. Verification and the exam come on top.
 
 ### Costs
 
-DHP fees, the DataFlow fee and the exam fee are set by them and paid separately. Your first consultation with Alpha Health Group is free. The licensing process itself is a paid service.
+DHP fees, the verification fee and the exam fee are set by them and paid separately. Your first consultation with Alpha Health Group is free. The licensing process itself is a paid service.
 
 ### Why applications are delayed
 
@@ -377,11 +379,11 @@ Our licensing team works through each step with you:
 
 
 
-- Eligibility review against current DHP classification criteria
+- Eligibility review against current DHP requirements
 
 - Document preparation to DHP standards
 
-- DataFlow verification, opened and followed up
+- Primary source verification, opened and followed up
 
 - Prometric exam guidance
 
@@ -391,22 +393,22 @@ Our licensing team works through each step with you:
 
 Send us your qualification, years of experience and your title. We will tell you whether you are eligible, what you need and what to do next.
 
-Your Qatar DataFlow report can be reused elsewhere. See <a href="/services/healthcare-professional-licensing-uae">UAE licensing</a> and <a href="/services/saudi-healthcare-professional-licensing">SCFHS licensing in Saudi Arabia</a>.
+Your Qatar DataFlow report can be reused elsewhere in the GCC. See <a href="/services/saudi-healthcare-professional-licensing">SCFHS licensing in Saudi Arabia</a>.
 
 **FAQs**
 
-- **Who needs a DHP license to work in Qatar?** (faq 116, 44 words)  
-  Every healthcare professional, including doctors, nurses, pharmacists, dentists and allied health practitioners, must hold a license from the Department of Healthcare Professions (DHP) at the Ministry of Public Health (MOPH) before practising in Qatar. The license is activated once a Qatar employer sponsors you.
-- **Is DataFlow verification required in 2026?** (faq 117, 42 words)  
-  Yes. DHP Circular 2025/24 made DataFlow primary source verification mandatory for all applicants from January 2026, with no exceptions. DataFlow checks your degree, license and experience directly with the institutions that issued them, and the report can later be transferred to other GCC regulators.
-- **How long does Qatar DHP licensing take?** (faq 118, 44 words)  
-  [confirm] a typical range, from real cases. DataFlow verification and the next available exam date take most of the time, followed by the DHP evaluation. We give you an estimate after reviewing your profile, and you can complete DataFlow and the exam before you move.
+- **Who needs a DHP license to work in Qatar?** (faq 116, 40 words)  
+  Every healthcare professional, including doctors, nurses, pharmacists, dentists and allied health practitioners, must hold a license from the Department of Healthcare Professions (DHP) at the Ministry of Public Health (MOPH) before practising in Qatar. DHP replaced the former QCHP in 2019.
+- **Is primary source verification required?** (faq 117, 40 words)  
+  Yes. Primary source verification is mandatory for all practitioners and is done through a DHP-approved provider: DataFlow, Quadrabay or AVS. The provider checks your degree, license and experience directly with the institutions that issued them before DHP evaluates your application.
+- **How long does Qatar DHP licensing take?** (faq 118, 38 words)  
+  DHP's service targets, counted from a complete application with verified documents, are 25 working days for evaluation and 15 for licensing for physicians and dentists, and 15 and 10 for nursing, allied health and pharmacy. Verification and the exam come on top.
 - **How much does it cost, and what is included in Alpha's fee?** (faq 119, 41 words)  
-  DHP fees, the DataFlow fee and the exam fee are set by them and paid separately. Alpha's fee covers the eligibility review, documents, DataFlow follow-up, exam guidance and the application. Your first consultation is free; the licensing process itself is charged.
-- **Can I apply from outside Qatar?** (faq 120, 47 words)  
-  Yes. You can complete DataFlow verification and the Prometric exam before you move. License activation needs employer sponsorship and your presence in Qatar. [confirm] whether the exam can be taken outside Qatar. We tell you which steps to finish from home and what to bring when you arrive.
-- **Can I reuse my Qatar DataFlow report in another country?** (faq 121, 41 words)  
-  Yes. A DataFlow report obtained for DHP Qatar can be transferred to regulators in the UAE, Saudi Arabia, Bahrain, Oman and the UK. Your documents are not verified again from the start, and you avoid paying for a second full verification.
+  DHP fees, the verification fee and the exam fee are set by them and paid separately. Alpha's fee covers the eligibility review, documents, verification follow-up, exam guidance and the application. Your first consultation is free; the licensing process itself is charged.
+- **Can I apply from outside Qatar?** (faq 120, 37 words)  
+  Yes. Primary source verification is done online, and Prometric delivers DHP exams at test centres in many countries, so you can complete both before you move. License issue and activation are then completed with your Qatar employer.
+- **Can I reuse my Qatar DataFlow report in another country?** (faq 121, 46 words)  
+  Yes, within the GCC. DataFlow's Report Transfer service can move a report made for DHP to DHA, DOH, SCFHS, OMSB and Bahrain's NHRA, with a new letter of authorisation and a fee. It usually takes 5 to 7 days, and the receiving regulator may ask for extra checks.
 
 ## /services/healthcare-professional-licensing-oman (id 64)
 
@@ -428,7 +430,7 @@ We guide doctors, nurses, pharmacists and allied health staff through Oman licen
 
 **overview**
 
-Alpha Health Group handles Oman licensing for doctors, nurses, pharmacists, dentists and allied health professionals: eligibility against OMSB requirements, document attestation, DataFlow verification, Prometric exam guidance and MOH registration.
+Alpha Health Group handles Oman licensing for doctors, nurses, pharmacists, dentists and allied health professionals: OMSB registration and eligibility, DataFlow verification, Pearson VUE exam guidance and the Ministry of Health license.
 
 **info_one**
 
@@ -438,29 +440,29 @@ Every healthcare professional, including doctors, nurses, pharmacists, dentists 
 
 **info_two**
 
-### Steps: eligibility, DataFlow, exam, MOH registration
+### Steps: eligibility, verification, exam, MOH license
 
 
 
-- <strong>Eligibility.</strong> Your qualification and experience are assessed against the OMSB Professional Qualification Requirements (PQR) for your title.
+- <strong>OMSB registration and eligibility.</strong> You register on Hakeem, the OMSB portal, and your qualification and experience are assessed for your title. In the private sector, a letter from your sponsor is part of this first application.
 
-- <strong>Document attestation.</strong> Certificates are attested before submission.
+- <strong>DataFlow verification.</strong> DataFlow verifies your degree, license and experience with the institutions that issued them.
 
-- <strong>DataFlow verification.</strong> DataFlow verifies your degree, license and experience with the issuing institutions.
+- <strong>Exam.</strong> OMSB exams are delivered by Pearson VUE, at its centres worldwide or at the OMSB National Test Center in Muscat. Doctors also sit an oral exam.
 
-- <strong>Prometric exam.</strong> OMSB requires the Prometric exam for most categories, with limited exemptions for experienced specialists who meet OMSB criteria.
+- <strong>Employer approvals.</strong> After you pass, your employer obtains the Ministry of Labour approval.
 
-- <strong>MOH registration.</strong> Your license is registered through the Hakeem portal.
+- <strong>MOH license.</strong> The license is issued through the Ministry of Health Health Practitioners Registration e-Service.
 
 
 
 ### Experience requirements
 
-General practitioners need five years of post-qualification clinical experience and specialists three years. Nurses with a bachelor degree need two years, and diploma-holding nurses three years. [confirm] these figures are current.
+For the private sector, MOH asks general practitioners for four years of work experience and specialists (level 3) for three years after the specialty. Nurses with a bachelor degree need at least three years, and diploma-holding nurses at least four. Government-sector rules may differ.
 
 ### Timeline
 
-[confirm] a typical range, from real cases. DataFlow verification, exam dates and how complete your documents are decide most of the time.
+MOH processes a complete registration application in about 5 business days, and DataFlow verification for OMSB takes up to 25 working days. The exam, the oral exam for doctors and your employer's labour approval come on top.
 
 ### Costs
 
@@ -468,7 +470,7 @@ MOH and OMSB fees, the DataFlow fee and the exam fee are set by them and paid se
 
 ### The 2025 Public Health Law
 
-Royal Decree No. 43/2025, the new Public Health Law, updates licensing and accreditation standards in Oman. [confirm] what changes for individual professional licensing.
+Royal Decree No. 43/2025, issued in April 2025, enacts Oman's new Public Health Law. It covers facility licensing and accreditation, data confidentiality, pharmaceuticals and penalties. Individual professional licensing still follows MOH and OMSB rules while the implementing regulations are prepared.
 
 **info_three**
 
@@ -478,67 +480,37 @@ Our licensing team works through each step with you:
 
 
 
-- Eligibility review against the OMSB PQR for your title
+- Hakeem registration and eligibility review for your title
 
-- Document preparation and attestation
+- Document preparation and checks
 
 - DataFlow verification, opened and followed up
 
-- Prometric exam guidance
+- Pearson VUE exam guidance
 
-- Application tracking through to MOH registration
+- Application tracking through to the MOH license
 
 **info_four**
 
 Send us your qualification, years of experience and your title. We will assess your eligibility for Oman and tell you what you need and what to do next.
 
-Also considering the UAE or Saudi Arabia? See <a href="/services/healthcare-professional-licensing-uae">UAE licensing</a> and <a href="/services/saudi-healthcare-professional-licensing">SCFHS licensing in Saudi Arabia</a>.
+Also considering Saudi Arabia? See <a href="/services/saudi-healthcare-professional-licensing">SCFHS licensing in Saudi Arabia</a>.
 
 **FAQs**
 
-- **How long does Oman healthcare licensing take?** (faq 110, 42 words)  
-  [confirm] a typical range, from real cases. The time from DataFlow submission to MOH registration depends on your profession, DataFlow verification and exam dates. We give you an estimate after reviewing your profile and tell you which documents to prepare and attest first.
-- **Who needs an OMSB-approved license in Oman?** (faq 111, 38 words)  
-  Every healthcare professional, including doctors, nurses, pharmacists, dentists and allied health technicians, must hold an OMSB-approved license to practise in any public or private facility in Oman. Registration with the Ministry of Health follows through the Hakeem portal.
-- **How much does it cost, and what is included in Alpha's fee?** (faq 112, 45 words)  
-  MOH and OMSB fees, the DataFlow fee and the exam fee are set by them and paid separately. Alpha's fee covers the eligibility review, attestation and documents, DataFlow follow-up, exam guidance and the application. Your first consultation is free; the licensing process itself is charged.
-- **Do I need to pass the Prometric exam?** (faq 113, 38 words)  
-  For most categories, yes. OMSB requires the Prometric exam, with limited exemptions for highly experienced specialists who meet specific OMSB criteria. We confirm what applies to your title before you book, and guide you on preparation and booking.
-- **What experience do I need for an Oman medical license?** (faq 114, 42 words)  
-  General practitioners need five years of post-qualification clinical experience and specialists three years. Nurses with a bachelor degree need two years, and diploma-holding nurses three years. [confirm] these figures are current. We check your experience certificates against these requirements in the eligibility review.
-- **Can I apply from outside Oman?** (faq 115, 37 words)  
-  Yes. Eligibility assessment, attestation planning and DataFlow verification can start from your home country, and the Prometric exam is booked online. [confirm] whether the exam can be taken outside Oman, and when the employer must be in place.
+- **How long does Oman healthcare licensing take?** (faq 110, 46 words)  
+  MOH processes a complete registration application in about 5 business days, and DataFlow verification for OMSB takes up to 25 working days. The Pearson VUE exam, the oral exam for doctors and your employer's labour approval come on top. We give you an estimate after reviewing your profile.
+- **Who needs an OMSB-approved license in Oman?** (faq 111, 44 words)  
+  Every healthcare professional, including doctors, nurses, pharmacists, dentists and allied health technicians, needs an OMSB-approved license to practise in any public or private facility in Oman. You register with OMSB on Hakeem, and the license is issued through the Ministry of Health registration e-service.
+- **How much does it cost, and what is included in Alpha's fee?** (faq 112, 43 words)  
+  MOH and OMSB fees, the DataFlow fee and the exam fee are set by them and paid separately. Alpha's fee covers the eligibility review, documents, DataFlow follow-up, exam guidance and the application. Your first consultation is free; the licensing process itself is charged.
+- **Do I need to pass an exam?** (faq 113, 44 words)  
+  For most categories, yes. OMSB exams are delivered by Pearson VUE, at its centres worldwide or at the OMSB National Test Center in Muscat, and doctors also sit an oral exam. We confirm what applies to your title, including any exemption, before you book.
+- **What experience do I need for an Oman license?** (faq 114, 48 words)  
+  For the private sector, MOH asks general practitioners for four years of work experience and specialists for three years after the specialty. Nurses with a bachelor degree need at least three years and diploma-holding nurses at least four. Government-sector rules may differ, so we check your certificates first.
+- **Can I apply from outside Oman?** (faq 115, 50 words)  
+  Yes, for the early steps. You register on Hakeem, complete DataFlow verification and can sit the Pearson VUE exam at a centre outside Oman. In the private sector, a letter from your sponsor is part of the first application, so your employer needs to be in place from the start.
 
 ## Open [confirm] items
 
-- id 67 info_two: [confirm] the steps and their wording.
-- id 67 info_two: [confirm] the main differences to state.
-- id 67 info_two: [confirm] whether the exam can be taken outside the UAE, and which documents must be attested in the issuing country.
-- id 67 info_two: Timeline [confirm] a typical range per authority, from real cases.
-- faq 134: [confirm] a typical range per authority, from real cases.
-- faq 136: [confirm] the exemption criteria to state.
-- faq 137: [confirm] the standard list.
-- faq 138: [confirm] whether the exam can be taken outside the UAE.
-- faq 139: [confirm] how long eligibility stays valid before activation.
-- id 112 content: [confirm] the exact rule.
-- id 112 info_two: [confirm] DOH to DHA The same steps in the other direction: apply to DHA through Sheryan with your valid DOH license, request exam exemption, redirect your DataFlow report to DHA, and your Dubai facility activates the license.
-- id 112 info_two: [confirm] MOHAP and the other emirates MOHAP licenses professionals for the Northern Emirates through MOHAP eServices.
-- id 112 info_two: Documents you need Your current, valid UAE license A good standing certificate from your current authority Your existing DataFlow report An offer or employment from a facility in the new emirate [confirm] any other documents the receiving authority asks for Timeline [confirm] a typical range, from real cases.
-- faq 409: [confirm] the exact rule.
-- faq 412: [confirm] a typical range, from real cases.
-- id 66 info_two: [confirm] which categories are exempt.
-- id 66 info_two: Timeline [confirm] a typical range, from real cases.
-- id 66 info_two: [confirm] the renewal period and requirements, such as continuing education hours.
-- faq 123: [confirm] a typical range, from real cases.
-- faq 125: [confirm] which categories are exempt.
-- faq 127: [confirm] whether the exam can be taken outside Saudi Arabia, and when employer sponsorship is needed.
-- id 65 info_two: [confirm] Evaluation.
-- id 65 info_two: Timeline [confirm] a typical range, from real cases.
-- faq 118: [confirm] a typical range, from real cases.
-- faq 120: [confirm] whether the exam can be taken outside Qatar.
-- id 64 info_two: [confirm] these figures are current.
-- id 64 info_two: Timeline [confirm] a typical range, from real cases.
-- id 64 info_two: [confirm] what changes for individual professional licensing.
-- faq 110: [confirm] a typical range, from real cases.
-- faq 114: [confirm] these figures are current.
-- faq 115: [confirm] whether the exam can be taken outside Oman, and when the employer must be in place.
+
