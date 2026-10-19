@@ -163,10 +163,15 @@
         '@context'    => 'https://schema.org',
         '@type'       => 'ProfessionalService',
         'name'        => $service->name,
-        'description' => strip_tags($service->content),
+        // The page's own meta description (what search shows), else the hero text.
+        'description' => trim((string) $service->meta_description) !== ''
+            ? trim((string) $service->meta_description)
+            : trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags((string) $service->content), ENT_QUOTES | ENT_HTML5, 'UTF-8'))),
+        'url'         => route('front.service', $service->slug),
         'provider'    => [
             '@type' => 'Organization',
-            'name'  => 'Alpha Health Consultancies',  /*config('app.name')*/
+            'name'  => 'Alpha Health Group',
+            'url'   => config('app.url'),
         ],
     ];
 

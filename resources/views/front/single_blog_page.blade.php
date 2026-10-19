@@ -17,6 +17,29 @@
 @section('meta_description', trim(preg_replace('/\s+/u', ' ', html_entity_decode($blogMetaDesc, ENT_QUOTES | ENT_HTML5, 'UTF-8'))))
 @push('meta')
     @if(!empty($blogKeywords))<meta name="keywords" content="{{ $blogKeywords }}">@endif
+    @php
+        // BlogPosting from the blog row. Author is the named author when filled in,
+        // otherwise the organisation that publishes the article.
+        $blogPosting = array_filter([
+            '@context'         => 'https://schema.org',
+            '@type'            => 'BlogPosting',
+            'headline'         => \Illuminate\Support\Str::limit(html_entity_decode(strip_tags($blog->title), ENT_QUOTES | ENT_HTML5, 'UTF-8'), 110, ''),
+            'description'      => html_entity_decode($blogMetaDesc, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+            'image'            => $blog->image ? asset('public/uploads/blog_images/' . $blog->image) : null,
+            'datePublished'    => optional($blog->published_date ?? $blog->created_at)->toAtomString(),
+            'dateModified'     => optional($blog->updated_date ?? $blog->updated_at)->toAtomString(),
+            'author'           => trim((string) $blog->author_name) !== ''
+                ? ['@type' => 'Person', 'name' => trim($blog->author_name)]
+                : ['@type' => 'Organization', 'name' => 'Alpha Health Group', 'url' => config('app.url')],
+            'publisher'        => [
+                '@type' => 'Organization',
+                'name'  => 'Alpha Health Group',
+                'logo'  => ['@type' => 'ImageObject', 'url' => asset('public/front-new/assets/images/alpha-logo.svg')],
+            ],
+            'mainEntityOfPage' => ['@type' => 'WebPage', '@id' => url()->current()],
+        ], fn ($v) => $v !== null && $v !== '');
+    @endphp
+    <script type="application/ld+json">{!! json_encode($blogPosting, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
 @endpush
 @push('og_tags')
     {{-- og:title/description/url come from the layout (one of each per page). --}}
