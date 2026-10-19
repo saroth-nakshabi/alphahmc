@@ -2,7 +2,7 @@
 
 @push('page_title', 'Healthcare Management Updates & Insights | Alpha Health Group')
 
-@section('meta_description', 'Explore healthcare management updates, leadership guides, DOH compliance insights, and operational excellence strategies from Alpha Health Group experts in the UAE and GCC.')
+@section('meta_description', 'Healthcare management updates and guides from Alpha Health Group on licensing, regulation, quality and operations for providers in the UAE and GCC.')
 
 @push('meta')
     <meta name="keywords" content="healthcare management updates, healthcare leaders guide, DOH compliance UAE, healthcare quality assurance, GCC healthcare insights, hospital management, healthcare consulting UAE, patient safety, healthcare operational excellence, Alpha Health Group blog">
@@ -12,11 +12,11 @@
 
 @push('og_tags')
     <meta property="og:title" content="Healthcare Management Updates & Insights | Alpha Health Group" />
-    <meta property="og:description" content="Expert articles and guides on healthcare management, DOH compliance, leadership strategies, and operational excellence for healthcare professionals across the UAE and GCC." />
+    <meta property="og:description" content="Healthcare management updates and guides from Alpha Health Group on licensing, regulation, quality and operations for providers in the UAE and GCC." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="{{ url('/healthcare-management-update-insights') }}" />
     <meta name="twitter:title" content="Healthcare Management Updates & Insights | Alpha Health Group" />
-    <meta name="twitter:description" content="Expert articles and guides on healthcare management, DOH compliance, leadership strategies, and operational excellence across the UAE and GCC." />
+    <meta name="twitter:description" content="Healthcare management updates and guides from Alpha Health Group on licensing, regulation, quality and operations for providers in the UAE and GCC." />
 @endpush
 
 @section('content')
@@ -32,7 +32,7 @@
     @include('front.partials.page-hero', [
         'heroEyebrow' => 'Healthcare Insights',
         'heroTitle'   => 'Healthcare Management Updates & Insights',
-        'heroDesc'    => 'Your go-to resource for healthcare leaders — covering management updates, DOH compliance guidance, operational excellence strategies, and industry trends shaping healthcare across the UAE and GCC.',
+        'heroDesc'    => 'Management updates, DOH regulatory guidance, operational strategies and industry trends for healthcare leaders in the UAE and GCC.',
         'heroCtaText' => 'Contact Us',
         'heroCtaModal'=> '#inquiryModal',
         'breadcrumb'  => ['Home' => route('home'), 'Insights' => null],

@@ -2,7 +2,7 @@
 
 @push('page_title', 'About Alpha Health Group | Healthcare Consultancy UAE')
 
-@section('meta_description')Discover Alpha Health Group — a leading healthcare consultancy in the UAE delivering DOH compliance, accreditation, quality assurance, and operational excellence for hospitals and clinics.@endsection
+@section('meta_description')A UAE healthcare consultancy helping hospitals, clinics and healthcare professionals with licensing, accreditation, quality and operations.@endsection
 
 @section('content')
     <style>

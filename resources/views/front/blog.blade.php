@@ -2,13 +2,13 @@
 
 @push('page_title', 'Healthcare Insights & Blog | Alpha Health Group')
 
-@section('meta_description', 'Stay informed with Alpha Health Group — expert articles on DOH compliance, healthcare accreditation, quality assurance, and industry news for UAE healthcare facilities.')
+@section('meta_description', 'Articles from Alpha Health Group on healthcare licensing, accreditation, quality and industry news for healthcare facilities in the UAE.')
 
 @push('og_tags')
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Alpha Health Group" />
     <meta property="og:title" content="Healthcare Insights & Blog | Alpha Health Group" />
-    <meta property="og:description" content="Expert articles on DOH compliance, healthcare accreditation, quality assurance, and industry news for UAE healthcare facilities." />
+    <meta property="og:description" content="Articles from Alpha Health Group on healthcare licensing, accreditation, quality and industry news for healthcare facilities in the UAE." />
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta name="twitter:card" content="summary_large_image" />
 @endpush

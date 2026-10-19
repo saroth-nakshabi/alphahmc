@@ -2,7 +2,7 @@
 
 @push('page_title', 'Contact Us | Alpha Health Group')
 
-@section('meta_description')Get in touch with Alpha Health Group for healthcare consultancy services, DOH compliance support, and accreditation assistance for healthcare facilities across the UAE.@endsection
+@section('meta_description')Contact Alpha Health Group about healthcare licensing, accreditation and consultancy for facilities and professionals in the UAE and GCC.@endsection
 
 @section('content')
     <!-- Professional Contact System -->

@@ -2,7 +2,7 @@
 
 @push('page_title', 'Healthcare Consultancy in Dubai | Alpha Health Group')
 
-@section('meta_description')Alpha Health Group is a trusted healthcare consultancy in the UAE. We deliver DOH compliance, accreditation support, quality assurance, and operational excellence for hospitals and clinics.@endsection
+@section('meta_description')UAE healthcare consultancy: facility setup and licensing, professional licensing, accreditation, quality and management support for hospitals and clinics.@endsection
 
 @push('meta')
 <script type="application/ld+json">
@@ -29,7 +29,7 @@
       "@type": "SiteNavigationElement",
       "position": 3,
       "name": "All Services",
-      "description": "Explore all healthcare consultancy services offered by Alpha Health Group including DOH compliance and accreditation.",
+      "description": "Explore all healthcare consultancy services offered by Alpha Health Group, including DOH licensing and accreditation.",
       "url": "{{ route('front.all-services') }}"
     },
     {
@@ -43,14 +43,14 @@
       "@type": "SiteNavigationElement",
       "position": 5,
       "name": "How Alpha Works",
-      "description": "Our proven 4-step methodology for healthcare facility compliance, planning, execution, and results.",
+      "description": "Our 4-step method for healthcare facility projects: research, planning, execution and results.",
       "url": "{{ route('how_alpha_work') }}"
     },
     {
       "@type": "SiteNavigationElement",
       "position": 6,
       "name": "Blog & Insights",
-      "description": "Healthcare industry news, compliance updates, and expert insights from Alpha Health Group.",
+      "description": "Healthcare industry news, regulatory updates and insights from Alpha Health Group.",
       "url": "{{ route('front.blog') }}"
     },
     {
