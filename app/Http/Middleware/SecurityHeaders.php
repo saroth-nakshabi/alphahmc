@@ -19,6 +19,13 @@ class SecurityHeaders
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 
+        // Google country domains for the Ads 1p-conversion page_view pings (fetch or image), from
+        // where our visitors come from. CSP has no wildcard for a top-level domain, so each is listed.
+        $googleCountries = 'https://www.google.ae https://www.google.co.in https://www.google.com.pk https://www.google.lk'
+            . ' https://www.google.com.sa https://www.google.com.qa https://www.google.com.om https://www.google.com.kw'
+            . ' https://www.google.com.bh https://www.google.com.ph https://www.google.com.eg https://www.google.jo'
+            . ' https://www.google.co.uk';
+
         // CSP — permissive policy that covers all CDNs used on this site
         $csp = implode('; ', [
             "default-src 'self'",
@@ -28,9 +35,9 @@ class SecurityHeaders
                 . " https://www.google.com https://www.gstatic.com",
             "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com https://maxcdn.bootstrapcdn.com",
             "font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com",
-            "img-src 'self' data: blob: https: http:",
+            "img-src 'self' data: blob: https: http: " . $googleCountries,
             "media-src 'self' blob: https:",
-            "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://region1.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://static.cloudflareinsights.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://stats.g.doubleclick.net https://*.g.doubleclick.net https://ad.doubleclick.net https://www.googleadservices.com https://www.google.com wss:",
+            "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://region1.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://static.cloudflareinsights.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://stats.g.doubleclick.net https://*.g.doubleclick.net https://ad.doubleclick.net https://www.googleadservices.com https://www.google.com " . $googleCountries . " wss:",
             "frame-src 'self' https://www.google.com https://www.youtube.com https://player.vimeo.com https://td.doubleclick.net https://googleads.g.doubleclick.net",
             "object-src 'none'",
             "base-uri 'self'",
