@@ -429,8 +429,9 @@ class MainHomeController extends Controller
                 'hostname'    => $rc->json('hostname'),
                 'threshold'   => $minScore,
                 'would_block' => $score < $minScore,
-                'email'       => $request->input('email'),
-                'ip'          => $request->ip(),
+                // matches an inquiry via hash('sha256', strtolower(email)); no raw email or IP in logs
+                'email_hash'  => $request->filled('email')
+                    ? substr(hash('sha256', strtolower(trim((string) $request->input('email')))), 0, 12) : null,
             ]);
             return self::RECAPTCHA_ENFORCE && $score < $minScore;
         } catch (\Exception $e) {
