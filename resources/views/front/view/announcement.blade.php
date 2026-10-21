@@ -31,7 +31,7 @@
                         <!-- Middle: Brand Box (Only show if no background image to keep it clean) -->
                         <div class="col-lg-1 d-none d-lg-flex justify-content-center">
                             <div class="purple-brand-box" data-aos="zoom-in" data-aos-delay="300">
-                                <i class="bi bi-cpu-fill"></i>
+                                <i class="fa-solid fa-microchip"></i>
                             </div>
                         </div>
 

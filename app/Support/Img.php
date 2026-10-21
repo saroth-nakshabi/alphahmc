@@ -109,6 +109,29 @@ class Img
     }
 
     /**
+     * srcset value built from thumb() at each width, e.g. "a.jpg 480w, b.jpg 800w".
+     * Descriptors use the real pixel width of each file (thumb() never upscales), and a
+     * URL that repeats (small source, or a pass-through original) is listed once.
+     *
+     * @param  string $path   Upload path as for thumb().
+     * @param  int[]  $widths Requested widths, smallest first.
+     */
+    public static function srcset(string $path, array $widths): string
+    {
+        $parts = [];
+        foreach ($widths as $width) {
+            $url = self::thumb($path, $width);
+            if (isset($parts[$url])) {
+                continue;
+            }
+            $size        = self::size($url);
+            $parts[$url] = $url . ' ' . ($size ? $size[0] : $width) . 'w';
+        }
+
+        return implode(', ', $parts);
+    }
+
+    /**
      * Pixel size of a local image given its public URL (as returned by thumb() or
      * asset('public/...')), for <img width height> so the layout does not jump while
      * images load. Returns null for remote URLs, missing files or non-images.

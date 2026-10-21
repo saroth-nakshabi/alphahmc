@@ -168,6 +168,7 @@
 
     .article-main-image {
         width: 100%;
+        height: auto;
         max-height: 70vh;
         object-fit: cover;
         transform: scale(1.02);
@@ -374,7 +375,17 @@
             </header>
 
             <div class="image-wrapper" id="read">
-                <img src="{{ asset('public/uploads/blog_images/' . $blog->image) }}" 
+                {{-- LCP image: right-sized files, fetched first, never lazy --}}
+                @php
+                    $mainImgPath = 'uploads/blog_images/' . $blog->image;
+                    $mainImg     = \App\Support\Img::thumb($mainImgPath, 1200);
+                    $mainImgSize = \App\Support\Img::size($mainImg);
+                @endphp
+                <img src="{{ $mainImg }}"
+                     srcset="{{ \App\Support\Img::srcset($mainImgPath, [480, 800, 1200]) }}"
+                     sizes="(max-width: 1320px) 100vw, 1296px"
+                     @if($mainImgSize) width="{{ $mainImgSize[0] }}" height="{{ $mainImgSize[1] }}" @endif
+                     fetchpriority="high"
                      class="article-main-image"
                      alt="{{ $blog->title }}">
             </div>
@@ -402,7 +413,7 @@
                 @foreach ($blogsByTag as $bt)
                     <div class="col-lg-4 col-md-6">
                         <a href="{{ route('front.singleBlog', $bt->slug) }}" class="thinking-card">
-                            <img src="{{ asset('public/uploads/blog_images/' . $bt->image) }}" class="thinking-card-img" alt="{{ $bt->title }}">
+                            <img src="{{ \App\Support\Img::thumb('uploads/blog_images/' . $bt->image, 800) }}" class="thinking-card-img" alt="{{ $bt->title }}" loading="lazy" decoding="async">
                             <div class="thinking-card-overlay"></div>
                             <div class="thinking-card-content">
                                 <span class="badge bg-teal" style="background: var(--accent-teal)">{{ $bt->tags->first()->name ?? 'INSIGHT' }}</span>
@@ -470,8 +481,8 @@
                                     </div>
                                 </div>
                                 <div class="blog-item-thumb">
-                                    <img src="{{ $svc->hero_image ? asset('public/uploads/service_images/' . $svc->hero_image) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}"
-                                        alt="{{ $svc->name }}" loading="lazy">
+                                    <img src="{{ $svc->hero_image ? \App\Support\Img::thumb('uploads/service_images/' . $svc->hero_image, 200) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}"
+                                        alt="{{ $svc->name }}" width="88" height="88" loading="lazy" decoding="async">
                                 </div>
                             </a>
                         @endforeach
@@ -497,8 +508,10 @@
                     @foreach($clients as $client)
                         <div class="swiper-slide blog-client-slide">
                             <div class="blog-client-logo">
-                                <img src="{{ asset('public/uploads/clients/' . $client->logo) }}"
-                                     alt="{{ $client->name }}" loading="lazy">
+                                @php $logoUrl = \App\Support\Img::thumb('uploads/clients/' . $client->logo, 300); $logoSize = \App\Support\Img::size($logoUrl); @endphp
+                                <img src="{{ $logoUrl }}"
+                                     @if($logoSize) width="{{ $logoSize[0] }}" height="{{ $logoSize[1] }}" @endif
+                                     alt="{{ $client->name }}" loading="lazy" decoding="async">
                             </div>
                         </div>
                     @endforeach

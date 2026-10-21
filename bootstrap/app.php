@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\CheckStudentProfile;
 use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\TrimHtmlWhitespace;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->append(SecurityHeaders::class);
+        $middleware->web(append: [TrimHtmlWhitespace::class]);
         $middleware->alias([
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,

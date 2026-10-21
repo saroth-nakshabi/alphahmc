@@ -39,6 +39,7 @@
         .hero-bg-image-item {
             position: absolute;
             inset: 0;
+            background-image: var(--hero-lg);
             background-size: cover;
             background-position: center;
             opacity: 0;
@@ -49,6 +50,22 @@
         .hero-bg-image-item.hero-img-active {
             opacity: 1;
             transform: scale(1);
+        }
+
+        /* Slides after the first fetch their image only after the page load event */
+        .hero-bg-image-item.hero-bg-deferred {
+            background-image: none;
+        }
+
+        @media (max-width: 767px) {
+            .hero-bg-image-item {
+                background-image: var(--hero-sm);
+            }
+
+            /* Phones have no video, so the image/video toggle is hidden */
+            .hero-phone .hero-mode-bar {
+                display: none;
+            }
         }
 
         .hero-video-overlay {

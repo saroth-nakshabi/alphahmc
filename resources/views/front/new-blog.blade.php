@@ -70,7 +70,9 @@
                 <div class="container">
                     <div class="featured-box">
                         <div class="featured-image-side">
-                            <img src="{{ $featuredBlog->image ? \App\Support\Img::thumb('uploads/blog_images/' . $featuredBlog->image, 1000) : asset('public/front-new/assets/images/section-3-1st-image.jpg') }}"
+                            @php $featImg = $featuredBlog->image ? \App\Support\Img::thumb('uploads/blog_images/' . $featuredBlog->image, 1000) : asset('public/front-new/assets/images/section-3-1st-image.jpg'); $featSize = \App\Support\Img::size($featImg); @endphp
+                            <img src="{{ $featImg }}"
+                                @if($featSize) width="{{ $featSize[0] }}" height="{{ $featSize[1] }}" @endif
                                 alt="{{ $featuredBlog->title }}">
                         </div>
                         <div class="featured-content-side">
@@ -157,8 +159,10 @@
                                     @if($blog->tags->first())
                                         <span class="blog-tag-badge">{{ $blog->tags->first()->name }}</span>
                                     @endif
-                                    <img src="{{ $blog->image ? \App\Support\Img::thumb('uploads/blog_images/' . $blog->image, 800) : asset('public/front-new/assets/images/blog_images/blog-card-image-01.webp') }}"
-                                        alt="{{ $blog->title }}">
+                                    @php $cardImg = $blog->image ? \App\Support\Img::thumb('uploads/blog_images/' . $blog->image, 800) : asset('public/front-new/assets/images/blog_images/blog-card-image-01.webp'); $cardSize = \App\Support\Img::size($cardImg); @endphp
+                                    <img src="{{ $cardImg }}"
+                                        @if($cardSize) width="{{ $cardSize[0] }}" height="{{ $cardSize[1] }}" @endif
+                                        alt="{{ $blog->title }}" loading="lazy" decoding="async">
                                 </div>
                                 <div class="blog-card-body">
                                     <h3>{{ $blog->title }}</h3>
@@ -235,7 +239,7 @@
                                 </div>
                                 <div class="project-row-thumb">
                                     @if($project->projects_images->first())
-                                        <img src="{{ asset('public/' . $project->projects_images->first()->image) }}" alt="Impact">
+                                        <img src="{{ \App\Support\Img::thumb($project->projects_images->first()->image, 300) }}" alt="Impact" width="120" height="120" loading="lazy" decoding="async">
                                     @else
                                         <img src="{{ asset('public/front-new/assets/images/section-3-1st-image.jpg') }}"
                                             alt="Impact">

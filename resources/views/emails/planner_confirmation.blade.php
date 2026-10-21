@@ -22,7 +22,7 @@
         ? asset('public/uploads/about_staff/' . $emailAgent->image) : null;
 
     /* ── Content ────────────────────────────────────────────────── */
-    $logoUrl     = 'https://alphahmc.com/public/front-new/assets/images/AHGlogo.svg';
+    $logoUrl     = 'https://alphahmc.com/public/front-new/assets/images/ahg-logo-header.png';   // PNG: many mail clients do not show SVG
     $phases      = $brief['phases']  ?? [];
     $summaryText = $brief['summary'] ?? '';
     $serviceNames = collect($cards)->pluck('name')->filter()->take(6);

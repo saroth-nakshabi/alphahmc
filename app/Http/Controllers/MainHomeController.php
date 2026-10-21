@@ -42,25 +42,26 @@ class MainHomeController extends Controller
 {
     public function index()
     {
-        $categories = MainCategory::with([
-            'categories',
-            'categories.services' => fn ($q) => $q->where('status', 'published'),
-            'allCategories',
-            'allCategories.services' => fn ($q) => $q->where('status', 'published'),
-        ])->orderBy('sort_order')->get();
-        $homeSliders = HomeSlider::where('status', 'active')->get();
-        $blogs = Blog::where('featured', true)->orderBy('sort_order')->orderBy('id')->take(3)->get();
-        // $featuredServices = Service::where('featured', true)->take(3)->get();
-        $categories_carts = Category::where('featured', true)->orderBy('sort_order')->orderBy('id')->take(8)->get();
-        $featured_categories_total = Category::where('featured', true)->count();
-        $announcements = Announcement::where('status', 1)->latest()->get();
-        $projects = Project::with(['project_category', 'projects_images', 'projects_videos', 'projects_documents'])->latest()->take(2)->get();
-        $clients = \App\Models\client::visible()->where('is_featured', 1)->get();
-        $insightBlogs = Blog::where('featured', true)->orderBy('sort_order')->orderBy('id')->take(8)->get();
-        $alphaUpdates = Blog::whereHas('tags', function ($q) {
-            $q->where('name', 'AHG Updates');
-        })->orderBy('sort_order')->orderBy('id')->take(4)->get();
-        return view('front.index-2', compact('categories', 'homeSliders', 'blogs', 'categories_carts', 'announcements', 'projects', 'featured_categories_total', 'clients', 'insightBlogs', 'alphaUpdates'));
+        // Cached for 10 minutes (App\Support\SiteCache); the menu and service picker data come
+        // from the shared, also cached, $main_categories.
+        $data = \App\Support\SiteCache::remember('home', fn () => [
+            'homeSliders'               => HomeSlider::where('status', 'active')->get(),
+            'blogs'                     => Blog::where('featured', true)->orderBy('sort_order')->orderBy('id')->take(3)->get(),
+            'categories_carts'          => Category::where('featured', true)->orderBy('sort_order')->orderBy('id')->take(8)->get(),
+            'featured_categories_total' => Category::where('featured', true)->count(),
+            'announcements'             => Announcement::where('status', 1)->latest()->get(),
+            'projects'                  => Project::with(['project_category', 'projects_images', 'projects_videos', 'projects_documents'])->latest()->take(2)->get(),
+            'clients'                   => \App\Models\client::visible()->where('is_featured', 1)->get(),
+            'insightBlogs'              => Blog::where('featured', true)->orderBy('sort_order')->orderBy('id')->take(8)->get(),
+            // IN-subquery instead of whereHas: whereHas ran a correlated EXISTS per blog row (~23 ms).
+            'alphaUpdates'              => Blog::whereIn('id', function ($q) {
+                $q->select('blog_tags.blog_id')->from('blog_tags')
+                    ->join('tags', 'tags.id', '=', 'blog_tags.tag_id')
+                    ->where('tags.name', 'AHG Updates');
+            })->orderBy('sort_order')->orderBy('id')->take(4)->get(),
+        ]);
+
+        return view('front.index-2', $data);
     }
 
     public function loadMoreCategories(Request $request)
@@ -388,6 +389,13 @@ class MainHomeController extends Controller
     }
 
     /**
+     * reCAPTCHA v3 is in record-only mode (Saroth, 21 Oct 2026, for one week): every score
+     * is logged ("reCAPTCHA score", with would_block) and never blocks a submission. Set to
+     * true once a threshold has been chosen from the logs.
+     */
+    private const RECAPTCHA_ENFORCE = false;
+
+    /**
      * Shared anti-spam check: honeypot field (bots fill it, humans never do) +
      * a reCAPTCHA v3 score check (only runs when keys are configured). Threshold
      * is per-caller since inquiries and testimonials/contact treat suspicion
@@ -411,7 +419,20 @@ class MainHomeController extends Controller
                 'remoteip' => $request->ip(),
             ]);
             $score = $rc->json('score', 1.0);
-            return $score < $minScore;
+            Log::info('reCAPTCHA score', [
+                'action'      => $action,
+                'score'       => $rc->json('score'),          // null when no valid token was sent
+                'success'     => $rc->json('success'),
+                'token_sent'  => $request->filled('g-recaptcha-response'),
+                'errors'      => $rc->json('error-codes'),
+                'rc_action'   => $rc->json('action'),
+                'hostname'    => $rc->json('hostname'),
+                'threshold'   => $minScore,
+                'would_block' => $score < $minScore,
+                'email'       => $request->input('email'),
+                'ip'          => $request->ip(),
+            ]);
+            return self::RECAPTCHA_ENFORCE && $score < $minScore;
         } catch (\Exception $e) {
             Log::warning("reCAPTCHA v3 check failed for {$action} (submission allowed): " . $e->getMessage());
             return false;

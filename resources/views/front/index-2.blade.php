@@ -4,88 +4,33 @@
 
 @section('meta_description')UAE healthcare consultancy: facility setup and licensing, professional licensing, accreditation, quality and management support for hospitals and clinics.@endsection
 
-@push('meta')
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "ItemList",
-  "name": "Alpha Health Group Site Navigation",
-  "itemListElement": [
-    {
-      "@type": "SiteNavigationElement",
-      "position": 1,
-      "name": "Home",
-      "description": "Alpha Health Group — UAE healthcare consultancy home",
-      "url": "{{ route('home') }}"
-    },
-    {
-      "@type": "SiteNavigationElement",
-      "position": 2,
-      "name": "About Alpha Health Group",
-      "description": "Learn about Alpha Health Group's mission, vision, and expertise in healthcare consultancy across the UAE.",
-      "url": "{{ route('front.new-about') }}"
-    },
-    {
-      "@type": "SiteNavigationElement",
-      "position": 3,
-      "name": "All Services",
-      "description": "Explore all healthcare consultancy services offered by Alpha Health Group, including DOH licensing and accreditation.",
-      "url": "{{ route('front.all-services') }}"
-    },
-    {
-      "@type": "SiteNavigationElement",
-      "position": 4,
-      "name": "Healthcare Quality Assurance",
-      "description": "Tawqeet — Alpha Health Group's healthcare quality assurance and KPI monitoring platform.",
-      "url": "{{ route('healthcare_quality_assurance') }}"
-    },
-    {
-      "@type": "SiteNavigationElement",
-      "position": 5,
-      "name": "How Alpha Works",
-      "description": "Our 4-step method for healthcare facility projects: research, planning, execution and results.",
-      "url": "{{ route('how_alpha_work') }}"
-    },
-    {
-      "@type": "SiteNavigationElement",
-      "position": 6,
-      "name": "Blog & Insights",
-      "description": "Healthcare industry news, regulatory updates and insights from Alpha Health Group.",
-      "url": "{{ route('front.blog') }}"
-    },
-    {
-      "@type": "SiteNavigationElement",
-      "position": 7,
-      "name": "Contact Us",
-      "description": "Get in touch with Alpha Health Group for healthcare consultancy services in the UAE.",
-      "url": "{{ route('contact') }}"
-    }
-  ]
-}
-</script>
-@endpush
 
 @section('content')
 
      <!-- ===== DUAL-MODE HERO SECTION ===== -->
     <section class="hero-video-modern" id="heroSection">
 
-        <!-- BACKGROUND: Video Layer (Default Active) -->
-        <!-- poster shows instantly; source is injected only on desktop to avoid mobile network hit -->
+        <!-- BACKGROUND: Video Layer (desktop only) -->
+        {{-- Phones never get the video: they start on the image slider and the video toggle is hidden.
+             The check uses matchMedia, not innerWidth: while the page is still parsing, phones report
+             innerWidth as the wide layout width (1376px measured), which used to load the 10 MB video. --}}
         @php
             $heroPoster = (isset($homeSliders) && count($homeSliders) && $homeSliders->first()->image)
                 ? \App\Support\Img::thumb('uploads/slider_images/' . $homeSliders->first()->image, 1920)
                 : asset('public/front-new/assets/images/video-thumbnail.jpg');
+            $heroVideoSrc = asset('public/front-new/assets/images/ahg-hero-720.mp4');
         @endphp
-        <video muted loop playsinline class="hero-bg-video hero-bg-active" id="heroVideo"
-               poster="{{ $heroPoster }}">
+        <video muted loop playsinline preload="none" class="hero-bg-video hero-bg-active" id="heroVideo"
+               data-poster="{{ $heroPoster }}" data-src="{{ $heroVideoSrc }}">
         </video>
         <script>
-            if (window.innerWidth >= 768) {
+            window.ahgHeroDesktop = window.matchMedia('(min-width: 768px)').matches;
+            if (window.ahgHeroDesktop) {
                 (function () {
                     var v = document.getElementById('heroVideo');
+                    v.poster = v.getAttribute('data-poster');
                     var s = document.createElement('source');
-                    s.src  = '{{ asset("public/front-new/assets/images/AHG Hero Video.mp4") }}';
+                    s.src  = v.getAttribute('data-src');
                     s.type = 'video/mp4';
                     v.appendChild(s);
                     v.load();
@@ -95,24 +40,40 @@
         </script>
 
         <!-- BACKGROUND: Image Slider Layer -->
+        {{-- Each slide carries a desktop (1920px) and a phone (828px) file as CSS variables; home.css
+             picks one per viewport. Slides after the first load their image after the page load event. --}}
         <div class="hero-bg-images" id="heroImageLayer">
             @if(isset($homeSliders) && count($homeSliders) > 0)
                 @foreach($homeSliders as $index => $slider)
-                    <div class="hero-bg-image-item {{ $index == 0 ? 'hero-img-active' : '' }}"
-                        style="background-image: url('{{ \App\Support\Img::thumb('uploads/slider_images/' . $slider->image, 1920) }}');"
+                    @php
+                        $slideLg = \App\Support\Img::thumb('uploads/slider_images/' . $slider->image, 1920);
+                        $slideSm = \App\Support\Img::thumb('uploads/slider_images/' . $slider->image, 828);
+                    @endphp
+                    <div class="hero-bg-image-item {{ $index == 0 ? 'hero-img-active' : 'hero-bg-deferred' }}"
+                        style="--hero-lg: url('{{ $slideLg }}'); --hero-sm: url('{{ $slideSm }}');"
                         data-image-index="{{ $index }}">
                     </div>
                     @if($index === 0)
-                        {{-- Preload the first hero image so it's fetched at highest priority --}}
+                        {{-- Each viewport preloads only its own file for the first slide --}}
                         @push('meta')
-                        <link rel="preload" as="image"
-                              href="{{ \App\Support\Img::thumb('uploads/slider_images/' . $slider->image, 1920) }}"
-                              fetchpriority="high">
+                        <link rel="preload" as="image" href="{{ $slideSm }}" media="(max-width: 767px)" fetchpriority="high">
+                        <link rel="preload" as="image" href="{{ $slideLg }}" media="(min-width: 768px)" fetchpriority="high">
                         @endpush
                     @endif
                 @endforeach
             @endif
         </div>
+        <script>
+            // Phones: show the image slider from the first paint (no fade from an empty video layer).
+            if (!window.ahgHeroDesktop) {
+                document.getElementById('heroVideo').classList.remove('hero-bg-active');
+                document.getElementById('heroImageLayer').classList.add('hero-bg-active');
+                document.getElementById('heroSection').classList.add('hero-phone');
+            }
+            window.addEventListener('load', function () {
+                document.querySelectorAll('.hero-bg-deferred').forEach(function (el) { el.classList.remove('hero-bg-deferred'); });
+            });
+        </script>
 
         <div class="hero-video-overlay"></div>
 
@@ -222,7 +183,7 @@
         </div>
     </section>
 
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/home.css') }}?v=7">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/home.css') }}?v=8">
 
 
     <script>
@@ -259,21 +220,23 @@
                 if (currentMode === 'image') syncBgImage();
                 startProgress();
             }
-            // Lazy-inject the video source (used on mobile, where it isn't loaded upfront).
+            // Resume the video when switching back to it. Phones never load it (see the hero markup).
             function ensureVideoSource() {
-                if (!videoBg || videoBg.querySelector('source')) return;
-                var s = document.createElement('source');
-                s.src  = '{{ asset("public/front-new/assets/images/AHG Hero Video.mp4") }}';
-                s.type = 'video/mp4';
-                videoBg.appendChild(s);
-                videoBg.load();
+                if (!window.ahgHeroDesktop || !videoBg) return;
+                if (!videoBg.querySelector('source')) {
+                    var s = document.createElement('source');
+                    s.src  = videoBg.getAttribute('data-src');
+                    s.type = 'video/mp4';
+                    videoBg.appendChild(s);
+                    videoBg.load();
+                }
                 videoBg.play().catch(function () {});
             }
 
             if (btnVideo) btnVideo.addEventListener('click', function () {
-                if (currentMode === 'video') return;
+                if (currentMode === 'video' || !window.ahgHeroDesktop) return;
                 currentMode = 'video';
-                ensureVideoSource();           // safe, on-demand load (esp. mobile)
+                ensureVideoSource();
                 btnVideo.classList.add('active-mode');
                 btnImage.classList.remove('active-mode');
                 videoBg.classList.add('hero-bg-active');
@@ -286,17 +249,15 @@
                 btnVideo.classList.remove('active-mode');
                 imageBg.classList.add('hero-bg-active');
                 videoBg.classList.remove('hero-bg-active');
+                videoBg.pause();
                 syncBgImage();
             });
 
-            // On mobile, default to the image slider (avoid the bare video poster);
-            // the video loads only if the user taps the video toggle.
-            if (window.innerWidth < 768) {
+            // Phones run the image slider only (layers were already switched before the first paint).
+            if (!window.ahgHeroDesktop) {
                 currentMode = 'image';
                 if (btnVideo) btnVideo.classList.remove('active-mode');
                 if (btnImage) btnImage.classList.add('active-mode');
-                if (videoBg) videoBg.classList.remove('hero-bg-active');
-                if (imageBg) imageBg.classList.add('hero-bg-active');
                 syncBgImage();
             }
 
@@ -380,20 +341,28 @@
                                 <div class="modern-dropdown-pro">
                                     <select name="service_name[]" id="serviceDropdown" class="pro-select">
                                         <option value="" selected disabled>Select required service...</option>
+                                        {{-- A service sits in several categories (194 options, 75 services): its preview data is
+                                             written once to #serviceData below instead of on every option. --}}
+                                        @php $serviceData = []; @endphp
                                         @foreach ($main_categories as $main_category)
                                             @foreach ($main_category->mergedCategories as $category)
                                                 @foreach ($category->services as $service)
-                                                    <option value="{{ $service->id }}" data-parent-id="{{ $category->id }}"
-                                                        data-name="{{ $service->name }}" data-slug="{{ $service->slug }}"
-                                                        data-overview="{{ strip_tags($service->overview) }}"
-                                                        data-hero="{{ $service->hero_image ? \App\Support\Img::thumb('uploads/service_images/' . $service->hero_image, 1200) : '' }}"
-                                                        data-image="{{ $service->images->count() ? \App\Support\Img::thumb('uploads/service_images/' . $service->images->first()->image, 1200) : '' }}">
-                                                        {{ $service->name }}
-                                                    </option>
+                                                    @php
+                                                        if (!isset($serviceData[$service->id])) {
+                                                            $serviceData[$service->id] = [
+                                                                'slug'     => $service->slug,
+                                                                'overview' => strip_tags($service->overview),
+                                                                'hero'     => $service->hero_image ? \App\Support\Img::thumb('uploads/service_images/' . $service->hero_image, 1200) : '',
+                                                                'image'    => $service->images->count() ? \App\Support\Img::thumb('uploads/service_images/' . $service->images->first()->image, 1200) : '',
+                                                            ];
+                                                        }
+                                                    @endphp
+                                                    <option value="{{ $service->id }}" data-parent-id="{{ $category->id }}" data-name="{{ $service->name }}">{{ $service->name }}</option>
                                                 @endforeach
                                             @endforeach
                                         @endforeach
                                     </select>
+                                    <script type="application/json" id="serviceData">{!! json_encode((object) $serviceData, JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
                                     <i class="fa-solid fa-chevron-down select-icon"></i>
                                 </div>
                             </div>
@@ -1356,6 +1325,8 @@
         document.addEventListener('DOMContentLoaded', function () {
             const categoryDropdown = document.getElementById('categoryDropdown');
             const serviceDropdown = document.getElementById('serviceDropdown');
+            const serviceDataEl = document.getElementById('serviceData');
+            const serviceData = serviceDataEl ? JSON.parse(serviceDataEl.textContent) : {};
 
             const serviceRight = document.getElementById('serviceRight');
             const serviceName = document.getElementById('serviceName');
@@ -1421,11 +1392,12 @@
                     const selectedOption = this.options[this.selectedIndex];
                     if (!selectedOption || !selectedOption.value) return;
 
+                    const info     = serviceData[selectedOption.value] || {};
                     const name     = selectedOption.getAttribute('data-name');
-                    const slug     = selectedOption.getAttribute('data-slug');
-                    const overview = selectedOption.getAttribute('data-overview');
-                    const hero     = selectedOption.getAttribute('data-hero');
-                    const image    = selectedOption.getAttribute('data-image');
+                    const slug     = info.slug;
+                    const overview = info.overview;
+                    const hero     = info.hero;
+                    const image    = info.image;
                     const bg       = hero || image;   // prefer the service hero image
                     const categoryName = categoryDropdown.options[categoryDropdown.selectedIndex]?.text || "Healthcare Services";
 

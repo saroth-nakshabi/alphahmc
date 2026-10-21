@@ -382,7 +382,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
                 <img src="{{ $grpImg }}" alt="{{ $group->name }}" loading="lazy">
               </div>
               <div class="svc-pill-body">
-                <span class="svc-pill-tag"><i class="bi bi-collection-fill"></i> Service Package</span>
+                <span class="svc-pill-tag"><i class="fa-solid fa-layer-group"></i> Service Package</span>
                 <h3 class="svc-pill-title">{{ $group->name }}</h3>
                 @if($grpDesc !== '')
                   <p class="svc-pill-desc">{{ Str::limit($grpDesc, 230) }}</p>

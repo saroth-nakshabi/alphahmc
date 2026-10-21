@@ -351,7 +351,10 @@
                                                 {{ $blog->tags->first()->name }}
                                             </span>
                                         @endif
-                                        <img src="{{ asset('public/uploads/blog_images/' . $blog->image) }}" alt="{{ $blog->title }}" />
+                                        @php $cardImg = \App\Support\Img::thumb('uploads/blog_images/' . $blog->image, 800); $cardSize = \App\Support\Img::size($cardImg); @endphp
+                                        <img src="{{ $cardImg }}" alt="{{ $blog->title }}"
+                                             @if($cardSize) width="{{ $cardSize[0] }}" height="{{ $cardSize[1] }}" @endif
+                                             @if(!$loop->first) loading="lazy" @endif decoding="async" />
                                     </div>
                                     <div class="card-content-area">
                                         <div class="card-meta-top">

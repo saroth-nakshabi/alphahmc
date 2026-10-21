@@ -541,6 +541,7 @@
                     window.dataLayer = window.dataLayer || [];
                     window.dataLayer.push({ event: 'ahg_inquiry_submitted', form_id: 'inquiryForm' });
                     window.dataLayer.push({ event: 'inquiry_sent' });
+                    if (typeof window.ahgGa4Event === 'function') window.ahgGa4Event('inquiry_sent');   // was GTM tag 14
                     // Google Ads conversion — fires only on confirmed AJAX success
                     if (typeof gtagReportInquirySent === 'function') gtagReportInquirySent();
 

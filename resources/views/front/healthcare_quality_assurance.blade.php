@@ -5,6 +5,8 @@
 @section('meta_description')Tawqeet by Alpha Health Group — a comprehensive healthcare quality assurance platform that monitors KPIs, tracks compliance, and drives excellence for medical and homecare facilities in the UAE.@endsection
 
 @section('custom_css')
+    {{-- Bootstrap Icons: only this page and a few others use it, so the layout no longer loads it --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         body { font-family: 'Outfit', sans-serif; }
 
@@ -695,17 +697,17 @@
     </section>
 
     {{-- Tawqeet Process --}}
-    <section style=”padding: 72px 0; background: #fff;”>
-        <div class=”container”>
-            <div class=”text-center mb-5”>
-                <span class=”sec-label”>Our Process</span>
-                <h2 class=”sec-title mt-2”>The Tawqeet Process</h2>
-                <p class=”sec-sub mx-auto mt-3” style=”max-width:700px;”>
+    <section style="padding: 72px 0; background: #fff;">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="sec-label">Our Process</span>
+                <h2 class="sec-title mt-2">The Tawqeet Process</h2>
+                <p class="sec-sub mx-auto mt-3" style="max-width:700px;">
                     A comprehensive audit of the healthcare facility is conducted by healthcare experts across all functional domains. Processes are evaluated based on preset checklists derived from combined KPIs and international best practices. GAP analysis is presented to facility management, and a Corrective Action Plan is developed in concurrence with the facility. Implementation involves staff training and process improvisation — all overseen by an assigned client manager.
                 </p>
             </div>
-            <div class=”text-center”>
-                <img src=”{{ asset('public/front/assets/img/towqeet-result.svg') }}” class=”img-fluid” style=”max-width: 100%;” alt=”Tawqeet Process Diagram”>
+            <div class="text-center">
+                <img src="{{ asset('public/front/assets/img/towqeet-result.svg') }}" class="img-fluid" style="max-width: 100%;" alt="Tawqeet Process Diagram" loading="lazy" decoding="async">
             </div>
         </div>
     </section>
