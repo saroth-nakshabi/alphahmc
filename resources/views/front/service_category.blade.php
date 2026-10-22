@@ -17,11 +17,11 @@
         }
     </style>
 @endsection
-@push('page_title')
-    {!! $service->name !!}
-@endpush
+{{-- Same rule as service and package pages: meta title (cut to 60 at a word), else the name --}}
+@push('page_title', e(\App\Support\Seo::title($service->meta_title, $service->name)))
+{{-- The layout prints the one description tag: this page's text, else the site default --}}
+@section('meta_description', trim((string) $service->meta_description))
 @push('meta')
-    <meta name="description" content="{{ $service->meta_description }}">
     <meta name="keywords" content="{{ $service->meta_keywords }}">
     <link rel="preload" as="style"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"

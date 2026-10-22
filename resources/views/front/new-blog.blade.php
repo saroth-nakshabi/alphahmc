@@ -227,7 +227,7 @@
                     {{-- Right Projects List --}}
                     <div class="projects-list-panel">
                         @forelse($projects as $project)
-                            <a href="{{ route('front.project_details', $project->id) }}" class="project-row-item">
+                            <a href="{{ route('front.project_details', $project->slug) }}" class="project-row-item">
                                 <div class="project-row-content">
                                     <h4>{{ $project->name }}</h4>
                                     <div class="project-row-meta">

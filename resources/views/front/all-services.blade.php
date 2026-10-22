@@ -477,7 +477,8 @@ body {
                                     @endif
                                 </div>
                                 <h3 class="as-card__title service-name">{{ $service->name }}</h3>
-                                <p class="as-card__desc">{{ strip_tags($service->overview ?? 'Expert consultancy tailored to your specific healthcare requirements and organizational goals.') }}</p>
+                                {{-- One line per card: the full overviews repeated /services-by-facility-type (67% overlap) --}}
+                                <p class="as-card__desc">{{ Str::limit(trim(strip_tags($service->overview ?? 'Expert consultancy tailored to your specific healthcare requirements and organizational goals.')), 110) }}</p>
                                 <div class="as-card__footer">
                                     <a href="{{ route('front.service', $service->slug) }}" class="as-card__link">
                                         Learn More <i class="fa-solid fa-arrow-right"></i>
@@ -499,7 +500,7 @@ body {
                                     <span class="as-card__tag"><i class="fa-solid fa-layer-group me-1"></i>Service Group</span>
                                 </div>
                                 <h3 class="as-card__title service-name">{{ $group->name }}</h3>
-                                <p class="as-card__desc">{{ strip_tags($group->description ?? 'A comprehensive group of healthcare consultancy services.') }}</p>
+                                <p class="as-card__desc">{{ Str::limit(trim(strip_tags($group->description ?? 'A comprehensive group of healthcare consultancy services.')), 110) }}</p>
                                 <div class="as-card__footer">
                                     <a href="{{ route('service-packages', $group->slug) }}" class="as-card__link">
                                         Learn More <i class="fa-solid fa-arrow-right"></i>

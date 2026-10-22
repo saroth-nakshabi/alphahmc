@@ -5,8 +5,9 @@
 @push('page_title')
     {!! $service->name !!} - All Services
 @endpush
+{{-- The layout prints the one description tag: this page's text, else the site default --}}
+@section('meta_description', trim((string) $service->meta_description))
 @push('meta')
-<meta name="description" content="{{ $service->meta_description }}">
     <meta name="keywords" content="{{ $service->meta_keywords }}">
 @endpush
 @push('og_tags')

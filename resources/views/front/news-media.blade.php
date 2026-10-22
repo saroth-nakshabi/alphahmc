@@ -1,9 +1,8 @@
 @extends('front/layout-2')
 
 @push('page_title', 'News & Media | Alpha Health Group')
-@push('meta')
-    <meta name="description" content="Latest news, media coverage, and updates from Alpha Health Group — healthcare consultancy across the UAE and GCC.">
-@endpush
+{{-- The layout prints the one description tag (the /ahg-updates page setting wins when set) --}}
+@section('meta_description', 'Latest news, media coverage and updates from Alpha Health Group, healthcare consultancy across the UAE and GCC.')
 
 @section('content')
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/blog-base.css') }}?v=2">
@@ -194,7 +193,7 @@
                     {{-- Right Projects List --}}
                     <div class="projects-list-panel">
                         @forelse($projects as $project)
-                            <a href="{{ route('front.project_details', $project->id) }}" class="project-row-item">
+                            <a href="{{ route('front.project_details', $project->slug) }}" class="project-row-item">
                                 <div class="project-row-content">
                                     <h4>{{ $project->name }}</h4>
                                     <div class="project-row-meta">

@@ -115,7 +115,10 @@ class MainHomeController extends Controller
         $data = [];
         $data['service'] = Service::published()->with('agent', 'ServiceTab', 'faq', 'announcement', 'projectProcess')->where('slug', $slug)->first();
         if (!$data['service']) {
-            return redirect()->route('front.all-services');
+            // Retired slugs that search engines still request get a permanent redirect. Any other
+            // unknown slug stays temporary: it may be a draft that is published later.
+            $status = in_array($slug, self::RETIRED_SERVICE_SLUGS, true) ? 301 : 302;
+            return redirect()->route('front.all-services', [], $status);
         }
 
         // Fetch related services
@@ -288,9 +291,41 @@ class MainHomeController extends Controller
         return view('front.projects', compact('projects', 'featuredProject', 'featuredServices', 'all_services', 'latest_blogs', 'clients'));
     }
 
+    /** Service slugs that never existed or were retired (SEO quick wins brief, 21 Oct 2026); none is a draft. */
+    private const RETIRED_SERVICE_SLUGS = [
+        'dha-healthcare-licensing', 'doh-healthcare-licensing', 'doh-licensing-compliance',
+        'gcc-healthcare-regulatory-consulting', 'healthcare-consulting', 'healthcare-digitalisation',
+        'healthcare-digitalisation)', 'healthcare-digitalization', 'healthcare-financial-consulting',
+        'healthcare-licensing', 'healthcare-licensing-consultancy', 'healthcare-regulatory-licensing',
+        'hospital-setup', 'infection-control-consulting', 'malaffi-nabidh-integration',
+        'medical-device-registration-uae', 'operational-audit', 'operational-readiness',
+        'quality-management-consulting', 'revenue-cycle-management',
+    ];
+
+    /**
+     * Old case-study URLs that were indexed: client websites stored without a scheme became
+     * relative links (/project_details/www.reemhospital.com). Numeric IDs are handled generically.
+     */
+    private const LEGACY_PROJECT_URLS = [
+        'beijingtherapy.ae'      => 'beijing-therapy',
+        'www.dnahealthcorp.com'  => 'dna-health-corp',
+        'www.ihiad.ae'           => 'ihlad-abu-dhabi',
+        'www.reemhospital.com'   => 'reem-hospital',
+        'revitalhospital.ae'     => 'revital-hospital',
+        'royalspanishcenter.com' => 'royal-spanish-center',
+    ];
+
     public function singleProject($slug)
     {
-        $project = Project::with(['projects_images', 'projects_videos', 'projects_documents', 'project_category'])->where('slug', $slug)->firstOrFail();
+        $project = Project::with(['projects_images', 'projects_videos', 'projects_documents', 'project_category'])->where('slug', $slug)->first();
+        if (!$project) {
+            // 301 indexed old URLs (/project_details/12, client-website paths) to the slug page.
+            $target = ctype_digit((string) $slug)
+                ? Project::whereKey((int) $slug)->value('slug')
+                : (self::LEGACY_PROJECT_URLS[strtolower($slug)] ?? null);
+            abort_unless($target, 404);
+            return redirect()->route('front.project_details', $target, 301);
+        }
         $relatedProjects = Project::with(['projects_images', 'projects_videos', 'projects_documents', 'project_category'])
             ->where('project_category_id', $project->project_category_id)
             ->where('id', '!=', $project->id)

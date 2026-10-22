@@ -1,9 +1,15 @@
 ﻿@extends('front/layout-2')
 
 @push('page_title', $project->name . ' | Alpha Health Group')
-@push('meta')
-    <meta name="description" content="{{ \Illuminate\Support\Str::limit(strip_tags($project->description ?? ''), 160) }}">
-@endpush
+@php
+    // Some client websites are stored without a scheme ("www.reemhospital.com"); as an href that
+    // resolved to /project_details/www.reemhospital.com (404). Make them absolute.
+    $clientUrl = $project->client_website
+        ? (preg_match('#^https?://#i', $project->client_website) ? $project->client_website : 'https://' . ltrim($project->client_website, '/'))
+        : null;
+@endphp
+{{-- The layout prints the one description tag: this page's text, else the site default --}}
+@section('meta_description', \Illuminate\Support\Str::limit(trim(strip_tags($project->description ?? '')), 160))
 
 @section('custom_css')
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1729,7 +1735,7 @@
                                 <span style="width:1px;height:18px;background:var(--border-md);display:inline-block;"></span>
                                 @endif
                                 @if($project->client_website)
-                                <a href="{{ $project->client_website }}" target="_blank" rel="noopener" style="display:flex; align-items:center; gap:6px; font-size:0.88rem; color:var(--cr); text-decoration:none; font-weight:500;">
+                                <a href="{{ $clientUrl }}" target="_blank" rel="noopener" style="display:flex; align-items:center; gap:6px; font-size:0.88rem; color:var(--cr); text-decoration:none; font-weight:500;">
                                     <i data-lucide="external-link" style="width:14px;height:14px;flex-shrink:0;"></i>
                                     {{ preg_replace('#^https?://(www\.)?#i', '', rtrim($project->client_website, '/')) }}
                                 </a>
@@ -2233,7 +2239,7 @@
               <div>
                 <div class="pdl-dm-item__lbl">Client Website</div>
                 <div class="pdl-dm-item__val">
-                  <a href="{{ $project->client_website }}" target="_blank" rel="noopener">
+                  <a href="{{ $clientUrl }}" target="_blank" rel="noopener">
                     {{ preg_replace('#^https?://#', '', $project->client_website) }}
                     <i data-lucide="external-link" style="width:11px;vertical-align:middle;"></i>
                   </a>

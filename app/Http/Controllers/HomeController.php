@@ -48,7 +48,7 @@ class HomeController extends Controller
 
     public function about()
     {
-        return redirect()->route('front.new-about');
+        return redirect()->route('front.new-about', [], 301);
     }
 
 
