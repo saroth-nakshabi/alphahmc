@@ -117,8 +117,11 @@ class MainHomeController extends Controller
         if (!$data['service']) {
             // Retired slugs that search engines still request get a permanent redirect. Any other
             // unknown slug stays temporary: it may be a draft that is published later.
-            $status = in_array($slug, self::RETIRED_SERVICE_SLUGS, true) ? 301 : 302;
-            return redirect()->route('front.all-services', [], $status);
+            if (array_key_exists($slug, self::RETIRED_SERVICE_SLUGS)) {
+                $target = self::RETIRED_SERVICE_SLUGS[$slug];
+                return $target ? redirect(url($target), 301) : redirect()->route('front.all-services', [], 301);
+            }
+            return redirect()->route('front.all-services', [], 302);
         }
 
         // Fetch related services
@@ -291,15 +294,31 @@ class MainHomeController extends Controller
         return view('front.projects', compact('projects', 'featuredProject', 'featuredServices', 'all_services', 'latest_blogs', 'clients'));
     }
 
-    /** Service slugs that never existed or were retired (SEO quick wins brief, 21 Oct 2026); none is a draft. */
+    /**
+     * Service slugs that never existed or were retired (none is a draft), with the live page
+     * closest to each old topic (redirect map approved 22 Oct 2026). Null = All Services.
+     */
     private const RETIRED_SERVICE_SLUGS = [
-        'dha-healthcare-licensing', 'doh-healthcare-licensing', 'doh-licensing-compliance',
-        'gcc-healthcare-regulatory-consulting', 'healthcare-consulting', 'healthcare-digitalisation',
-        'healthcare-digitalisation)', 'healthcare-digitalization', 'healthcare-financial-consulting',
-        'healthcare-licensing', 'healthcare-licensing-consultancy', 'healthcare-regulatory-licensing',
-        'hospital-setup', 'infection-control-consulting', 'malaffi-nabidh-integration',
-        'medical-device-registration-uae', 'operational-audit', 'operational-readiness',
-        'quality-management-consulting', 'revenue-cycle-management',
+        'dha-healthcare-licensing'             => '/services/dha-license-healthcare-professionals-dubai',
+        'doh-healthcare-licensing'             => '/service-category/healthcare-professional-licensing',
+        'doh-licensing-compliance'             => '/services/hospital-compliance-doh-consultation',
+        'gcc-healthcare-regulatory-consulting' => '/service-category/regulatory-quality',
+        'healthcare-consulting'                => '/service-packages/healthcare-management-consultancy-in-uae',
+        'healthcare-digitalisation'            => '/services/hospital-digital-transformation-consulting',
+        'healthcare-digitalisation)'           => '/services/hospital-digital-transformation-consulting',
+        'healthcare-digitalization'            => '/services/hospital-digital-transformation-consulting',
+        'healthcare-financial-consulting'      => null,
+        'healthcare-licensing'                 => '/service-category/healthcare-professional-licensing',
+        'healthcare-licensing-consultancy'     => '/service-category/healthcare-professional-licensing',
+        'healthcare-regulatory-licensing'      => '/service-category/regulatory-quality',
+        'hospital-setup'                       => '/service-category/hospitals',
+        'infection-control-consulting'         => null,
+        'malaffi-nabidh-integration'           => '/service-category/hie-integration',
+        'medical-device-registration-uae'      => '/services/medical-equipment-moh-licensing-consulting',
+        'operational-audit'                    => '/service-category/audit-consultation',
+        'operational-readiness'                => '/services/regulatory-readiness-compliance-assurance',
+        'quality-management-consulting'        => '/service-category/regulatory-quality',
+        'revenue-cycle-management'             => '/service-category/insurance-empanelment',
     ];
 
     /**
