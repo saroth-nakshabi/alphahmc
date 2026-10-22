@@ -1,6 +1,8 @@
 @extends('front/layout-2')
 
 @section('page_title', 'Search Results | Alpha Health Group')
+{{-- Search results are not indexed (Search Console listed them as soft 404s); links are followed --}}
+@section('robots', 'noindex, follow')
 
 @section('content')
 

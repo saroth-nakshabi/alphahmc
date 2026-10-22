@@ -1415,7 +1415,7 @@
                     }
                     if (singleService) {
                         singleService.style.display = '';
-                        if (slug) singleService.href = `{{ url('/services') }}/${slug}`;
+                        if (slug) singleService.href = @json(url('/services')) + '/' + encodeURIComponent(slug);
                         if (ctaText) ctaText.textContent = 'EXPLORE SERVICE';
                     }
 

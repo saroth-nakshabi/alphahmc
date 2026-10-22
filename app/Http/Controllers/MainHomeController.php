@@ -74,7 +74,7 @@ class MainHomeController extends Controller
             'html' => view('front.partials.category_cards', ['categories' => $categories])->render(),
             'count' => $categories->count(),
             'remaining' => max(0, $total - ($offset + $categories->count())),
-        ]);
+        ])->header('X-Robots-Tag', 'noindex'); // AJAX endpoint, not a page (Search Console crawled it)
     }
 
     public function sendContact(Request $request)
@@ -117,9 +117,17 @@ class MainHomeController extends Controller
         if (!$data['service']) {
             // Retired slugs that search engines still request get a permanent redirect. Any other
             // unknown slug stays temporary: it may be a draft that is published later.
+            $query = request()->getQueryString() ? '?' . request()->getQueryString() : '';
+            if (in_array($slug, self::GONE_SERVICE_SLUGS, true)) {
+                abort(410, 'service');
+            }
             if (array_key_exists($slug, self::RETIRED_SERVICE_SLUGS)) {
                 $target = self::RETIRED_SERVICE_SLUGS[$slug];
-                return $target ? redirect(url($target), 301) : redirect()->route('front.all-services', [], 301);
+                return $target ? redirect(url($target) . $query, 301) : redirect(route('front.all-services') . $query, 301);
+            }
+            // Old service URLs whose slug is now a category (index cleanup brief, 22 Oct 2026).
+            if (Category::where('slug', $slug)->exists()) {
+                return redirect(route('front.service-category', $slug) . $query, 301);
             }
             return redirect()->route('front.all-services', [], 302);
         }
@@ -359,7 +367,17 @@ class MainHomeController extends Controller
         'operational-readiness'                => '/services/regulatory-readiness-compliance-assurance',
         'quality-management-consulting'        => '/service-category/regulatory-quality',
         'revenue-cycle-management'             => '/service-category/insurance-empanelment',
+        // index cleanup brief, 22 Oct 2026 (1b)
+        'uae-healthcare-professional-licensing'      => '/service-packages/healthcare-professional-licensing-uae',
+        'transfer-your-uae-healthcare-license'       => '/services/healthcare-professional-license-transfer',
+        'medical-centre-setup-licensing-dubai-dha'   => '/services/medical-centre-setup-licensing-dubai',
+        'healthcare-acquisition-due-diligence'       => '/services/healthcare-facility-acquisition-due-diligence',
+        'healthcare-it-digital-strategy-consulting2' => '/services/hospital-digital-transformation-consulting',
+        'gcc-healthcare-consulting'                  => '/service-category/regulatory-quality',
     ];
+
+    /** Service URLs removed on purpose: 410 Gone (Saroth, 22 Oct 2026: not required, unpublished). */
+    private const GONE_SERVICE_SLUGS = ['medical-college-setup-licensing'];
 
     /**
      * Old case-study URLs that were indexed: client websites stored without a scheme became
@@ -489,7 +507,7 @@ class MainHomeController extends Controller
 
     /**
      * reCAPTCHA v3 is in record-only mode (Saroth, 21 Oct 2026, for one week): every score
-     * is logged ("reCAPTCHA score", with would_block) and never blocks a submission. Set to
+     * is logged to storage/logs/recaptcha-*.log ("reCAPTCHA score", with would_block) and never blocks a submission. Set to
      * true once a threshold has been chosen from the logs.
      */
     private const RECAPTCHA_ENFORCE = false;
@@ -518,7 +536,7 @@ class MainHomeController extends Controller
                 'remoteip' => $request->ip(),
             ]);
             $score = $rc->json('score', 1.0);
-            Log::info('reCAPTCHA score', [
+            Log::channel('recaptcha')->info('reCAPTCHA score', [
                 'action'      => $action,
                 'score'       => $rc->json('score'),          // null when no valid token was sent
                 'success'     => $rc->json('success'),

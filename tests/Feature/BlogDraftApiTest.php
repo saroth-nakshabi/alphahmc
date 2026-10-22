@@ -148,7 +148,7 @@ class BlogDraftApiTest extends TestCase
         $url = $this->api('POST', '/api/agent/blogs', $this->payload())->json('previewUrl');
 
         $res = $this->get($url)->assertStatus(200)->assertSee('Test Draft Title')->assertSee('Preview, not published');
-        $this->assertStringContainsString('noindex,nofollow', $res->getContent());
+        $this->assertStringContainsString('content="noindex, nofollow"', $res->getContent());
         $this->assertSame('noindex, nofollow', $res->headers->get('X-Robots-Tag'));
 
         $this->get(preg_replace('/signature=([0-9a-f])/', 'signature=' . 'x', $url))->assertStatus(403);

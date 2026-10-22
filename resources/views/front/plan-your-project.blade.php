@@ -555,7 +555,9 @@
         }
         if(d.alpha_offer){ document.getElementById('ppOfferBlock').style.display=''; document.getElementById('ppOffer').textContent=d.alpha_offer; }
         const recsEl=document.getElementById('ppRecs');
-        if((d.services||[]).length){ recsEl.innerHTML=d.services.map(s=>`<a class="pp-rec" href="{{ url('/services') }}/${s.slug}"><h5>${escapeHtml(s.name)}</h5><p>${escapeHtml(s.reason||s.overview||'')}</p><span class="pp-rec-link">View service <i class="fa-solid fa-arrow-right"></i></span></a>`).join(''); }
+        // Service links are built here (a literal path with a template placeholder was crawled as a URL).
+        function serviceUrl(slug){ return @json(url('/services')) + '/' + encodeURIComponent(slug); }
+        if((d.services||[]).length){ recsEl.innerHTML=d.services.map(s=>`<a class="pp-rec" href="${serviceUrl(s.slug)}"><h5>${escapeHtml(s.name)}</h5><p>${escapeHtml(s.reason||s.overview||'')}</p><span class="pp-rec-link">View service <i class="fa-solid fa-arrow-right"></i></span></a>`).join(''); }
         else { recsEl.innerHTML='<p class="pp-muted">Talk to our team and we\'ll match the right services to your needs.</p>'; }
         if(TIMING==='before'){
             const head = 'Your blueprint is on its way' + (leadEmail ? ' to ' + escapeHtml(leadEmail) : '') + (meetingRequested ? ', and your consultation request is in.' : '.');

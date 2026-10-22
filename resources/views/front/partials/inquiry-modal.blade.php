@@ -16,10 +16,7 @@
     $rcSiteKey = config('services.recaptcha.site_key', '');
 @endphp
 
-{{-- Optional: load reCAPTCHA v3 only when a key is configured --}}
-@if($rcSiteKey)
-<script src="https://www.google.com/recaptcha/api.js?render={{ $rcSiteKey }}" async defer></script>
-@endif
+{{-- reCAPTCHA v3 loads on demand (front.partials.recaptcha-loader in the layout) --}}
 
 <div class="modal fade ahg-inquiry-modal" id="inquiryModal"
      tabindex="-1"
@@ -488,14 +485,8 @@
     // ── reCAPTCHA v3 token helper ────────────────────────────
     function getRecaptchaToken() {
         var key = modalEl && modalEl.dataset.recaptchaKey;
-        if (!key || typeof grecaptcha === 'undefined') return Promise.resolve('');
-        return new Promise(function (resolve) {
-            grecaptcha.ready(function () {
-                grecaptcha.execute(key, { action: 'inquiry' })
-                    .then(resolve)
-                    .catch(function () { resolve(''); });
-            });
-        });
+        if (!key || !window.ahgRecaptcha) return Promise.resolve('');
+        return window.ahgRecaptcha.token('inquiry');
     }
 
     // ── showAlert ────────────────────────────────────────────

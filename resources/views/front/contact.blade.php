@@ -340,9 +340,7 @@
                         <div class="contact-form-container">
                             <h3 class="contact-heading-main">Send us a Message</h3>
                             @php $rcSiteKey = config('services.recaptcha.site_key', ''); @endphp
-                            @if($rcSiteKey)
-                                <script src="https://www.google.com/recaptcha/api.js?render={{ $rcSiteKey }}" async defer></script>
-                            @endif
+                            {{-- reCAPTCHA v3 loads on demand (front.partials.recaptcha-loader in the layout) --}}
                             {{-- Add CSRF and correct action --}}
                                 <form action="{{ route('contact.send') }}" method="POST" id="mainContactForm" data-recaptcha-key="{{ $rcSiteKey }}">
     @csrf
@@ -1109,19 +1107,18 @@
 
             form.addEventListener('submit', function (e) {
                 var key = form.dataset.recaptchaKey;
-                if (!key || typeof grecaptcha === 'undefined') {
+                if (!key || !window.ahgRecaptcha) {
                     if (typeof gtagReportInquirySent === 'function') gtagReportInquirySent();
-                    return; // no key configured — submit normally
+                    return; // no key configured: submit normally
                 }
                 e.preventDefault();
-                grecaptcha.ready(function () {
-                    grecaptcha.execute(key, { action: 'contact' }).then(function (token) {
-                        document.getElementById('contact-recaptcha-token').value = token;
-                        if (typeof gtagReportInquirySent === 'function') gtagReportInquirySent();
-                        form.submit();
-                    }).catch(function () {
-                        form.submit();
-                    });
+                var btn = form.querySelector('[type="submit"]');
+                if (btn) { btn.disabled = true; btn.setAttribute('aria-busy', 'true'); }
+                // form.submit() does not fire this handler again, so the conversion is reported once.
+                window.ahgRecaptcha.token('contact').then(function (token) {
+                    document.getElementById('contact-recaptcha-token').value = token;
+                    if (typeof gtagReportInquirySent === 'function') gtagReportInquirySent();
+                    form.submit();
                 });
             });
         })();

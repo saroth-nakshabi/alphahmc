@@ -12,7 +12,7 @@
                 <span class="apc-eyebrow"><span class="apc-dot"></span> Alpha Blueprint AI</span>
                 <h2 class="apc-title">Your strategic plan is one&nbsp;minute&nbsp;away.</h2>
                 <p class="apc-sub">Tell us your goal and preview the scope, recommended services, timeline and indicative
-                    investment for your healthcare project — built instantly, no commitment.</p>
+                    investment for your healthcare project, built instantly with no commitment.</p>
                 <div class="apc-actions">
                     <a href="{{ route('planner.page') }}" class="apc-btn">
                         Build your plan <i class="fa-solid fa-arrow-right"></i>

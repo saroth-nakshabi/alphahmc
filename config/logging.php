@@ -73,6 +73,16 @@ return [
             'replace_placeholders' => true,
         ],
 
+        // reCAPTCHA scores during record-only mode. Its own file and level: production logs at
+        // warning and above, which dropped every score (MainHomeController::isSuspiciousSubmission).
+        'recaptcha' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/recaptcha.log'),
+            'level' => 'info',
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),

@@ -385,7 +385,7 @@
                       <li class="nav-item"><a href="{{ route('healthcare_quality_assurance') }}"
                               class="nav-link active">Tawqeet</a>
                       </li>
-                      <li class="nav-item"><a href="{{ route('about') }}" class="nav-link active">About</a></li>
+                      <li class="nav-item"><a href="{{ route('front.new-about') }}" class="nav-link active">About</a></li>
                        <li class="nav-item"><a href="{{ route('front.project') }}" class="nav-link active">Projects</a></li>
                        <li class="nav-item"><a href="{{ route('front.new_blog') }}" class="nav-link active">Blog</a></li>
                       <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link active">Contact</a></li>

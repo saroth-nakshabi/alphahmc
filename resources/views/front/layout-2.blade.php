@@ -2,7 +2,8 @@
 <html lang="en">
 
 <head>
-    <meta name="robots" content="index, follow">
+    {{-- One robots tag per page: search results, previews and removed pages set their own --}}
+    <meta name="robots" content="@yield('robots', 'index, follow')">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {{-- SEO: dashboard-managed PageSetting takes precedence on standard pages;
@@ -116,6 +117,7 @@
 </script>
 
 @include('front.partials.whatsapp-ref')
+@include('front.partials.recaptcha-loader')
 
 {{-- Global Tags from database (GA4, GTM, etc.) — fire AFTER consent default above --}}
 @foreach($globaltags as $tag)
@@ -357,10 +359,18 @@
           onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="{{ asset('public/front/assets/vendor/fontawesome-6.5.1/css/fontawesome.min.css') }}?v=2"></noscript>
 
+    @php
+        // Swiper (CSS + about 150 KB of JS) only on pages that render a slider (swiper-wrapper markup).
+        // Child sections and stacks are already rendered when the layout runs, so check them.
+        $needsSwiper = stripos($__env->yieldContent('content') . $__env->yieldContent('custom_js')
+            . $__env->yieldPushContent('scripts') . $__env->yieldPushContent('meta'), 'swiper-wrapper') !== false;
+    @endphp
+    @if($needsSwiper)
     <link rel="preload" as="style"
           href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
           onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"></noscript>
+    @endif
 
     <link rel="preload" as="style"
           href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"
@@ -936,7 +946,7 @@
                     <a href="{{ url('/alpha-privacy-policy') }}" class="policy-link">Privacy Policy</a>
                     <a href="{{ route('front.terms-of-service') }}" class="policy-link">Terms of Service</a>
                     <a href="{{ route('front.cookie-policy') }}" class="policy-link">Cookie Policy</a>
-                    <a href="{{ route('front.gdpr-terms') }}" class="policy-link">GDPR &amp; Data Protection</a>
+                    <a href="{{ route('front.privacy-policy') }}" class="policy-link">GDPR &amp; Data Protection</a>
                 </div>
 
 
@@ -1009,10 +1019,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
         </script>
-    <!-- Swiper JS -->
+    <!-- Swiper JS (only on pages with a slider, see $needsSwiper) -->
+    @if($needsSwiper)
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script src="{{ asset('public/front/assets/js/layout/swiper.js') }}?v=1"></script>
+    @else
+    {{-- Safety net: a stray new Swiper() on a page without a slider must not stop its other scripts --}}
+    <script>window.Swiper = window.Swiper || function () { var noop = new Proxy(function () {}, { get: function () { return noop; }, apply: function () { return noop; } }); return noop; };</script>
+    @endif
 
 
 

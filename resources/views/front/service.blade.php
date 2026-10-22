@@ -108,7 +108,7 @@
                 <div class="container">
                     <a href="{{ route('home') }}">Home</a>
                     <span class="bc-sep">›</span>
-                    <a href="{{ url('/services') }}">Services</a>
+                    <a href="{{ route('front.all-services') }}">Services</a>
                     <span class="bc-sep">›</span>
                     <span class="bc-current">{{ $service->name }}</span>
                 </div>

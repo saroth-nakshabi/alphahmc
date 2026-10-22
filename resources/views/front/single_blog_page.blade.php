@@ -21,9 +21,7 @@
     $preview = $preview ?? false;
 @endphp
 @if($preview)
-    @push('meta')
-        <meta name="robots" content="noindex,nofollow">
-    @endpush
+    @section('robots', 'noindex, nofollow')
 @endif
 @push('page_title', e($blogSeoTitle))
 @section('og_type', 'article')

@@ -15,9 +15,7 @@
 @endphp
 
 @push('page_title', $goneTitle . ' | Alpha Health Group')
-@push('meta')
-    <meta name="robots" content="noindex">
-@endpush
+@section('robots', 'noindex')
 
 @section('custom_css')
     @include('errors.partials.styles')

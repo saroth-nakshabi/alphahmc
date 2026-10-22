@@ -107,9 +107,7 @@
                 <div id="fb-form-wrap">
                     <h2>Write a Review</h2>
                     @php $rcSiteKey = config('services.recaptcha.site_key', ''); @endphp
-                    @if($rcSiteKey)
-                        <script src="https://www.google.com/recaptcha/api.js?render={{ $rcSiteKey }}" async defer></script>
-                    @endif
+                    {{-- reCAPTCHA v3 loads on demand (front.partials.recaptcha-loader in the layout) --}}
                     <form id="fb-form" novalidate data-recaptcha-key="{{ $rcSiteKey }}">
                         @csrf
 
@@ -206,12 +204,8 @@
 <script>
 function fbGetRecaptchaToken(form) {
     var key = form.dataset.recaptchaKey;
-    if (!key || typeof grecaptcha === 'undefined') return Promise.resolve('');
-    return new Promise(function (resolve) {
-        grecaptcha.ready(function () {
-            grecaptcha.execute(key, { action: 'testimonial' }).then(resolve).catch(function () { resolve(''); });
-        });
-    });
+    if (!key || !window.ahgRecaptcha) return Promise.resolve('');
+    return window.ahgRecaptcha.token('testimonial');
 }
 
 document.getElementById('fb-form').addEventListener('submit', async function(e) {

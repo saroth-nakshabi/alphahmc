@@ -7,7 +7,6 @@
 @push('meta')
     <meta name="keywords" content="healthcare management updates, healthcare leaders guide, DOH compliance UAE, healthcare quality assurance, GCC healthcare insights, hospital management, healthcare consulting UAE, patient safety, healthcare operational excellence, Alpha Health Group blog">
     <meta name="author" content="Alpha Health Group">
-    <meta name="robots" content="index, follow">
 @endpush
 
 @push('og_tags')

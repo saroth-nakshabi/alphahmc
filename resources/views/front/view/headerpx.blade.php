@@ -216,7 +216,7 @@
                               </li>
                           </ul>
                       </li>
-                      <li class="nav-item"><a href="{{ route('about') }}" class="nav-link active">About</a></li>
+                      <li class="nav-item"><a href="{{ route('front.new-about') }}" class="nav-link active">About</a></li>
                       <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link active">Contact</a></li>
                   </ul>
                   <div class="col-lg-2 col-md-12">
