@@ -173,6 +173,9 @@ Route::get('/healthcare-management-update-insights', [MainHomeController::class,
 Route::redirect('/new_blog', '/healthcare-management-update-insights', 301);
 // Route::get('/blog_single/{slug}', [MainHomeController::class, 'singleBlog'])->name('front.singleBlog');
 Route::get('/blog_single/{slug}', [MainHomeController::class, 'singleBlog'])->name('front.singleBlog');
+// Signed 14-day preview links for the reviewer (drafts, and staged revisions of live posts).
+Route::get('/blog-preview/revision/{id}', [MainHomeController::class, 'previewBlogRevision'])->name('blogs.preview.revision')->middleware('signed');
+Route::get('/blog-preview/{id}', [MainHomeController::class, 'previewBlog'])->name('blogs.preview')->middleware('signed');
 Route::get('/project', [MainHomeController::class, 'project'])->name('front.project');
 Route::get('/project_details/{slug}', [MainHomeController::class, 'singleProject'])->name('front.project_details');
 Route::get('/ahg-updates', [MainHomeController::class, 'newsMedia'])->name('front.ahg-updates');
@@ -431,9 +434,13 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::post('/manage-blog', [BlogController::class, 'store'])->name('blogs.store')->middleware('permission:create blogs');
     Route::delete('/manage-blog/delete/{id}', [BlogController::class, 'destroy'])->name('blogs.destroy')->middleware('permission:delete blogs');
     Route::post('/manage-blog/update/{id}', [BlogController::class, 'update'])->name('blogs.update')->middleware('permission:edit blogs');
-    Route::post('/manage-blog/get', [BlogController::class, 'getBlog'])->name('blogs.get');
+    Route::post('/manage-blog/get', [BlogController::class, 'getBlog'])->name('blogs.get')->middleware('permission:view blogs');
     Route::post('/manage-blog/featured', [BlogController::class, 'featuredHandle'])->name('blogs.featured.change');
     Route::post('/manage-blog/reorder', [BlogController::class, 'reorder'])->name('blogs.reorder')->middleware('permission:edit blogs');
+    // Drafts and staged revisions from the SEO agent go live only through these (a person, edit blogs).
+    Route::post('/manage-blog/publish/{id}', [BlogController::class, 'publish'])->name('blogs.publish')->middleware('permission:edit blogs');
+    Route::post('/manage-blog/revision/{id}/publish', [BlogController::class, 'publishRevision'])->name('blogs.revision.publish')->middleware('permission:edit blogs');
+    Route::post('/manage-blog/revision/{id}/discard', [BlogController::class, 'discardRevision'])->name('blogs.revision.discard')->middleware('permission:edit blogs');
 
     // tags Routes (blog)
     Route::get('/tags', [TagController::class, 'index'])->name('blog.tags.index')->middleware('permission:view tags');

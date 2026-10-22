@@ -103,10 +103,11 @@ class SitemapController extends Controller
     {
         $pages = [];
         try {
-            Blog::select('slug', 'updated_at')->whereNotNull('slug')->where('slug', '!=', '')->get()->each(function ($b) use (&$pages) {
+            // Drafts are excluded by Blog's PublishedScope. lastmod follows the dates the post shows.
+            Blog::select('slug', 'updated_at', 'updated_date', 'published_date')->whereNotNull('slug')->where('slug', '!=', '')->get()->each(function ($b) use (&$pages) {
                 $pages[] = [
                     'loc'        => route('front.singleBlog', $b->slug),
-                    'lastmod'    => $b->updated_at?->toAtomString(),
+                    'lastmod'    => ($b->updated_date ?? $b->published_date ?? $b->updated_at)?->toAtomString(),
                     'priority'   => '0.6',
                     'changefreq' => 'monthly',
                 ];

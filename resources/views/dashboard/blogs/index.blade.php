@@ -68,6 +68,9 @@
         }
         .blog-search-wrap input { padding-left: 30px; border-radius: 8px; }
         .sort-item.search-hidden { display: none; }
+        .sort-item.tab-hidden { display: none; }
+        .blog-status-badge { font-size: .7rem; font-weight: 600; margin-left: 6px; vertical-align: middle; }
+        .blog-status-tabs .btn { font-size: .8rem; }
     </style>
 @endsection
 
@@ -123,15 +126,34 @@
                             @endcan
                         </div>
 
+                        @php
+                            $draftCount = $blogs->where('status', 'draft')->count();
+                            $publishedCount = count($blogs) - $draftCount;
+                        @endphp
+                        {{-- Status tabs: drafts come from the SEO agent and go live only through Publish --}}
+                        <div class="blog-status-tabs btn-group mb-3" role="group" aria-label="Filter by status">
+                            <button type="button" class="btn btn-sm btn-outline-primary active" data-status-tab="all">All ({{ count($blogs) }})</button>
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-status-tab="published">Published ({{ $publishedCount }})</button>
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-status-tab="draft">Drafts ({{ $draftCount }})</button>
+                        </div>
+
                         {{-- Sortable list --}}
                         <ul id="sortable-list">
                             @if (isset($blogs) && count($blogs) > 0)
                                 @foreach ($blogs as $blog)
-                                    <li class="sort-item {{ $blog->featured ? 'is-featured' : '' }}" data-id="{{ $blog->id }}">
+                                    @php
+                                        $isDraft = $blog->status === 'draft';
+                                        $hasRevision = (bool) $blog->revision;
+                                        $previewUrl = $isDraft ? \App\Http\Controllers\AgentBlogController::previewUrl($blog)
+                                            : ($hasRevision ? \App\Http\Controllers\AgentBlogController::previewUrl($blog, true) : null);
+                                    @endphp
+                                    <li class="sort-item {{ $blog->featured ? 'is-featured' : '' }}" data-id="{{ $blog->id }}" data-status="{{ $isDraft ? 'draft' : 'published' }}">
                                         <span class="drag-handle" title="Drag to reorder"><i class="ti ti-grip-vertical"></i></span>
                                         <span class="sort-rank">{{ $loop->iteration }}</span>
                                         <span class="sort-name">
                                             <span class="blog-title">{{ $blog->title }}</span>
+                                            @if($isDraft)<span class="badge bg-light-warning text-warning blog-status-badge">Draft</span>@endif
+                                            @if($hasRevision)<span class="badge bg-light-info text-info blog-status-badge">Revision pending</span>@endif
                                             <span class="blog-tags">
                                                 @forelse ($blog->tags as $tag)
                                                     <span class="cat-tag cat-tag-sub">{{ $tag->name }}</span>
@@ -150,11 +172,24 @@
                                             </span>
                                         </span>
                                         <div class="sort-actions">
-                                            <a class="btn btn-light btn-sm" href="{{ route('front.singleBlog', $blog->slug) }}"
-                                                target="_blank" title="Open page">
+                                            <a class="btn btn-light btn-sm" href="{{ $isDraft ? $previewUrl : route('front.singleBlog', $blog->slug) }}"
+                                                target="_blank" title="{{ $isDraft ? 'Open preview (drafts are not public)' : 'Open page' }}">
                                                 <i class="ti ti-external-link"></i>
                                             </a>
                                             @can('edit blogs')
+                                                @if($previewUrl)
+                                                    <a class="btn btn-light btn-sm" href="{{ $previewUrl }}" target="_blank" title="{{ $isDraft ? 'Review the draft' : 'Review the pending revision' }}">Review</a>
+                                                @endif
+                                                @if($isDraft)
+                                                    <button class="btn btn-light-success btn-sm text-success blog-action" data-url="{{ route('blogs.publish', $blog->id) }}"
+                                                        data-confirm="Publish this draft? It goes live on the site at once." data-label="Publish">Publish</button>
+                                                @endif
+                                                @if($hasRevision)
+                                                    <button class="btn btn-light-success btn-sm text-success blog-action" data-url="{{ route('blogs.revision.publish', $blog->id) }}"
+                                                        data-confirm="Publish the revision? The live post will show the new text." data-label="Publish revision">Publish revision</button>
+                                                    <button class="btn btn-light btn-sm blog-action" data-url="{{ route('blogs.revision.discard', $blog->id) }}"
+                                                        data-confirm="Discard the revision? The live post stays as it is." data-label="Discard revision">Discard revision</button>
+                                                @endif
                                                 <button class="btn btn-light btn-sm edit" data-id="{{ $blog->id }}" title="Edit">
                                                     <i class="ti ti-edit"></i>
                                                 </button>
@@ -379,6 +414,32 @@
                         <div class="col-md-6">
                             <label class="control-label mb-1">Meta Keywords</label>
                             <textarea name="meta_keywords" id="edit_meta_kw" rows="3" class="form-control" placeholder="Comma-separated keywords"></textarea>
+                        </div>
+                    </div>
+                    <hr class="mt-4">
+                    <h6 class="fw-semibold mb-1">Review</h6>
+                    <p class="text-muted small mb-3">A draft can be published only with a cover image, a reviewer name and a last reviewed date.</p>
+                    <p class="text-muted small mb-3 d-none" id="edit_revision_note">This post has a pending revision from the SEO agent. This form edits the live post only; use Review, Publish revision or Discard revision in the list.</p>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="control-label mb-1" for="edit_reviewer_name">Reviewer name</label>
+                            <input type="text" name="reviewer_name" id="edit_reviewer_name" class="form-control" maxlength="255" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="control-label mb-1" for="edit_reviewer_credential">Reviewer credential</label>
+                            <input type="text" name="reviewer_credential" id="edit_reviewer_credential" class="form-control" maxlength="255" placeholder="e.g. Head of Licensing" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="control-label mb-1" for="edit_reviewer_url">Reviewer URL</label>
+                            <input type="url" name="reviewer_url" id="edit_reviewer_url" class="form-control" maxlength="2048" placeholder="https://" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="control-label mb-1" for="edit_last_reviewed">Last reviewed</label>
+                            <input type="date" name="last_reviewed" id="edit_last_reviewed" class="form-control" />
+                        </div>
+                        <div class="col-md-12">
+                            <label class="control-label mb-1">Sources (from the SEO agent, read only)</label>
+                            <ul id="edit_sources" class="small mb-0"></ul>
                         </div>
                     </div>
                 </div>
@@ -699,6 +760,15 @@
                         // date cast serialises as full ISO; <input type="date"> needs YYYY-MM-DD
                         $('#edit_published_date').val(d.published_date ? String(d.published_date).substring(0, 10) : '');
                         $('#edit_updated_date').val(d.updated_date ? String(d.updated_date).substring(0, 10) : '');
+                        $('#edit_reviewer_name').val(d.reviewer_name || '');
+                        $('#edit_reviewer_credential').val(d.reviewer_credential || '');
+                        $('#edit_reviewer_url').val(d.reviewer_url || '');
+                        $('#edit_last_reviewed').val(d.last_reviewed ? String(d.last_reviewed).substring(0, 10) : '');
+                        var sources = Array.isArray(d.sources) ? d.sources : [];
+                        $('#edit_sources').html(sources.length
+                            ? sources.map(function (u) { return '<li>' + escHtml(u) + '</li>'; }).join('')
+                            : '<li class="text-muted list-unstyled">None</li>');
+                        $('#edit_revision_note').toggleClass('d-none', !d.revision);
                         pendingContent = d.content || '';
                         if (tinymce.get('editor-edit')) { tinymce.get('editor-edit').setContent(pendingContent); pendingContent = null; }
                         $('#editModal').modal('show');
@@ -706,6 +776,39 @@
                     error: function() {
                         Swal.fire({ icon: 'error', title: 'Could not load blog data.' });
                     }
+                });
+            });
+
+            /* ── Status tabs ── */
+            $('[data-status-tab]').on('click', function () {
+                var tab = $(this).data('status-tab');
+                $('[data-status-tab]').removeClass('active');
+                $(this).addClass('active');
+                $('#sortable-list .sort-item').each(function () {
+                    $(this).toggleClass('tab-hidden', tab !== 'all' && $(this).data('status') !== tab);
+                });
+            });
+
+            /* ── Publish, Publish revision, Discard revision (a person only; the agent API cannot) ── */
+            $(document).on('click', '.blog-action', function () {
+                var $btn = $(this);
+                Swal.fire({
+                    title: $btn.data('label') + '?', text: $btn.data('confirm'),
+                    icon: 'question', showCancelButton: true, confirmButtonText: $btn.data('label')
+                }).then(function (result) {
+                    if (!result.isConfirmed) return;
+                    Swal.fire({ title: 'Working...', allowOutsideClick: false, didOpen: function () { Swal.showLoading(); } });
+                    $.ajax({
+                        url: $btn.data('url'), method: 'POST',
+                        headers: { 'X-CSRF-TOKEN': CSRF },
+                        success: function (response) {
+                            Swal.fire({ icon: 'success', title: response.message }).then(function () { location.reload(); });
+                        },
+                        error: function (xhr) {
+                            var msg = (xhr.responseJSON && xhr.responseJSON.message) || 'Something went wrong. Please try again.';
+                            Swal.fire({ icon: 'error', title: 'Not done', text: msg });
+                        }
+                    });
                 });
             });
 

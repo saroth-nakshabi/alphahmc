@@ -256,7 +256,45 @@ class MainHomeController extends Controller
 
     public function singleBlog($slug)
     {
-        $blog = Blog::where('slug', $slug)->firstOrFail();
+        // Drafts 404 here: Blog's PublishedScope only finds published posts.
+        return $this->renderBlog(Blog::where('slug', $slug)->firstOrFail(), false);
+    }
+
+    /** Signed, noindex preview of a draft (or of a live post as it is) for the reviewer. */
+    public function previewBlog($id)
+    {
+        $blog = Blog::withoutGlobalScope(\App\Models\Scopes\PublishedScope::class)->findOrFail($id);
+
+        return $this->renderBlog($blog, true);
+    }
+
+    /** Signed preview of a live post with its staged revision applied in memory (never saved). */
+    public function previewBlogRevision($id)
+    {
+        $blog = Blog::withoutGlobalScope(\App\Models\Scopes\PublishedScope::class)->with('revision')->findOrFail($id);
+        abort_unless($blog->revision, 404);
+        $rev = $blog->revision;
+        $blog->forceFill([
+            'title'               => $rev->title,
+            'description'         => $rev->description,
+            'content'             => $rev->content,
+            'meta_title'          => $rev->meta_title,
+            'meta_description'    => $rev->meta_description,
+            'meta_keywords'       => $rev->meta_keywords,
+            'sources'             => $rev->sources,
+            'reviewer_name'       => $rev->reviewer_name,
+            'reviewer_credential' => $rev->reviewer_credential,
+            'reviewer_url'        => $rev->reviewer_url,
+            'last_reviewed'       => $rev->last_reviewed,
+            'updated_date'        => now()->toDateString(),
+        ]);
+
+        return $this->renderBlog($blog, true);
+    }
+
+    /** One renderer for the public post and its previews, so the two never drift. */
+    private function renderBlog(Blog $blog, bool $preview)
+    {
         $blogsByTag = Blog::whereHas('tags', function ($query) use ($blog) {
             $query->whereIn('tags.id', $blog->tags->pluck('id'));
         })->where('id', '!=', $blog->id)->orderBy('sort_order')->orderBy('id')->paginate(3);
@@ -270,7 +308,9 @@ class MainHomeController extends Controller
         $clients = \App\Models\client::visible()->get();
 
         // Pass both blog and projects to the view
-        return view('front.single_blog_page', compact('blog', 'projects', 'featuredServices', 'blogsByTag', 'clients'));
+        $response = response()->view('front.single_blog_page', compact('blog', 'projects', 'featuredServices', 'blogsByTag', 'clients', 'preview'));
+
+        return $preview ? $response->header('X-Robots-Tag', 'noindex, nofollow') : $response;
     }
 
 

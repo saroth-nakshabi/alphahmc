@@ -11,6 +11,8 @@ use Illuminate\Support\ServiceProvider;
 use App\Models\globaltag;
 use App\Models\googletag;
 use App\Support\SiteCache;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -34,6 +36,11 @@ class AppServiceProvider extends ServiceProvider
         Gate::before(function ($user, $ability) {
             return (method_exists($user, 'hasRole') && $user->hasRole('Admin')) ? true : null;
         });
+
+        // SEO agent blog API: 30 calls a minute, keyed on the token hash when a token is sent
+        // (an empty token must not share one bucket with every caller), otherwise on the IP.
+        RateLimiter::for('agent-api', fn ($request) => Limit::perMinute(30)
+            ->by($request->bearerToken() ? 'agent:' . hash('sha256', $request->bearerToken()) : 'ip:' . $request->ip()));
 
         // Clear the 10-minute site cache whenever an admin saves or deletes page data.
         foreach (self::SITE_CACHE_MODELS as $model) {

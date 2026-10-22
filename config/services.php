@@ -44,4 +44,9 @@ return [
         'secret_key' => env('RECAPTCHA_V3_SECRET_KEY'),
     ],
 
+    // SEO agent blog API: only the SHA-256 of the token is stored here (empty = API closed).
+    'agent_api' => [
+        'token_sha256' => env('AGENT_API_TOKEN_SHA256', ''),
+    ],
+
 ];

@@ -7,6 +7,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Service;
 use App\Models\ServiceGroup;
+use App\Models\Scopes\PublishedScope;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -57,7 +58,7 @@ class SeoOverviewController extends Controller
 
         $canEdit = Auth::user()->can($editPerm);
 
-        $items = $model::orderBy($nameField)->get()->map(fn ($r) => [
+        $items = $this->query($model)->orderBy($nameField)->get()->map(fn ($r) => [
             'id'               => $r->id,
             'name'             => $r->{$nameField},
             'meta_title'       => $r->meta_title,
@@ -94,7 +95,7 @@ class SeoOverviewController extends Controller
         }
         $data = $request->validate($rules);
 
-        $record = $model::findOrFail($id);
+        $record = $this->query($model)->findOrFail($id);
         $record->meta_title       = $data['meta_title'] ?? null;
         $record->meta_description = $data['meta_description'] ?? null;
         $record->meta_keywords    = $data['meta_keywords'] ?? null;
@@ -104,5 +105,11 @@ class SeoOverviewController extends Controller
         $record->save();
 
         return response()->json(['success' => true, 'message' => 'SEO fields updated']);
+    }
+
+    /** Blog drafts may appear on this admin screen (brief 4.1); every other model as usual. */
+    private function query(string $model)
+    {
+        return $model === Blog::class ? Blog::withoutGlobalScope(PublishedScope::class) : $model::query();
     }
 }

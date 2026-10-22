@@ -11,7 +11,20 @@
     $blogMetaDesc = $blog->meta_description ?: \Illuminate\Support\Str::limit(strip_tags($blog->description ?? $blog->content ?? ''), 160);
     // <title>: cut to 60 at a word; the brand suffix only when it still fits.
     $blogSeoTitle = \App\Support\Seo::title($blog->meta_title, $blog->title, 'Alpha Health Group');
+    // Dates shown on the page and in the JSON-LD (one source for both).
+    $blogPublished = $blog->published_date ?? $blog->created_at;
+    $blogModified  = $blog->updated_date ?? $blog->published_date ?? $blog->updated_at;
+    // "Reviewed by" only with both a name and a date; the URL is re-checked before it is used.
+    $blogReviewed    = trim((string) $blog->reviewer_name) !== '' && $blog->last_reviewed;
+    $blogReviewerUrl = \App\Support\BlogPublishGuard::safeUrl($blog->reviewer_url);
+    $blogSources     = collect($blog->sources ?? [])->filter(fn ($u) => is_string($u) && \App\Support\BlogPublishGuard::safeUrl($u))->values();
+    $preview = $preview ?? false;
 @endphp
+@if($preview)
+    @push('meta')
+        <meta name="robots" content="noindex,nofollow">
+    @endpush
+@endif
 @push('page_title', e($blogSeoTitle))
 @section('og_type', 'article')
 @section('meta_description', trim(preg_replace('/\s+/u', ' ', html_entity_decode($blogMetaDesc, ENT_QUOTES | ENT_HTML5, 'UTF-8'))))
@@ -26,11 +39,19 @@
             'headline'         => \Illuminate\Support\Str::limit(html_entity_decode(strip_tags($blog->title), ENT_QUOTES | ENT_HTML5, 'UTF-8'), 110, ''),
             'description'      => html_entity_decode($blogMetaDesc, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
             'image'            => $blog->image ? asset('public/uploads/blog_images/' . $blog->image) : null,
-            'datePublished'    => optional($blog->published_date ?? $blog->created_at)->toAtomString(),
-            'dateModified'     => optional($blog->updated_date ?? $blog->updated_at)->toAtomString(),
+            'datePublished'    => optional($blogPublished)->toAtomString(),
+            'dateModified'     => optional($blogModified)->toAtomString(),
             'author'           => trim((string) $blog->author_name) !== ''
                 ? ['@type' => 'Person', 'name' => trim($blog->author_name)]
                 : ['@type' => 'Organization', 'name' => 'Alpha Health Group', 'url' => config('app.url')],
+            // reviewedBy is defined on WebPage in schema.org; emitted here as the brief plans.
+            'reviewedBy'       => $blogReviewed ? array_filter([
+                '@type'    => 'Person',
+                'name'     => trim($blog->reviewer_name),
+                'jobTitle' => trim((string) $blog->reviewer_credential) ?: null,
+                'url'      => $blogReviewerUrl,
+            ]) : null,
+            'citation'         => $blogSources->isNotEmpty() ? $blogSources->all() : null,
             'publisher'        => [
                 '@type' => 'Organization',
                 'name'  => 'Alpha Health Group',
@@ -323,6 +344,13 @@
     {{-- Top Progress Bar --}}
     <div id="progress-container"><div id="progress-bar"></div></div>
 
+    @if($preview ?? false)
+        {{-- Signed preview for the reviewer: not public, not indexed --}}
+        <div role="status" style="position:fixed;left:0;right:0;bottom:0;z-index:10000;background:#7a4b00;color:#fff;text-align:center;font-size:.85rem;font-weight:600;padding:10px 16px;">
+            Preview, not published. Only people with this link can see this page.
+        </div>
+    @endif
+
     {{-- Main Article Section --}}
     <article class="article-main">
         <div class="container">
@@ -357,14 +385,20 @@
                     <div class="meta-divider-vertical"></div>
                     <div class="meta-item-box">
                         <span class="meta-label">Published</span>
-                        <span>{{ $blog->created_at->format('M d, Y') }}</span>
+                        <span>{{ optional($blogPublished)->format('M d, Y') }}</span>
                     </div>
                     <div class="meta-divider-vertical"></div>
                     <div class="meta-item-box">
                         <span class="meta-label">Last Updated</span>
-                        <span>{{ $blog->updated_at->format('M d, Y') }}</span>
+                        <span>{{ optional($blogModified)->format('M d, Y') }}</span>
                     </div>
                 </div>
+                @if($blogReviewed)
+                    <p class="article-reviewed-by" style="margin:14px 0 0;font-size:.85rem;color:#64748b;">
+                        Reviewed by
+                        @if($blogReviewerUrl)<a href="{{ $blogReviewerUrl }}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">{{ $blog->reviewer_name }}</a>@else{{ $blog->reviewer_name }}@endif{{ trim((string) $blog->reviewer_credential) !== '' ? ', ' . $blog->reviewer_credential : '' }}, {{ $blog->last_reviewed->format('j M Y') }}
+                    </p>
+                @endif
 
                 <div class="mt-5">
                     <a href="#read" class="text-dark fw-bold text-decoration-none" id="scroll-trigger">
@@ -374,6 +408,7 @@
                 </div>
             </header>
 
+            @if($blog->image)
             <div class="image-wrapper" id="read">
                 {{-- LCP image: right-sized files, fetched first, never lazy --}}
                 @php
@@ -389,10 +424,24 @@
                      class="article-main-image"
                      alt="{{ $blog->title }}">
             </div>
+            @else
+            <div id="read"></div>
+            @endif
 
             <div class="article-body-text">
                 {!! \App\Support\Html::fixLinks($blog->content) !!}
             </div>
+
+            @if($blogSources->isNotEmpty())
+                <section class="article-sources" style="max-width:780px;margin:40px auto 0;">
+                    <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:10px;">Sources</h2>
+                    <ul style="padding-left:1.2rem;margin:0;">
+                        @foreach($blogSources as $src)
+                            <li><a href="{{ $src }}" target="_blank" rel="noopener nofollow">{{ preg_replace('/^www\./', '', parse_url($src, PHP_URL_HOST) ?: $src) }}</a></li>
+                        @endforeach
+                    </ul>
+                </section>
+            @endif
         </div>
     </article>
 
