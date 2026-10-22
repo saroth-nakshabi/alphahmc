@@ -25,3 +25,5 @@ yarn-error.log
 /storage/logs/
 /alphahmc/
 *.zip
+/scripts/css/node_modules
+/scripts/css/package-lock.json

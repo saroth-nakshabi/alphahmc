@@ -1,4 +1,5 @@
 @extends('front/layout-2')
+@section('critical', 'blog')
 
 @php
     // Dynamic SEO from the blog record: meta_title falls back to the post title;

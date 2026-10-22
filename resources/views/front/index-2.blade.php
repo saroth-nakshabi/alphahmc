@@ -1,4 +1,5 @@
 @extends('front/layout-2')
+@section('critical', 'home')
 
 @push('page_title', 'Healthcare Consultancy in Dubai | Alpha Health Group')
 
@@ -183,7 +184,7 @@
         </div>
     </section>
 
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/home.css') }}?v=8">
+    @include('front.partials.stylesheet', ['href' => asset('public/front/assets/css/home.css') . '?v=8', 'bundle' => 'home', 'criticalTemplate' => 'home'])
 
 
     <script>

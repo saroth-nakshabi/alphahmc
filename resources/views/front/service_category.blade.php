@@ -1,7 +1,8 @@
 @extends('front/layout-2')
+@section('critical', 'category')
 @section('custom_css')
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.min.css') }}?v=8">
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-category.min.css') }}?v=8">
+    {{-- service-pages-shared + service-category, merged by scripts/css/build.mjs --}}
+    @include('front.partials.stylesheet', ['href' => \App\Support\CriticalCss::bundleUrl('category'), 'bundle' => 'category', 'criticalTemplate' => 'category'])
     <style>
         /* Internal/content links blend with body text — no color change, no underline. */
         .hero-desc-wrapper a, .lead-text a, .quote-text a,

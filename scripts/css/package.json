@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "type": "module",
+  "description": "Build tools for the merged stylesheets and inline critical CSS (not deployed).",
+  "devDependencies": {
+    "purgecss": "6.0.0",
+    "puppeteer-core": "23.11.1"
+  }
+}

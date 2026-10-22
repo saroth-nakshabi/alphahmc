@@ -1,9 +1,9 @@
 @extends('front/layout-2')
+@section('critical', 'service')
 @section('custom_css')
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-pages-shared.min.css') }}?v=8">
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-detail.min.css') }}?v=6">
-    {{-- Project Process section styles (shared with the category page) --}}
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/service-category.min.css') }}?v=3">
+    {{-- service-pages-shared + service-detail + service-category (Project Process section, shared with
+         the category page), merged by scripts/css/build.mjs --}}
+    @include('front.partials.stylesheet', ['href' => \App\Support\CriticalCss::bundleUrl('service'), 'bundle' => 'service', 'criticalTemplate' => 'service'])
     <style>
         /* Some service content was pasted from MS Word, which injects the
            "MsoNormal" class and inline near-black colour / Word fonts that

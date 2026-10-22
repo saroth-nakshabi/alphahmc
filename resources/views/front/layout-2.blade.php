@@ -341,14 +341,11 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap">
     </noscript>
 
-    <!-- Bootstrap CSS — blocking (needed for above-fold grid layout).
-         Self-hosted (was jsDelivr CDN) to drop the ~1.95s cross-origin round-trip
-         and apply the local 1-year cache. v5.2.3, byte-identical to CDN (SRI verified). -->
-    <link href="{{ asset('public/front/assets/css/vendor/bootstrap-5.2.3.min.css') }}?v=1" rel="stylesheet" />
-
-    <!-- Site CSS — blocking (critical nav + layout styles) -->
-    <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/style.min.css') }}?v=3">
-    <link rel="stylesheet" href="{{ asset('public/front-new/assets/css/slide-menu.min.css') }}?v=17">
+    {{-- Bootstrap 5.2.3 (unused rules removed) + style.min.css + slide-menu.min.css as one file
+         (scripts/css/build.mjs). Templates with @section('critical', ...) inline their first-screen
+         rules and load the full files without blocking (scripts/css/critical.mjs). --}}
+    @php $criticalTemplate = trim($__env->yieldContent('critical')) ?: null; @endphp
+    @include('front.partials.stylesheet', ['href' => \App\Support\CriticalCss::bundleUrl('base'), 'bundle' => 'base'])
 
     <!-- Icon font + animation libs — deferred (not needed for first paint).
          Font Awesome is the only icon set loaded site-wide: self-hosted, fonts subset to the icons
@@ -391,7 +388,7 @@
         @endif
     @endforeach
 
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/front-global.min.css') }}?v=12">
+    @include('front.partials.stylesheet', ['href' => asset('public/front/assets/css/front-global.min.css') . '?v=12', 'bundle' => 'front-global'])
 
 {{-- Consent update functions (called by banner buttons) --}}
     <script>
