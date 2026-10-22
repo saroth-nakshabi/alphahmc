@@ -1169,7 +1169,8 @@
                 trackConversion('ahg_contact_submitted', {
                     form_id: form.id || 'contact_form',
                 });
-                gtagReportInquirySent();
+                // The Ads "Inquiry Sent" conversion is reported once by the contact page's own submit
+                // handler (front/contact.blade.php); calling it here too sent it twice.
             }
         });
 
