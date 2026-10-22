@@ -527,10 +527,9 @@
             .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
             .then(function (res) {
                 if (res.ok && res.d.success) {
-                    // Conversion tracking
-                    if (typeof gtag === 'function') gtag('event', 'ahg_inquiry_submitted', { form_id: 'inquiryForm' });
+                    // Conversion tracking. ahg_inquiry_submitted comes once from the global submit
+                    // tracker in layout-2 (with service_name); sending it here too counted it twice.
                     window.dataLayer = window.dataLayer || [];
-                    window.dataLayer.push({ event: 'ahg_inquiry_submitted', form_id: 'inquiryForm' });
                     window.dataLayer.push({ event: 'inquiry_sent' });
                     if (typeof window.ahgGa4Event === 'function') window.ahgGa4Event('inquiry_sent');   // was GTM tag 14
                     // Google Ads conversion — fires only on confirmed AJAX success

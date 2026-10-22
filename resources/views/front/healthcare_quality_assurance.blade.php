@@ -2,7 +2,7 @@
 
 @push('page_title', 'Healthcare Quality Assurance | Tawqeet | Alpha Health Group')
 
-@section('meta_description')Tawqeet by Alpha Health Group — a comprehensive healthcare quality assurance platform that monitors KPIs, tracks compliance, and drives excellence for medical and homecare facilities in the UAE.@endsection
+@section('meta_description')Tawqeet by Alpha Health Group: a comprehensive healthcare quality assurance platform that monitors KPIs, tracks compliance, and drives excellence for medical and homecare facilities in the UAE.@endsection
 
 @section('custom_css')
     {{-- Bootstrap Icons: only this page and a few others use it, so the layout no longer loads it --}}
@@ -205,7 +205,7 @@
                     </div>
                 </div>
                 <div class="col-lg-5 text-center mt-4 mt-lg-0">
-                    <img class="tawqeet-logo img-fluid" src="{{ asset('public/front/assets/img/tawqueet-logo.svg') }}" alt="Tawqeet — Facility Quality Assurance">
+                    <img class="tawqeet-logo img-fluid" src="{{ asset('public/front/assets/img/tawqueet-logo.svg') }}" alt="Tawqeet: Facility Quality Assurance">
                 </div>
             </div>
         </div>
@@ -218,13 +218,13 @@
                 <div class="col-lg-9">
                     <div class="text-center mb-5">
                         <span class="sec-label">What We Do</span>
-                        <h2 class="sec-title mt-2">Tawqeet — Results-Driven Quality Assurance</h2>
+                        <h2 class="sec-title mt-2">Tawqeet: Results-Driven Quality Assurance</h2>
                     </div>
                     <div class="intro-quote mb-5">
                         We analyze your existing healthcare business system to understand areas for improvement and enhance the working processes to achieve optimal patient satisfaction and financial outcomes. We help you define combined Key Performance Indicators (KPIs) across all facility processes, which aids in the business improvement plan developed by our healthcare expert team. Our extensive expertise in healthcare makes it easier to design tailor-made performance improvement plans that align with international best practices and ensure regulatory compliance.
                     </div>
                     <p class="sec-sub mb-4">
-                        We assign a dedicated project manager to every client — your single point of contact throughout the entire implementation. This manager continuously monitors the engagement and makes necessary adjustments. We also conduct training exercises for your in-house staff and design periodic monitoring systems to ensure continuity of compliance. <strong>Improvise, Accomplish, and Sustain</strong> is what Tawqeet stands for.
+                        We assign a dedicated project manager to every client: your single point of contact throughout the entire implementation. This manager continuously monitors the engagement and makes necessary adjustments. We also conduct training exercises for your in-house staff and design periodic monitoring systems to ensure continuity of compliance. <strong>Improvise, Accomplish, and Sustain</strong> is what Tawqeet stands for.
                     </p>
 
                     <div class="row g-4 text-center mt-2">
@@ -261,7 +261,7 @@
                         Tawqeet analyses and reviews the adaptability and compliance of your facility against defined standards and guidelines across Clinical, Operational, Infrastructural, and Administrative domains.
                     </p>
                     <p class="sec-sub mt-3">
-                        Tawqeet ensures the facility fulfils operational efficiency, patient satisfaction, and quality of service — providing meaningful insights to facility owners and investors to evaluate outcomes and sustainability. Tawqeet not only enhances the entire work system of a facility, but ensures full regulatory compliance too.
+                        Tawqeet ensures the facility fulfils operational efficiency, patient satisfaction, and quality of service, providing meaningful insights to facility owners and investors to evaluate outcomes and sustainability. Tawqeet not only enhances the entire work system of a facility, but ensures full regulatory compliance too.
                     </p>
                 </div>
                 <div class="col-lg-8">
@@ -703,7 +703,7 @@
                 <span class="sec-label">Our Process</span>
                 <h2 class="sec-title mt-2">The Tawqeet Process</h2>
                 <p class="sec-sub mx-auto mt-3" style="max-width:700px;">
-                    A comprehensive audit of the healthcare facility is conducted by healthcare experts across all functional domains. Processes are evaluated based on preset checklists derived from combined KPIs and international best practices. GAP analysis is presented to facility management, and a Corrective Action Plan is developed in concurrence with the facility. Implementation involves staff training and process improvisation — all overseen by an assigned client manager.
+                    A comprehensive audit of the healthcare facility is conducted by healthcare experts across all functional domains. Processes are evaluated based on preset checklists derived from combined KPIs and international best practices. GAP analysis is presented to facility management, and a Corrective Action Plan is developed in concurrence with the facility. Implementation involves staff training and process improvisation, all overseen by an assigned client manager.
                 </p>
             </div>
             <div class="text-center">
@@ -717,7 +717,7 @@
             <div class="text-center mb-5">
                 <span class="sec-label">Choose Your Plan</span>
                 <h2 class="sec-title mt-2">Tawqeet Packages</h2>
-                <p class="sec-sub mx-auto mt-3" style="max-width:650px;">Select the Tawqeet plan that best meets your facility's requirements. All packages are custom-made to suit your facility size, budget, and needs — and can be converted or amended as required.</p>
+                <p class="sec-sub mx-auto mt-3" style="max-width:650px;">Select the Tawqeet plan that best meets your facility's requirements. All packages are custom-made to suit your facility size, budget and needs, and can be converted or amended as required.</p>
             </div>
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
@@ -726,7 +726,7 @@
                             <i class="bi bi-shield-check"></i>
                         </div>
                         <h4>Audit Compliance</h4>
-                        <p>A one-off solution for situational audits — periodic regulatory inspections, change of location, addition of specialty, or internal plan changes. Ensures your facility is audit-ready and fully compliant.</p>
+                        <p>A one-off solution for situational audits: periodic regulatory inspections, change of location, addition of specialty, or internal plan changes. Ensures your facility is audit-ready and fully compliant.</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
@@ -744,7 +744,7 @@
                             <i class="bi bi-award-fill"></i>
                         </div>
                         <h4>Full Compliance Program</h4>
-                        <p>The comprehensive package ensuring long-term sustainability of enhancements. Overseen by a dedicated client manager, each domain is optimised for compliance — keeping your facility ready for any regulatory audit at any time.</p>
+                        <p>The comprehensive package ensuring long-term sustainability of enhancements. Overseen by a dedicated client manager, each domain is optimised for compliance, keeping your facility ready for any regulatory audit at any time.</p>
                     </div>
                 </div>
             </div>
@@ -825,7 +825,7 @@
                             <div class="mb-3">
                                 <textarea id="Message" name="Message" class="form-control" rows="4" placeholder="Your message..."></textarea>
                             </div>
-                            <p class="success-msg" id="formSuccess">We have received your enquiry — a representative will contact you shortly.</p>
+                            <p class="success-msg" id="formSuccess">We have received your enquiry. A representative will contact you shortly.</p>
                             <div class="text-center">
                                 <button type="submit" class="btn-submit">Send Message</button>
                             </div>
