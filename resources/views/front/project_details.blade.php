@@ -2478,9 +2478,12 @@ function openGalleryModal(type, url, title) {
   galleryModal.show();
 }
 
-$('#galleryModal').on('hidden.bs.modal', () => {
-  const v = document.getElementById('modalVideo');
-  if (v) { v.pause(); v.currentTime = 0; }
+// jQuery loads after the page content (layout-2), so bind once the document is parsed.
+document.addEventListener('DOMContentLoaded', () => {
+  $('#galleryModal').on('hidden.bs.modal', () => {
+    const v = document.getElementById('modalVideo');
+    if (v) { v.pause(); v.currentTime = 0; }
+  });
 });
 
 /* ── PDF Flipbook ────────────────────────────────── */
@@ -2540,10 +2543,12 @@ async function openFlipbook(url, title) {
 function nextPage() { if (pageFlip) pageFlip.flipNext(); }
 function prevPage() { if (pageFlip) pageFlip.flipPrev(); }
 
-$('#pdfModal').on('hidden.bs.modal', () => {
-  loadId++;
-  if (pageFlip) { pageFlip.destroy(); pageFlip = null; }
-  $('#flipbook').remove(); $('#flipbookContainer').append('<div id="flipbook"></div>');
+document.addEventListener('DOMContentLoaded', () => {
+  $('#pdfModal').on('hidden.bs.modal', () => {
+    loadId++;
+    if (pageFlip) { pageFlip.destroy(); pageFlip = null; }
+    $('#flipbook').remove(); $('#flipbookContainer').append('<div id="flipbook"></div>');
+  });
 });
 </script>
 @endsection

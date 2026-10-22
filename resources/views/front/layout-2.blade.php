@@ -331,7 +331,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-    <link rel="dns-prefetch" href="https://code.jquery.com">
 
     <!-- Fonts — non-render-blocking, reduced weights (300/500/700 dropped — not used in critical path) -->
     <link rel="preload" as="style"
@@ -855,19 +854,8 @@
     </div>
 
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- JavaScript for Unified Menu (Fixed & Cleaned) -->
-    <script>
-        window.AHG_NAV = {
-            searchLive: @json(route('front.search.live')),
-            search: @json(route('front.search')),
-            blog: @json(route('front.new_blog')),
-            project: @json(route('front.project')),
-            allServices: @json(route('front.all-services')),
-        };
-    </script>
-    <script src="{{ asset('public/front/assets/js/layout/nav.js') }}?v=1"></script>
+    {{-- jQuery and the menu script load after the page content (just before the footer scripts) so they
+         do not stop the parser before the hero image; see the block above ui.js. --}}
 
 
     <!-- FOOTER SECTION -->
@@ -1009,9 +997,23 @@
     
 
 
-    <script src="{{ asset('public/front/assets/js/layout/ui.js') }}?v=1"></script>
+    {{-- jQuery 3.6.0, self-hosted (byte-identical to code.jquery.com, sha256 /xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=),
+         and the menu script. Kept synchronous and before every script that uses jQuery. --}}
+    <script src="{{ asset('public/front/assets/js/vendor/jquery-3.6.0.min.js') }}"></script>
 
-    <!-- jQuery is loaded at the top -->
+    <!-- JavaScript for Unified Menu (Fixed & Cleaned) -->
+    <script>
+        window.AHG_NAV = {
+            searchLive: @json(route('front.search.live')),
+            search: @json(route('front.search')),
+            blog: @json(route('front.new_blog')),
+            project: @json(route('front.project')),
+            allServices: @json(route('front.all-services')),
+        };
+    </script>
+    <script src="{{ asset('public/front/assets/js/layout/nav.js') }}?v=1"></script>
+
+    <script src="{{ asset('public/front/assets/js/layout/ui.js') }}?v=1"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
