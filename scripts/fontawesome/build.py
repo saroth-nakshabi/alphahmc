@@ -10,6 +10,7 @@ Run after adding icons to the site (needs: pip install fonttools brotli):
     python <repo>/scripts/fontawesome/build.py <repo> <repo>/public/front/assets/vendor/fontawesome-6.5.1 [dump.sql ...]
 """
 import glob
+import hashlib
 import os
 import re
 import sys
@@ -52,7 +53,7 @@ print('files', len(files), 'icons', len(used), 'css content codepoints', len(raw
 os.makedirs(os.path.join(out, 'webfonts'), exist_ok=True)
 os.makedirs(os.path.join(out, 'css'), exist_ok=True)
 
-ranges = {}
+ranges, versions = {}, {}
 for name in ['fa-solid-900', 'fa-regular-400', 'fa-brands-400']:
     font = TTFont(name + '.woff2')
     keep = sorted(used & set(font.getBestCmap().keys()))
@@ -66,6 +67,10 @@ for name in ['fa-solid-900', 'fa-regular-400', 'fa-brands-400']:
     dst = os.path.join(out, 'webfonts', name + '-subset.woff2')
     font.save(dst)
     ranges[name] = ','.join('u+%x' % c for c in keep)
+    # Fonts are served with a 1-year immutable cache: version each subset URL by content, or a
+    # returning browser keeps the old subset while the new unicode-range promises new glyphs.
+    with open(dst, 'rb') as fh:
+        versions[name] = hashlib.md5(fh.read()).hexdigest()[:10]
     print(name, len(keep), 'glyphs', os.path.getsize(dst), 'bytes, full', os.path.getsize(name + '.woff2'))
     with open(name + '.woff2', 'rb') as src, open(os.path.join(out, 'webfonts', name + '.woff2'), 'wb') as cp:
         cp.write(src.read())
@@ -77,7 +82,7 @@ def faces(family, weight, name, with_style=True):
     style = 'font-style:normal;' if with_style else ''
     head = '@font-face{font-family:"%s";%sfont-weight:%s;font-display:swap;' % (family, style, weight)
     full = head + 'src:url(../webfonts/%s.woff2) format("woff2")}' % name
-    part = head + 'src:url(../webfonts/%s-subset.woff2) format("woff2");unicode-range:%s}' % (name, ranges[name])
+    part = head + 'src:url(../webfonts/%s-subset.woff2?v=%s) format("woff2");unicode-range:%s}' % (name, versions[name], ranges[name])
     return full + part  # the later face wins inside its range; other icons fall back to the full file
 
 

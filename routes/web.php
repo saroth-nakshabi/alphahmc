@@ -75,6 +75,9 @@ Route::get('/robots.txt', function () {
         'Disallow: /login',
         'Disallow: /register',
         'Disallow: /password/',
+        // Form endpoints that answer 405 to a normal visit; the trailing slash keeps /plan-your-project crawlable.
+        'Disallow: /plan-your-project/',
+        'Disallow: /share-your-experience/submit',
         'Allow: /',
         '',
         'Sitemap: ' . rtrim(config('app.url'), '/') . '/sitemap.xml',
@@ -124,6 +127,46 @@ Route::redirect('/activate-professional-license', '/services/activate-your-uae-h
 Route::redirect('/healthcare-insurance-empanelment', '/service-category/insurance-empanelment', 301);
 Route::redirect('/careers', '/service-category/healthcare-professional-resourcing', 301);
 Route::redirect('/careers/apply-job', '/service-category/healthcare-professional-resourcing', 301);
+
+// ── Old URLs from Search Console (brief of 22 Oct 2026) ──
+// Old pages with a matching page today: one-hop 301, query string kept.
+// (/careers/ with a trailing slash and any query is answered by nginx before the slash rewrite.)
+foreach ([
+    '/healthcare-careers'                       => '/service-category/healthcare-professional-resourcing',
+    '/facility-auditing-accreditation'          => '/service-category/healthcare-accreditations-certifications',
+    '/how-alpha-works'                          => '/how_alpha_work',
+    '/oman-healthcare-professional-license'     => '/services/healthcare-professional-licensing-oman',
+    '/healthcare-facility-licensing'            => '/service-category/facility-licensing-setup',
+    '/healthcare-business-setup'                => '/service-category/facility-licensing-setup',
+    '/alpha-services'                           => '/all_services',
+    '/self-processing-assistance'               => '/service-category/healthcare-professional-licensing',
+    '/healthcare-management-services'           => '/service-packages/healthcare-management-consultancy-in-uae',
+    '/healthcare-quality-assurance'             => '/healthcare_quality_assurance',
+    '/healthcare-management-outsourcing'        => '/service-category/healthcare-management-outsourcing',
+    '/healthcare-professional-resourcing'       => '/service-category/healthcare-professional-resourcing',
+    '/healthcare-professional-development'      => '/service-category/training-education',
+    '/professional-development-programs'        => '/service-category/training-education',
+    '/professional-development-programs.php'    => '/service-category/training-education',
+    '/healthcare-feasibility-study'             => '/service-category/healthcare-feasibility-evaluation',
+    '/hospital-conceptual-design'               => '/service-category/hospital-design-master-planning',
+    '/healthcare-infrastructure-transformation' => '/services/hospital-infrastructure-planning-engineering-design',
+    '/alpha-terms-and-conditions'               => '/terms-of-service',
+] as $from => $to) {
+    Route::get($from, fn (\Illuminate\Http\Request $r) => redirect()->to(
+        url($to) . ($r->getQueryString() ? '?' . $r->getQueryString() : ''),
+        301
+    ));
+}
+// Old job board pages: 410 Gone with a short "job is no longer open" page (errors/410).
+Route::get('/careers/job/{id}', fn () => abort(410, 'job'));
+Route::get('/careers/apply-job/{id}', fn () => abort(410, 'job'));
+Route::get('/careers/{page}', fn () => abort(410, 'job'))->whereIn('page', ['register', 'signin', 'forgot-password', 'upcoming_jobs']);
+// Old Alpha TSM marketing service pages (now on alphatsm.com): 410 Gone (option A).
+foreach (['/healthcare-digital-marketing', '/website-development-solution', '/digital-advertisement-solution',
+          '/social-media-management', '/instagram-marketing', '/branding-and-designing',
+          '/customer-relationship-management', '/healthcare-branding-web-development'] as $gone) {
+    Route::get($gone, fn () => abort(410, 'service'));
+}
 
 Route::post('/inquiry/submit', [MainHomeController::class, 'submitInquiry'])->middleware('throttle:5,1')->name('front.inquiry.submit');
 Route::get('/healthcare-management-update-insights', [MainHomeController::class, 'blog'])->name('front.new_blog');

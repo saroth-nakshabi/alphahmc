@@ -353,9 +353,9 @@
          in use (~16 KB instead of ~300 KB) with the full files as fallback (scripts/fontawesome/build.py).
          Bootstrap Icons is loaded only by the pages that use it; Line Awesome was unused. -->
     <link rel="preload" as="style"
-          href="{{ asset('public/front/assets/vendor/fontawesome-6.5.1/css/fontawesome.min.css') }}?v=1"
+          href="{{ asset('public/front/assets/vendor/fontawesome-6.5.1/css/fontawesome.min.css') }}?v=2"
           onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{{ asset('public/front/assets/vendor/fontawesome-6.5.1/css/fontawesome.min.css') }}?v=1"></noscript>
+    <noscript><link rel="stylesheet" href="{{ asset('public/front/assets/vendor/fontawesome-6.5.1/css/fontawesome.min.css') }}?v=2"></noscript>
 
     <link rel="preload" as="style"
           href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
