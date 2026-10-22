@@ -379,9 +379,14 @@ class MainHomeController extends Controller
         $project = Project::with(['projects_images', 'projects_videos', 'projects_documents', 'project_category'])->where('slug', $slug)->first();
         if (!$project) {
             // 301 indexed old URLs (/project_details/12, client-website paths) to the slug page.
-            $target = ctype_digit((string) $slug)
-                ? Project::whereKey((int) $slug)->value('slug')
-                : (self::LEGACY_PROJECT_URLS[strtolower($slug)] ?? null);
+            if (ctype_digit((string) $slug)) {
+                // An old numeric URL: its case study, or the Case Studies page when it was deleted.
+                $target = Project::whereKey((int) $slug)->value('slug');
+                return $target
+                    ? redirect()->route('front.project_details', $target, 301)
+                    : redirect()->route('front.project', [], 301);
+            }
+            $target = self::LEGACY_PROJECT_URLS[strtolower($slug)] ?? null;
             abort_unless($target, 404);
             return redirect()->route('front.project_details', $target, 301);
         }
