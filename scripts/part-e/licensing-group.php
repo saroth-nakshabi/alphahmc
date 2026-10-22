@@ -27,6 +27,7 @@ $slug = 'healthcare-professional-licensing-uae';
 $authorityPages = [
     'Dubai Health Authority (DHA)' => ['dha-license-healthcare-professionals-dubai', 'Working in Dubai? See <a href="/services/%s">DHA licensing for healthcare professionals</a>.'],
     'Department of Health (DOH)' => ['doh-license-healthcare-professionals-abu-dhabi', 'Working in Abu Dhabi? See <a href="/services/%s">DOH licensing for healthcare professionals</a>.'],
+    'Ministry of Health and Prevention (MOHAP)' => ['mohap-license-healthcare-professionals', 'Working in Ajman, Umm Al Quwain, Ras Al Khaimah or Fujairah? See <a href="/services/%s">MOHAP licensing for healthcare professionals</a>.'],
 ];
 $serviceSlugs = [
     'healthcare-professional-license-registration',   // New healthcare professional license
@@ -73,7 +74,7 @@ $fields = [
 
 // Six shared steps; a step can point to the service that covers it.
 $steps = [
-    ['Registration', 'You open your application with the authority: Sheryan for DHA, TAMM for DOH, or the MOHAP website or app.', 'healthcare-professional-license-registration'],
+    ['Registration', 'You open your application with the authority: Sheryan for DHA, TAMM for DOH, or the MOHAP portal.', 'healthcare-professional-license-registration'],
     ['Credential evaluation', 'The authority evaluates your qualifications and experience against the PQR for your title.', null],
     ['DataFlow verification', 'DataFlow verifies your education, experience, professional licenses and good standing certificate with the institutions that issued them.', null],
     ['Exam or exemption', 'Most titles sit the licensing exam. The PQR exempts some applicants, for example holders of listed UK or US qualifications, or of a valid license from another UAE authority.', null],
