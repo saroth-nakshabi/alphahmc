@@ -539,10 +539,11 @@ class MainHomeController extends Controller
         //    submissions are just flagged as spam for admin review.
         $isSuspicious = $this->isSuspiciousSubmission($request, 'inquiry', 0.3);
 
-        // ── 3. Email dedup — same email submitted within the last 2 hours.
+        // ── 3. Dedup — same email (or, for phone-only inquiries, same phone) within 2 hours.
         //    Return silent success (user already got a confirmation; just don't double-save).
         if (!$isSuspicious) {
-            $recentExists = Inquiry::where('email', $request->input('email'))
+            $dedupField = $request->filled('email') ? 'email' : 'phone';
+            $recentExists = Inquiry::where($dedupField, $request->input($dedupField))
                 ->where('created_at', '>=', now()->subHours(2))
                 ->exists();
 
@@ -584,11 +585,13 @@ class MainHomeController extends Controller
                 Log::error('Inquiry Admin Mail failed: ' . $e->getMessage());
             }
 
-            // 3. Send Confirmation Email to Customer
-            try {
-                Mail::to($inquiry->email)->send(new CustomerInquiryConfirmationMail($inquiry));
-            } catch (\Exception $e) {
-                Log::error('Inquiry Customer Mail failed: ' . $e->getMessage());
+            // 3. Send Confirmation Email to Customer (phone-only inquiries have no email)
+            if (!empty($inquiry->email)) {
+                try {
+                    Mail::to($inquiry->email)->send(new CustomerInquiryConfirmationMail($inquiry));
+                } catch (\Exception $e) {
+                    Log::error('Inquiry Customer Mail failed: ' . $e->getMessage());
+                }
             }
         }
 
