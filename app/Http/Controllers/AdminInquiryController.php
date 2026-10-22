@@ -74,6 +74,10 @@ class AdminInquiryController extends Controller
             'status'        => 'replied',
         ]);
 
+        if (empty($inquiry->email)) {
+            return back()->with('success', 'Reply saved. This inquiry has no email address, so contact them by phone or WhatsApp.');
+        }
+
         try {
             \Mail::raw($request->reply_message, function ($msg) use ($inquiry) {
                 $msg->to($inquiry->email, $inquiry->name)
