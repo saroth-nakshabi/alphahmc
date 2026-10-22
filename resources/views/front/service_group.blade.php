@@ -23,11 +23,10 @@
     // description; the hero URL computed once for the preload and the background.
     $seoTitle = \App\Support\Seo::title($service->meta_title, $service->name);
     $seoDesc  = trim((string) $service->meta_description);
-    $hero = \App\Support\Img::hero(
+    $pic = \App\Support\Img::heroPicture(
         $service->hero_image ?: ($service->images[0]->image ?? null),
-        asset('public/front/assets/img/hero/service-details-bg.jpg')
+        'front/assets/img/hero/service-details-bg.jpg'
     );
-    $heroImg = $hero[0];
 @endphp
 @push('page_title', e($seoTitle))
 @if($seoDesc !== '')
@@ -39,7 +38,7 @@
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
           onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
-    @include('front.partials.hero-preload', ['hero' => $hero])
+    @include('front.partials.hero-preload', ['pic' => $pic])
 @endpush
 @push('og_tags')
     {{-- og:site_name/title/description/url/type and twitter:card come from the layout. --}}
@@ -56,8 +55,9 @@
     <div class="service-page-wrapper">
         <!-- Hero Section -->
         <section class="service-hero">
-            <div class="hero-background"
-                style="background-image: linear-gradient(to right, rgba(0, 0, 0, 25%), rgba(202, 202, 202, 0.163)),url('{{ $heroImg }}');">
+            <div class="hero-background">
+                @include('front.partials.hero-picture', ['pic' => $pic, 'class' => 'hero-background-img'])
+                <div class="hero-background-overlay" aria-hidden="true"></div>
             </div>
 
             <div class="container">

@@ -963,3 +963,19 @@
 /* In-text links in page copy: underlined so they read as links on dark and light bands (same colour as the text before). */
 .large-info :is(p, li, td) a, .transformation-desc :is(p, li, td) a, .help-text-block :is(p, li, td) a, .sdb-desc :is(p, li, td) a, .quote-text :is(p, li) a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .large-info :is(p, li, td) a:hover, .transformation-desc :is(p, li, td) a:hover, .help-text-block :is(p, li, td) a:hover, .sdb-desc :is(p, li, td) a:hover, .quote-text :is(p, li) a:hover { text-decoration-thickness: 2px; }
+/* Hero image (partials/hero-picture): cropped like the old background, overlay gradient above it */
+.hero-background-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.hero-background-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0, 0, 0, 25%), rgba(202, 202, 202, 0.163));
+}

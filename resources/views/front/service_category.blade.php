@@ -30,12 +30,12 @@
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
     {{-- Was preloading the original upload while the background used the 1600px thumb: two downloads. --}}
     @php
-        $hero = \App\Support\Img::hero(
+        $pic = \App\Support\Img::heroPicture(
             $service->hero_image ?: ($service->images[0]->image ?? null),
-            asset('public/front/assets/img/hero/service-details-bg.jpg')
+            'front/assets/img/hero/service-details-bg.jpg'
         );
     @endphp
-    @include('front.partials.hero-preload', ['hero' => $hero])
+    @include('front.partials.hero-preload', ['pic' => $pic])
 @endpush
 @push('og_tags')
     {{-- <link rel="canonical" href="{{ url('/' . $service->slug) }}"> --}}
@@ -54,8 +54,9 @@
     <div class="service-page-wrapper">
         <!-- Hero Section -->
         <section class="service-hero">
-            <div class="hero-background"
-                style="background-image: linear-gradient(to right, rgba(0, 0, 0, 25%), rgba(202, 202, 202, 0.163)),url('{{ $hero[0] }}');">
+            <div class="hero-background">
+                @include('front.partials.hero-picture', ['pic' => $pic, 'class' => 'hero-background-img'])
+                <div class="hero-background-overlay" aria-hidden="true"></div>
             </div>
 
             <div class="container">

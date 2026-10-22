@@ -26,23 +26,6 @@ class Img
     private const RASTER = ['jpg', 'jpeg', 'png'];
 
     /**
-     * Hero background URLs: [desktop 1600px, phone 828px]. Phones (390px at 2x) do not need
-     * the desktop file, and the hero image is the LCP element on service-type pages.
-     *
-     * @param  string|null $path      Upload path as for thumb(), or null when there is none.
-     * @param  string      $fallback  Absolute URL used for both sizes when $path is empty.
-     * @return array{0: string, 1: string}
-     */
-    public static function hero(?string $path, string $fallback): array
-    {
-        if ($path === null || trim($path) === '') {
-            return [$fallback, $fallback];
-        }
-
-        return [self::thumb($path, 1600), self::thumb($path, 828)];
-    }
-
-    /**
      * @param  string $path     Path relative to the public dir, e.g. "uploads/service_images/x.jpg"
      *                          (a leading "public/" or "/" is tolerated and stripped).
      * @param  int    $width    Max width in px. The image is only ever scaled DOWN.
@@ -51,24 +34,81 @@ class Img
      */
     public static function thumb(string $path, int $width, int $quality = 80): string
     {
+        return self::derive($path, $width, $quality, null) ?? asset('public/' . preg_replace('#^public/#', '', ltrim($path, '/')));
+    }
+
+    /**
+     * WebP copy of a jpg/png, scaled down to $width like thumb(). Returns null when it cannot be
+     * made (no WebP in GD, missing file, other format), so callers can simply leave the WebP
+     * source out and the browser uses the jpg/png.
+     */
+    public static function webp(string $path, int $width, int $quality = 70): ?string
+    {
+        if (!function_exists('imagewebp')) {
+            return null;
+        }
+
+        return self::derive($path, $width, $quality, 'webp');
+    }
+
+    /**
+     * Hero image as a <picture> for service, group and category pages (the LCP element):
+     * phones (up to 767px) get the 412/828 files, larger screens 1280/1920, each as WebP with a
+     * jpg/png fallback. Files are never upscaled; repeated URLs are listed once.
+     *
+     * @param  string|null $path         Upload path as for thumb(), or null when there is none.
+     * @param  string      $fallbackPath Path under public/ used when $path is empty.
+     * @return array{phone: array{webp: string, img: string}, desktop: array{webp: string, img: string}, src: string, width: ?int, height: ?int}
+     */
+    public static function heroPicture(?string $path, string $fallbackPath): array
+    {
+        $path = ($path === null || trim($path) === '') ? $fallbackPath : $path;
+        $set  = function (array $widths, bool $webp) use ($path): string {
+            $parts = [];
+            foreach ($widths as $w) {
+                $url = $webp ? self::webp($path, $w) : self::thumb($path, $w);
+                if ($url === null || isset($parts[$url])) {
+                    continue;
+                }
+                $size        = self::size($url);
+                $parts[$url] = $url . ' ' . ($size ? $size[0] : $w) . 'w';
+            }
+
+            return implode(', ', $parts);
+        };
+        $src  = self::thumb($path, 1280);
+        $size = self::size($src);
+
+        return [
+            'phone'   => ['webp' => $set([412, 828], true), 'img' => $set([412, 828], false)],
+            'desktop' => ['webp' => $set([1280, 1920], true), 'img' => $set([1280, 1920], false)],
+            'src'     => $src,
+            'width'   => $size[0] ?? null,
+            'height'  => $size[1] ?? null,
+        ];
+    }
+
+    /** thumb()/webp() core: the derivative URL, or null when only the original can be served. */
+    private static function derive(string $path, int $width, int $quality, ?string $format): ?string
+    {
         $rel      = ltrim($path, '/');
         $rel      = preg_replace('#^public/#', '', $rel);   // normalise to "uploads/..."
-        $original = asset('public/' . $rel);
 
         try {
             $src = public_path($rel);
             if (!is_file($src)) {
-                return $original;
+                return null;
             }
 
             $ext = strtolower(pathinfo($rel, PATHINFO_EXTENSION));
             if (!in_array($ext, self::RASTER, true) || !extension_loaded('gd')) {
-                return $original;                            // svg/gif/webp or no GD → leave alone
+                return null;                                 // svg/gif/webp or no GD → leave alone
             }
+            $out = $format ?? $ext;
 
             // Cache key changes when the source file or the requested size changes.
-            $key      = md5($rel . '|' . filemtime($src) . '|' . $width . '|' . $quality);
-            $cacheRel = 'uploads/cache/' . $key . '.' . $ext;
+            $key      = md5($rel . '|' . filemtime($src) . '|' . $width . '|' . $quality . ($format ? '|' . $format : ''));
+            $cacheRel = 'uploads/cache/' . $key . '.' . $out;
             $cacheAbs = public_path($cacheRel);
 
             if (is_file($cacheAbs)) {
@@ -79,7 +119,7 @@ class Img
             // original without re-running GD on every page view.
             $skipAbs = $cacheAbs . '.skip';
             if (is_file($skipAbs)) {
-                return $original;
+                return null;
             }
 
             $dir = dirname($cacheAbs);
@@ -87,11 +127,11 @@ class Img
                 @mkdir($dir, 0775, true);
             }
             if (!is_dir($dir) || !is_writable($dir)) {
-                return $original;                            // can't cache → serve original
+                return null;                            // can't cache → serve original
             }
 
-            if (!self::generate($src, $cacheAbs, $cacheRel, $ext, $width, $quality)) {
-                return $original;
+            if (!self::generate($src, $cacheAbs, $cacheRel, $ext, $width, $quality, $out)) {
+                return null;
             }
 
             // Never serve a derivative that ended up larger than the source
@@ -99,12 +139,12 @@ class Img
             if (@filesize($cacheAbs) >= @filesize($src)) {
                 @unlink($cacheAbs);
                 @touch($skipAbs);
-                return $original;
+                return null;
             }
 
             return asset('public/' . $cacheRel);
         } catch (\Throwable $e) {
-            return $original;                                // any failure → original, never break
+            return null;                                // any failure → original, never break
         }
     }
 
@@ -160,7 +200,7 @@ class Img
     }
 
     /** Create the resized derivative with GD. Returns true on success. */
-    private static function generate(string $src, string $dest, string $cacheRel, string $ext, int $width, int $quality): bool
+    private static function generate(string $src, string $dest, string $cacheRel, string $ext, int $width, int $quality, ?string $out = null): bool
     {
         $info = @getimagesize($src);
         if (!$info) {
@@ -201,7 +241,9 @@ class Img
 
         imagecopyresampled($canvas, $source, 0, 0, 0, 0, $dstW, $dstH, $srcW, $srcH);
 
-        if ($isPng) {
+        if ($out === 'webp') {
+            $ok = imagewebp($canvas, $dest, $quality);
+        } elseif ($isPng) {
             // GD PNG "quality" is a 0-9 compression level (9 = smallest). Map from 0-100.
             $level = (int) round((100 - $quality) / 100 * 9);
             $level = max(0, min(9, $level));

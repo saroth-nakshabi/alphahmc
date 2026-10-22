@@ -41,24 +41,20 @@
         </script>
 
         <!-- BACKGROUND: Image Slider Layer -->
-        {{-- Each slide carries a desktop (1920px) and a phone (828px) file as CSS variables; home.css
-             picks one per viewport. Slides after the first load their image after the page load event. --}}
+        {{-- Each slide is a <picture> (phones 412/828, larger screens 1280/1920, WebP first; partials/hero-picture).
+             The first slide is the phone LCP; later slides get their sources after the page load event. --}}
         <div class="hero-bg-images" id="heroImageLayer">
             @if(isset($homeSliders) && count($homeSliders) > 0)
                 @foreach($homeSliders as $index => $slider)
-                    @php
-                        $slideLg = \App\Support\Img::thumb('uploads/slider_images/' . $slider->image, 1920);
-                        $slideSm = \App\Support\Img::thumb('uploads/slider_images/' . $slider->image, 828);
-                    @endphp
+                    @php $slidePic = \App\Support\Img::heroPicture('uploads/slider_images/' . $slider->image, 'front-new/assets/images/video-thumbnail.jpg'); @endphp
                     <div class="hero-bg-image-item {{ $index == 0 ? 'hero-img-active' : 'hero-bg-deferred' }}"
-                        style="--hero-lg: url('{{ $slideLg }}'); --hero-sm: url('{{ $slideSm }}');"
                         data-image-index="{{ $index }}">
+                        @include('front.partials.hero-picture', ['pic' => $slidePic, 'class' => 'hero-bg-image', 'deferred' => $index > 0])
                     </div>
                     @if($index === 0)
                         {{-- Each viewport preloads only its own file for the first slide --}}
                         @push('meta')
-                        <link rel="preload" as="image" href="{{ $slideSm }}" media="(max-width: 767px)" fetchpriority="high">
-                        <link rel="preload" as="image" href="{{ $slideLg }}" media="(min-width: 768px)" fetchpriority="high">
+                        @include('front.partials.hero-preload', ['pic' => $slidePic])
                         @endpush
                     @endif
                 @endforeach
@@ -72,7 +68,11 @@
                 document.getElementById('heroSection').classList.add('hero-phone');
             }
             window.addEventListener('load', function () {
-                document.querySelectorAll('.hero-bg-deferred').forEach(function (el) { el.classList.remove('hero-bg-deferred'); });
+                document.querySelectorAll('.hero-bg-deferred').forEach(function (el) {
+                    el.querySelectorAll('[data-srcset]').forEach(function (n) { n.srcset = n.dataset.srcset; n.removeAttribute('data-srcset'); });
+                    el.querySelectorAll('img[data-src]').forEach(function (n) { n.src = n.dataset.src; n.removeAttribute('data-src'); });
+                    el.classList.remove('hero-bg-deferred');
+                });
             });
         </script>
 
@@ -184,7 +184,7 @@
         </div>
     </section>
 
-    @include('front.partials.stylesheet', ['href' => asset('public/front/assets/css/home.css') . '?v=8', 'bundle' => 'home', 'criticalTemplate' => 'home'])
+    @include('front.partials.stylesheet', ['href' => asset('public/front/assets/css/home.css') . '?v=9', 'bundle' => 'home', 'criticalTemplate' => 'home'])
 
 
     <script>

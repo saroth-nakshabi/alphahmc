@@ -39,9 +39,6 @@
         .hero-bg-image-item {
             position: absolute;
             inset: 0;
-            background-image: var(--hero-lg);
-            background-size: cover;
-            background-position: center;
             opacity: 0;
             transform: scale(1.08);
             transition: opacity 1.5s ease-in-out, transform 8s ease;
@@ -52,16 +49,19 @@
             transform: scale(1);
         }
 
-        /* Slides after the first fetch their image only after the page load event */
-        .hero-bg-image-item.hero-bg-deferred {
-            background-image: none;
+        /* Slide image (partials/hero-picture), cropped like the old background. Slides after the first
+           get their sources only after the page load event (index-2). */
+        .hero-bg-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
         }
 
         @media (max-width: 767px) {
-            .hero-bg-image-item {
-                background-image: var(--hero-sm);
-            }
-
             /* Phones have no video, so the image/video toggle is hidden */
             .hero-phone .hero-mode-bar {
                 display: none;

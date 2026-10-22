@@ -1,9 +1,14 @@
-{{-- Hero LCP image for service, group and category pages. $hero = Img::hero(...) = [desktop, phone].
-     Each viewport preloads only its own file; on phones the media query swaps the background
-     to the small file (the inline style keeps the desktop URL), so only one image downloads. --}}
-@php [$heroLg, $heroSm] = $hero; @endphp
-<link rel="preload" as="image" href="{{ $heroSm }}" media="(max-width: 767px)" fetchpriority="high">
-<link rel="preload" as="image" href="{{ $heroLg }}" media="(min-width: 768px)" fetchpriority="high">
-@if($heroSm !== $heroLg)
-<style>@media (max-width: 767px) { .service-hero .hero-background { background-image: linear-gradient(to right, rgba(0, 0, 0, 25%), rgba(202, 202, 202, 0.163)), url('{{ $heroSm }}') !important; } }</style>
+{{-- Preload for the hero <picture> (partials/hero-picture): the same candidates the img will pick, one
+     link per viewport, so each viewport downloads exactly one hero file. $pic = Img::heroPicture(...). --}}
+@php
+    $heroPhone = $pic['phone']['webp'] !== '' ? $pic['phone']['webp'] : $pic['phone']['img'];
+    $heroDesk  = $pic['desktop']['webp'] !== '' ? $pic['desktop']['webp'] : $pic['desktop']['img'];
+@endphp
+@if($heroPhone !== '')
+<link rel="preload" as="image" @if($pic['phone']['webp'] !== '') type="image/webp" @endif imagesrcset="{{ $heroPhone }}" imagesizes="100vw" media="(max-width: 767px)" fetchpriority="high">
+@endif
+@if($heroDesk !== '')
+<link rel="preload" as="image" @if($pic['desktop']['webp'] !== '') type="image/webp" @endif imagesrcset="{{ $heroDesk }}" imagesizes="100vw" media="(min-width: 768px)" fetchpriority="high">
+@else
+<link rel="preload" as="image" href="{{ $pic['src'] }}" media="(min-width: 768px)" fetchpriority="high">
 @endif
