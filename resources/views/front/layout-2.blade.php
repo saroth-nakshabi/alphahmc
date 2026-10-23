@@ -1007,13 +1007,16 @@
     <script src="{{ asset('public/front/assets/js/layout/ui.js') }}?v=1"></script>
 
     {{-- Bootstrap, Swiper and AOS are self-hosted (byte-identical to jsDelivr: Bootstrap sha384 kenU1KFd...,
-         Swiper 11.2.10 = what swiper@11 resolved to, AOS 2.3.4), so pages no longer connect to cdn.jsdelivr.net. --}}
-    <script src="{{ asset('public/front/assets/vendor/bootstrap-5.2.3/bootstrap.bundle.min.js') }}?v=5.2.3"></script>
+         Swiper 11.2.10 = what swiper@11 resolved to, AOS 2.3.4), so pages no longer connect to cdn.jsdelivr.net.
+         They load with defer (run after parsing, in order, before DOMContentLoaded), so they never run
+         before the hero is painted; page scripts use them only in DOMContentLoaded / jQuery ready / event
+         handlers (checked on all sitemap pages, 2026-10-23). Keep it that way in new scripts. --}}
+    <script src="{{ asset('public/front/assets/vendor/bootstrap-5.2.3/bootstrap.bundle.min.js') }}?v=5.2.3" defer></script>
     <!-- Swiper JS (only on pages with a slider, see $needsSwiper) -->
     @if($needsSwiper)
-    <script src="{{ asset('public/front/assets/vendor/swiper-11.2.10/swiper-bundle.min.js') }}?v=11.2.10"></script>
+    <script src="{{ asset('public/front/assets/vendor/swiper-11.2.10/swiper-bundle.min.js') }}?v=11.2.10" defer></script>
 
-    <script src="{{ asset('public/front/assets/js/layout/swiper.js') }}?v=1"></script>
+    <script src="{{ asset('public/front/assets/js/layout/swiper.js') }}?v=1" defer></script>
     @else
     {{-- Safety net: a stray new Swiper() on a page without a slider must not stop its other scripts --}}
     <script>window.Swiper = window.Swiper || function () { var noop = new Proxy(function () {}, { get: function () { return noop; }, apply: function () { return noop; } }); return noop; };</script>
@@ -1025,13 +1028,10 @@
 
     <script></script>
 
-    <script src="{{ asset('public/front/assets/vendor/aos-2.3.4/aos.js') }}?v=2.3.4"></script>
-    <script>
-        AOS.init({
-            once: true, // Animation runs only once
-            mirror: false, // Prevents animation when scrolling back up
-        });
-    </script>
+    {{-- AOS.init runs as soon as the deferred aos.js has run (before DOMContentLoaded), so pages that call
+         AOS.init again with their own settings on DOMContentLoaded still override it, as before. --}}
+    <script src="{{ asset('public/front/assets/vendor/aos-2.3.4/aos.js') }}?v=2.3.4" defer
+        onload="AOS.init({ once: true, mirror: false })"></script>
 
     @stack('scripts')
     @yield('custom_js')
