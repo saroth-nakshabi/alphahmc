@@ -119,7 +119,7 @@ class Img
             // original without re-running GD on every page view.
             $skipAbs = $cacheAbs . '.skip';
             if (is_file($skipAbs)) {
-                return null;
+                return $format === null ? self::originalWithTwin($src, $cacheAbs, $cacheRel) : null;
             }
 
             $dir = dirname($cacheAbs);
@@ -138,8 +138,9 @@ class Img
             // (can happen re-encoding an already-optimised image with no downscale).
             if (@filesize($cacheAbs) >= @filesize($src)) {
                 @unlink($cacheAbs);
+                @unlink(preg_replace('/\.(jpe?g|png)$/i', '.webp', $cacheAbs));
                 @touch($skipAbs);
-                return null;
+                return $format === null ? self::originalWithTwin($src, $cacheAbs, $cacheRel) : null;
             }
 
             return asset('public/' . $cacheRel);
@@ -251,10 +252,70 @@ class Img
         } else {
             $ok = imagejpeg($canvas, $dest, $quality);
         }
+        if ($ok && $out !== 'webp') {
+            self::writeWebpTwin($canvas, $dest);
+        }
 
         imagedestroy($source);
         imagedestroy($canvas);
 
         return (bool) $ok && is_file($dest);
+    }
+
+    /**
+     * The original could not be made smaller as jpg/png, but WebP often can: keep a byte-identical copy of
+     * the original as the cache file and give it a WebP twin, so WebP browsers get the smaller file at the
+     * cache URL. Returns null (serve the original as before) when the twin would not be smaller.
+     */
+    private static function originalWithTwin(string $src, string $cacheAbs, string $cacheRel): ?string
+    {
+        if (!function_exists('imagewebp')) {
+            return null;
+        }
+        $twin = preg_replace('/\.(jpe?g|png)$/i', '.webp', $cacheAbs);
+        if (is_file($twin) && is_file($cacheAbs)) {
+            return asset('public/' . $cacheRel);
+        }
+        if (!@copy($src, $cacheAbs)) {
+            return null;
+        }
+        $img = @imagecreatefromstring((string) file_get_contents($src));
+        if ($img) {
+            self::writeWebpTwin($img, $cacheAbs);
+            imagedestroy($img);
+        }
+        if (!is_file($twin)) {
+            @unlink($cacheAbs);
+            return null;
+        }
+
+        return asset('public/' . $cacheRel);
+    }
+
+    /**
+     * WebP twin of a cached jpg/png derivative: uploads/cache/<hash>.webp next to <hash>.jpg. nginx serves
+     * it at the jpg/png URL to browsers that accept WebP (Vary: Accept), so no template changes are needed
+     * and CSS backgrounds benefit too. Kept only when smaller than the jpg/png.
+     */
+    public static function writeWebpTwin(\GdImage $canvas, string $dest, int $quality = 80): void
+    {
+        if (!function_exists('imagewebp')) {
+            return;
+        }
+        $twin = preg_replace('/\.(jpe?g|png)$/i', '.webp', $dest);
+        if ($twin === $dest || $twin === null) {
+            return;
+        }
+        try {
+            if (!imageistruecolor($canvas)) {
+                imagepalettetotruecolor($canvas);
+            }
+            imagesavealpha($canvas, true);
+            if (@imagewebp($canvas, $twin, $quality) && @filesize($twin) >= @filesize($dest)) {
+                @unlink($twin);
+            }
+        } catch (\Throwable $e) {
+            @unlink($twin);
+        }
     }
 }

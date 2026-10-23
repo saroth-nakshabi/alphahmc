@@ -354,15 +354,15 @@
     @endphp
     @if($needsSwiper)
     <link rel="preload" as="style"
-          href="{{ asset('public/front/assets/vendor/swiper-11.2.10/swiper-bundle.min.css') }}"
+          href="{{ asset('public/front/assets/vendor/swiper-11.2.10/swiper-bundle.min.css') }}?v=11.2.10"
           onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{{ asset('public/front/assets/vendor/swiper-11.2.10/swiper-bundle.min.css') }}"></noscript>
+    <noscript><link rel="stylesheet" href="{{ asset('public/front/assets/vendor/swiper-11.2.10/swiper-bundle.min.css') }}?v=11.2.10"></noscript>
     @endif
 
     <link rel="preload" as="style"
-          href="{{ asset('public/front/assets/vendor/aos-2.3.4/aos.css') }}"
+          href="{{ asset('public/front/assets/vendor/aos-2.3.4/aos.css') }}?v=2.3.4"
           onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{{ asset('public/front/assets/vendor/aos-2.3.4/aos.css') }}"></noscript>
+    <noscript><link rel="stylesheet" href="{{ asset('public/front/assets/vendor/aos-2.3.4/aos.css') }}?v=2.3.4"></noscript>
 
     @stack('meta_scripts')
 
@@ -990,7 +990,7 @@
 
     {{-- jQuery 3.6.0, self-hosted (byte-identical to code.jquery.com, sha256 /xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=),
          and the menu script. Kept synchronous and before every script that uses jQuery. --}}
-    <script src="{{ asset('public/front/assets/js/vendor/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('public/front/assets/js/vendor/jquery-3.6.0.min.js') }}?v=3.6.0"></script>
 
     <!-- JavaScript for Unified Menu (Fixed & Cleaned) -->
     <script>
@@ -1008,10 +1008,10 @@
 
     {{-- Bootstrap, Swiper and AOS are self-hosted (byte-identical to jsDelivr: Bootstrap sha384 kenU1KFd...,
          Swiper 11.2.10 = what swiper@11 resolved to, AOS 2.3.4), so pages no longer connect to cdn.jsdelivr.net. --}}
-    <script src="{{ asset('public/front/assets/vendor/bootstrap-5.2.3/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('public/front/assets/vendor/bootstrap-5.2.3/bootstrap.bundle.min.js') }}?v=5.2.3"></script>
     <!-- Swiper JS (only on pages with a slider, see $needsSwiper) -->
     @if($needsSwiper)
-    <script src="{{ asset('public/front/assets/vendor/swiper-11.2.10/swiper-bundle.min.js') }}"></script>
+    <script src="{{ asset('public/front/assets/vendor/swiper-11.2.10/swiper-bundle.min.js') }}?v=11.2.10"></script>
 
     <script src="{{ asset('public/front/assets/js/layout/swiper.js') }}?v=1"></script>
     @else
@@ -1025,7 +1025,7 @@
 
     <script></script>
 
-    <script src="{{ asset('public/front/assets/vendor/aos-2.3.4/aos.js') }}"></script>
+    <script src="{{ asset('public/front/assets/vendor/aos-2.3.4/aos.js') }}?v=2.3.4"></script>
     <script>
         AOS.init({
             once: true, // Animation runs only once
