@@ -79,7 +79,7 @@ server {
     }
     # Resized images: serve the WebP twin when the browser accepts WebP and the twin exists, else the
     # jpg/png itself. Vary: Accept keeps caches from mixing the two. Must stay above the generic image block.
-    location ~* ^/uploads/cache/(?<alphahmc_img>[a-f0-9]{32})\.(?:jpe?g|png)$ {
+    location ~* "^/uploads/cache/(?<alphahmc_img>[a-f0-9]{32})\.(?:jpe?g|png)$" {
         add_header Vary Accept;
         add_header Cache-Control $alphahmc_static_cache;
         try_files /uploads/cache/$alphahmc_img$alphahmc_webp_suffix $uri =404;
