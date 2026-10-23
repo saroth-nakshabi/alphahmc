@@ -1188,6 +1188,9 @@
 
     {{-- Reusable global inquiry modal: pages opt in via @push('inquiry_modal') --}}
     @stack('inquiry_modal')
+
+    {{-- Meta Pixel (was in Tag Manager; starts on the load event) --}}
+    @include('front.partials.meta-pixel')
 </body>
 
 <script>
