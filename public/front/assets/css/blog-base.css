@@ -73,7 +73,7 @@
 }
 
 .featured-title {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
     font-size: 2rem;
     color: #0f172a;
     font-weight: 800;

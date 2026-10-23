@@ -63,7 +63,7 @@
         }
 
         .service-banner .title {
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
             font-size: 5rem;
             font-weight: 800;
             color: var(--primary-navy);
@@ -73,7 +73,7 @@
         }
 
         .service-banner .hero-desc {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
             font-size: 1.25rem;
             line-height: 1.8;
             color: #1e3a8a;
@@ -150,7 +150,7 @@
         }
 
         .card-title-premium {
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
             font-size: 2.5rem;
             font-weight: 800;
             color: var(--primary-navy);
@@ -215,7 +215,7 @@
         }
 
         .sidebar-title-premium {
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
             font-size: 1.5rem;
             font-weight: 800;
             color: var(--primary-navy);
@@ -314,7 +314,6 @@
             .card-img-area { height: 260px; }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 @endSection
 
 @section('content')

@@ -8,7 +8,7 @@
     {{-- Bootstrap Icons: only this page and a few others use it, so the layout no longer loads it --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
-        body { font-family: 'Outfit', sans-serif; }
+        body { font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif; }
 
         /* Hero */
         .tawqeet-hero {
@@ -165,7 +165,7 @@
             border: 1.5px solid #d8e8ea;
             border-radius: 8px;
             padding: 12px 16px;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
             font-size: 0.95rem;
             transition: border-color .2s;
         }
@@ -178,7 +178,7 @@
             padding: 13px 32px;
             font-weight: 700;
             font-size: 1rem;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
             transition: opacity .2s;
         }
         .contact-card .btn-submit:hover { opacity: 0.9; }

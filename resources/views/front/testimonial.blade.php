@@ -15,7 +15,7 @@
     .testimonials-section {
     padding: 80px 20px;
     background: #f8fafc;
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', system-ui, sans-serif;
 }
 
 .testimonials-container {

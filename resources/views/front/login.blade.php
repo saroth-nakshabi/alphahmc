@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <style>
-        *, body { font-family: 'Outfit', sans-serif; }
+        *, body { font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif; }
         html, body { height: 100%; margin: 0; }
 
         .main-container {
@@ -104,7 +104,7 @@
             border: 1.5px solid #d6e8ea;
             border-radius: 10px;
             padding: 13px 16px;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
             font-size: 0.95rem;
             color: #0d2126;
             transition: border-color .2s, box-shadow .2s;
@@ -138,7 +138,7 @@
             padding: 14px;
             font-weight: 700;
             font-size: 1rem;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
             cursor: pointer;
             transition: opacity .2s, transform .15s;
         }

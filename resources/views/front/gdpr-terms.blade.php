@@ -22,7 +22,7 @@
         --bg: #f8fafc;
     }
 
-    body { font-family: 'Outfit', sans-serif; background: #fff; }
+    body { font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif; background: #fff; }
 
     /* ── HERO ───────────────────────────────────── */
     .gdpr-hero {
@@ -52,7 +52,7 @@
         margin-bottom: 22px;
     }
     .gdpr-hero h1 {
-        font-family: 'Libre Baskerville', serif;
+        font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
         font-size: clamp(2rem, 4.5vw, 3.4rem);
         color: #fff;
         font-weight: 700;
@@ -142,7 +142,7 @@
     }
 
     .gdpr-section h2 {
-        font-family: 'Libre Baskerville', serif;
+        font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
         font-size: clamp(1.4rem, 2.5vw, 1.9rem);
         color: var(--navy);
         font-weight: 700;
@@ -243,7 +243,7 @@
         text-align: center;
     }
     .gdpr-contact-box h3 {
-        font-family: 'Libre Baskerville', serif;
+        font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
         font-size: 1.8rem;
         font-weight: 700;
         margin-bottom: 12px;

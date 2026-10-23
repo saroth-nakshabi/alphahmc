@@ -298,7 +298,7 @@
             display: block;
             background: transparent;
             color: #00796b;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
             font-size: 1.1rem;
             font-weight: 700;
             text-transform: lowercase;

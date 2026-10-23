@@ -14,7 +14,7 @@
 .tp-section {
     padding: 56px 0;
     background: #f8f9fa;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
 }
 .tp-layout {
     display: flex;

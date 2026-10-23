@@ -24,10 +24,6 @@
 @section('meta_description', trim((string) $service->meta_description))
 @push('meta')
     <meta name="keywords" content="{{ $service->meta_keywords }}">
-    <link rel="preload" as="style"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-          onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
     {{-- Was preloading the original upload while the background used the 1600px thumb: two downloads. --}}
     @php
         $pic = \App\Support\Img::heroPicture(

@@ -88,7 +88,7 @@ box-shadow: 0 8px 30px rgba(30, 167, 161, 0.1);
 background: transparent;
 border: none;
 outline: none;
-font-family: 'Outfit', sans-serif;
+font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
 font-size: 15px;
 color: var(--alpha-dark);
 width: 100%;
@@ -121,7 +121,7 @@ padding: 0 32px;
 height: 46px;
 box-sizing: border-box;
 border-radius: 35px;
-font-family: 'Outfit', sans-serif;
+font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
 font-weight: 700;
 font-size: 13px;
 letter-spacing: 1.8px;
@@ -211,7 +211,7 @@ background: rgba(255, 255, 255, 0.2);
 overflow-y: auto;
 }
 .sidebar-menu-heading {
-font-family: 'Outfit', sans-serif;
+font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
 font-size: 13px;
 color: var(--alpha-teal);
 font-weight: 800;
@@ -227,7 +227,7 @@ margin-bottom: 5px;
 .service-content a {
 text-decoration: none;
 color: var(--alpha-dark);
-font-family: 'Outfit', sans-serif;
+font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
 padding: 12px 15px;
 transition: var(--transition-curve);
 display: flex;
@@ -266,14 +266,14 @@ border-bottom: none;
 }
 }
 #dynamic-heading {
-font-family: 'Outfit', sans-serif;
+font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
 color: var(--alpha-dark);
 font-weight: 600;
 margin-bottom: 5px;
 letter-spacing: -1px;
 }
 #dynamic-desc {
-font-family: 'Outfit', sans-serif;
+font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
 font-size: 17px;
 color: #57606a;
 max-width: 600px;
@@ -287,7 +287,7 @@ grid-template-columns: 300px 1fr;
 gap: 10px;
 }
 .categories_service h6 {
-font-family: 'Outfit', sans-serif;
+font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
 font-size: 14px;
 color: rgba(12, 47, 47, 0.4);
 margin-bottom: 20px;
@@ -296,7 +296,7 @@ letter-spacing: 1px;
 }
 .sub_categories a {
 color: var(--alpha-dark);
-font-family: 'Outfit', sans-serif;
+font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
 text-decoration: none;
 display: flex;
 align-items: center;
@@ -330,7 +330,7 @@ color: #57606a;
 text-decoration: none;
 display: flex;
 align-items: center;
-font-family: 'Outfit', sans-serif;
+font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
 font-size: 16px;
 font-weight: 500;
 margin-bottom: 15px;

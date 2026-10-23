@@ -8,7 +8,7 @@
     {{-- Bootstrap Icons: only this page and a few others use it, so the layout no longer loads it --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
-        body { font-family: 'Outfit', sans-serif; }
+        body { font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif; }
 
         /* Hero — full image banner */
         .haw-hero {

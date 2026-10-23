@@ -68,7 +68,6 @@
 
 @section('custom_css')
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;800&display=swap');
 
     :root {
         --primary-navy: #00233d;
@@ -78,7 +77,7 @@
         --text-main: #1a1a1a;
         --text-muted: #64748b;
         --font-serif: 'Playfair Display', serif;
-        --font-sans: 'Inter', sans-serif;
+        --font-sans: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
         --transition-smooth: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
     }
 

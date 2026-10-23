@@ -1,5 +1,5 @@
 * {
-font-family: 'Outfit', sans-serif;
+font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
 }
 .img-section {
 position: relative;

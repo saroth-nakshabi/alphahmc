@@ -64,7 +64,7 @@
         margin-bottom: 20px;
     }
     .brand-hero-name {
-        font-family: 'Libre Baskerville', serif;
+        font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
         font-size: clamp(2.4rem, 5vw, 4rem);
         font-weight: 700; color: #fff; line-height: 1.1;
         margin-bottom: 22px; letter-spacing: -0.02em;
@@ -118,7 +118,7 @@
         padding: 5px 14px; border-radius: 100px; margin-bottom: 16px;
     }
     .bd-heading {
-        font-family: 'Libre Baskerville', serif;
+        font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
         font-size: clamp(1.8rem, 3vw, 2.6rem);
         font-weight: 700; color: var(--navy); line-height: 1.2; margin-bottom: 0;
     }
@@ -129,7 +129,7 @@
     .bd-body ul { padding-left: 20px; }
     .bd-body li { margin-bottom: 8px; }
     .bd-body h1, .bd-body h2, .bd-body h3 {
-        font-family: 'Libre Baskerville', serif;
+        font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
         color: var(--navy); margin-bottom: 12px;
     }
 
@@ -202,7 +202,7 @@
         position: sticky; top: 100px;
     }
     .location-info-panel h3 {
-        font-family: 'Libre Baskerville', serif;
+        font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
         font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 28px;
     }
     .location-detail-row {
@@ -250,7 +250,7 @@
         border-radius: 100px; border: 1px solid rgba(102,217,232,0.2); margin-bottom: 22px;
     }
     .brand-cta h2 {
-        font-family: 'Libre Baskerville', serif;
+        font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
         font-size: clamp(1.8rem, 3.5vw, 2.6rem);
         color: #fff; font-weight: 700; line-height: 1.25; margin-bottom: 18px;
     }

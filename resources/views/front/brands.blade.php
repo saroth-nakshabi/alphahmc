@@ -3,10 +3,6 @@
 @push('page_title', 'Alpha Health Group Branches | Our Business Portfolio')
 
 @push('meta')
-    <link rel="preload" as="style"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-          onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
 @endpush
 
 @section('content')
@@ -21,7 +17,7 @@
         --soft:   #f8fafc;
     }
 
-    .brands-page { background: #fff; overflow-x: hidden; font-family: 'Inter', sans-serif; }
+    .brands-page { background: #fff; overflow-x: hidden; font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif; }
 
     /* ── HERO ───────────────────────────────────────────── */
     .brands-hero {
@@ -66,7 +62,7 @@
         display: inline-block; width: 32px; height: 1px; background: var(--teal2);
     }
     .brands-hero h1 {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
         font-size: clamp(3.2rem, 8vw, 5.2rem);
         font-weight: 600; color: #fff; line-height: 1.05;
         letter-spacing: -0.03em; margin-bottom: 24px; max-width: 820px;
@@ -114,7 +110,7 @@
         border-bottom: 1px solid var(--border);
     }
     .brands-intro-left h2 {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
         font-size: clamp(1.6rem, 3vw, 2.4rem);
         color: var(--navy); font-weight: 600; line-height: 1.2;
         letter-spacing: -0.02em; margin-bottom: 12px;
@@ -126,7 +122,7 @@
         display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; gap: 4px;
     }
     .brands-count-badge .big-num {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
         font-size: 3.6rem; font-weight: 700; color: var(--teal); line-height: 1;
         letter-spacing: -0.03em;
     }
@@ -205,7 +201,7 @@
     }
     .bc-location i { font-size: 0.65rem; }
     .bc-name {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
         font-size: 1.45rem; font-weight: 600;
         color: var(--navy); line-height: 1.2; margin: 0;
         letter-spacing: -0.02em;
@@ -279,7 +275,7 @@
         padding: 5px 16px; border-radius: 100px; margin-bottom: 22px;
     }
     .brands-cta h2 {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
         font-size: clamp(1.8rem, 3.5vw, 2.8rem);
         color: #fff; font-weight: 600; line-height: 1.2;
         letter-spacing: -0.02em; margin-bottom: 18px;

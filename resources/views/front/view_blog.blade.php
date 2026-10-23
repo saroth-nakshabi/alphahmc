@@ -43,8 +43,8 @@
         --primary-navy: #003358;
         --accent-teal: #1ea7a1;
         --accent-red: #e50303;
-        --font-serif: 'Libre Baskerville', serif;
-        --font-sans: 'Inter', sans-serif;
+        --font-serif: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
+        --font-sans: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
         --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 

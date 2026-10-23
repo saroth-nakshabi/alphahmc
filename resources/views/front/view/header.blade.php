@@ -147,7 +147,7 @@
           cursor: pointer;
           font-size: 14px;
           font-weight: 600;
-          font-family: 'Outfit', sans-serif;
+          font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
           line-height: 1.4;
           color: white;
           background-color: #066D77;

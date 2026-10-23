@@ -11,7 +11,7 @@
    ============================================ */
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
-    font-family: 'Libre Baskerville', serif !important;
+    font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif !important;
 }
 h1, .h1 { font-weight: 500 !important; }
 
@@ -439,7 +439,7 @@ h1, .h1 { font-weight: 500 !important; }
     color: var(--alpha-teal) !important;
     border: 1.5px solid var(--alpha-teal);
     border-radius: 30px;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
     font-weight: 600;
     font-size: 0.82rem;
     letter-spacing: 0.2px;
@@ -590,7 +590,7 @@ h1, .h1 { font-weight: 500 !important; }
 
         /* Mission Statement */
         .mission-statement h3 {
-            font-family: 'Outfit', sans-serif !important;
+            font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif !important;
             font-size: 18px !important;
             font-weight: 600 !important;
             margin-bottom: 25px;
@@ -624,7 +624,7 @@ h1, .h1 { font-weight: 500 !important; }
         }
 
         .links-column h4 {
-            font-family: 'Outfit', sans-serif !important;
+            font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif !important;
             font-size: 18px !important;
             font-weight: 600 !important;
             margin-bottom: 20px;

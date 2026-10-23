@@ -44,16 +44,16 @@
         }
         .hero-content-container { position:relative; z-index:2; width:100%; }
         .hero-premium-v2 .display-large {
-            font-family: 'Libre Baskerville', serif;
+            font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
             font-size: 4rem; color:#fff!important; line-height:1.1; margin-bottom:30px; font-weight:700;
         }
         .display-large {
-            font-family: 'Libre Baskerville', serif;
+            font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
             font-size: clamp(2.5rem, 5vw, 4.5rem);
             font-weight: 700; line-height: 1.1; letter-spacing: -0.02em;
         }
         .hero-desc {
-            max-width:700px; font-family:'Outfit',sans-serif;
+            max-width:700px; font-family:'Outfit', 'Outfit Fallback', 'Outfit Fallback Android',sans-serif;
             font-size:1.25rem; line-height:1.6; font-weight:300;
             letter-spacing:0.5px; color:rgba(255,255,255,0.9)!important;
         }
@@ -129,7 +129,7 @@
         .about-stats-strip.is-counting .stat-block:nth-child(8) { transition-delay: .49s; }
         .stat-num {
             display: block;
-            font-family: 'Libre Baskerville', serif;
+            font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
             font-size: 2.2rem; font-weight: 700;
             color: var(--teal); line-height: 1; margin-bottom: 8px;
             white-space: nowrap;
@@ -186,7 +186,7 @@
             border-radius: 100px; margin-bottom: 18px;
         }
         .story-heading {
-            font-family: 'Libre Baskerville', serif;
+            font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
             font-size: 2rem; font-weight: 700; color: var(--navy);
             line-height: 1.25; margin-bottom: 18px;
         }
@@ -216,12 +216,12 @@
         }
         .quote-block { max-width: 860px; margin: 0 auto; text-align: center; padding: 0 20px; }
         .quote-mark {
-            font-family: 'Libre Baskerville', serif;
+            font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
             font-size: 7rem; line-height: 0.5;
             color: rgba(6,109,119,0.12); margin-bottom: 28px; display: block;
         }
         .quote-text {
-            font-family: 'Libre Baskerville', serif;
+            font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
             font-size: clamp(1.35rem, 2.4vw, 1.9rem);
             color: var(--navy); line-height: 1.55; font-weight: 400; font-style: italic;
             margin: 0 0 40px; border: none; padding: 0;
@@ -245,7 +245,7 @@
             border-radius: 100px; margin-bottom: 14px;
         }
         .eco-title {
-            font-family: 'Libre Baskerville', serif;
+            font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
             font-size: clamp(2rem, 3.5vw, 2.8rem);
             color: var(--navy); font-weight: 700; line-height: 1.2;
         }
@@ -268,7 +268,7 @@
         .eco-card:hover { background: var(--soft-bg); }
         .eco-card:hover::after { transform: scaleX(1); }
         .eco-num {
-            display: block; font-family: 'Libre Baskerville', serif;
+            display: block; font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
             font-size: 0.75rem; font-weight: 700; color: var(--teal);
             letter-spacing: 2px; margin-bottom: 14px;
         }
@@ -308,7 +308,7 @@
             border: 1px solid rgba(102,217,232,0.2);
         }
         .portfolio-title {
-            font-family: 'Libre Baskerville', serif;
+            font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
             font-size: clamp(2rem, 3.5vw, 2.8rem);
             color: #ffffff; font-weight: 700; line-height: 1.2;
         }
@@ -389,7 +389,7 @@
             border-radius: 100px; margin-bottom: 12px;
         }
         .partners-title {
-            font-family: 'Libre Baskerville', serif;
+            font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
             font-size: clamp(1.5rem, 3vw, 2.1rem);
             color: var(--navy); font-weight: 700;
         }
@@ -483,7 +483,7 @@
             border: 1px solid rgba(102,217,232,0.2);
         }
         .cta-heading {
-            font-family: 'Libre Baskerville', serif;
+            font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
             font-size: clamp(2rem, 4vw, 3rem);
             color: #fff; font-weight: 700; line-height: 1.2; margin-bottom: 22px;
         }
@@ -611,7 +611,7 @@
                 .team-header { text-align: center; max-width: 820px; margin: 0 auto 40px; }
                 .team-tag { display:inline-block; text-transform:uppercase; letter-spacing:2px; font-size:.72rem;
                     font-weight:700; color:#009095; margin-bottom:10px; }
-                .team-title { font-family:'Libre Baskerville', serif; font-size:2rem; color:#16242a; margin:0 0 16px; line-height:1.25; }
+                .team-title { font-family:'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif; font-size:2rem; color:#16242a; margin:0 0 16px; line-height:1.25; }
                 .team-intro { color:#5b6b72; font-size:.98rem; line-height:1.7; }
                 .teamSwiper { padding: 8px 4px 56px; }
                 .team-card {

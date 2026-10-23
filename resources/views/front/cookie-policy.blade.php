@@ -22,7 +22,7 @@
         --bg: #f8fafc;
         --border: #e2e8f0;
     }
-    body { font-family: 'Outfit', sans-serif; background: #fff; }
+    body { font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif; background: #fff; }
 
     /* HERO */
     .cookie-hero {
@@ -52,7 +52,7 @@
         margin-bottom: 22px;
     }
     .cookie-hero h1 {
-        font-family: 'Libre Baskerville', serif;
+        font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
         font-size: clamp(2rem, 4.5vw, 3.4rem);
         color: #fff;
         font-weight: 700;
@@ -130,7 +130,7 @@
         margin-bottom: 14px;
     }
     .cookie-section h2 {
-        font-family: 'Libre Baskerville', serif;
+        font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
         font-size: clamp(1.35rem, 2.5vw, 1.85rem);
         color: var(--navy);
         font-weight: 700;
@@ -275,7 +275,7 @@
         text-align: center;
     }
     .cookie-cta-box h3 {
-        font-family: 'Libre Baskerville', serif;
+        font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
         font-size: 1.75rem;
         font-weight: 700;
         margin-bottom: 12px;

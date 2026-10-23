@@ -184,7 +184,7 @@
         </div>
     </section>
 
-    @include('front.partials.stylesheet', ['href' => asset('public/front/assets/css/home.css') . '?v=9', 'bundle' => 'home', 'criticalTemplate' => 'home'])
+    @include('front.partials.stylesheet', ['href' => asset('public/front/assets/css/home.css') . '?v=10', 'bundle' => 'home', 'criticalTemplate' => 'home'])
 
 
     <script>
@@ -566,9 +566,6 @@
 
     {{-- Clients carousel moved into the "Our Clients" section above the announcements --}}
     <!-- Careers/About Section -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Playfair+Display:wght@400;500;600&display=swap"
-        rel="stylesheet">
     
 
 
@@ -934,7 +931,7 @@
     }
 
     .ann-split-title {
-        font-family: 'Libre Baskerville', serif;
+        font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
         font-size: clamp(2rem, 5vw, 4.5rem);
         color: #fff;
         line-height: 1.1;
@@ -948,7 +945,7 @@
         color: rgba(255, 255, 255, 0.7);
         line-height: 1.6;
         margin-bottom: 45px;
-        font-family: 'Outfit', sans-serif;
+        font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
         font-weight: 400;
     }
 

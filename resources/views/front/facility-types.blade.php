@@ -2,7 +2,7 @@
 
 @section('content')
 <style>
-    .ft-page { background: #f8fafc; padding: 56px 0 84px; font-family: 'Outfit', sans-serif; }
+    .ft-page { background: #f8fafc; padding: 56px 0 84px; font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif; }
     .ft-section { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
     .ft-section + .ft-section { margin-top: 54px; }
     .ft-section-head { margin-bottom: 22px; border-bottom: 1px solid #e7ebee; padding-bottom: 16px; }
@@ -12,7 +12,7 @@
         color: #066D77; margin-bottom: 8px;
     }
     .ft-section-title {
-        font-family: 'Libre Baskerville', Georgia, serif;
+        font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', Georgia, serif;
         font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; color: #0B1F3A; margin: 0; line-height: 1.2;
     }
     .ft-section-count { font-size: 0.85rem; color: #6b7a82; margin-top: 6px; }

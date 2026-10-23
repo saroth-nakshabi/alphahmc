@@ -111,7 +111,7 @@
   background: transparent;
   border: none;
   outline: none;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
   font-size: 15px;
   color: var(--alpha-dark);
   width: 100%;
@@ -151,7 +151,7 @@
   height: 46px;            /* match Search & Contact buttons */
   box-sizing: border-box;
   border-radius: 35px;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
   font-weight: 700;
   font-size: 13px;
   letter-spacing: 1.8px;
@@ -270,7 +270,7 @@
 }
 
 .sidebar-menu-heading {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
   font-size: 13px;
   color: var(--alpha-teal);
   font-weight: 800;
@@ -290,7 +290,7 @@
 .service-content a {
   text-decoration: none;
   color: var(--alpha-dark);
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
   /* font-size: 17px; */
   /* font-weight: 600; */
   padding: 12px 15px;
@@ -348,7 +348,7 @@
 
 /* Right Detail Area Typography */
 #dynamic-heading {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
   color: var(--alpha-dark);
   font-weight: 600;
   margin-bottom: 5px;
@@ -356,7 +356,7 @@
 }
 
 #dynamic-desc {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
   font-size: 17px;
   color: #57606a;
   max-width: 600px;
@@ -374,7 +374,7 @@
 
 /* Sub-column header style */
 .categories_service h6 {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
   font-size: 14px;
   color: rgba(12, 47, 47, 0.4);
   margin-bottom: 20px;
@@ -384,7 +384,7 @@
 
 .sub_categories a {
   color: var(--alpha-dark);
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -424,7 +424,7 @@
   text-decoration: none;
   display: flex;
   align-items: center;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
   font-size: 16px;
   font-weight: 500;
   margin-bottom: 15px;

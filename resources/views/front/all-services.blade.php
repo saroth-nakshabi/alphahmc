@@ -28,7 +28,7 @@ body {
 }
 
 .as-page {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
     color: var(--as-navy);
 }
 
@@ -51,7 +51,7 @@ body {
 }
 
 .as-hero__title {
-    font-family: 'Libre Baskerville', serif;
+    font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
     font-size: clamp(2.5rem, 5vw, 4rem);
     font-weight: 700;
     margin-bottom: 24px;
@@ -206,7 +206,7 @@ body {
 }
 
 .as-cat-title {
-    font-family: 'Libre Baskerville', serif;
+    font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
     font-size: 1.8rem;
     font-weight: 700;
     display: flex;

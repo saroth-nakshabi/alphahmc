@@ -47,14 +47,14 @@
     .apc-dot { width: 7px; height: 7px; border-radius: 50%; background: #1ea7a1; position: relative; }
     .apc-dot::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 1px solid #1ea7a1; opacity: .4; animation: apcPulse 2.2s ease-out infinite; }
     @keyframes apcPulse { 0% { transform: scale(.6); opacity: .6; } 100% { transform: scale(1.7); opacity: 0; } }
-    .apc-title { font-family: 'Outfit', sans-serif; font-weight: 700; letter-spacing: -.02em; line-height: 1.08;
+    .apc-title { font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif; font-weight: 700; letter-spacing: -.02em; line-height: 1.08;
         font-size: clamp(1.7rem, 3.6vw, 2.7rem); margin: 0 0 14px; }
     .apc-sub { font-size: clamp(.98rem, 1.3vw, 1.08rem); line-height: 1.6; margin: 0 0 26px; max-width: 560px; }
     .apc--ink .apc-sub { color: rgba(255,255,255,.66); }
     .apc--light .apc-sub { color: #5b6b73; }
     .apc-actions { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
     .apc-btn {
-        display: inline-flex; align-items: center; gap: 11px; font-family: 'Outfit', sans-serif; font-weight: 600;
+        display: inline-flex; align-items: center; gap: 11px; font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif; font-weight: 600;
         font-size: 1rem; padding: 16px 34px; border-radius: 100px; text-decoration: none;
         transition: transform .2s cubic-bezier(.16,1,.3,1), background-color .2s ease, color .2s ease;
     }

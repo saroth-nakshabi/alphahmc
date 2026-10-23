@@ -12,9 +12,6 @@
 @section('meta_description', \Illuminate\Support\Str::limit(trim(strip_tags($project->description ?? '')), 160))
 
 @section('custom_css')
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
 /* ─── DESIGN TOKENS ────────────────────────────────────────────────── */
@@ -63,7 +60,7 @@
 .pdl *, .pdl *::before, .pdl *::after { box-sizing: border-box; }
 
 .pdl {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-weight: 400;
   background: var(--bg);
   color: var(--slate);
@@ -75,7 +72,7 @@
 }
 
 .pdl h1, .pdl h2, .pdl h3, .pdl h4 {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-weight: 700;
   line-height: 1.08;
   color: var(--slate);
@@ -124,7 +121,7 @@
   animation: expandLine 0.6s var(--ease-expo) 0.4s both;
 }
 .pdl-eyebrow__text {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.68rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -480,7 +477,7 @@
 
 .pdl-readmore {
   background: none; border: none;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.65rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -510,7 +507,7 @@
   gap: 9px;
   padding: 14px 28px;
   border-radius: var(--r-sm);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.68rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -582,7 +579,7 @@
 
 .pdl-hero__meta-item {}
 .pdl-meta-lbl {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.6rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -680,7 +677,7 @@
 .pdl-stat-row:hover .pdl-stat-row__icon { transform: scale(1.1) rotate(-5deg); }
 
 .pdl-stat-row__label {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.6rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -700,7 +697,7 @@
 .pdl-svc-block__lbl {
   font-size: 1.35rem;
   font-weight: 800;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
   letter-spacing: -0.3px;
   color: var(--ink, #0f172a);
   margin-bottom: 18px;
@@ -782,7 +779,7 @@
 }
 
 .pdl-feat__num {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.62rem;
   letter-spacing: 0.2em;
   color: var(--ghost);
@@ -822,7 +819,7 @@
 }
 
 .pdl-tech__lbl {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.62rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -868,7 +865,7 @@
 }
 
 .pdl-tech__name {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.58rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -908,7 +905,7 @@
   background: transparent;
   border: none;
   color: var(--muted);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.63rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -979,7 +976,7 @@
   padding: 4px 12px;
   border-radius: 4px;
   background: rgba(255,255,255,0.9);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.58rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1026,7 +1023,7 @@
 }
 .pdl-doc-thumb i { color: var(--cr); opacity: 0.5; width: 64px; height: 64px; }
 .pdl-doc-thumb span {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.6rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -1078,7 +1075,7 @@
   gap: 7px;
   padding: 5px 14px;
   border-radius: 4px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.6rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -1275,7 +1272,7 @@
 .pdl-rstat:hover { background: var(--slate-2); }
 
 .pdl-rstat__num {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 4.5rem;
   font-weight: 700;
   letter-spacing: -0.04em;
@@ -1286,7 +1283,7 @@
 }
 
 .pdl-rstat__lbl {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.62rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1346,7 +1343,7 @@
 }
 
 .pdl-rcard__cat {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.58rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1355,7 +1352,7 @@
 }
 
 .pdl-rcard__name {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 1.25rem;
   color: #fff;
   line-height: 1.2;
@@ -1400,7 +1397,7 @@
 }
 
 .pdl-modal .modal-title {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 1.4rem;
   color: var(--slate);
   font-weight: 700;
@@ -1450,7 +1447,7 @@
 .pdl-pdf-loading .spinner-border { color: var(--cr) !important; }
 
 .pdl-pdf-loading p {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.65rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1466,7 +1463,7 @@
   border: 1px solid var(--border-md);
   border-radius: var(--r-sm);
   color: var(--slate-3);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.62rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1480,7 +1477,7 @@
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 100px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.68rem;
   color: var(--muted);
 }
@@ -1567,7 +1564,7 @@
 }
 .pdl-details-modal .modal-title {
   color: #fff;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 1.4rem;
   font-weight: 700;
 }
@@ -1583,7 +1580,7 @@
   border-radius: 100px;
   background: var(--cr-mid);
   color: var(--cr);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.63rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1616,7 +1613,7 @@
   flex-shrink: 0;
 }
 .pdl-dm-item__lbl {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.58rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1644,7 +1641,7 @@
   margin-bottom: 12px;
 }
 .pdl-dm-full__lbl {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-size: 0.58rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;

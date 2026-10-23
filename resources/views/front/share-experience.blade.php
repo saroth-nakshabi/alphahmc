@@ -6,7 +6,7 @@
 @section('content')
 <style>
     :root { --teal: #066D77; --navy: #0f172a; --star: #FBBC04; --border: #e8eaed; }
-    .feedback-page { font-family: 'Inter', sans-serif; background: #f8f9fa; min-height: 100vh; }
+    .feedback-page { font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif; background: #f8f9fa; min-height: 100vh; }
 
     .feedback-hero {
         background: var(--navy); padding: 160px 0 72px; margin-top: -120px; position: relative; overflow: hidden;
@@ -37,7 +37,7 @@
         width: 100%; padding: 12px 16px; border: 1px solid var(--border);
         border-radius: 8px; font-size: 0.92rem; color: #202124;
         outline: none; transition: border-color 0.2s ease;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
     }
     .fb-input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(6,109,119,0.1); }
     .fb-input.is-error { border-color: #ea4335; }
@@ -58,7 +58,7 @@
         width: 100%; padding: 15px; background: var(--teal); color: #fff;
         border: none; border-radius: 100px; font-size: 0.95rem; font-weight: 600;
         cursor: pointer; transition: background 0.25s ease, transform 0.2s ease;
-        font-family: 'Inter', sans-serif; margin-top: 8px;
+        font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif; margin-top: 8px;
     }
     .fb-submit:hover { background: #088a95; transform: translateY(-1px); }
     .fb-submit:disabled { opacity: 0.6; cursor: not-allowed; }

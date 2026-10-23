@@ -11,7 +11,7 @@
     --ava-white:     #ffffff;
     --ava-shadow:    0 20px 60px rgba(6,109,119,.22), 0 4px 20px rgba(0,0,0,.10);
     --ava-radius:    20px;
-    --ava-font:      'Outfit', sans-serif;
+    --ava-font:      'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
 }
 
 /* ----- Widget root ----- */

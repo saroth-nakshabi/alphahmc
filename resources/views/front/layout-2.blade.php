@@ -326,19 +326,11 @@
 
 
 
-    <!-- Preconnect & DNS prefetch for external origins -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- DNS prefetch for external origins -->
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
-    <!-- Fonts — non-render-blocking, reduced weights (300/500/700 dropped — not used in critical path) -->
-    <link rel="preload" as="style"
-          href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
-          onload="this.onload=null;this.rel='stylesheet'">
-    <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap">
-    </noscript>
+    @include('front.partials.fonts')
 
     {{-- Bootstrap 5.2.3 (unused rules removed) + style.min.css + slide-menu.min.css as one file
          (scripts/css/build.mjs). Templates with @section('critical', ...) inline their first-screen
@@ -387,7 +379,7 @@
         @endif
     @endforeach
 
-    @include('front.partials.stylesheet', ['href' => asset('public/front/assets/css/front-global.min.css') . '?v=12', 'bundle' => 'front-global'])
+    @include('front.partials.stylesheet', ['href' => asset('public/front/assets/css/front-global.min.css') . '?v=13', 'bundle' => 'front-global'])
 
 {{-- Consent update functions (called by banner buttons) --}}
     <script>

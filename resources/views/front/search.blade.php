@@ -10,7 +10,7 @@
 
     {{-- Header --}}
     <div style="margin-bottom: 40px;">
-        <h2 style="font-family: 'Outfit', sans-serif; font-size: 2rem; color: #1e293b; margin-bottom: 8px;">
+        <h2 style="font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif; font-size: 2rem; color: #1e293b; margin-bottom: 8px;">
             Search Results
         </h2>
 
@@ -56,7 +56,7 @@
                style="display: inline-block; margin-top: 24px; padding: 12px 28px;
                       background: linear-gradient(135deg, #009095, #0056a6);
                       color: #fff; border-radius: 8px; text-decoration: none;
-                      font-family: 'Outfit', sans-serif;">
+                      font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;">
                 Browse All Services
             </a>
         </div>
@@ -110,7 +110,7 @@
 
                         {{-- Title --}}
                         <h4 style="
-                            font-family: 'Outfit', sans-serif;
+                            font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
                             font-size: 1.05rem;
                             font-weight: 600;
                             color: #1e293b;

@@ -7,7 +7,7 @@
 .service-page-wrapper {
             background-color: var(--white);
             color: var(--text-body);
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
             line-height: 1.7;
             /* clip (not hidden) prevents a horizontal scrollbar WITHOUT turning the
                wrapper into a vertical scroll container — fixes intermittent mobile
@@ -255,7 +255,7 @@
             /* Thin weight for EY style */
             margin-bottom: 60px;
             color: #2e2e2e;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
         }
 
 .help-text-block h4 {
@@ -516,7 +516,7 @@
 .ey-section-title {
             font-size: 3rem;
             font-weight: 800;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
             color: #1a1a1a;
             margin-bottom: 50px;
             letter-spacing: -0.03em;
@@ -848,7 +848,7 @@
         }
 
 .mag-card .mag-desc {
-            font-family: 'Libre Baskerville', serif;
+            font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
             font-size: 1.1rem;
             line-height: 1.9;
             color: #444444;

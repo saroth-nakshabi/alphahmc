@@ -208,7 +208,7 @@
         letter-spacing: 1.4px; color: #066D77; background: rgba(6,109,119,.08);
         padding: 3px 12px; border-radius: 100px; margin-bottom: 8px;
     }
-    .ahg-im-title { font-family: 'Libre Baskerville', serif; font-size: 1.4rem; color: #14252a; margin: 0 0 4px; }
+    .ahg-im-title { font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif; font-size: 1.4rem; color: #14252a; margin: 0 0 4px; }
     .ahg-im-sub { font-size: .84rem; color: #5b6b73; line-height: 1.5; margin: 0; }
 
     /* ── Form grid ── */
@@ -292,7 +292,7 @@
         display: flex; align-items: center; justify-content: center;
         margin: 0 auto 16px; color: #1a8a4a;
     }
-    .ahg-im-thanks-title { font-family: 'Libre Baskerville', serif; font-size: 1.4rem; color: #14252a; margin: 0 0 8px; }
+    .ahg-im-thanks-title { font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif; font-size: 1.4rem; color: #14252a; margin: 0 0 8px; }
     .ahg-im-thanks-msg { font-size: .86rem; color: #5b6b73; margin: 0 0 22px; line-height: 1.6; }
     .ahg-wa-big-btn {
         display: inline-flex; align-items: center; gap: 9px;

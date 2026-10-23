@@ -34,10 +34,6 @@
 @endif
 @push('meta')
     @if(!empty($service->meta_keywords))<meta name="keywords" content="{{ $service->meta_keywords }}">@endif
-    <link rel="preload" as="style"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-          onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
     @include('front.partials.hero-preload', ['pic' => $pic])
 @endpush
 @push('og_tags')

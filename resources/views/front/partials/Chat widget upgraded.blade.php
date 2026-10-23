@@ -138,7 +138,7 @@
         bottom: max(30px, env(safe-area-inset-bottom, 30px));
         right:   max(30px, env(safe-area-inset-right,  30px));
         z-index: 999999;
-        font-family: 'Outfit', sans-serif;
+        font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
     }
 
     .wa-chat-btn {

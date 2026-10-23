@@ -701,7 +701,7 @@ Header CSS
   color: #ffffff;
   margin-left: 8px;
   font-size: 15px;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
   border: none;
   width: auto;
   height: auto;
@@ -750,7 +750,7 @@ Header CSS
 .header-area .header-info li {
   font-size: 14px;
   font-weight: 600;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
   padding-left: 15px;
   padding-right: 6px;
   color: #ffffff;
@@ -806,7 +806,7 @@ Header CSS
 .navbar-right-side h5 {
   display: inline-block;
   font-size: 17px;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
   margin: 0 25px;
   color: #3c3232;
 }
@@ -832,7 +832,7 @@ Header CSS
   color: #ffffff;
   font-size: 14px;
   font-weight: 400;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
 }
 
 .header-area .header-info li a:hover {
@@ -862,11 +862,11 @@ Navbar CSS
 .navbar-nav .nav-link,
 .navbar .dropdown-menu h5,
 .navbar .dropdown-menu h6 {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
 }
 .navbar-light .dropdown-menu .navbar-nav .nav-link {
     color: rgb(255, 255, 255);
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
 }
 .navbar-light.is-sticky {
   position: fixed;
@@ -1664,7 +1664,7 @@ Features CSS
   margin-bottom: 20px;
 }
 .dropdown-item {
-    font-family: 'Outfit', sans-serif !important;
+    font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif !important;
     font-size: 13px;
     letter-spacing: .25px;
     font-weight: 400;
@@ -1685,7 +1685,7 @@ Features CSS
 {
     padding: 6px 14px 6px 14px;
     color: bisque;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
@@ -6356,7 +6356,7 @@ width: 70%;
     border-bottom: 4px solid !important;
     font-size: 20px;
     font-weight: bold;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
 }
 #tabs .nav-tabs .nav-link {
     border: 1px solid transparent;
@@ -6364,7 +6364,7 @@ width: 70%;
     border-top-right-radius: .25rem;
     color: #eee;
     font-size: 20px;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
 }
 
 #tabs2{
@@ -6388,7 +6388,7 @@ width: 70%;
     border-bottom: 4px solid !important;
     font-size: 16px;
     font-weight: bold;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
 }
 #tabs2 .nav-tabs .nav-link {
     border: 1px solid transparent;
@@ -6396,7 +6396,7 @@ width: 70%;
     border-top-right-radius: .25rem;
     color: #066d77;
     padding: 20px;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
 }
 
 .spah5{

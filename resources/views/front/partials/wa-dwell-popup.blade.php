@@ -60,7 +60,7 @@
         background: #25D366; display: flex; align-items: center; justify-content: center;
     }
     .ahg-wa-dwell-text {
-        font-family: 'Outfit', 'Inter', sans-serif; font-size: 0.84rem;
+        font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif; font-size: 0.84rem;
         line-height: 1.4; color: #14252a;
     }
     .ahg-wa-dwell-text strong { display: block; font-size: 0.88rem; }

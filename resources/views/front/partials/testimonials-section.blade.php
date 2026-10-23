@@ -1,5 +1,5 @@
 <style>
-.inline-reviews { padding: 80px 0; background: #f8f9fa; font-family: 'Inter', sans-serif; }
+.inline-reviews { padding: 80px 0; background: #f8f9fa; font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif; }
 .inline-reviews-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 36px; flex-wrap: wrap; gap: 16px; }
 .inline-reviews-header h2 { font-size: 1.6rem; font-weight: 600; color: #0f172a; margin: 0; letter-spacing: -0.02em; }
 .ir-summary { display: flex; align-items: center; gap: 12px; }

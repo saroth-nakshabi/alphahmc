@@ -1,6 +1,6 @@
 {{-- Shared styles for the 404 and 410 pages (the watermark number comes from --error-mark) --}}
     <style>
-        body { font-family: 'Outfit', sans-serif; }
+        body { font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif; }
 
         .error-section {
             min-height: 80vh;
@@ -97,7 +97,7 @@
             padding: 14px 28px;
             font-weight: 700;
             font-size: 0.97rem;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
             text-decoration: none;
             transition: opacity .2s, transform .15s;
             box-shadow: 0 6px 20px rgba(6,109,119,0.2);
@@ -120,7 +120,7 @@
             padding: 13px 28px;
             font-weight: 700;
             font-size: 0.97rem;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
             text-decoration: none;
             transition: background .2s, color .2s, transform .15s;
         }

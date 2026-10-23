@@ -24,7 +24,7 @@
         --ease:   cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    body { font-family: 'Outfit', sans-serif; background: #fff; }
+    body { font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif; background: #fff; }
 
     /* ── HERO ──────────────────────────────────────────── */
     .cl-hero {
@@ -61,7 +61,7 @@
         margin-bottom: 24px;
     }
     .cl-hero h1 {
-        font-family: 'Libre Baskerville', serif;
+        font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
         font-size: clamp(2.4rem, 5vw, 4rem);
         color: #fff;
         font-weight: 700;
@@ -129,7 +129,7 @@
         margin-bottom: 14px;
     }
     .cl-section-title {
-        font-family: 'Libre Baskerville', serif;
+        font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
         font-size: clamp(1.8rem, 3.5vw, 2.8rem);
         color: var(--navy);
         font-weight: 700;
@@ -288,7 +288,7 @@
         text-align: center;
     }
     .cl-cta h2 {
-        font-family: 'Libre Baskerville', serif;
+        font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
         font-size: clamp(1.8rem, 3.5vw, 2.8rem);
         color: #fff;
         margin-bottom: 16px;

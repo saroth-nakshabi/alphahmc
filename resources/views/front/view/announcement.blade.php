@@ -66,7 +66,7 @@
             width: 100%;
             color: #fff;
 
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
             margin-top: 0;
             /* Removing top margin for full section look */
             background-repeat: no-repeat;

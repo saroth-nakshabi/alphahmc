@@ -19,7 +19,7 @@
         .contact-page-wrapper {
             background-color: #fff;
             color: #333;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
             overflow-x: hidden;
         }
 
@@ -34,7 +34,7 @@
         }
 
         .contact-hero .display-large {
-            font-family: 'Libre Baskerville', serif;
+            font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
             font-size: clamp(3.2rem, 6vw, 5.5rem);
             line-height: 1.1;
             margin-bottom: 25px;
@@ -54,7 +54,7 @@
         }
 
         .contact-heading-main {
-            font-family: 'Libre Baskerville', serif;
+            font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
             color: #003d66;
             font-size: 2.2rem;
             font-weight: 700;
@@ -88,7 +88,7 @@
             border: 1px solid #edf2f7;
             padding: 18px 24px;
             border-radius: 12px;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
             transition: all 0.4s ease;
             background: #f8fafc;
             font-size: 1rem;
@@ -123,7 +123,7 @@
             font-weight: 800;
             font-size: 1.4rem;
             margin-bottom: 25px;
-            font-family: 'Libre Baskerville', serif;
+            font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
         }
 
         .office-info-item {
@@ -214,7 +214,7 @@
 
         .touch-left h2 {
             color: #066D77;
-            font-family: 'Libre Baskerville', serif;
+            font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif;
             font-size: 2.8rem;
             margin-bottom: 30px;
             font-weight: 700;
@@ -270,7 +270,7 @@
             line-height: 1.6;
             margin-bottom: 20px;
             color: rgba(255,255,255,0.95);
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
             font-weight: 300;
         }
 
@@ -897,7 +897,7 @@
         <section class="section-padding bg-light map-section">
             <div class="container text-center mb-5">
                 <span class="section-tag-light mb-4" style="background: #e6e6e6; color: #066D77; display: inline-block; padding: 8px 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; border-radius: 4px;">GLOBAL REACH</span>
-                <h2 class="display-large" style="font-size: 3rem; font-family: 'Libre Baskerville', serif; color: #00767c;">Global Offices</h2>
+                <h2 class="display-large" style="font-size: 3rem; font-family: 'Libre Baskerville', 'Libre Baskerville Fallback', 'Libre Baskerville Fallback Android', serif; color: #00767c;">Global Offices</h2>
             </div>
 
             <div class="map-container">

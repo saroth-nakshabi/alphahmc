@@ -5,10 +5,6 @@
 @section('meta_description', 'Read verified reviews and testimonials from healthcare clients who have worked with Alpha Health Group across the UAE and GCC.')
 
 @push('meta')
-<link rel="preload" as="style"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
 @endpush
 
 @section('content')
@@ -22,7 +18,7 @@
         --muted: #70757a;
         --text: #202124;
     }
-    .reviews-page { font-family: 'Inter', sans-serif; background: #fff; overflow-x: hidden; }
+    .reviews-page { font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif; background: #fff; overflow-x: hidden; }
 
     /* ── Hero ───────────────────────── */
     .reviews-hero {
@@ -205,7 +201,7 @@
     .wr-modal .modal-content {
         border-radius: 16px; border: none;
         box-shadow: 0 24px 64px rgba(0,0,0,0.18);
-        font-family: 'Inter', sans-serif;
+        font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
     }
     .wr-modal .modal-header {
         padding: 24px 28px 0; border-bottom: none;
@@ -224,7 +220,7 @@
         width: 100%; padding: 11px 14px; border: 1px solid var(--border);
         border-radius: 8px; font-size: 0.9rem; color: #202124;
         outline: none; transition: border-color 0.2s ease;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
     }
     .wr-input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(6,109,119,0.1); }
     .wr-input.is-error { border-color: #ea4335; }
@@ -244,7 +240,7 @@
         width: 100%; padding: 13px; background: var(--teal); color: #fff;
         border: none; border-radius: 100px; font-size: 0.92rem; font-weight: 600;
         cursor: pointer; transition: background 0.25s ease;
-        font-family: 'Inter', sans-serif; margin-top: 4px;
+        font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif; margin-top: 4px;
     }
     .wr-submit:hover { background: #088a95; }
     .wr-submit:disabled { opacity: 0.6; cursor: not-allowed; }
