@@ -301,9 +301,6 @@
             @if ($stepService)
               <a href="{{ route('front.service', $stepService->slug) }}" class="process-svc">
                 <span class="process-svc-name">{{ $stepService->name }} →</span>
-                @if (trim(strip_tags((string) $stepService->overview)) !== '')
-                  <span class="process-svc-desc">{{ Str::limit(strip_tags($stepService->overview), 140) }}</span>
-                @endif
               </a>
             @endif
           </div>

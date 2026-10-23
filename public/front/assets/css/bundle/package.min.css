@@ -1166,13 +1166,7 @@
   font-weight: 700;
   color: #066D77;
   font-size: .9rem;
-  margin-bottom: 4px;
-}
-.process-svc-desc {
-  display: block;
-  color: #475569;
-  font-size: .8rem;
-  line-height: 1.55;
+  margin-bottom: 0;
 }
 
 /* ── Service Details Band (light replacement for the old intro + pillar) ── */
