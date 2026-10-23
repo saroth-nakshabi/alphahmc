@@ -327,7 +327,6 @@
 
 
     <!-- DNS prefetch for external origins -->
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
     @include('front.partials.fonts')
@@ -355,15 +354,15 @@
     @endphp
     @if($needsSwiper)
     <link rel="preload" as="style"
-          href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+          href="{{ asset('public/front/assets/vendor/swiper-11.2.10/swiper-bundle.min.css') }}"
           onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"></noscript>
+    <noscript><link rel="stylesheet" href="{{ asset('public/front/assets/vendor/swiper-11.2.10/swiper-bundle.min.css') }}"></noscript>
     @endif
 
     <link rel="preload" as="style"
-          href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"
+          href="{{ asset('public/front/assets/vendor/aos-2.3.4/aos.css') }}"
           onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"></noscript>
+    <noscript><link rel="stylesheet" href="{{ asset('public/front/assets/vendor/aos-2.3.4/aos.css') }}"></noscript>
 
     @stack('meta_scripts')
 
@@ -1007,12 +1006,12 @@
 
     <script src="{{ asset('public/front/assets/js/layout/ui.js') }}?v=1"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
-        </script>
+    {{-- Bootstrap, Swiper and AOS are self-hosted (byte-identical to jsDelivr: Bootstrap sha384 kenU1KFd...,
+         Swiper 11.2.10 = what swiper@11 resolved to, AOS 2.3.4), so pages no longer connect to cdn.jsdelivr.net. --}}
+    <script src="{{ asset('public/front/assets/vendor/bootstrap-5.2.3/bootstrap.bundle.min.js') }}"></script>
     <!-- Swiper JS (only on pages with a slider, see $needsSwiper) -->
     @if($needsSwiper)
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="{{ asset('public/front/assets/vendor/swiper-11.2.10/swiper-bundle.min.js') }}"></script>
 
     <script src="{{ asset('public/front/assets/js/layout/swiper.js') }}?v=1"></script>
     @else
@@ -1026,7 +1025,7 @@
 
     <script></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="{{ asset('public/front/assets/vendor/aos-2.3.4/aos.js') }}"></script>
     <script>
         AOS.init({
             once: true, // Animation runs only once
@@ -1049,133 +1048,7 @@
            event = 'ahg_contact_submitted'
          Then attach Google Ads conversion tags to those triggers.
     ════════════════════════════════════════════════════════════════ --}}
-    <script>
-    (function () {
-        'use strict';
-
-        // ── Google Ads conversion functions (exposed globally for inline calls) ──
-        window.gtagReportInquirySent = function () {
-            if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-695565753/wF9YCMud6cMcELn71csC' });
-        };
-        window.gtagReportWhatsAppClick = function () {
-            if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-695565753/__2wCM6d6cMcELn71csC', value: 1.0, currency: 'AED' });
-        };
-        window.gtagReportCallClick = function () {
-            if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-695565753/QcGMCNGd6cMcELn71csC', value: 1.0, currency: 'AED' });
-        };
-
-        // ── Helper: push event to dataLayer + fire gtag directly ──────
-        function trackConversion(eventName, params) {
-            var payload = Object.assign({ event: eventName, page_url: window.location.href }, params || {});
-
-            // 1. dataLayer push (GTM picks this up automatically)
-            window.dataLayer = window.dataLayer || [];
-            window.dataLayer.push(payload);
-
-            // 2. gtag event (for GA4 / Google Ads when configured via GTM)
-            if (typeof gtag === 'function') {
-                gtag('event', eventName, params || {});
-            }
-        }
-
-        // ── GA4 events moved from GTM tags 14-16 (container v37, 21 Oct 2026) ─────────
-        // Same names, no parameters, same conditions as the GTM triggers: Just Links clicks
-        // whose URL contains "wa.me" (whatsapp_click) or starts with "tel:" (call_click);
-        // inquiry_sent fires from the inquiry modal. None is a GA4 key event.
-        window.ahgGa4Event = function (name) {
-            if (typeof gtag === 'function') gtag('event', name, { send_to: 'G-KBQ7ZEQ196' });
-        };
-        document.addEventListener('click', function (e) {
-            var link = e.target.closest('a[href]');
-            if (!link) return;
-            if (link.href.indexOf('wa.me') !== -1) window.ahgGa4Event('whatsapp_click');
-            else if (link.href.indexOf('tel:') === 0) window.ahgGa4Event('call_click');
-        });
-
-        // ── Global click tracker (event delegation, works on all pages) ─
-        document.addEventListener('click', function (e) {
-            var el = e.target.closest('a, button');
-            if (!el) return;
-
-            var href    = el.getAttribute('href') || '';
-            var label   = el.getAttribute('data-track-label') || el.innerText.trim().substring(0, 60);
-            var ctx = window._ahgPage || {};
-
-            // ── Phone call ────────────────────────────────────────────
-            if (href.indexOf('tel:') === 0) {
-                trackConversion('ahg_phone_call', {
-                    phone_number: href.replace('tel:', '').replace(/\s/g, ''),
-                    service_name: ctx.service_name || '',
-                    element_label: label,
-                });
-                gtagReportCallClick();
-                return;
-            }
-
-            // ── Email (mailto:) ───────────────────────────────────────
-            if (href.indexOf('mailto:') === 0) {
-                trackConversion('ahg_email_click', {
-                    email_address: href.replace('mailto:', ''),
-                    service_name: ctx.service_name || '',
-                    element_label: label,
-                });
-                return;
-            }
-
-            // ── WhatsApp ──────────────────────────────────────────────
-            if (href.indexOf('wa.me') !== -1 || href.indexOf('whatsapp') !== -1) {
-                trackConversion('ahg_whatsapp_click', {
-                    service_name: ctx.service_name || '',
-                    element_label: label,
-                });
-                gtagReportWhatsAppClick();
-                return;
-            }
-
-            // ── Inquiry / Contact modal triggers ──────────────────────
-            var modalTarget = el.getAttribute('data-bs-target') || '';
-            if (modalTarget === '#inquiryModal') {
-                trackConversion('ahg_inquiry_opened', {
-                    trigger_element: label || el.className,
-                    service_name: ctx.service_name || '',
-                });
-                return;
-            }
-        });
-
-        // ── Form submits ───────────────────────────────────────────────
-        document.addEventListener('submit', function (e) {
-            var form = e.target;
-            var ctx  = window._ahgPage || {};
-
-            if (form.id === 'inquiryForm') {
-                trackConversion('ahg_inquiry_submitted', {
-                    service_name: ctx.service_name || '',
-                    form_id: 'inquiryForm',
-                });
-            }
-
-            // ── Contact page form ──────────────────────────────────────
-            if (form.id === 'contactForm' || form.id === 'mainContactForm' || form.classList.contains('contact-form')) {
-                trackConversion('ahg_contact_submitted', {
-                    form_id: form.id || 'contact_form',
-                });
-                // The Ads "Inquiry Sent" conversion is reported once by the contact page's own submit
-                // handler (front/contact.blade.php); calling it here too sent it twice.
-            }
-        });
-
-        // ── Normalize tel: hrefs — strip spaces so mobile dialers work ──
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('a[href^="tel:"]').forEach(function (el) {
-                var raw   = el.getAttribute('href') || '';
-                var clean = raw.replace(/\s/g, '');
-                if (clean !== raw) el.setAttribute('href', clean);
-            });
-        });
-
-    })();
-    </script>
+    <script src="{{ asset('public/front/assets/js/layout/tracking.js') }}?v=75ed55c1ff"></script>
 
     {{-- "Chat with Alpha" AI widget stays only on Contact + About Us — everywhere
          else it was high-click/low-inquiry friction, so the dwell popup + the
