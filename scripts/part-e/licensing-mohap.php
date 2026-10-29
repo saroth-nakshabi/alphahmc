@@ -46,7 +46,7 @@ $fields = [
     'overview' => '<p>Practising in Ajman, Umm Al Quwain, Ras Al Khaimah or Fujairah takes a license from the Ministry of Health and Prevention (MOHAP). We check your title against the PQR, prepare your documents for DataFlow, guide you through the Prometric exam and file your application on the MOHAP portal.</p>',
     'info_one' => "<h2>Who needs a MOHAP license</h2>
 <p>Physicians, dentists, nurses, midwives, pharmacists and allied health professionals who will practise in Ajman, Umm Al Quwain, Ras Al Khaimah or Fujairah. The license is issued by the <a href=\"https://mohap.gov.ae\" target=\"_blank\" rel=\"noopener\">Ministry of Health and Prevention</a>. Dubai (DHA), Abu Dhabi (DOH) and Sharjah (SHA) license their own healthcare professionals, so a MOHAP license does not cover them.</p>
-<p>Not sure which authority applies to you? <a href=\"' . \$groupUrl . '\">Compare DHA, DOH and MOHAP</a>.</p>",
+<p>Not sure which authority applies to you? <a href=\"{$groupUrl}\">Compare DHA, DOH and MOHAP</a>.</p>",
     'info_two' => "<h2>How MOHAP licensing works</h2>
 <p>You apply for a MOHAP license on the MOHAP portal, through the <a href=\"https://mohap.gov.ae/en/w/licensing-or-re-licensing-of-health-professional\" target=\"_blank\" rel=\"noopener\">licensing or re-licensing of health professional</a> service.</p>
 <ol>
