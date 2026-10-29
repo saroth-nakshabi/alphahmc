@@ -1786,9 +1786,9 @@
           <span class="pdl-eyebrow__text">{{ $project->project_category->name }} — Case Study</span>
         </div>
 
-        <h1 class="pdl-hero__title pdl-reveal on d1">
+        <h2 class="pdl-hero__title pdl-reveal on d1">
           {{ $project->name }}
-        </h1>
+        </h2>
 
         <p class="pdl-hero__desc pdl-reveal on d2" id="heroDesc">{!! strip_tags($project->description) !!}</p>
         <button id="heroReadMore" class="pdl-readmore pdl-reveal on d2" style="display:none;">
@@ -1939,7 +1939,7 @@
 
         @forelse($project->projects_images as $index => $image)
         <div class="pdl-gcard pdl-reveal" data-category="images"
-             onclick="openGalleryModal('image','{{ asset('public/'.$image->image) }}','Project Visual Asset')">
+             onclick="openGalleryModal('image','{{ asset('public/'.$image->image) }}','Project Visual Asset',this.querySelector('img').alt)">
           <span class="pdl-gcard__badge">Image</span>
           <span class="pdl-gcard__type"><i data-lucide="image" style="width:15px;"></i></span>
           <div class="pdl-gcard__media"><img src="{{ asset('public/'.$image->image) }}" alt="Image {{ $index+1 }}" loading="lazy"></div>
@@ -2005,7 +2005,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body p-4" style="min-height:180px;display:flex;align-items:center;justify-content:center;">
-            <img id="modalImage" class="d-none" />
+            <img id="modalImage" class="d-none" alt="" />
             <video id="modalVideo" class="d-none" controls><source id="modalVideoSource"></video>
           </div>
         </div>
@@ -2453,7 +2453,7 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ── Gallery Modal ───────────────────────────────── */
 let galleryModal = null, pdfModalInst = null;
 
-function openGalleryModal(type, url, title) {
+function openGalleryModal(type, url, title, alt) {
   const el = document.getElementById('galleryModal');
   if (!el) return;
   if (!galleryModal) galleryModal = new bootstrap.Modal(el);
@@ -2461,7 +2461,7 @@ function openGalleryModal(type, url, title) {
   $('#galleryTitle').text(title);
   const wrap = document.getElementById('modalTypeIconWrap');
   if (type === 'image') {
-    $('#modalImage').attr('src', url).removeClass('d-none');
+    $('#modalImage').attr({ src: url, alt: alt || '' }).removeClass('d-none');
     if (wrap) wrap.innerHTML = '<i data-lucide="image" style="width:17px;"></i>';
   } else {
     const vs = document.getElementById('modalVideoSource');

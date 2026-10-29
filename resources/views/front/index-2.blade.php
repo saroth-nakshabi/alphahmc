@@ -86,9 +86,12 @@
                 @if(isset($homeSliders) && count($homeSliders) > 0)
                     @foreach($homeSliders as $index => $slider)
                         <div class="hero-slide-item {{ $index == 0 ? 'slide-active' : '' }}" data-index="{{ $index }}">
-                            <h1 class="hero-main-title">
+                            {{-- One H1 per page: the first slide's title. The others are H2 with the same class;
+                                 mb-2 cancels the site-wide h2 margin so every slide sits as before. --}}
+                            @php $titleTag = $index == 0 ? 'h1' : 'h2'; @endphp
+                            <{{ $titleTag }} class="hero-main-title{{ $index == 0 ? '' : ' mb-2' }}">
                                 {{ $slider->main_title }}
-                            </h1>
+                            </{{ $titleTag }}>
                             @if($slider->pre_title)
                                 <h3 class="hero-pre-title">{{ $slider->pre_title }}</h3>
                             @endif
