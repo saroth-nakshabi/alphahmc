@@ -221,8 +221,10 @@
         ];
     }
 
-    // FAQPage schema - only add if FAQs exist
-    if (!empty($faqSchema)) {
+    // FAQPage schema - only add if FAQs exist. The facility setup pages built from the SEO agent's briefs
+    // (30 Oct 2026) carry no FAQPage markup by design.
+    $noFaqSchema = ['dental-centre-setup-licensing-dubai', 'day-surgery-centre-setup-licensing-uae'];
+    if (!empty($faqSchema) && !(isset($service->slug) && in_array($service->slug, $noFaqSchema, true))) {
         $schema[] = [
             '@context'   => 'https://schema.org',
             '@type'      => 'FAQPage',
