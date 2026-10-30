@@ -83,6 +83,12 @@
                         <span class="inq-label">Mobile</span>
                         <span class="inq-val"><a href="tel:{{ preg_replace('/[^0-9+]/', '', $inquiry->phone) }}">{{ $inquiry->phone }}</a></span>
                     </div>
+                    @if(!empty($inquiry->source['ref_id']))
+                    <div class="inq-row">
+                        <span class="inq-label">Ref code</span>
+                        <span class="inq-val"><strong>{{ $inquiry->source['ref_id'] }}</strong> <small class="text-muted">copy into the CRM (red_reference)</small></span>
+                    </div>
+                    @endif
                     <div class="inq-row">
                         <span class="inq-label">Service</span>
                         <span class="inq-val">{{ $inquiry->service->name ?? 'General enquiry' }}</span>

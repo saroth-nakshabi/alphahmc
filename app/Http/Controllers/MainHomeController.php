@@ -87,6 +87,9 @@ class MainHomeController extends Controller
         ]);
 
         $data = $request->only(['name', 'email', 'subject', 'message']);
+        // The visitor's WhatsApp Ref code, for staff to copy into the CRM (Ref click log brief, 30 Oct 2026).
+        $ref = (string) $request->input('ref');
+        $data['ref'] = preg_match(\App\Models\RefClick::REF_PATTERN, $ref) ? $ref : null;
 
         // Spam has zero value here — silently "succeed" without sending mail
         // rather than tipping the bot off that it was blocked.

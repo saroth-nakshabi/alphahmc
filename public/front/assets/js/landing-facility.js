@@ -121,20 +121,11 @@
         return !first;
     }
 
-    // Where the visitor came from: the Ref record kept by the whatsapp-ref partial (90 days, first
-    // tagged visit) plus this page's own ad parameters, so the lead keeps its gclid and UTM tags.
+    // Where the visitor came from: the Ref code and first-touch click data from the WhatsApp Ref script
+    // (window.ahgRef.formSource), so the lead keeps its Ref, gclid and UTM tags (Ref click log brief, 30 Oct).
     function source() {
-        var data = {};
-        try { data = JSON.parse(localStorage.getItem('alpha_inquiry_source') || '{}') || {}; } catch (e) {}
-        var p = new URLSearchParams(location.search), out = { page_url: location.href.split('#')[0] };
-        ['ref_id', 'channel', 'campaign', 'adgroup', 'term', 'gclid'].forEach(function (k) {
-            var key = k === 'ref_id' ? 'id' : k;
-            if (data[key]) out[k] = String(data[key]).slice(0, 200);
-        });
-        ['gclid', 'gbraid', 'wbraid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(function (k) {
-            if (p.get(k)) out['url_' + k] = p.get(k).slice(0, 200);
-        });
-        return JSON.stringify(out);
+        if (window.ahgRef && typeof window.ahgRef.formSource === 'function') return window.ahgRef.formSource();
+        return JSON.stringify({ page_url: location.href.split('#')[0] });
     }
 
     function busy(on) {

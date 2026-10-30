@@ -26,6 +26,11 @@
         <p class="label">Message</p>
         <p class="value">{{ $data['message'] }}</p>
 
+        @if(!empty($data['ref']))
+        <p class="label">Ref code (copy into the CRM)</p>
+        <p class="value">{{ $data['ref'] }}</p>
+        @endif
+
         <div class="footer">This message was sent from the Alpha HMS contact form.</div>
     </div>
 </body>
