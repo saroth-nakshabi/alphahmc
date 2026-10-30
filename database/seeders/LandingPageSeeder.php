@@ -258,6 +258,8 @@ class LandingPageSeeder extends Seeder
             ['key' => 'faq', 'enabled' => true, 'data' => [
                 'nav_label' => 'Questions', 'heading' => 'Questions before you start.', 'items' => $faq,
             ]],
+            // Per facility type FAQ, case studies and the related services list: migration 2026_10_31_200100.
+            ['key' => 'services', 'enabled' => true, 'data' => ['heading' => 'Related services', 'text' => '', 'items' => []]],
             ['key' => 'contact', 'enabled' => true, 'data' => [
                 'heading' => 'Talk to the facility team.',
                 'text' => 'Tell us what you plan to open. After a free scoping call you get a fixed fee proposal and a schedule.',

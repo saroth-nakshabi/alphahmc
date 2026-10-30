@@ -348,6 +348,17 @@
                         </li>
                         @endcan
 
+                        @can('view pages')
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('admin.facility-types.index') }}" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-building-hospital"></i>
+                                </span>
+                                <span class="hide-menu">Facility types</span>
+                            </a>
+                        </li>
+                        @endcan
+
                         @can('view menu promos')
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin.menu-promos.index') }}" aria-expanded="false">

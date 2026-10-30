@@ -17,6 +17,14 @@
                 <option value="{{ $project->id }}" @selected((int) $value === $project->id)>{{ $project->name }} ({{ $project->slug }})</option>
             @endforeach
         </select>
+    @elseif($type === 'page')
+        <select class="form-select form-select-sm" id="{{ $fid }}" data-f="{{ $f }}">
+            <option value="">Choose a page</option>
+            @if($value !== '' && !isset($pageTargets[$value]))<option value="{{ $value }}" selected>Unpublished or deleted page: hidden on the site</option>@endif
+            @foreach($pageTargets as $key => $t)
+                <option value="{{ $key }}" @selected($value === $key)>{{ $t['label'] }}</option>
+            @endforeach
+        </select>
     @else
         <input type="text" class="form-control form-control-sm" id="{{ $fid }}" data-f="{{ $f }}" value="{{ $value }}" @if($required) aria-required="true" @endif>
     @endif

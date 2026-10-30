@@ -123,6 +123,7 @@ class AdminLandingPageController extends Controller
             'page'     => $page,
             'content'  => LandingPageSchema::normalize($page->content ?? []),
             'projects' => Project::orderBy('name')->get(['id', 'name', 'slug']),
+            'pageTargets' => \App\Models\FacilityTypeCard::targets(),
             'others'   => LandingPage::orderBy('emirate')->orderBy('name')->get(['id', 'name', 'slug', 'status', 'facility_type']),
         ]);
     }

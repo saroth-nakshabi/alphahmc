@@ -386,6 +386,13 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::post('/dashboard/menu-promos/{id}', [App\Http\Controllers\MenuPromoController::class, 'update'])->name('admin.menu-promos.update')->middleware('permission:edit menu promos');
     Route::delete('/dashboard/menu-promos/{id}', [App\Http\Controllers\MenuPromoController::class, 'destroy'])->name('admin.menu-promos.destroy')->middleware('permission:delete menu promos');
 
+    // Facility types cards on the facility licensing category page (SEO brief, 30 Oct 2026)
+    Route::get('/dashboard/facility-types', [App\Http\Controllers\AdminFacilityTypeController::class, 'index'])->name('admin.facility-types.index')->middleware('permission:view pages');
+    Route::post('/dashboard/facility-types', [App\Http\Controllers\AdminFacilityTypeController::class, 'store'])->name('admin.facility-types.store')->middleware('permission:edit pages');
+    Route::post('/dashboard/facility-types/{id}', [App\Http\Controllers\AdminFacilityTypeController::class, 'update'])->name('admin.facility-types.update')->middleware('permission:edit pages');
+    Route::post('/dashboard/facility-types/{id}/move/{direction}', [App\Http\Controllers\AdminFacilityTypeController::class, 'move'])->name('admin.facility-types.move')->middleware('permission:edit pages')->where('direction', 'up|down');
+    Route::delete('/dashboard/facility-types/{id}', [App\Http\Controllers\AdminFacilityTypeController::class, 'destroy'])->name('admin.facility-types.destroy')->middleware('permission:edit pages');
+
     // Pages & SEO — manage standard pages' SEO tags + hero content
     Route::get('/dashboard/pages', [App\Http\Controllers\PageSettingController::class, 'index'])->name('admin.pages.index')->middleware('permission:view pages');
     Route::get('/dashboard/pages/{key}/edit', [App\Http\Controllers\PageSettingController::class, 'edit'])->name('admin.pages.edit')->middleware('permission:edit pages');

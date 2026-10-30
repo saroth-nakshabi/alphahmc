@@ -9,7 +9,7 @@ namespace App\Support;
  * copy while the template, typography and tracking stay in code. Shape:
  *   ['page' => [field => value], 'hero' => [...], 'sections' => [['key' => .., 'enabled' => bool, 'data' => [..]], ..]]
  * Section `data` holds its fields plus its lists (each a list of rows of fields).
- * Field types: text, textarea, int, project (a projects.id).
+ * Field types: text, textarea, int, project (a projects.id), page (an indexable page, see FacilityTypeCard::targets()).
  */
 class LandingPageSchema
 {
@@ -168,6 +168,11 @@ class LandingPageSchema
             'nav'    => true,
             'fields' => ['nav_label' => ['Header link label', 'text'], 'heading' => ['Heading', 'text', true]],
             'lists'  => ['items' => ['Questions', ['question' => ['Question', 'text'], 'answer' => ['Answer', 'textarea']]]],
+        ],
+        'services' => [
+            'label'  => 'Related services (published service, package or category pages; a page that is unpublished later hides)',
+            'fields' => ['heading' => ['Heading', 'text', true], 'text' => ['Text', 'text']],
+            'lists'  => ['items' => ['Services', ['target' => ['Page', 'page'], 'label' => ['Link text (empty: the page name)', 'text']]]],
         ],
         'contact' => [
             'label'  => 'Contact and form',

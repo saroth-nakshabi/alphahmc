@@ -211,6 +211,7 @@ html:has(.lp) { scroll-behavior: smooth; scroll-padding-top: 96px; }
 .lp-projects { background: var(--lp-mist); }
 .lp-projects:has(+ .lp-rescue-band) { padding-bottom: 0; }
 .lp-proj-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 44px; flex-wrap: wrap; }
+.lp-proj-head:last-child { margin-bottom: 0; }
 .lp-proj-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; }
 .lp .lp-proj { text-decoration: none; display: block; min-width: 0; }
 .lp-proj figure { border-radius: 18px; overflow: hidden; aspect-ratio: 16 / 10; background: var(--lp-line); }

@@ -266,6 +266,9 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
 <!-- ════════════════════════════════════════
   BROWSE ALL CATEGORIES SECTION
 ════════════════════════════════════════ -->
+@if($service->slug === \App\Models\FacilityTypeCard::HOST_CATEGORY)
+    @include('front.partials.facility-types')
+@endif
 <section class="browse-section" id="services">
     <div class="container">
   

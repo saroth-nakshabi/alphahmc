@@ -1,14 +1,20 @@
-{{-- Delivered projects, picked from /project in the admin; the cards link to their case studies. --}}
+{{-- Delivered projects, picked per facility type from /project in the admin; the cards link to their case studies.
+     With no matching case study (none picked, or the project was deleted) only a "See our projects" link shows. --}}
+@php $shownProjects = collect($d['items'])->filter(fn ($i) => $projects->has($i['project_id'])); @endphp
 <section class="lp-section lp-projects" id="projects">
     <div class="lp-wrap">
         <div class="lp-proj-head">
             <h2>{{ $d['heading'] }}</h2>
-            @if($d['see_all_label'] !== '')<a class="lp-btn lp-btn-ghost" href="{{ route('front.project') }}">{{ $d['see_all_label'] }}</a>@endif
+            @if($shownProjects->isEmpty())
+                <a class="lp-btn lp-btn-ghost" href="{{ route('front.project') }}">See our projects</a>
+            @elseif($d['see_all_label'] !== '')
+                <a class="lp-btn lp-btn-ghost" href="{{ route('front.project') }}">{{ $d['see_all_label'] }}</a>
+            @endif
         </div>
+        @if($shownProjects->isNotEmpty())
         <div class="lp-proj-grid">
-            @foreach($d['items'] as $item)
+            @foreach($shownProjects as $item)
                 @php $project = $projects->get($item['project_id']); @endphp
-                @continue(!$project)
                 @php
                     $img  = optional($project->projects_images->first())->image;
                     $webp = $img ? \App\Support\Img::webp($img, 828) : null;
@@ -31,5 +37,6 @@
                 </a>
             @endforeach
         </div>
+        @endif
     </div>
 </section>
