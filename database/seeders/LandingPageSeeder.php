@@ -22,25 +22,25 @@ class LandingPageSeeder extends Seeder
     private const DUBAI = [
         // slug => [facility_type, name in copy, intro, facts]
         'dental-centre-dubai' => ['Dental centre', 'dental centre',
-            'One team plans your layout around your specialties, secures your DHA license, prepares your documentation and stands with you at the final inspection.',
+            'One team plans your layout around your specialties, secures your DHA license, prepares your documentation and handles the final inspection for you.',
             ['Treatment rooms and sterilisation areas are planned around the specialties you offer.', 'X-ray equipment needs FANR approval. We build it into the layout and the schedule from the start.']],
         'medical-centre-dubai' => ['Medical centre', 'medical centre',
-            'One team plans your layout around your specialties, secures your DHA license, prepares your documentation and stands with you at the final inspection.',
+            'One team plans your layout around your specialties, secures your DHA license, prepares your documentation and handles the final inspection for you.',
             ['Rooms, areas and staffing follow the specialties you choose. We map them before any drawing starts.', 'Adding a specialty later is easier when the first layout leaves room for it.']],
         'aesthetic-centre-dubai' => ['Aesthetic centre', 'aesthetic centre',
-            'One team plans your clinical aesthetic centre, secures the license, prepares your documentation and stands with you at the final inspection.',
+            'One team plans your clinical aesthetic centre, secures the license, prepares your documentation and handles the final inspection for you.',
             ['A medical aesthetic centre offers clinical aesthetic services, licensed as a healthcare facility.', 'Injectables are performed by a licensed medical practitioner. Rooms are planned by specialty.']],
         'home-healthcare-dubai' => ['Home healthcare', 'home healthcare company',
-            'One team sets up your office, secures your DHA license, prepares your documentation and stands with you at the final inspection.',
+            'One team sets up your office, secures your DHA license, prepares your documentation and handles the final inspection for you.',
             ['A home healthcare company needs an office in Dubai.', 'Planning covers your vehicles, equipment and how medication is handled.']],
         'clinical-laboratory-dubai' => ['Clinical laboratory', 'clinical laboratory',
-            'One team plans your laboratory around the tests you will offer, secures your DHA license, prepares your documentation and stands with you at the final inspection.',
+            'One team plans your laboratory around the tests you will offer, secures your DHA license, prepares your documentation and handles the final inspection for you.',
             ['Areas and workflow are planned around the scope of tests you will offer.', 'One team carries the project from planning to the final inspection.']],
         'dental-laboratory-dubai' => ['Dental laboratory', 'dental laboratory',
-            'One team plans your dental laboratory, secures your DHA license, prepares your documentation and stands with you at the final inspection.',
+            'One team plans your dental laboratory, secures your DHA license, prepares your documentation and handles the final inspection for you.',
             ['Dental laboratories in Dubai are licensed by DHA.', 'Fit-out and Civil Defence approval usually take the longest. We plan for both from the start.']],
         'day-surgery-centre-dubai' => ['Day surgery centre', 'day surgery centre',
-            'One team plans your theatres and patient flow, takes your engineering drawings through approval, prepares your documentation and stands with you at the final inspection.',
+            'One team plans your theatres and patient flow, takes your engineering drawings through approval, prepares your documentation and handles the final inspection for you.',
             ['The DHA classification of your centre sets how many operating theatres you need.', 'Theatre layout, patient flow and engineering drawings are the main challenge. Medical gases, HVAC and power backup are planned with the layout.']],
     ];
 
@@ -74,7 +74,7 @@ class LandingPageSeeder extends Seeder
 
         foreach (self::EMIRATE_PAGES as $slug => [$emirate, $authority, $economic]) {
             $intro = 'One team plans your layout around your specialties, secures your ' . $authority
-                . ' license, prepares your documentation and stands with you at the final inspection.';
+                . ' license, prepares your documentation and handles the final inspection for you.';
             // Not authority specific; the facility team confirms the facts and FAQ before publishing.
             $facts = ['Rooms, areas and staffing follow the specialties you choose. We map them before any drawing starts.',
                 'Adding a specialty later is easier when the first layout leaves room for it.'];
@@ -191,7 +191,7 @@ class LandingPageSeeder extends Seeder
                     $row('License and staff', 'Vendor contracts', 'The third party services the authority requires, sourced and contracted.'),
                     $row('Prepare and open', 'Quality documentation', 'Policies, procedures, forms, clinical guidelines and staff orientation.'),
                     $row('Prepare and open', 'Mock audit', 'An inspection run the way the authority runs it, with a corrective action plan.'),
-                    $row('Prepare and open', 'Final inspection', 'We request it, prepare for it and attend it with you.'),
+                    $row('Prepare and open', 'Final inspection', 'We request the audit, prepare your facility for it, and attend and handle the full inspection as your consultant.'),
                 ],
             ]],
             ['key' => 'plan', 'enabled' => true, 'data' => [
@@ -205,7 +205,7 @@ class LandingPageSeeder extends Seeder
                     $phase('Applications and engineering drawings', 'Trade license and initial approval, the facility application to the authority, engineering drawings to guidelines, and professional licensing begins.', 1, 5),
                     $phase('Quality documentation', 'Policies, procedures and forms for your specialties, equipment planning, HR documentation and checks that the build matches the approved design.', 4, 10),
                     $phase('Inspection readiness and mock audit', 'Staff orientation, site visits and a mock audit run the way the authority runs it. Depends on your site being ready.', 9, 12),
-                    $phase('Final inspection and license', 'We request the inspection, attend it with you, close any findings and see the license issued.', 11, 14),
+                    $phase('Final inspection and license', 'We request the inspection, attend and handle the full audit as your consultant, close any findings and see the license issued.', 11, 14),
                 ],
             ]],
             ['key' => 'others', 'enabled' => true, 'data' => [
