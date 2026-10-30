@@ -18,6 +18,13 @@ return new class extends Migration
             => 'We request the inspection, attend and handle the full audit as your consultant, close any findings and see the license issued.',
         'and stands with you at the final inspection.'
             => 'and handles the final inspection for you.',
+        // Saroth, 30 Oct 2026: the beyond-approval paragraph in his words (his "compliant", kept as written).
+        'Your facility needs more than a passed DHA inspection. We learn your operating requirements, your business model and your long-term plans, then help you plan, set up and prepare a facility that meets the regulations and is ready to operate.'
+            => 'Passing a DHA inspection is only part of preparing your facility. We understand your operational needs, business model and long-term plans, then help you plan and set up a compliant facility that is ready to operate.',
+        'Your facility needs more than a passed SHA inspection. We learn your operating requirements, your business model and your long-term plans, then help you plan, set up and prepare a facility that meets the regulations and is ready to operate.'
+            => 'Passing an SHA inspection is only part of preparing your facility. We understand your operational needs, business model and long-term plans, then help you plan and set up a compliant facility that is ready to operate.',
+        'Your facility needs more than a passed DOH inspection. We learn your operating requirements, your business model and your long-term plans, then help you plan, set up and prepare a facility that meets the regulations and is ready to operate.'
+            => 'Passing a DOH inspection is only part of preparing your facility. We understand your operational needs, business model and long-term plans, then help you plan and set up a compliant facility that is ready to operate.',
         // Saroth, 30 Oct 2026: "according to" the authority guidelines.
         'layout drawings to authority guidelines'
             => 'layout drawings according to authority guidelines',

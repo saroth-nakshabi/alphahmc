@@ -158,6 +158,20 @@ html:has(.lp) { scroll-behavior: smooth; scroll-padding-top: 96px; }
 .lp-rows span { color: var(--lp-ink-2); font-size: .98rem; }
 .lp-optional { margin-top: 28px !important; font-size: .95rem; color: var(--lp-ink-2) !important; }
 
+/* Optional services for a turnkey project */
+.lp-turnkey { background: var(--lp-mist); }
+.lp-turnkey-head { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 5vw, 80px); align-items: end; margin-bottom: 40px; }
+.lp-turnkey-label { display: inline-block; font-size: .8rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--lp-teal-800) !important; background: var(--lp-teal-100); border-radius: 999px; padding: 6px 14px; margin-bottom: 16px !important; }
+.lp-turnkey-grid { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+.lp-turnkey-grid li { background: var(--lp-white); border: 1px solid var(--lp-line); border-radius: 18px; padding: 26px 24px; display: grid; align-content: start; gap: 10px; transition: border-color .25s var(--lp-ease), transform .25s var(--lp-ease); }
+.lp-turnkey-grid li:hover { border-color: var(--lp-teal-400); transform: translateY(-2px); }
+.lp-turnkey-num { width: 36px; height: 36px; border-radius: 50%; background: var(--lp-teal-800); color: var(--lp-white); display: grid; place-items: center; font-weight: 600; font-size: .95rem; }
+.lp .lp-turnkey-grid h3 { font-size: 1.15rem; line-height: 1.35; }
+.lp-turnkey-grid p { color: var(--lp-ink-2) !important; font-size: .98rem; line-height: 1.6; }
+.lp-turnkey-note { margin-top: 14px !important; font-size: .85rem; color: var(--lp-ink-2) !important; }
+.lp-turnkey-cta { margin-top: 24px !important; }
+@media (max-width: 960px) { .lp-turnkey-head { grid-template-columns: 1fr; } }
+
 /* Project plan */
 .lp-plan { background: var(--lp-teal-800); color: var(--lp-on-teal); overflow: hidden; }
 .lp .lp-plan h2, .lp .lp-plan h3 { color: var(--lp-on-teal); }

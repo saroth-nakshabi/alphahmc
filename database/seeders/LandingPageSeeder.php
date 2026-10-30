@@ -156,7 +156,7 @@ class LandingPageSeeder extends Seeder
             ]],
             ['key' => 'beyond', 'enabled' => true, 'data' => [
                 'heading' => "Beyond $authority approval. Built for long-term success.",
-                'text' => "Your facility needs more than a passed $authority inspection. We learn your operating requirements, your business model and your long-term plans, then help you plan, set up and prepare a facility that meets the regulations and is ready to operate.",
+                'text' => 'Passing ' . ($authority === 'SHA' ? 'an' : 'a') . " $authority inspection is only part of preparing your facility. We understand your operational needs, business model and long-term plans, then help you plan and set up a compliant facility that is ready to operate.",
                 'list_label' => 'Our in-house teams work on your project',
                 'items' => [
                     $two('Engineering', "Layouts and engineering drawings prepared to the authority's guidelines."),
@@ -180,7 +180,7 @@ class LandingPageSeeder extends Seeder
                 'heading' => 'Everything between the idea and the license.',
                 'text' => 'You deal with one team instead of a license agent, a designer and a documentation consultant.',
                 'image_alt' => 'Alpha engineers reviewing a facility layout drawing',
-                'optional' => 'Also available: construction phase engineering (design package, BOQ, contractor appointment, NOCs and site supervision) and recruitment of your clinical team.',
+                'optional' => '',   // replaced by the turnkey section (Saroth, 30 Oct)
                 'rows' => [
                     $row('Plan and design', 'Strategic planning', 'Project master plan, service mapping by specialty and a gap analysis before you commit.'),
                     $row('Plan and design', 'Design and engineering approval', 'Space programming, layout drawings according to authority guidelines, submission and approval.'),
@@ -192,6 +192,19 @@ class LandingPageSeeder extends Seeder
                     $row('Prepare and open', 'Quality documentation', 'Policies, procedures, forms, clinical guidelines and staff orientation.'),
                     $row('Prepare and open', 'Mock audit', 'An inspection run the way the authority runs it, with a corrective action plan.'),
                     $row('Prepare and open', 'Final inspection', 'We request the audit, prepare your facility for it, and attend and handle the full inspection as your consultant.'),
+                ],
+            ]],
+            ['key' => 'turnkey', 'enabled' => true, 'data' => [
+                'label' => 'Optional services',
+                'heading' => 'Make it turnkey.',
+                'text' => 'Add any of these and one team takes you from the first drawing to your first months of operation.',
+                'note' => '*Terms and conditions apply.',
+                'items' => [
+                    $two('Construction phase engineering', 'Design package, BOQ, contractor appointment, NOCs and site supervision.'),
+                    $two('Construction and fit-out', 'We build and fit out your facility to the approved design.'),
+                    $two('Staff hiring', 'Recruitment of your clinical and support team, ready for licensing.'),
+                    $two('Soft launch', 'A controlled first opening to test your workflows, systems and team before full operation.'),
+                    $two('Three months of operational support, free*', 'After your license is issued we support you for three months at no extra cost, so the immediate post-licensing requirements are handled and your first stages run smoothly.'),
                 ],
             ]],
             ['key' => 'plan', 'enabled' => true, 'data' => [

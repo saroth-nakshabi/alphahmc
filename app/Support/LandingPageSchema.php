@@ -110,6 +110,16 @@ class LandingPageSchema
                 'group' => ['Group', 'text'], 'title' => ['Title', 'text'], 'text' => ['Text', 'textarea'],
             ]]],
         ],
+        'turnkey' => [
+            'label'  => 'Optional services for a turnkey project',
+            'fields' => [
+                'label'   => ['Small label above the heading', 'text'],
+                'heading' => ['Heading', 'text', true],
+                'text'    => ['Text', 'textarea'],
+                'note'    => ['Footnote under the services (for example terms and conditions)', 'text'],
+            ],
+            'lists' => ['items' => ['Services', ['title' => ['Service', 'text'], 'text' => ['What it covers', 'textarea']]]],
+        ],
         'plan' => [
             'label'  => 'Project plan',
             'nav'    => true,
