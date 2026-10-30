@@ -32,6 +32,17 @@
     $faq = LandingPageSchema::section($content, 'faq');
     $canonical = $page->canonical ?: $page->url();
     $pic = \App\Support\Img::heroPicture($page->hero_image, 'uploads/landing_pages/nhs-medical-center-hero.jpg');
+    // Shared WhatsApp chat window (front/partials/wa-chat, in the layout): this page's number, text and copy; it
+    // opens by itself after 5 seconds on landing pages (Saroth, 30 Oct 2026).
+    $waChat = [
+        'link'         => $waHref,
+        'title'        => $pg['wa_window_title'] ?: 'Alpha Health Group',
+        'subtitle'     => $pg['wa_window_subtitle'] ?: 'Facility setup team',
+        'welcome'      => $pg['wa_window_message'] ?: 'Hello. Tell us what you plan to open and where, and the facility team will reply on WhatsApp.',
+        'send_label'   => $pg['wa_window_send'] ?: 'Send on WhatsApp',
+        'auto_open_ms' => 5000,
+        'fallback'     => 'landing',
+    ];
 @endphp
 
 @section('bare_layout', '1')
@@ -123,29 +134,6 @@
             </div>
         </div>
     </footer>
-
-    {{-- Floating WhatsApp: opens a message window (as on alphatsm.com). Only "Send" opens WhatsApp, so the
-         conversion and the Ref code apply to a real message, through the wa.me link click as everywhere else. --}}
-    <div class="lp-wa" id="lp-wa">
-        <div class="lp-wa-window" id="lp-wa-window" role="dialog" aria-modal="false" aria-labelledby="lp-wa-title" hidden>
-            <div class="lp-wa-head">
-                <span class="lp-wa-avatar" aria-hidden="true"><i class="fab fa-whatsapp"></i></span>
-                <span class="lp-wa-head-text"><strong id="lp-wa-title">{{ $pg['wa_window_title'] ?: 'Alpha Health Group' }}</strong><small>{{ $pg['wa_window_subtitle'] ?: 'Facility setup team' }}</small></span>
-                <button type="button" class="lp-wa-close" id="lp-wa-close" aria-label="Close the WhatsApp window">&times;</button>
-            </div>
-            <div class="lp-wa-body">
-                <p class="lp-wa-bubble">{{ $pg['wa_window_message'] ?: 'Hello. Tell us what you plan to open and where, and the facility team will reply on WhatsApp.' }}</p>
-            </div>
-            <form class="lp-wa-compose" id="lp-wa-compose">
-                <label class="lp-visually-hidden" for="lp-wa-text">Your message</label>
-                <textarea id="lp-wa-text" rows="2">{{ $pg['wa_text'] }}</textarea>
-                <a class="lp-wa-send" id="lp-wa-send" href="{{ $waHref }}" target="_blank" rel="noopener" aria-label="{{ $pg['wa_window_send'] ?: 'Send on WhatsApp' }}"><i class="fas fa-paper-plane" aria-hidden="true"></i></a>
-            </form>
-        </div>
-        <button type="button" class="lp-wa-button" id="lp-wa-button" aria-expanded="false" aria-controls="lp-wa-window" aria-label="Chat with us on WhatsApp">
-            <i class="fab fa-whatsapp" aria-hidden="true"></i>
-        </button>
-    </div>
 
     <div class="lp-dock" id="lp-dock">
         <a class="lp-btn lp-btn-primary" href="{{ $waHref }}" target="_blank" rel="noopener">{{ $pg['dock_wa'] ?: 'WhatsApp' }}</a>

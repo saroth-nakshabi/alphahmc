@@ -108,37 +108,6 @@
     });
     if (location.hash === '#contact') openForm(true);
 
-    // ── Floating WhatsApp: a message window; only the send link opens WhatsApp (and counts) ──
-    var waBtn = $('#lp-wa-button'), waWin = $('#lp-wa-window'), waText = $('#lp-wa-text'), waSend = $('#lp-wa-send');
-    function setWa(open) {
-        if (!waWin) return;
-        waWin.hidden = !open;
-        waBtn.setAttribute('aria-expanded', String(open));
-        if (open && waText) { waText.focus(); waText.setSelectionRange(waText.value.length, waText.value.length); }
-        else if (!open) waBtn.focus();
-    }
-    function syncSend() {
-        // Keep the link's text current before the tap: the Ref script and the tracker read the link itself.
-        if (!waSend || !waText) return;
-        var url = new URL(waSend.href);
-        url.searchParams.set('text', waText.value.trim());
-        waSend.href = url.toString();
-    }
-    if (waBtn && waWin) {
-        waBtn.addEventListener('click', function () { setWa(waWin.hidden); });
-        $('#lp-wa-close').addEventListener('click', function () { setWa(false); });
-        document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !waWin.hidden) setWa(false); });
-        if (waText) {
-            waText.addEventListener('input', syncSend);
-            waText.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); waSend.click(); }
-            });
-            syncSend();
-        }
-        $('#lp-wa-compose').addEventListener('submit', function (e) { e.preventDefault(); });
-        waSend.addEventListener('click', function () { setTimeout(function () { waWin.hidden = true; waBtn.setAttribute('aria-expanded', 'false'); }, 300); });
-    }
-
     // ── Proposal form ──
     var form = $('#lp-form');
     if (!form) return;
