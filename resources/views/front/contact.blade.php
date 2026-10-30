@@ -424,10 +424,6 @@
                                     <span>+971 4 272 4064</span>
                                 </div>
                                 <div class="office-info-item">
-                                    <i class="fas fa-envelope"></i>
-                                    <span>info@alphatsm.com</span>
-                                </div>
-                                <div class="office-info-item">
                                     <i class="fas fa-clock"></i>
                                     <span>Monday to Friday, 9:00 am to 6:00 pm</span>
                                 </div>
