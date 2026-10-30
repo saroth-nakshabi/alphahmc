@@ -306,6 +306,7 @@
                         <td>
                             <a href="mailto:{{ $inquiry->email }}" class="d-block text-dark" style="font-size:.85rem;">{{ $inquiry->email }}</a>
                             <a href="tel:{{ preg_replace('/[^0-9+]/', '', $inquiry->phone) }}" class="text-muted" style="font-size:.82rem;">{{ $inquiry->phone }}</a>
+                            @if(!empty($inquiry->source['ref_id']))<span class="d-block text-muted" style="font-size:.78rem;">Ref {{ $inquiry->source['ref_id'] }}</span>@endif
                         </td>
                         <td>
                             <form action="{{ route('admin.inquiries.update', $inquiry->id) }}" method="POST" class="d-inline">

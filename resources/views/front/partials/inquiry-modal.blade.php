@@ -68,6 +68,8 @@
 
                 {{-- reCAPTCHA v3 token (populated by JS before submit) --}}
                 <input type="hidden" id="im-recaptcha-token" name="g-recaptcha-response" value="">
+                {{-- The visitor's Ref code and first-touch click data (whatsapp-ref partial), stored on the inquiry. --}}
+                <input type="hidden" id="im-source" name="source" value="">
 
                 <div class="ahg-im-grid">
                     <div class="ahg-im-field">
@@ -323,5 +325,5 @@
     }
 </style>
 
-<script src="{{ asset('public/front/assets/js/inquiry-modal.js') }}?v=3d54af61e8"></script>
+<script src="{{ asset('public/front/assets/js/inquiry-modal.js') }}?v=17e970e8d7"></script>
 @endonce

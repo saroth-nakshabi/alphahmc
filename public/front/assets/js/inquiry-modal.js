@@ -190,6 +190,9 @@
         getRecaptchaToken().then(function (token) {
             var rcInput = document.getElementById('im-recaptcha-token');
             if (rcInput) rcInput.value = token;
+            // Ref code and click data for the inquiry (Ref click log brief, 30 Oct 2026).
+            var srcInput = document.getElementById('im-source');
+            if (srcInput && window.ahgRef && typeof window.ahgRef.formSource === 'function') srcInput.value = window.ahgRef.formSource();
 
             fetch(form.action, {
                 method: 'POST',

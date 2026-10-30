@@ -351,6 +351,8 @@
         <input type="text" id="contact_website_url" name="website_url" tabindex="-1" autocomplete="off" placeholder="https://">
     </div>
     <input type="hidden" id="contact-recaptcha-token" name="g-recaptcha-response" value="">
+    {{-- The visitor's Ref code, shown in the contact email so staff can copy it into the CRM. --}}
+    <input type="hidden" id="contact-ref" name="ref" value="">
 
     {{-- Success --}}
     @if(session('success'))
@@ -1106,6 +1108,8 @@
             form.dataset.rcBound = '1';
 
             form.addEventListener('submit', function (e) {
+                var refInput = document.getElementById('contact-ref');
+                if (refInput && window.ahgRef) refInput.value = window.ahgRef.code;
                 var key = form.dataset.recaptchaKey;
                 if (!key || !window.ahgRecaptcha) {
                     if (typeof gtagReportInquirySent === 'function') gtagReportInquirySent();
