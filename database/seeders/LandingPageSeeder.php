@@ -60,8 +60,8 @@ class LandingPageSeeder extends Seeder
                 'status'           => 'published',   // all published since 30 Oct (Saroth)
                 'facility_type'    => $type,
                 'emirate'          => 'Dubai',
-                'seo_title'        => ucwords($type) . ' Setup and Licensing in Dubai | Alpha Health Group',
-                'meta_description' => 'Open your ' . $name . ' in Dubai with one team for layout planning, licensing, documentation and the final inspection. Fixed fee proposal after a free scoping call.',
+                'seo_title'        => ucwords($type) . ' Setup and Licensing in Dubai',
+                'meta_description' => 'Open your ' . $name . ' in Dubai with one team for layout, licensing and the final inspection. Fixed fee proposal after a free scoping call.',
                 'content'          => $this->content($name, 'Dubai', $intro, $facts, ['DHA', 'DED'], 'DHA', 'DED', true, $projects),
             ]);
         }
@@ -83,8 +83,8 @@ class LandingPageSeeder extends Seeder
                 'status'           => 'published',
                 'facility_type'    => null,
                 'emirate'          => $emirate,
-                'seo_title'        => 'Medical Facility Setup and Licensing in ' . $emirate . ' | Alpha Health Group',
-                'meta_description' => 'Open your medical facility in ' . $emirate . ' with one team for layout planning, ' . $authority . ' licensing, documentation and the final inspection. Fixed fee proposal after a free scoping call.',
+                'seo_title'        => 'Medical Facility Setup and Licensing in ' . $emirate,
+                'meta_description' => 'Open your medical facility in ' . $emirate . ' with one team for layout, ' . $authority . ' licensing and the final inspection. Fixed fee proposal after a free scoping call.',
                 'content'          => $this->content('medical facility', $emirate, $intro, $facts, [$authority, $economic], $authority, $economic, false, $projects),
             ]);
         }
@@ -122,13 +122,14 @@ class LandingPageSeeder extends Seeder
     {
         $type = ucfirst($name);
         $notDoctor = in_array($name, ['dental centre', 'dental laboratory'], true) ? 'dentist' : 'doctor';
+        $aName = (preg_match('/^[aeio]/i', $name) ? 'an ' : 'a ') . $name;   // "an aesthetic centre"
 
         $faq = [
-            ['question' => "How long does it take to open a $name?",
+            ['question' => "How long does it take to open $aName?",
              'answer'   => 'It depends on your facility, the fit-out and authority steps such as FANR approval for X-ray equipment. You get a dated project plan after the free scoping call.'],
-            ['question' => "What does it cost to set up a $name?",
+            ['question' => "What does it cost to set up $aName?",
              'answer'   => 'Your budget covers government fees, fit-out, equipment, staff licensing and our fee. Every facility is different, so we give you a fixed fee proposal after a free scoping call.'],
-            ['question' => "Can I open a $name if I am not a $notDoctor?",
+            ['question' => "Can I open $aName if I am not a $notDoctor?",
              'answer'   => 'Yes. An investor can own the facility; it needs a licensed medical director, and we help you appoint one.'],
         ];
         $faq[] = ['question' => 'Can you take over a project that is half finished or failed its audit?',
@@ -172,7 +173,7 @@ class LandingPageSeeder extends Seeder
                 'tag_before' => 'Without planning', 'tag_after' => 'Planned by Alpha',
                 'note' => 'Illustration of one floor area laid out two ways. Your layout depends on your specialties and site.',
                 'legend_rooms' => 'Clinical rooms', 'legend_lost' => 'Lost space',
-                'facts_heading' => "What shapes a $name",
+                'facts_heading' => "What shapes $aName",
                 'facts' => array_map(fn ($f) => ['text' => $f], $facts),
             ]],
             ['key' => 'scope', 'enabled' => true, 'data' => [

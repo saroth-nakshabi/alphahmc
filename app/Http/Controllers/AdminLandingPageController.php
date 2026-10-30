@@ -143,6 +143,10 @@ class AdminLandingPageController extends Controller
             'canonical'        => 'nullable|url|max:255',
             'hero_image'       => 'nullable|file|mimes:jpg,jpeg,png|max:6144|dimensions:min_width=1200,min_height=600',
             'hero_image_alt'   => 'required|string|max:255',
+            'plan_before_image' => 'nullable|file|mimes:jpg,jpeg,png|max:6144|dimensions:min_width=800',
+            'plan_after_image'  => 'nullable|file|mimes:jpg,jpeg,png|max:6144|dimensions:min_width=800',
+            'plan_before_alt'   => 'nullable|string|max:255',
+            'plan_after_alt'    => 'nullable|string|max:255',
             'related_ids'      => 'nullable|array',
             'related_ids.*'    => 'integer|exists:landing_pages,id',
             'content'          => 'required|json',
@@ -153,6 +157,12 @@ class AdminLandingPageController extends Controller
             'hero_image.max'        => 'The hero image must be 6 MB or smaller.',
             'hero_image.dimensions' => 'The hero image must be at least 1200 by 600 pixels.',
             'hero_image_alt.required' => 'Describe the hero image for screen readers (alt text).',
+            'plan_before_image.mimes' => 'Upload the floor plan as JPG or PNG.',
+            'plan_after_image.mimes'  => 'Upload the floor plan as JPG or PNG.',
+            'plan_before_image.max'   => 'Each floor plan must be 6 MB or smaller.',
+            'plan_after_image.max'    => 'Each floor plan must be 6 MB or smaller.',
+            'plan_before_image.dimensions' => 'Each floor plan must be at least 800 pixels wide.',
+            'plan_after_image.dimensions'  => 'Each floor plan must be at least 800 pixels wide.',
         ]);
 
         $content = LandingPageSchema::normalize(json_decode((string) $request->input('content'), true) ?: []);
@@ -162,6 +172,13 @@ class AdminLandingPageController extends Controller
         }
         if (!$page->hero_image && !$request->hasFile('hero_image')) {
             $errors['hero_image'] = ['Upload a hero image.'];
+        }
+        $removePlans = $request->boolean('plan_images_remove');
+        foreach (['before', 'after'] as $side) {
+            $hasImage = $request->hasFile("plan_{$side}_image") || ($page->{"plan_{$side}_image"} && !$removePlans);
+            if ($hasImage && trim((string) $request->input("plan_{$side}_alt")) === '') {
+                $errors["plan_{$side}_alt"] = ['Describe the ' . ($side === 'before' ? 'unplanned' : 'planned') . ' layout for screen readers (alt text).'];
+            }
         }
         if ($errors) {
             return response()->json(['success' => false, 'message' => 'Fix the highlighted fields, then save again.', 'errors' => $errors], 422);
@@ -173,7 +190,10 @@ class AdminLandingPageController extends Controller
         $data['related_ids'] = array_values(array_unique(array_map('intval', $request->input('related_ids', []))));
         $data['canonical'] = $data['canonical'] ?? null;
         $data['updated_by'] = Auth::id();
-        unset($data['hero_image']);
+        unset($data['hero_image'], $data['plan_before_image'], $data['plan_after_image']);
+        if ($removePlans) {
+            $data['plan_before_image'] = $data['plan_after_image'] = null;   // files kept: revisions may restore them
+        }
 
         try {
             if ($request->hasFile('hero_image')) {
@@ -182,6 +202,14 @@ class AdminLandingPageController extends Controller
                 $name = time() . '_' . Str::uuid() . '.' . strtolower($file->getClientOriginalExtension());
                 $file->move(public_path(self::HERO_DIR), $name);
                 $data['hero_image'] = self::HERO_DIR . '/' . $name;
+            }
+            foreach (['plan_before_image', 'plan_after_image'] as $field) {
+                if ($request->hasFile($field)) {
+                    $file = $request->file($field);
+                    $name = time() . '_' . Str::uuid() . '.' . strtolower($file->getClientOriginalExtension());
+                    $file->move(public_path(self::HERO_DIR), $name);
+                    $data[$field] = self::HERO_DIR . '/' . $name;
+                }
             }
 
             $wasNew = !$page->exists;
@@ -202,7 +230,15 @@ class AdminLandingPageController extends Controller
         $warnings = LandingPageSchema::copyWarnings($content, [
             'SEO title' => $page->seo_title, 'Meta description' => $page->meta_description,
             'Page name' => $page->name, 'Hero image alt text' => $page->hero_image_alt,
+            'Unplanned layout alt text' => $page->plan_before_alt, 'Planned layout alt text' => $page->plan_after_alt,
         ]);
+        // Search engines cut longer ones (Saroth, 30 Oct 2026).
+        if (mb_strlen($page->seo_title) > 60) {
+            $warnings[] = 'SEO title is ' . mb_strlen($page->seo_title) . ' characters; keep it within 60.';
+        }
+        if (mb_strlen($page->meta_description) > 155) {
+            $warnings[] = 'Meta description is ' . mb_strlen($page->meta_description) . ' characters; keep it within 155.';
+        }
 
         return response()->json([
             'success'  => true,
@@ -211,6 +247,10 @@ class AdminLandingPageController extends Controller
             'redirect' => $wasNew ? route('admin.landing-pages.edit', $page->id) : null,
             'view_url' => $page->url(),
             'hero_url' => $page->hero_image ? asset('public/' . $page->hero_image) : null,
+            'plan_urls' => [
+                'before' => $page->plan_before_image ? asset('public/' . $page->plan_before_image) : null,
+                'after'  => $page->plan_after_image ? asset('public/' . $page->plan_after_image) : null,
+            ],
         ]);
     }
 

@@ -1,4 +1,17 @@
-{{-- Floor comparison (drawings from the prototype, kept in code) and the key facts for this facility. --}}
+{{-- Floor comparison and the key facts for this facility. The unplanned and planned layouts are uploaded per page
+     in the landing editor (Saroth, 30 Oct 2026); until both are there, the prototype's drawings show. --}}
+@php
+    $planImages = $page->plan_before_image && $page->plan_after_image
+        && is_file(public_path($page->plan_before_image)) && is_file(public_path($page->plan_after_image));
+    $planPic = function (string $path, string $alt, bool $hidden) {
+        $webp = \App\Support\Img::webp($path, 1200);
+        $size = @getimagesize(public_path($path));
+        $dims = $size ? ' width="' . $size[0] . '" height="' . $size[1] . '"' : '';
+        return ($webp ? '<picture><source type="image/webp" srcset="' . e($webp) . '">' : '<picture>')
+            . '<img src="' . e(\App\Support\Img::thumb($path, 1200)) . '" alt="' . e($hidden ? '' : $alt) . '"' . $dims . ' loading="lazy" decoding="async">'
+            . '</picture>';
+    };
+@endphp
 <section class="lp-section" id="planning">
     <div class="lp-wrap">
         <div class="lp-split-head">
@@ -6,6 +19,10 @@
             @if($d['text'] !== '')<p class="lp-lede">{{ $d['text'] }}</p>@endif
         </div>
         <div class="lp-compare" id="lp-compare" style="--pos:50%">
+            @if($planImages)
+            {!! $planPic($page->plan_before_image, (string) $page->plan_before_alt, false) !!}
+            <div class="lp-after">{!! $planPic($page->plan_after_image, (string) $page->plan_after_alt, false) !!}</div>
+            @else
             <svg viewBox="0 0 1200 560" role="img" aria-label="Illustration of an unplanned layout: two treatment rooms, a long corridor and an oversized waiting area">
         <rect x="0" y="0" width="1200" height="560" fill="#ffffff"/>
         <defs><pattern id="lp-hatch" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="12" height="12" fill="#fbecea"/><line x1="0" y1="0" x2="0" y2="12" stroke="#e8b4ad" stroke-width="3"/></pattern></defs>
@@ -51,13 +68,14 @@
           <text x="1010" y="413" text-anchor="middle" font-family="Outfit, sans-serif" font-size="21" fill="#3c5457">Staff and store</text>
         </svg>
             </div>
+            @endif
             <div class="lp-handle" aria-hidden="true"></div>
             <div class="lp-compare-tags" aria-hidden="true"><span>{{ $d['tag_before'] }}</span><span>{{ $d['tag_after'] }}</span></div>
             <input type="range" min="0" max="100" value="50" id="lp-compare-range" aria-label="Compare the unplanned and the planned layout">
         </div>
         <div class="lp-compare-note">
             <span>{{ $d['note'] }}</span>
-            <span class="lp-legend"><span><i style="background:#005e67"></i>{{ $d['legend_rooms'] }}</span><span><i style="background:#fbecea;border:1px solid #e8b4ad"></i>{{ $d['legend_lost'] }}</span></span>
+            @unless($planImages)<span class="lp-legend"><span><i style="background:#005e67"></i>{{ $d['legend_rooms'] }}</span><span><i style="background:#fbecea;border:1px solid #e8b4ad"></i>{{ $d['legend_lost'] }}</span></span>@endunless
         </div>
         @if(count($d['facts']))
         <div class="lp-facts">

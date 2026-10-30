@@ -19,11 +19,13 @@ class LandingPage extends Model
     public const SNAPSHOT_FIELDS = [
         'name', 'slug', 'status', 'lead_type', 'facility_type', 'emirate', 'seo_title', 'meta_description',
         'canonical', 'indexable', 'hero_image', 'hero_image_alt', 'related_ids', 'content',
+        'plan_before_image', 'plan_before_alt', 'plan_after_image', 'plan_after_alt',
     ];
 
     protected $fillable = [
         'name', 'slug', 'status', 'lead_type', 'facility_type', 'emirate', 'seo_title', 'meta_description',
         'canonical', 'indexable', 'hero_image', 'hero_image_alt', 'related_ids', 'content', 'published_at', 'updated_by',
+        'plan_before_image', 'plan_before_alt', 'plan_after_image', 'plan_after_alt',
     ];
 
     protected $casts = [

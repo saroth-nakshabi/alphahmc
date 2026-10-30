@@ -165,6 +165,29 @@
 
                 <div class="card shadow-sm border-0 mb-3">
                     <div class="card-body">
+                        <h6 class="fw-semibold mb-1">Floor plans: the same floor, planned twice</h6>
+                        <p class="small text-muted mb-2">The unplanned and the planned layout of this facility type, shown in the comparison slider. Use two images of the same size and framing. Until both are uploaded, the page shows the built-in drawings.</p>
+                        @foreach(['before' => 'Unplanned layout', 'after' => 'Planned layout'] as $side => $sideLabel)
+                            @php $planImg = $page->{"plan_{$side}_image"}; @endphp
+                            <img class="lpe-hero-preview mb-2" id="lpePlan{{ ucfirst($side) }}Preview" alt=""
+                                 src="{{ $planImg ? asset('public/' . $planImg) : '' }}" @unless($planImg) hidden @endunless>
+                            <label class="form-label small fw-semibold mb-1" for="lpePlan{{ ucfirst($side) }}">{{ $sideLabel }}: {{ $planImg ? 'replace the image' : 'upload an image' }}</label>
+                            <input type="file" class="form-control form-control-sm" id="lpePlan{{ ucfirst($side) }}" name="plan_{{ $side }}_image" accept="image/jpeg,image/png" aria-describedby="lpePlanHelp">
+                            <label class="form-label small fw-semibold mb-1 mt-2" for="lpePlan{{ ucfirst($side) }}Alt">{{ $sideLabel }}: alt text <span class="text-danger" aria-hidden="true">*</span></label>
+                            <input class="form-control form-control-sm mb-3" id="lpePlan{{ ucfirst($side) }}Alt" name="plan_{{ $side }}_alt" value="{{ $page->{"plan_{$side}_alt"} }}" maxlength="255">
+                        @endforeach
+                        <div class="form-text" id="lpePlanHelp">JPG or PNG, at least 800 pixels wide, up to 6 MB. Alt text is required once an image is uploaded.</div>
+                        @if($page->plan_before_image || $page->plan_after_image)
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" id="lpePlanRemove" name="plan_images_remove" value="1">
+                                <label class="form-check-label small" for="lpePlanRemove">Remove both floor plans and show the built-in drawings</label>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0 mb-3">
+                    <div class="card-body">
                         <h6 class="fw-semibold mb-1">Facility links in the hero</h6>
                         <p class="small text-muted mb-2">Tick the pages to link, this page included, and set their order. Drafts stay hidden until published. With none ticked, the hero shows the facilities list instead.</p>
                         <ul class="list-unstyled mb-0 lpe-related" id="lpeRelated">
@@ -366,9 +389,16 @@
 
     // ── Save (AJAX) ──
     var saveBtn = document.getElementById('lpeSave');
+    // Turning search indexing on needs a confirmation (SEO agent and Saroth, 30 Oct 2026).
+    var indexSwitch = document.getElementById('lpeIndex');
+    var indexedBefore = indexSwitch ? indexSwitch.checked : false;
     form.addEventListener('submit', function (e) {
         e.preventDefault();
         if (!saveBtn) return;
+        if (indexSwitch && indexSwitch.checked && !indexedBefore
+            && !window.confirm('This page shares most of its text with the other landing pages. Index it only after the SEO agent approves its own content.\n\nSave with search indexing on?')) {
+            return;
+        }
         clearAll();
         var fd = new FormData(form);
         fd.append('content', content());
@@ -390,6 +420,14 @@
                 if (d.redirect) { window.location = d.redirect; return; }
                 document.getElementById('lpeState').textContent = d.message;
                 if (d.hero_url) { preview.src = d.hero_url; preview.hidden = false; hero.value = ''; }
+                if (indexSwitch) indexedBefore = indexSwitch.checked;
+                ['before', 'after'].forEach(function (side) {
+                    var key = side.charAt(0).toUpperCase() + side.slice(1);
+                    var img = document.getElementById('lpePlan' + key + 'Preview'), input = document.getElementById('lpePlan' + key);
+                    var url = d.plan_urls ? d.plan_urls[side] : null;
+                    if (img) { img.src = url || ''; img.hidden = !url; }
+                    if (input) input.value = '';
+                });
                 if (typeof Toast !== 'undefined') Toast.fire({ icon: 'success', title: d.message });
                 return;
             }

@@ -131,6 +131,8 @@ html:has(.lp) { scroll-behavior: smooth; scroll-padding-top: 96px; }
 .lp-split-head { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 5vw, 80px); align-items: end; margin-bottom: 44px; }
 .lp-compare { position: relative; border-radius: 20px; overflow: hidden; border: 1px solid var(--lp-line); background: var(--lp-white); user-select: none; touch-action: pan-y; }
 .lp-compare svg { display: block; width: 100%; height: auto; }
+.lp-compare img { display: block; width: 100%; height: auto; }
+.lp-compare .lp-after img { height: 100%; object-fit: cover; }
 .lp-after { position: absolute; inset: 0; clip-path: inset(0 0 0 var(--pos, 50%)); }
 .lp-handle { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 2px; background: var(--lp-ink); transform: translateX(-1px); pointer-events: none; }
 .lp-handle::after { content: "\2194"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 46px; height: 46px; border-radius: 50%; background: var(--lp-ink); color: var(--lp-white); display: grid; place-items: center; font-size: 20px; box-shadow: 0 6px 18px rgba(14,36,39,.25); }
