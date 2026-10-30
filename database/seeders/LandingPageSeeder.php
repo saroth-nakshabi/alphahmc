@@ -183,7 +183,7 @@ class LandingPageSeeder extends Seeder
                 'optional' => 'Also available: construction phase engineering (design package, BOQ, contractor appointment, NOCs and site supervision) and recruitment of your clinical team.',
                 'rows' => [
                     $row('Plan and design', 'Strategic planning', 'Project master plan, service mapping by specialty and a gap analysis before you commit.'),
-                    $row('Plan and design', 'Design and engineering approval', 'Space programming, layout drawings to authority guidelines, submission and approval.'),
+                    $row('Plan and design', 'Design and engineering approval', 'Space programming, layout drawings according to authority guidelines, submission and approval.'),
                     $row('Plan and design', 'Medical equipment planning', 'Equipment lists by specialty, consumables, crash cart and biomedical documentation.'),
                     $row('License and staff', 'Commercial trade license', "$economic or free zone entity, memorandum of association and security clearance."),
                     $row('License and staff', 'Facility license', 'Registration with the health authority through to the final facility license.'),

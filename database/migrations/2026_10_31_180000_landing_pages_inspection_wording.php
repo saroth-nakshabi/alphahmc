@@ -18,6 +18,9 @@ return new class extends Migration
             => 'We request the inspection, attend and handle the full audit as your consultant, close any findings and see the license issued.',
         'and stands with you at the final inspection.'
             => 'and handles the final inspection for you.',
+        // Saroth, 30 Oct 2026: "according to" the authority guidelines.
+        'layout drawings to authority guidelines'
+            => 'layout drawings according to authority guidelines',
     ];
 
     public function up(): void
