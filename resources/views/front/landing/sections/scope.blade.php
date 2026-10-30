@@ -12,8 +12,8 @@
             @if($d['text'] !== '')<p class="lp-lede lp-mt">{{ $d['text'] }}</p>@endif
             <figure>
                 <picture>
-                    <source type="image/webp" srcset="{{ asset('public/front/assets/images/landing/scope-engineers.webp') }}">
-                    <img src="{{ asset('public/front/assets/images/landing/scope-engineers.jpg') }}" alt="{{ $d['image_alt'] }}" width="800" height="357" loading="lazy" decoding="async">
+                    <source type="image/webp" srcset="{{ asset('public/front/assets/images/landing/scope-engineers.webp') }}?v={{ substr(md5_file(public_path('front/assets/images/landing/scope-engineers.webp')), 0, 10) }}">
+                    <img src="{{ asset('public/front/assets/images/landing/scope-engineers.jpg') }}?v={{ substr(md5_file(public_path('front/assets/images/landing/scope-engineers.jpg')), 0, 10) }}" alt="{{ $d['image_alt'] }}" width="418" height="359" loading="lazy" decoding="async">
                 </picture>
             </figure>
         </div>

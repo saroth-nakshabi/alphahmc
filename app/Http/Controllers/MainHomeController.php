@@ -704,7 +704,12 @@ class MainHomeController extends Controller
         if (!$isSuspicious) {
             // 2. Send Email Notification to Admin
             try {
-                Mail::to('info@alphatsm.com')->send(new ServiceInquiryMail($inquiry));
+                // Proposal requests from the facility landing pages also go to the facility team (Saroth, 30 Oct 2026).
+                $adminMail = Mail::to('info@alphatsm.com');
+                if ($inquiry->landing_page_id) {
+                    $adminMail->cc('mhmrimas.alpha@gmail.com');
+                }
+                $adminMail->send(new ServiceInquiryMail($inquiry));
             } catch (\Exception $e) {
                 Log::error('Inquiry Admin Mail failed: ' . $e->getMessage());
             }
