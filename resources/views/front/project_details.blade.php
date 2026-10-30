@@ -157,8 +157,11 @@
             margin-bottom: 24px;
         }
 
+        /* Sized so a case study title (up to about 45 characters) fits on 2 lines in the desktop hero column and
+           3 on a phone (case study brief, 30 Oct). Libre Baskerville is wide and the column is about 430px at 1440,
+           so the desktop size follows the viewport; measured with all 16 titles at 1440, 1024, 768, 390 and 360. */
         .pd-hero h1 {
-            font-size: 4rem;
+            font-size: clamp(1.5rem, 2.25vw, 2.5rem);
             line-height: 1.1;
             margin-bottom: 24px;
             letter-spacing: -0.02em;
@@ -1490,10 +1493,10 @@
   /* Hero Responsive */
   .pd-hero { width: 100%; padding: 100px 20px 60px; border-radius: 0; }
   .pd-hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .pd-hero h1 { font-size: 3rem; }
   .pd-hero-text { order: 2; text-align: center; }
   .pd-hero-image-container { order: 1; }
   .pd-hero-image-container img { height: 400px; }
-  .pd-hero h1 { font-size: 3rem; }
   .pd-hero-desc-wrapper { margin: 0 auto 32px; }
   .pd-hero-ctas { justify-content: center; }
 
@@ -1519,7 +1522,6 @@
 }
 
 @media (max-width: 768px) {
-  .pd-hero h1 { font-size: 2.5rem; }
   .pd-hero-image-container img { height: 320px; }
   .pdl-features__grid { grid-template-columns: 1fr; }
   .pdl-rstat__num { font-size: 3.5rem; }
@@ -1527,7 +1529,7 @@
 
 @media (max-width: 600px) {
   .pdl { margin-top: -85px; padding-top: 110px; }
-  .pd-hero h1 { font-size: 2.2rem; }
+  .pd-hero h1 { font-size: clamp(1.4rem, 6.6vw, 1.75rem); }
   .pd-hero-desc-content { font-size: 1.1rem; }
   .pd-hero-ctas { flex-direction: column; width: 100%; gap: 12px; }
   .pd-btn { width: 100%; justify-content: center; }
