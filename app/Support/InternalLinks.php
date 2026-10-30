@@ -24,6 +24,8 @@ class InternalLinks
         '/service-category/healthcare-professional-licensing'  => self::PRO_LICENSING,
         '/service-packages/healthcare-professional-licensing-uae' => self::PRO_LICENSING,
         '/service-category/facility-licensing-setup'           => ['/plan-your-project'],
+        // Linked from nowhere else in the server-rendered HTML (orphan check, 30 Oct).
+        '/service-category/regulatory-quality'                 => ['/healthcare_quality_assurance'],
         '/services/clinic-setup-licensing-uae'                 => ['/plan-your-project'],
         '/services/medical-centre-setup-licensing-dubai'       => ['/plan-your-project'],
     ];
@@ -47,6 +49,7 @@ class InternalLinks
     private const STATIC_TITLES = [
         '/plan-your-project'         => 'Plan your healthcare project',
         '/services-by-facility-type' => 'Services by facility type',
+        '/healthcare_quality_assurance' => 'Facility Quality Assurance',
     ];
 
     private static array $resolved = [];
