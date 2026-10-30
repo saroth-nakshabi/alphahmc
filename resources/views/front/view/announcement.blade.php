@@ -20,7 +20,9 @@
                             <p class="ann-sub-description mb-5">{{ $ann->description }}</p>
 
                             @if($ann->button_text)
-                                <a href="{{ $ann->button_link ?? '#' }}" class="ann-ghost-btn">
+                                {{-- An empty or "#" link used to go nowhere; it now opens the inquiry form. --}}
+                                @php $annModal = in_array(trim((string) $ann->button_link), ['', '#', '#inquiryModal'], true); @endphp
+                                <a href="{{ $annModal ? '#inquiryModal' : $ann->button_link }}" class="ann-ghost-btn" @if($annModal) data-bs-toggle="modal" data-bs-target="#inquiryModal" role="button" @endif>
                                     {{ $ann->button_text }}
                                 </a>
                             @endif
