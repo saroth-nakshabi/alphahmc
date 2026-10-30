@@ -690,7 +690,7 @@
                         <li><strong>Registered Office:</strong> UAE (Abu Dhabi &amp; Dubai)</li>
                         <li><strong>Legal enquiries:</strong> <a href="mailto:legal@alphahmc.com">legal@alphahmc.com</a></li>
                         <li><strong>General enquiries:</strong> <a href="mailto:info@alphahmc.com">info@alphahmc.com</a></li>
-                        <li><strong>Phone:</strong> +971 3 780 2818</li>
+                        <li><strong>Phone:</strong> +971 4 272 4064</li>
                     </ul>
                     <p>
                         Notices sent by email are deemed received at the time of confirmed transmission (excluding weekends and UAE public holidays). Notices sent by registered post are deemed received five (5) business days after posting.

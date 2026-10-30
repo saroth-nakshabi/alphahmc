@@ -411,31 +411,49 @@
                         <div class="ps-lg-4">
                             <h4 class="contact-heading-main">Connect Directly</h4>
 
+                            {{-- Offices in the order of the business listings (SEO brief 30 Oct 2026): Dubai is the main address.
+                                 Dubai and Abu Dhabi share the main number; the Al Ain Office keeps its own (Saroth). --}}
                             <div class="office-card">
-                                <div class="office-title">Corporate Head Office</div>
+                                <div class="office-title">Dubai Office</div>
                                 <div class="office-info-item">
                                     <i class="fas fa-map-marker-alt"></i>
-                                    <span>R Floor, Building 105, Othman Bin Affan St, Al Central District, Al Ain, UAE</span>
+                                    <span>1101, 11th Floor, Damas Tower, Al Maktoum Road, Riggat Al Buteen, Dubai, UAE</span>
                                 </div>
                                 <div class="office-info-item">
                                     <i class="fas fa-phone-alt"></i>
-                                    <span>+971 3 780 2818</span>
+                                    <span>+971 4 272 4064</span>
                                 </div>
                                 <div class="office-info-item">
                                     <i class="fas fa-envelope"></i>
                                     <span>info@alphatsm.com</span>
                                 </div>
+                                <div class="office-info-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Monday to Friday, 9:00 am to 6:00 pm</span>
+                                </div>
                             </div>
 
                             <div class="office-card">
-                                <div class="office-title">Dubai Branch</div>
+                                <div class="office-title">Abu Dhabi Office</div>
                                 <div class="office-info-item">
                                     <i class="fas fa-map-marker-alt"></i>
-                                    <span>1101, 11th floor, Damas Tower, Al Maktoum Road, Dubai</span>
+                                    <span>307, Al Khazna Tower, Al Najda Street, Al Danah, Zone 1, Abu Dhabi, UAE</span>
                                 </div>
                                 <div class="office-info-item">
                                     <i class="fas fa-phone-alt"></i>
                                     <span>+971 4 272 4064</span>
+                                </div>
+                            </div>
+
+                            <div class="office-card">
+                                <div class="office-title">Al Ain Office</div>
+                                <div class="office-info-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Building 105, Othman Bin Affan St, Al Central District, Al Ain, UAE</span>
+                                </div>
+                                <div class="office-info-item">
+                                    <i class="fas fa-phone-alt"></i>
+                                    <span>+971 3 780 2818</span>
                                 </div>
                             </div>
 

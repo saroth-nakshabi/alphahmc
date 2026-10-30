@@ -319,6 +319,24 @@
                 '@type' => 'ImageObject',
                 'url'   => asset('public/front-new/assets/images/alpha-logo.svg'),
             ],
+            // Main address as on the business listings (Dubai Office), and the three offices (SEO brief 30 Oct 2026).
+            'address'      => [
+                '@type' => 'PostalAddress', 'streetAddress' => '1101, 11th Floor, Damas Tower, Al Maktoum Road, Riggat Al Buteen',
+                'addressLocality' => 'Dubai', 'addressCountry' => 'AE',
+            ],
+            'telephone'    => '+971 4 272 4064',
+            'email'        => 'info@alphatsm.com',
+            'location'     => [
+                ['@type' => 'Place', 'name' => 'Dubai Office', 'telephone' => '+971 4 272 4064', 'address' => [
+                    '@type' => 'PostalAddress', 'streetAddress' => '1101, 11th Floor, Damas Tower, Al Maktoum Road, Riggat Al Buteen',
+                    'addressLocality' => 'Dubai', 'addressCountry' => 'AE']],
+                ['@type' => 'Place', 'name' => 'Abu Dhabi Office', 'telephone' => '+971 4 272 4064', 'address' => [
+                    '@type' => 'PostalAddress', 'streetAddress' => '307, Al Khazna Tower, Al Najda Street, Al Danah, Zone 1',
+                    'addressLocality' => 'Abu Dhabi', 'addressCountry' => 'AE']],
+                ['@type' => 'Place', 'name' => 'Al Ain Office', 'telephone' => '+971 3 780 2818', 'address' => [
+                    '@type' => 'PostalAddress', 'streetAddress' => 'Building 105, Othman Bin Affan St, Al Central District',
+                    'addressLocality' => 'Al Ain', 'addressCountry' => 'AE']],
+            ],
             'description'  => $siteDesc !== '' ? $siteDesc : null,
             'areaServed'   => [
                 ['@type' => 'Country', 'name' => 'United Arab Emirates'],
@@ -326,6 +344,7 @@
             'contactPoint' => [
                 '@type'             => 'ContactPoint',
                 'contactType'       => 'customer service',
+                'telephone'         => '+971 4 272 4064',
                 'areaServed'        => 'AE',
                 'availableLanguage' => ['English', 'Arabic'],
             ],

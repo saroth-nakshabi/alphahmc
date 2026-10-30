@@ -816,8 +816,8 @@
                         <a href="{{ route('contact') }}" class="cta-btn-primary">
                             Consult an Expert <i class="fas fa-paper-plane ms-2"></i>
                         </a>
-                        <a href="tel:+97137802818" class="cta-btn-outline">
-                            <i class="fas fa-phone-alt me-2"></i> +971 3 780 2818
+                        <a href="tel:+97142724064" class="cta-btn-outline">
+                            <i class="fas fa-phone-alt me-2"></i> +971 4 272 4064
                         </a>
                     </div>
                 </div>
