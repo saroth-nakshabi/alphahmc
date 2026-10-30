@@ -88,12 +88,24 @@ class ReviewerSeeder extends Seeder
             'reviews' => 'facility licensing projects (first page: the MABC Abilities Development case study).',
             'linkedin' => 'https://www.linkedin.com/in/rafah-razik-974828244/',
         ],
+        'nuha-ansaf' => [
+            // Blog author, not a reviewer (brief "alphahmc-blog-author", Saroth 30 Oct): Head of Content.
+            // Qualifications not given yet.
+            'role' => 'author',
+            'name' => 'Nuha Ansaf',
+            'title' => 'Head of Content',
+            'qualifications' => null,
+            'experience' => '2 years in business writing; 10 months with Alpha Health Group as content strategist.',
+            'bio' => 'Nuha leads content at Alpha Health Group and edits every guide published on alphahmc.com. Each guide is checked for accuracy by the specialist named in its "Reviewed by" line.',
+            'reviews' => null,
+            'linkedin' => 'https://www.linkedin.com/in/nuhaansaf/',
+        ],
     ];
 
     public function run(): void
     {
         foreach (array_keys(self::REVIEWERS) as $i => $key) {
-            Reviewer::updateOrCreate(['key' => $key], self::REVIEWERS[$key] + ['sort_order' => $i + 1]);
+            Reviewer::updateOrCreate(['key' => $key], self::REVIEWERS[$key] + ['role' => Reviewer::ROLE_REVIEWER, 'sort_order' => $i + 1]);
         }
 
         $json = json_decode(file_get_contents(database_path('data/reviewer-assignments.json')), true);

@@ -52,7 +52,7 @@ class AgentBlogController extends Controller
             'image'          => null,
             'featured'       => 0,
             'sort_order'     => (int) Blog::withoutGlobalScope(PublishedScope::class)->max('sort_order') + 1,
-            'author_name'    => null,
+            'author_name'    => Blog::DEFAULT_AUTHOR,   // blog author brief, 30 Oct 2026
         ] + $this->reviewerFields($data, null));
         $blog->forceFill(['status' => Blog::STATUS_DRAFT, 'agent_written_at' => now()]);
         $blog->save();

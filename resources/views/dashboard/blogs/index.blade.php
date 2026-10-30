@@ -245,7 +245,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="control-label mb-1">Author Name</label>
-                            <input type="text" name="author_name" class="form-control" placeholder="e.g. Dr. Sarah Ahmed" />
+                            <input type="text" name="author_name" class="form-control" value="{{ \App\Models\Blog::DEFAULT_AUTHOR }}" placeholder="e.g. Dr. Sarah Ahmed" />
                         </div>
                         <div class="col-md-4">
                             <label class="control-label mb-1">Tags</label>

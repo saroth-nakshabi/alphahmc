@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 #[ScopedBy([PublishedScope::class])]
 class Blog extends Model
 {
+    /** Byline for new posts (blog author brief, Saroth 30 Oct 2026): Head of Content, editor of every guide. */
+    public const DEFAULT_AUTHOR = 'Nuha Ansaf';
+
     use HasFactory;
 
     public const STATUS_DRAFT = 'draft';

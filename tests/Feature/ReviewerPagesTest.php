@@ -80,6 +80,26 @@ class ReviewerPagesTest extends TestCase
             ->assertSee('"lastReviewed":"2026-10-27"', false);
     }
 
+    public function test_blog_byline_links_the_author_bio_and_leaves_dates_alone(): void
+    {
+        $author = Reviewer::updateOrCreate(['key' => 'test-author'], [
+            'role' => Reviewer::ROLE_AUTHOR, 'name' => 'Test Author', 'title' => 'Head of Content',
+            'bio' => 'Edits the guides.', 'sort_order' => 100,
+        ]);
+        $blog = new Blog(['title' => 'Author test', 'slug' => 'author-test', 'content' => '<p>Body.</p>', 'description' => 'Test.',
+                          'image' => 'test.jpg', 'author_name' => 'Test Author', 'published_date' => '2026-05-14', 'updated_date' => '2026-06-04']);
+        $blog->forceFill(['status' => 'published'])->saveQuietly();
+
+        $this->get('/blog_single/author-test')->assertOk()
+            ->assertSee('<a href="' . $author->url() . '"', false)
+            ->assertSee('"author":{"@type":"Person","@id":"' . $author->personId() . '"', false)
+            ->assertSee('"datePublished":"2026-05-14', false)
+            ->assertSee('"dateModified":"2026-06-04', false);
+
+        $this->assertFalse(Reviewer::byKey()->has('test-author'));   // the author is not offered as a reviewer
+        $this->assertSame(Blog::DEFAULT_AUTHOR, 'Nuha Ansaf');
+    }
+
     public function test_menu_rows_are_not_in_the_page_but_served_separately(): void
     {
         $home = $this->get('/')->assertOk()->getContent();

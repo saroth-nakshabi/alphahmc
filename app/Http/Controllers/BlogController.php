@@ -91,7 +91,7 @@ class BlogController extends Controller
             'content'          => $request->input('content'),
             'description'      => $request->input('description'),
             'news_focus'       => $this->normalizeNewsFocus($request->input('news_focus')),
-            'author_name'      => $request->input('author_name'),
+            'author_name'      => $request->input('author_name') ?: Blog::DEFAULT_AUTHOR,
             'read_time'        => $request->input('read_time'),
             'published_date'   => $request->input('published_date') ?: now()->toDateString(),
             'updated_date'     => $request->input('updated_date') ?: null,

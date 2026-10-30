@@ -15,6 +15,20 @@
                 </li>
             @endforeach
         </ul>
+        @php $contentTeam = \App\Models\Reviewer::team()->where('role', \App\Models\Reviewer::ROLE_AUTHOR); @endphp
+        @if($contentTeam->isNotEmpty())
+            <h3 class="about-reviewers-sub">{{ $contentTeam->count() > 1 ? 'Content team' : $contentTeam->first()->title }}</h3>
+            <ul>
+                @foreach($contentTeam as $r)
+                    <li>
+                        <a href="{{ $r->url() }}">
+                            <span class="about-reviewers-initials" aria-hidden="true">{{ $r->initials() }}</span>
+                            <span><strong>{{ $r->name }}</strong><small>{{ $r->title }}, author of our guides</small></span>
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        @endif
     </div>
 </section>
 <style>
@@ -26,6 +40,7 @@
     .about-reviewers a:hover, .about-reviewers a:focus-visible { border-color: #006e72; }
     .about-reviewers-initials { flex: none; width: 52px; height: 52px; border-radius: 50%; background: #006e72; color: #fff; display: grid; place-items: center; font-weight: 600; }
     .about-reviewers strong { display: block; font-weight: 600; }
+    .about-reviewers-sub { font-size: 1.15rem; margin: 32px 0 14px; }
     .about-reviewers small { display: block; color: #3c5457; font-size: .88rem; line-height: 1.4; }
 </style>
 @endif

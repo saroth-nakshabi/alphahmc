@@ -18,6 +18,8 @@
     // "Reviewed by" only with both a name and a date; the URL is re-checked before it is used.
     // A reviewer from the reviewers list (bio page at /team/{key}) takes over from the free-text fields.
     $blogReviewer    = \App\Models\Reviewer::forPage($blog);
+    // Byline: a team member's name links to their bio page (blog author brief, 30 Oct).
+    $blogAuthor      = \App\Models\Reviewer::forAuthor($blog->author_name);
     $blogReviewed    = !$blogReviewer && trim((string) $blog->reviewer_name) !== '' && $blog->last_reviewed;
     $blogReviewerUrl = \App\Support\BlogPublishGuard::safeUrl($blog->reviewer_url);
     $blogSources     = collect($blog->sources ?? [])->filter(fn ($u) => is_string($u) && \App\Support\BlogPublishGuard::safeUrl($u))->values();
@@ -42,9 +44,12 @@
             'image'            => $blog->image ? asset('public/uploads/blog_images/' . $blog->image) : null,
             'datePublished'    => optional($blogPublished)->toAtomString(),
             'dateModified'     => optional($blogModified)->toAtomString(),
-            'author'           => trim((string) $blog->author_name) !== ''
+            'author'           => $blogAuthor
+                ? ['@type' => 'Person', '@id' => $blogAuthor->personId(), 'name' => $blogAuthor->name,
+                   'jobTitle' => $blogAuthor->title, 'url' => $blogAuthor->url()]
+                : ((trim((string) $blog->author_name) !== '')
                 ? ['@type' => 'Person', 'name' => trim($blog->author_name)]
-                : ['@type' => 'Organization', 'name' => 'Alpha Health Group', 'url' => config('app.url')],
+                : ['@type' => 'Organization', 'name' => 'Alpha Health Group', 'url' => config('app.url')]),
             // reviewedBy is defined on WebPage in schema.org; emitted here as the brief plans.
             'reviewedBy'       => $blogReviewed ? array_filter([
                 '@type'    => 'Person',
@@ -386,7 +391,7 @@
                 <div class="article-meta-editorial">
                     <div class="meta-item-box">
                         <span class="meta-label">Author</span>
-                        <span>{{ $blog->author_name ?? 'Alpha Team' }}</span>
+                        <span>@if($blogAuthor)<a href="{{ $blogAuthor->url() }}" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">{{ $blogAuthor->name }}</a>@else{{ $blog->author_name ?? 'Alpha Team' }}@endif</span>
                     </div>
                     <div class="meta-divider-vertical"></div>
                     <div class="meta-item-box">
