@@ -101,7 +101,9 @@ return new class extends Migration
             'status' => 'published',
             'featured' => 0,
             'show_testimonials' => 0,
-            'agent_id' => DB::table('agents')->where('whatsapp', '+971507807163')->value('id'),   // B2B line
+            // B2B line, as on the medical centre page
+            'agent_id' => DB::table('agents')->where('whatsapp', '+971507807163')->value('id')
+                ?? DB::table('services')->where('slug', 'medical-centre-setup-licensing-dubai')->value('agent_id'),
             'related_services' => json_encode(array_map('strval', DB::table('services')->whereIn('slug', $page['related'])->pluck('id')->all())),
             'reviewer' => 'afrin-nakshabi',
             'reviewed_at' => '2026-10-30',
