@@ -19,8 +19,10 @@
             var label = isFacilityLead() ? '65cgCJS6oa4dELn71csC' : '__2wCM6d6cMcELn71csC';
             if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-695565753/' + label, value: 1.0, currency: 'AED' });
         };
+        // Facility pages report "Facility call" instead of "Call Click" (Ads agent, 30 Oct 2026): one label per tap.
         window.gtagReportCallClick = function () {
-            if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-695565753/QcGMCNGd6cMcELn71csC', value: 1.0, currency: 'AED' });
+            var label = isFacilityLead() ? 'GTv9CJ-Qg68dELn71csC' : 'QcGMCNGd6cMcELn71csC';
+            if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-695565753/' + label, value: 1.0, currency: 'AED' });
         };
 
         // ── Helper: push event to dataLayer + fire gtag directly ──────

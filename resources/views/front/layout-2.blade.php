@@ -1058,7 +1058,7 @@
            event = 'ahg_contact_submitted'
          Then attach Google Ads conversion tags to those triggers.
     ════════════════════════════════════════════════════════════════ --}}
-    <script src="{{ asset('public/front/assets/js/layout/tracking.js') }}?v=b176c594b9"></script>
+    <script src="{{ asset('public/front/assets/js/layout/tracking.js') }}?v=b41fe6c154"></script>
 
     {{-- "Chat with Alpha" AI widget stays only on Contact + About Us — everywhere
          else it was high-click/low-inquiry friction, so the dwell popup + the
