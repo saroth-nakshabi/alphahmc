@@ -59,8 +59,24 @@ html:has(.lp) { scroll-behavior: smooth; scroll-padding-top: 96px; }
 
 .lp-preview { background: #7a4b00; color: #fff; font-size: .85rem; text-align: center; padding: 8px var(--lp-gutter-r) 8px var(--lp-gutter); }
 
-/* Header: three floating pills */
-.lp-top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; padding-block: 14px; pointer-events: none; margin-bottom: -84px; }
+/* Header: the site's floating island (logo left, sections middle, Contact right) */
+.lp-top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; padding-block: 15px; pointer-events: none; margin-bottom: -120px; }
+.lp-island { flex: 1; min-width: 0; pointer-events: auto; height: 90px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 24px; padding: 0 22px 0 32px; background: rgba(255,255,255,.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.6); border-radius: 60px; box-shadow: 0 20px 40px rgba(0,0,0,.08); transition: background .3s var(--lp-ease); }
+.lp-top.is-scrolled .lp-island { background: rgba(255,255,255,.82); }
+.lp-island-logo img { height: 52px; width: auto; display: block; }
+.lp-island-nav { display: flex; justify-content: center; gap: 4px; }
+.lp .lp-island-nav a { text-decoration: none; color: var(--lp-ink); font-size: .95rem; font-weight: 500; padding: 10px 16px; border-radius: 999px; transition: background .25s, color .25s; }
+.lp .lp-island-nav a:hover, .lp .lp-island-nav a.is-on { background: rgba(0,110,114,.1); color: var(--lp-teal-900); }
+.lp-contact-menu { position: relative; }
+.lp .lp-contact-btn { font: 600 .95rem/1 var(--lp-sans); color: var(--lp-ink); background: var(--lp-white); border: 1px solid var(--lp-line); border-radius: 999px; padding: 14px 26px; cursor: pointer; box-shadow: 0 4px 14px rgba(14,36,39,.06); transition: border-color .25s, background .25s; }
+.lp .lp-contact-btn:hover, .lp .lp-contact-btn[aria-expanded="true"] { border-color: var(--lp-teal-800); }
+.lp-contact-list { position: absolute; right: 0; top: calc(100% + 12px); min-width: 250px; background: var(--lp-white); border: 1px solid var(--lp-line); border-radius: 16px; box-shadow: 0 18px 40px rgba(14,36,39,.14); padding: 8px; display: grid; gap: 2px; animation: lp-panel .25s var(--lp-ease); }
+.lp .lp-contact-list a { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; text-decoration: none; color: var(--lp-ink); }
+.lp .lp-contact-list a:hover, .lp .lp-contact-list a:focus-visible { background: var(--lp-mist); }
+.lp-contact-list i { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--lp-teal-100); color: var(--lp-teal-900); flex: none; }
+.lp-contact-list .fa-whatsapp { background: #dcf8e6; color: #128c4b; font-size: 1.1rem; }
+.lp-contact-list span { display: grid; line-height: 1.3; }
+.lp-contact-list small { color: var(--lp-ink-2); font-size: .82rem; }
 .lp-top .lp-wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .lp-pill { pointer-events: auto; background: rgba(255,255,255,.94); backdrop-filter: saturate(1.3) blur(12px); border: 1px solid var(--lp-line); border-radius: 16px; display: flex; align-items: center; gap: 4px; padding: 6px; box-shadow: 0 6px 24px rgba(14,36,39,.06); transition: box-shadow .3s; }
 .lp-top.is-scrolled .lp-pill { box-shadow: 0 10px 30px rgba(14,36,39,.12); }
@@ -73,7 +89,7 @@ html:has(.lp) { scroll-behavior: smooth; scroll-padding-top: 96px; }
 .lp-pill-act .lp-btn { min-height: 40px; padding: 0 16px; font-size: .9rem; border-radius: 11px; }
 
 /* Hero */
-.lp-hero { background: var(--lp-mist); padding-block: calc(84px + clamp(28px, 3vw, 40px)) 0; }
+.lp-hero { background: var(--lp-mist); padding-block: calc(120px + clamp(28px, 3vw, 40px)) 0; }
 .lp-crumb { font-size: .85rem; color: var(--lp-ink-2) !important; display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: clamp(28px, 4vw, 52px) !important; }
 .lp-crumb span + span::before { content: "/"; margin-right: 10px; color: #9fb3b4; }
 .lp-crumb b { color: var(--lp-ink); font-weight: 500; }
@@ -274,6 +290,11 @@ html:has(.lp) { scroll-behavior: smooth; scroll-padding-top: 96px; }
 @media (max-width: 960px) {
   .lp-pill-nav, .lp-top-call { display: none; }
   .lp-pill-act { padding-left: 6px; }
+  .lp-island-nav { display: none; }
+  .lp-island { grid-template-columns: auto 1fr auto; height: 72px; padding: 0 12px 0 20px; }
+  .lp-island-logo img { height: 42px; }
+  .lp-top { margin-bottom: -102px; }
+  .lp-hero { padding-top: calc(102px + 24px); }
   .lp-hero-intro, .lp-thesis-grid, .lp-split-head, .lp-facts, .lp-scope-grid, .lp-excl, .lp-proj-grid, .lp-rescue, .lp-faq-grid, .lp-contact-grid { grid-template-columns: 1fr; }
   .lp-band { aspect-ratio: 4 / 3; }
   .lp-band figcaption { border-radius: 12px; right: 16px; left: 16px; bottom: 16px; }

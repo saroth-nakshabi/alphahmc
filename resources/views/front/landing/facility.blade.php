@@ -75,19 +75,28 @@
         <div class="lp-preview" role="status">Draft preview. Only signed-in admins can see this page until it is published.</div>
     @endif
 
+    {{-- Header as the site's floating island (Saroth, 30 Oct 2026): logo left, this page's sections in the middle
+         (no mega menu), and a Contact button that offers Call or WhatsApp. --}}
     <header class="lp-top" id="lp-header">
         <div class="lp-wrap">
-            <a class="lp-pill lp-pill-logo" href="{{ route('home') }}" aria-label="Alpha Health Group home">
-                <img src="{{ asset('public/front-new/assets/images/ahg-logo-header.png') }}" alt="Alpha Health Group" width="123" height="40">
-            </a>
-            @if($navLinks)
-            <nav class="lp-pill lp-pill-nav" aria-label="On this page">
-                @foreach($navLinks as $key => $label)<a href="#{{ $key }}">{{ $label }}</a>@endforeach
-            </nav>
-            @endif
-            <div class="lp-pill lp-pill-act">
-                @if($pg['phone_display'] !== '')<span class="lp-top-call">{{ $pg['phone_display'] }}</span>@endif
-                <a class="lp-btn lp-btn-primary" href="{{ $waHref }}" target="_blank" rel="noopener">{{ $pg['wa_header'] ?: 'WhatsApp us' }}</a>
+            <div class="lp-island">
+                <a class="lp-island-logo" href="{{ route('home') }}" aria-label="Alpha Health Group home">
+                    <img src="{{ asset('public/front-new/assets/images/ahg-logo-header.png') }}" alt="Alpha Health Group" width="185" height="60">
+                </a>
+                @if($navLinks)
+                <nav class="lp-island-nav" aria-label="On this page">
+                    @foreach($navLinks as $key => $label)<a href="#{{ $key }}">{{ $label }}</a>@endforeach
+                </nav>
+                @endif
+                <div class="lp-contact-menu">
+                    <button type="button" class="lp-contact-btn" id="lp-contact-btn" aria-expanded="false" aria-controls="lp-contact-list">Contact</button>
+                    <div class="lp-contact-list" id="lp-contact-list" hidden>
+                        @if($pg['phone_tel'] !== '' || $pg['phone_display'] !== '')
+                        <a href="tel:{{ preg_replace('/[^0-9+]/', '', $pg['phone_tel'] ?: $pg['phone_display']) }}"><i class="fas fa-phone" aria-hidden="true"></i><span><strong>Call</strong><small>{{ $pg['phone_display'] }}</small></span></a>
+                        @endif
+                        <a href="{{ $waHref }}" target="_blank" rel="noopener"><i class="fab fa-whatsapp" aria-hidden="true"></i><span><strong>{{ $pg['wa_header'] ?: 'WhatsApp' }}</strong><small>Chat with the facility team</small></span></a>
+                    </div>
+                </div>
             </div>
         </div>
     </header>

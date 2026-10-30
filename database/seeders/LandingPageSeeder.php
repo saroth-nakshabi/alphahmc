@@ -145,7 +145,7 @@ class LandingPageSeeder extends Seeder
         $two   = fn ($t, $x) => ['title' => $t, 'text' => $x];
 
         $sections = [
-            ['key' => 'authorities', 'enabled' => true, 'data' => [
+            ['key' => 'authorities', 'enabled' => false, 'data' => [   // off since 30 Oct (Saroth); copy kept
                 'label' => 'We license facilities with',
                 'items' => array_map(fn ($a) => ['name' => $a], $authorities),
             ]],

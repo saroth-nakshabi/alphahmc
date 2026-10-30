@@ -48,7 +48,7 @@
     onScroll();
 
     // ── Header links follow the section in view ──
-    var navLinks = $$('.lp-pill-nav a');
+    var navLinks = $$('.lp-island-nav a');
     if (navLinks.length && 'IntersectionObserver' in window) {
         var secs = navLinks.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
         var io = new IntersectionObserver(function (entries) {
@@ -57,6 +57,16 @@
             });
         }, { rootMargin: '-45% 0px -50% 0px' });
         secs.forEach(function (s) { if (s) io.observe(s); });
+    }
+
+    // ── Header Contact button: Call or WhatsApp ──
+    var cBtn = $('#lp-contact-btn'), cList = $('#lp-contact-list');
+    if (cBtn && cList) {
+        var setC = function (open) { cList.hidden = !open; cBtn.setAttribute('aria-expanded', String(open)); };
+        cBtn.addEventListener('click', function (e) { e.stopPropagation(); setC(cList.hidden); if (!cList.hidden) { var f = cList.querySelector('a'); if (f) f.focus(); } });
+        document.addEventListener('click', function (e) { if (!cList.hidden && !cList.contains(e.target)) setC(false); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !cList.hidden) { setC(false); cBtn.focus(); } });
+        $$('a', cList).forEach(function (a) { a.addEventListener('click', function () { setTimeout(function () { setC(false); }, 200); }); });
     }
 
     // ── Phone dock appears once the hero buttons scroll away ──
