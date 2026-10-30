@@ -22,10 +22,10 @@ class LandingPageSeeder extends Seeder
     private const DUBAI = [
         // slug => [facility_type, name in copy, intro, facts]
         'dental-centre-dubai' => ['Dental centre', 'dental centre',
-            'One team plans your layout around your specialties, secures your DHA or DHCC license, prepares your documentation and stands with you at the final inspection.',
+            'One team plans your layout around your specialties, secures your DHA license, prepares your documentation and stands with you at the final inspection.',
             ['Treatment rooms and sterilisation areas are planned around the specialties you offer.', 'X-ray equipment needs FANR approval. We build it into the layout and the schedule from the start.']],
         'medical-centre-dubai' => ['Medical centre', 'medical centre',
-            'One team plans your layout around your specialties, secures your DHA or DHCC license, prepares your documentation and stands with you at the final inspection.',
+            'One team plans your layout around your specialties, secures your DHA license, prepares your documentation and stands with you at the final inspection.',
             ['Rooms, areas and staffing follow the specialties you choose. We map them before any drawing starts.', 'Adding a specialty later is easier when the first layout leaves room for it.']],
         'aesthetic-centre-dubai' => ['Aesthetic centre', 'aesthetic centre',
             'One team plans your clinical aesthetic centre, secures the license, prepares your documentation and stands with you at the final inspection.',
@@ -57,12 +57,12 @@ class LandingPageSeeder extends Seeder
         foreach (self::DUBAI as $slug => [$type, $name, $intro, $facts]) {
             $this->seedPage($slug, [
                 'name'             => $type . ', Dubai',
-                'status'           => $slug === 'dental-centre-dubai' ? 'published' : 'draft',
+                'status'           => 'published',   // all published since 30 Oct (Saroth)
                 'facility_type'    => $type,
                 'emirate'          => 'Dubai',
                 'seo_title'        => ucwords($type) . ' Setup and Licensing in Dubai | Alpha Health Group',
                 'meta_description' => 'Open your ' . $name . ' in Dubai with one team for layout planning, licensing, documentation and the final inspection. Fixed fee proposal after a free scoping call.',
-                'content'          => $this->content($name, 'Dubai', $intro, $facts, ['DHA', 'DHCC', 'DED'], 'DHA', 'DED', true, $projects),
+                'content'          => $this->content($name, 'Dubai', $intro, $facts, ['DHA', 'DED'], 'DHA', 'DED', true, $projects),
             ]);
         }
 
@@ -80,7 +80,7 @@ class LandingPageSeeder extends Seeder
                 'Adding a specialty later is easier when the first layout leaves room for it.'];
             $this->seedPage($slug, [
                 'name'             => 'Medical facility, ' . $emirate,
-                'status'           => 'draft',
+                'status'           => 'published',
                 'facility_type'    => null,
                 'emirate'          => $emirate,
                 'seo_title'        => 'Medical Facility Setup and Licensing in ' . $emirate . ' | Alpha Health Group',
@@ -115,7 +115,7 @@ class LandingPageSeeder extends Seeder
 
     /**
      * @param string $name      facility name as used in copy ("dental centre")
-     * @param bool   $dubai     Dubai pages get the DHA or DHCC FAQ and the facility links; the others a facilities list
+     * @param bool   $dubai     Dubai pages get the facility links; the others a facilities list
      */
     private function content(string $name, string $emirate, string $intro, array $facts, array $authorities,
                              string $authority, string $economic, bool $dubai, $projects): array
@@ -131,10 +131,6 @@ class LandingPageSeeder extends Seeder
             ['question' => "Can I open a $name if I am not a $notDoctor?",
              'answer'   => 'Yes. An investor can own the facility; it needs a licensed medical director, and we help you appoint one.'],
         ];
-        if ($dubai) {
-            $faq[] = ['question' => 'Should I license with DHA or DHCC?',
-                'answer' => 'Facilities in Dubai Healthcare City are licensed by the DHCC authority under DHA; the rest of Dubai is licensed by DHA. We advise on the right route in the first meeting.'];
-        }
         $faq[] = ['question' => 'Can you take over a project that is half finished or failed its audit?',
             'answer' => 'Yes, both. We review the current state, close the gaps and carry the project to the final license.'];
         $faq[] = ['question' => "Can I buy an existing $name instead?",
@@ -212,7 +208,11 @@ class LandingPageSeeder extends Seeder
                     $phase('Final inspection and license', 'We request the inspection, attend it with you, close any findings and see the license issued.', 11, 14),
                 ],
             ]],
-            ['key' => 'excluded', 'enabled' => true, 'data' => [
+            ['key' => 'others', 'enabled' => true, 'data' => [
+                'heading' => 'Open another facility with Alpha.',
+                'text' => 'Other facility types we set up, from planning to the final license.',
+            ]],
+            ['key' => 'excluded', 'enabled' => false, 'data' => [   // replaced by "others" (Saroth, 30 Oct)
                 'heading' => 'What is not in our fee.',
                 'text' => 'So you can budget with no surprises.',
                 'items' => array_map(fn ($t) => ['text' => $t], [

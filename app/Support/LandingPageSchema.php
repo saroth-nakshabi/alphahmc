@@ -130,6 +130,10 @@ class LandingPageSchema
             'fields' => ['heading' => ['Heading', 'text', true], 'text' => ['Text', 'text']],
             'lists'  => ['items' => ['Items', ['text' => ['Item', 'text']]]],
         ],
+        'others' => [
+            'label'  => 'Other facility types (links to the other published landing pages)',
+            'fields' => ['heading' => ['Heading', 'text', true], 'text' => ['Text', 'text']],
+        ],
         'projects' => [
             'label'  => 'Facilities we have delivered',
             'nav'    => true,

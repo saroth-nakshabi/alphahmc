@@ -184,6 +184,15 @@ html:has(.lp) { scroll-behavior: smooth; scroll-padding-top: 96px; }
 .lp-excl ul { list-style: none; columns: 2; column-gap: 40px; }
 .lp-excl li { break-inside: avoid; padding: 16px 0; border-top: 1px solid var(--lp-line); color: var(--lp-ink-2); }
 
+/* Other facility types: pills to the other landing pages */
+.lp-others { display: grid; grid-template-columns: 1fr 2fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
+.lp-others-pills { display: flex; flex-wrap: wrap; gap: 12px; list-style: none; }
+.lp .lp-others-pills a { display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; border-radius: 999px; border: 1px solid var(--lp-line); background: var(--lp-white); color: var(--lp-ink); font-weight: 500; text-decoration: none; transition: border-color .25s var(--lp-ease), background .25s var(--lp-ease), transform .25s var(--lp-ease); }
+.lp .lp-others-pills a::after { content: "\2192"; color: var(--lp-teal-800); transition: transform .25s var(--lp-ease); }
+.lp .lp-others-pills a:hover { border-color: var(--lp-teal-800); background: var(--lp-mist); }
+.lp .lp-others-pills a:hover::after { transform: translateX(3px); }
+@media (max-width: 960px) { .lp-others { grid-template-columns: 1fr; } }
+
 /* Projects and the rescue line on the same band */
 .lp-projects { background: var(--lp-mist); }
 .lp-projects:has(+ .lp-rescue-band) { padding-bottom: 0; }
