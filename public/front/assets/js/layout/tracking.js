@@ -5,11 +5,19 @@
         'use strict';
 
         // ── Google Ads conversion functions (exposed globally for inline calls) ──
+        // Facility and regulatory pages (window._ahgPage.lead_type, set by App\Support\LeadType) report
+        // "Facility form" and "Facility WhatsApp" INSTEAD OF "Inquiry Sent" and "WhatsApp Click":
+        // exactly one label per action, or a lead counts twice (Ads agent, 29 Oct 2026).
+        function isFacilityLead() {
+            return (window._ahgPage || {}).lead_type === 'facility';
+        }
         window.gtagReportInquirySent = function () {
-            if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-695565753/wF9YCMud6cMcELn71csC' });
+            var label = isFacilityLead() ? 'H9gQCJe6oa4dELn71csC' : 'wF9YCMud6cMcELn71csC';
+            if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-695565753/' + label });
         };
         window.gtagReportWhatsAppClick = function () {
-            if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-695565753/__2wCM6d6cMcELn71csC', value: 1.0, currency: 'AED' });
+            var label = isFacilityLead() ? '65cgCJS6oa4dELn71csC' : '__2wCM6d6cMcELn71csC';
+            if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-695565753/' + label, value: 1.0, currency: 'AED' });
         };
         window.gtagReportCallClick = function () {
             if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-695565753/QcGMCNGd6cMcELn71csC', value: 1.0, currency: 'AED' });

@@ -919,6 +919,7 @@ function toggleTransformationDesc() {
             service_name: @json($service->name ?? ''),
             service_slug: @json($service->slug ?? ''),
             page_type:    'service_group',
+            lead_type:    @json(\App\Support\LeadType::for($service ?? null)),
         };
     </script>
     @endpush

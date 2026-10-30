@@ -1091,4 +1091,15 @@ function toggleTransformationDesc() {
             }
         </script>
     @endpush
+    {{-- Page context for the conversion tracker: which Ads labels this page reports (App\Support\LeadType). --}}
+    @push('scripts')
+    <script>
+        window._ahgPage = {
+            service_name: @json($service->name ?? ''),
+            service_slug: @json($service->slug ?? ''),
+            page_type:    'service_category',
+            lead_type:    @json(\App\Support\LeadType::for($service ?? null)),
+        };
+    </script>
+    @endpush
 @endsection
