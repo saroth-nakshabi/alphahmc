@@ -382,6 +382,8 @@
                     </div>
                     <div class="section-body">
                         <div class="row g-3">
+                            {{-- Reviewer and review date (SEO brief 30 Oct): the "Reviewed by" line needs both. --}}
+                            <div class="col-12">@include('dashboard.partials.reviewer-fields', ['page' => $service_group])</div>
                             <div class="col-12">
                                 <label class="control-label">Meta Title</label>
                                 <input type="text" name="meta_title" class="form-control"

@@ -447,6 +447,8 @@
                                 <input type="text" name="serviceType" class="form-control"
                                     placeholder="e.g. Healthcare" value="{{ $category->serviceType }}" />
                             </div>
+                            {{-- Reviewer and review date (SEO brief 30 Oct): the "Reviewed by" line needs both. --}}
+                            <div class="col-12">@include('dashboard.partials.reviewer-fields', ['page' => $category])</div>
                             <div class="col-12">
                                 <label class="control-label">Meta Title</label>
                                 <input type="text" name="meta_title" class="form-control"

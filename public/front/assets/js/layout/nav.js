@@ -7,6 +7,26 @@
         return window.innerWidth <= 768;
     }
 
+    // ── Third column rows (services, guides, case studies) load on first use from /nav-items, so they
+    // are not links on every page (SEO brief 30 Oct 2026). Rows arrive hidden; the active filter is re-shown.
+    var navItems = null;
+    function loadNavItems() {
+        if (navItems) return navItems;
+        var $list = $(".serv-col .service-content-2");
+        navItems = $.Deferred();
+        if (!$list.length || !$list.data("src")) { navItems.resolve(); return navItems; }
+        $.get($list.data("src")).done(function (html) {
+            $list.html(html);
+            var $active = $(".main-category-link-sub.active-category");
+            if ($active.length && $active.attr("id")) $(".filter-" + $active.attr("id")).show();
+            navItems.resolve();
+        }).fail(function () {
+            navItems = null;   // try again on the next open
+        });
+        return navItems;
+    }
+    $("#explore-search-toggle").on("mouseenter focus touchstart", function () { loadNavItems(); });
+
     function navIsOpen() {
         return $("#main-navbar").hasClass("menu-is-open");
     }
@@ -25,6 +45,7 @@
     }
 
     $("#explore-search-toggle").on("click", function () {
+        loadNavItems();
         const nav = $("#main-navbar");
         nav.toggleClass("menu-is-open");
 
@@ -439,6 +460,14 @@
         if (!isMobile()) return; // desktop uses hover — no change needed there
 
         e.preventDefault(); // block page nav; user navigates via the "Visit →" link inside L3
+
+        // Rows still loading: open this sub-category once they are in.
+        var navReady = loadNavItems();
+        if (navReady.state() !== "resolved") {
+            var self = this;
+            navReady.done(function () { $(self).trigger("click"); });
+            return;
+        }
 
         var subId    = $(this).attr("id") || "";              // "sub_5"
         var catId    = subId.replace("sub_", "");             // "5"

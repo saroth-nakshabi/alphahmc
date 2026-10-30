@@ -16,7 +16,9 @@
     $blogPublished = $blog->published_date ?? $blog->created_at;
     $blogModified  = $blog->updated_date ?? $blog->published_date ?? $blog->updated_at;
     // "Reviewed by" only with both a name and a date; the URL is re-checked before it is used.
-    $blogReviewed    = trim((string) $blog->reviewer_name) !== '' && $blog->last_reviewed;
+    // A reviewer from the reviewers list (bio page at /team/{key}) takes over from the free-text fields.
+    $blogReviewer    = \App\Models\Reviewer::forPage($blog);
+    $blogReviewed    = !$blogReviewer && trim((string) $blog->reviewer_name) !== '' && $blog->last_reviewed;
     $blogReviewerUrl = \App\Support\BlogPublishGuard::safeUrl($blog->reviewer_url);
     $blogSources     = collect($blog->sources ?? [])->filter(fn ($u) => is_string($u) && \App\Support\BlogPublishGuard::safeUrl($u))->values();
     $preview = $preview ?? false;
@@ -56,7 +58,13 @@
                 'name'  => 'Alpha Health Group',
                 'logo'  => ['@type' => 'ImageObject', 'url' => asset('public/front-new/assets/images/alpha-logo.svg')],
             ],
-            'mainEntityOfPage' => ['@type' => 'WebPage', '@id' => url()->current()],
+            'mainEntityOfPage' => array_filter([
+                '@type'        => 'WebPage',
+                '@id'          => url()->current(),
+                'reviewedBy'   => $blogReviewer ? ['@type' => 'Person', '@id' => $blogReviewer->personId(), 'name' => $blogReviewer->name,
+                                                   'jobTitle' => $blogReviewer->title, 'url' => $blogReviewer->url()] : null,
+                'lastReviewed' => $blogReviewer ? $blog->reviewed_at->toDateString() : null,
+            ]),
         ], fn ($v) => $v !== null && $v !== '');
     @endphp
     <script type="application/ld+json">{!! json_encode($blogPosting, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
@@ -391,6 +399,7 @@
                         <span>{{ optional($blogModified)->format('M d, Y') }}</span>
                     </div>
                 </div>
+                @include('front.partials.reviewed-by', ['page' => $blog, 'class' => 'article-reviewed-by'])
                 @if($blogReviewed)
                     <p class="article-reviewed-by" style="margin:14px 0 0;font-size:.85rem;color:#64748b;">
                         Reviewed by
@@ -429,6 +438,8 @@
             <div class="article-body-text">
                 {!! \App\Support\Html::fixLinks($blog->content) !!}
             </div>
+
+            @include('front.partials.blog-next-steps', ['blog' => $blog])
 
             @if($blogSources->isNotEmpty())
                 <section class="article-sources" style="max-width:780px;margin:40px auto 0;">

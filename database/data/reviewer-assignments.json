@@ -1,0 +1,1155 @@
+{
+ "generated": "2026-10-30",
+ "source": "docs/briefs/alphahmc-reviewer-map.md",
+ "reviewers": {
+  "siraj-hm-ibrahim": {
+   "name": "Siraj H.M Ibrahim",
+   "title": "CEO, Healthcare Investment Expert",
+   "linkedin": "https://www.linkedin.com/in/siraj-hm-ibrahim/"
+  },
+  "mohammed-ehsaan": {
+   "name": "Dr Mohammed Ehsaan",
+   "title": "Healthcare Regulatory Consultant & COO",
+   "linkedin": "https://www.linkedin.com/in/dr-mohammed-ehsaan-2558021a/"
+  },
+  "areej-m-bathurudeen": {
+   "name": "Areej M. Bathurudeen",
+   "title": "Healthcare Quality Consultant",
+   "linkedin": "https://www.linkedin.com/in/areej-m-bathurudeen-56b54a265/"
+  },
+  "murshid-bafick": {
+   "name": "Murshid Bafick",
+   "title": "Professional Licensing Manager",
+   "linkedin": "https://www.linkedin.com/in/murshid-bafick-bb9a31b4/"
+  },
+  "afrin-nakshabi": {
+   "name": "Eng. Afrin Nakshabi",
+   "title": "Healthcare Planning & Infrastructure Engineer",
+   "linkedin": "https://www.linkedin.com/in/eng-afrin-nakshabi-50497ab1/"
+  },
+  "saroth-nakshabi": {
+   "name": "Saroth Nakshabi",
+   "title": "Health Technology Consultant & CIO",
+   "linkedin": "https://www.linkedin.com/in/sarothnakshabi/"
+  }
+ },
+ "pages": [
+  {
+   "path": "/service-category/healthcare-professional-licensing",
+   "reviewer": "murshid-bafick",
+   "service_link": null,
+   "reviewed_at": "2026-10-27"
+  },
+  {
+   "path": "/service-packages/healthcare-professional-licensing-uae",
+   "reviewer": "murshid-bafick",
+   "service_link": null,
+   "reviewed_at": "2026-10-27"
+  },
+  {
+   "path": "/services/activate-your-uae-healthcare-license",
+   "reviewer": "murshid-bafick",
+   "service_link": null,
+   "reviewed_at": "2026-10-27"
+  },
+  {
+   "path": "/services/dha-license-healthcare-professionals-dubai",
+   "reviewer": "murshid-bafick",
+   "service_link": null,
+   "reviewed_at": "2026-10-27"
+  },
+  {
+   "path": "/services/doh-license-healthcare-professionals-abu-dhabi",
+   "reviewer": "murshid-bafick",
+   "service_link": null,
+   "reviewed_at": "2026-10-27"
+  },
+  {
+   "path": "/services/healthcare-professional-license-registration",
+   "reviewer": "murshid-bafick",
+   "service_link": null,
+   "reviewed_at": "2026-10-27"
+  },
+  {
+   "path": "/services/healthcare-professional-license-transfer",
+   "reviewer": "murshid-bafick",
+   "service_link": null,
+   "reviewed_at": "2026-10-27"
+  },
+  {
+   "path": "/services/healthcare-professional-licensing-oman",
+   "reviewer": "murshid-bafick",
+   "service_link": null,
+   "reviewed_at": "2026-10-27"
+  },
+  {
+   "path": "/services/healthcare-professional-licensing-qatar",
+   "reviewer": "murshid-bafick",
+   "service_link": null,
+   "reviewed_at": "2026-10-27"
+  },
+  {
+   "path": "/services/mohap-license-healthcare-professionals",
+   "reviewer": "murshid-bafick",
+   "service_link": null,
+   "reviewed_at": "2026-10-27"
+  },
+  {
+   "path": "/services/saudi-healthcare-professional-licensing",
+   "reviewer": "murshid-bafick",
+   "service_link": null,
+   "reviewed_at": "2026-10-27"
+  },
+  {
+   "path": "/blog_single/eligibility-letter-in-hand-but-no-job-offer-here-is-why-activating-your-uae-license-comes-first",
+   "reviewer": "murshid-bafick",
+   "service_link": "/services/activate-your-uae-healthcare-license",
+   "reviewed_at": "2026-10-27"
+  },
+  {
+   "path": "/blog_single/how-to-get-a-healthcare-professional-license-in-the-uae-a-complete-regulatory-guide",
+   "reviewer": "murshid-bafick",
+   "service_link": "/service-packages/healthcare-professional-licensing-uae",
+   "reviewed_at": "2026-10-27"
+  },
+  {
+   "path": "/blog_single/how-to-get-your-healthcare-professional-license-in-saudi-arabia-a-complete-scfhs-licensing-guide-for-2026",
+   "reviewer": "murshid-bafick",
+   "service_link": "/services/saudi-healthcare-professional-licensing",
+   "reviewed_at": "2026-10-27"
+  },
+  {
+   "path": "/blog_single/how-to-get-your-uae-healthcare-license-in-2026-the-complete-guide-for-doctors-nurses-and-allied-professionals",
+   "reviewer": "murshid-bafick",
+   "service_link": "/service-packages/healthcare-professional-licensing-uae",
+   "reviewed_at": "2026-10-27"
+  },
+  {
+   "path": "/blog_single/how-to-obtain-a-healthcare-professional-license-in-oman-a-practitioners-guide-to-moh-and-omsb-requirements",
+   "reviewer": "murshid-bafick",
+   "service_link": "/services/healthcare-professional-licensing-oman",
+   "reviewed_at": "2026-10-27"
+  },
+  {
+   "path": "/blog_single/how-to-obtain-your-healthcare-professional-license-in-qatar-a-practitioners-guide-to-dhp-licensing-in-2026",
+   "reviewer": "murshid-bafick",
+   "service_link": "/services/healthcare-professional-licensing-qatar",
+   "reviewed_at": "2026-10-27"
+  },
+  {
+   "path": "/blog_single/how-to-transfer-your-healthcare-license-between-uae-authorities-without-starting-over",
+   "reviewer": "murshid-bafick",
+   "service_link": "/services/healthcare-professional-license-transfer",
+   "reviewed_at": "2026-10-27"
+  },
+  {
+   "path": "/blog_single/why-clinical-recruitment-in-the-uae-fails-without-verification-first",
+   "reviewer": "murshid-bafick",
+   "service_link": "/services/licensed-nursing-allied-health-recruitment",
+   "reviewed_at": "2026-10-27"
+  },
+  {
+   "path": "/service-category/audit-consultation",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/service-category/day-surgery-centers",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/service-category/diagnostic-labs-imaging-centers",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/service-category/drugstores",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/service-category/dubai-municipality-product-registration",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/service-category/healthcare-accreditations-certifications",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/service-category/home-healthcare",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/service-category/hospitals",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/service-category/medical-centers-polyclinics",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/service-category/pharmaceutical-product-services",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/service-category/pharmacies",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/service-category/regulatory-quality",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/service-category/rehabilitation-centers",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/service-category/telehealth",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/service-category/training-education",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/cbahi-accreditation-consulting",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/consumer-product-registration-dubai",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/cosmetic-product-registration-dubai",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/drugstore-pharmaceutical-distribution-licensing",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/healthcare-insurance-compliance-consulting",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/iso-certification-consulting-for-healthcare-facilities",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/isqua-accreditation-consulting-audit-preparation",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/jci-accreditation-consulting-across-uae-gcc",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/medical-equipment-moh-licensing-consulting",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/medical-facility-change-of-type-regulatory-approval",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/medical-pharmaceutical-product-consulting",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/medical-product-import-regulatory-approval",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/nabh-accreditation-consulting-audit-preparation",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/personal-care-product-registration-dubai",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/pharmaceutical-product-registration-services-uae",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/pharmaceutical-regulatory-market-access-consulting",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/product-classification-regulatory-assessment",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/regulatory-readiness-compliance-assurance",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/school-clinic-licensing-uae",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/service-category/facility-licensing-setup",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/healthtech-registration-regulatory-approvals",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/telehealth-digital-platform-approval",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/telehealth-facility-licensing-uae",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": null,
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/a-strategic-guide-to-regulatory-readiness-in-uae-healthcare",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/regulatory-readiness-compliance-assurance",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/cbahi-accreditation-in-saudi-arabia-what-healthcare-leaders-must-get-right-before-the-surveyors-arrive",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/cbahi-accreditation-consulting",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/complete-implementation-guide-for-healthcare-facilities",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/service-category/regulatory-quality",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/cosmetic-product-registration-in-dubai-what-brands-must-know-before-they-launch",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/cosmetic-product-registration-dubai",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/dietary-supplement-registration-in-dubai-what-brands-must-get-right-before-market-entry",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/service-category/dubai-municipality-product-registration",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/how-pharmaceutical-companies-can-navigate-uae-regulatory-approvals-and-achieve-faster-market-access",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/pharmaceutical-regulatory-market-access-consulting",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/how-product-classification-shapes-regulatory-success-in-the-uae-healthcare-market",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/product-classification-regulatory-assessment",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/how-to-get-your-telehealth-platform-approved-in-the-uae-a-practical-guide-for-2026",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/telehealth-digital-platform-approval",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/how-to-license-a-school-clinic-in-the-uae-a-complete-guide-for-school-operators",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/school-clinic-licensing-uae",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/how-to-navigate-healthcare-facility-licensing-in-sri-lanka-a-complete-guide-for-2026",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/service-category/facility-licensing-setup",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/how-to-navigate-medical-product-import-approval-in-the-uae-a-regulatory-roadmap-for-manufacturers-and-distributors",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/medical-product-import-regulatory-approval",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/how-to-navigate-pharmaceutical-distribution-licensing-in-the-uae-a-regulatory-roadmap-for-importers-and-distributors",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/drugstore-pharmaceutical-distribution-licensing",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/how-to-register-consumer-products-in-dubai-without-costly-delays",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/consumer-product-registration-dubai",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/how-to-register-personal-care-products-in-dubai-without-costly-delays",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/personal-care-product-registration-dubai",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/how-to-register-your-healthtech-platform-in-the-uae-a-regulatory-roadmap-for-2026",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/healthtech-registration-regulatory-approvals",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/iso-certification-for-healthcare-facilities-a-practical-roadmap-for-gcc-hospitals-and-labs",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/iso-certification-consulting-for-healthcare-facilities",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/isqua-accreditation-what-gcc-healthcare-leaders-must-know-before-audit-day",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/isqua-accreditation-consulting-audit-preparation",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/medical-facility-change-of-type-in-the-uae-a-regulatory-roadmap-for-healthcare-operators",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/medical-facility-change-of-type-regulatory-approval",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/nabh-accreditation-in-2025-why-preparation-not-paperwork-decides-the-outcome",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/nabh-accreditation-consulting-audit-preparation",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/navigating-medical-and-pharmaceutical-product-registration-in-the-uae-and-gcc-what-manufacturers-need-to-know",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/pharmaceutical-product-registration-services-uae",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/pharmaceutical-product-registration-in-the-uae-a-regulatory-roadmap-for-market-entry",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/pharmaceutical-product-registration-services-uae",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/telehealth-licensing-in-the-uae-what-healthcare-providers-need-to-know-before-launching-virtual-care-services",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/telehealth-facility-licensing-uae",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/the-complete-guide-to-medical-equipment-licensing-in-the-uae-what-suppliers-distributors-and-facilities-must-know",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/medical-equipment-moh-licensing-consulting",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/why-healthcare-accreditation-matters-for-patient-safety",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/service-category/healthcare-accreditations-certifications",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/why-hospital-compliance-readiness-is-a-strategic-imperative-not-an-administrative-task",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/hospital-compliance-doh-consultation",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/blog_single/your-strategic-roadmap-to-international-healthcare-excellence",
+   "reviewer": "mohammed-ehsaan",
+   "service_link": "/services/jci-accreditation-consulting-across-uae-gcc",
+   "reviewed_at": "2026-10-15"
+  },
+  {
+   "path": "/services/dha-audit-preparation-inspection-consultation",
+   "reviewer": "areej-m-bathurudeen",
+   "service_link": null,
+   "reviewed_at": "2026-10-23"
+  },
+  {
+   "path": "/services/doh-healthcare-facility-licensing-abu-dhabi",
+   "reviewer": "areej-m-bathurudeen",
+   "service_link": null,
+   "reviewed_at": "2026-10-23"
+  },
+  {
+   "path": "/services/doh-inspection-preparation-services",
+   "reviewer": "areej-m-bathurudeen",
+   "service_link": null,
+   "reviewed_at": "2026-10-23"
+  },
+  {
+   "path": "/services/fanr-licensing-services-uae",
+   "reviewer": "areej-m-bathurudeen",
+   "service_link": null,
+   "reviewed_at": "2026-10-23"
+  },
+  {
+   "path": "/services/healthcare-compliance-audit",
+   "reviewer": "areej-m-bathurudeen",
+   "service_link": null,
+   "reviewed_at": "2026-10-23"
+  },
+  {
+   "path": "/services/healthcare-licensing-audit-compliance-consultation",
+   "reviewer": "areej-m-bathurudeen",
+   "service_link": null,
+   "reviewed_at": "2026-10-23"
+  },
+  {
+   "path": "/services/hospital-compliance-doh-consultation",
+   "reviewer": "areej-m-bathurudeen",
+   "service_link": null,
+   "reviewed_at": "2026-10-23"
+  },
+  {
+   "path": "/services/jawda-audit-consulting-services",
+   "reviewer": "areej-m-bathurudeen",
+   "service_link": null,
+   "reviewed_at": "2026-10-23"
+  },
+  {
+   "path": "/services/radiation-equipment-fanr-registration-uae",
+   "reviewer": "areej-m-bathurudeen",
+   "service_link": null,
+   "reviewed_at": "2026-10-23"
+  },
+  {
+   "path": "/services/radiation-protection-program-development",
+   "reviewer": "areej-m-bathurudeen",
+   "service_link": null,
+   "reviewed_at": "2026-10-23"
+  },
+  {
+   "path": "/blog_single/complete-audit-preparation-guide-for-dubai-medical-facilities",
+   "reviewer": "areej-m-bathurudeen",
+   "service_link": "/services/dha-audit-preparation-inspection-consultation",
+   "reviewed_at": "2026-10-23"
+  },
+  {
+   "path": "/blog_single/doh-facility-licensing-requirements-for-abu-dhabi-a-complete-guide-for-healthcare-investors",
+   "reviewer": "areej-m-bathurudeen",
+   "service_link": "/services/doh-healthcare-facility-licensing-abu-dhabi",
+   "reviewed_at": "2026-10-23"
+  },
+  {
+   "path": "/blog_single/doh-healthcare-facility-inspection-preparation-a-practical-checklist-for-abu-dhabi",
+   "reviewer": "areej-m-bathurudeen",
+   "service_link": "/services/doh-inspection-preparation-services",
+   "reviewed_at": "2026-10-23"
+  },
+  {
+   "path": "/blog_single/fanr-licensing-in-the-uae-what-healthcare-facilities-get-wrong-before-they-even-apply",
+   "reviewer": "areej-m-bathurudeen",
+   "service_link": "/services/fanr-licensing-services-uae",
+   "reviewed_at": "2026-10-23"
+  },
+  {
+   "path": "/blog_single/jawda-compliance-in-abu-dhabi-what-healthcare-facilities-need-to-know-to-improve-quality-scores",
+   "reviewer": "areej-m-bathurudeen",
+   "service_link": "/services/jawda-audit-consulting-services",
+   "reviewed_at": "2026-10-23"
+  },
+  {
+   "path": "/blog_single/why-a-strong-radiation-protection-program-is-now-non-negotiable-for-uae-healthcare-facilities",
+   "reviewer": "areej-m-bathurudeen",
+   "service_link": "/services/radiation-protection-program-development",
+   "reviewed_at": "2026-10-23"
+  },
+  {
+   "path": "/blog_single/why-abu-dhabi-phcs-cannot-afford-to-treat-kpi-reporting-as-a-checkbox-exercise",
+   "reviewer": "areej-m-bathurudeen",
+   "service_link": "/services/phc-kpi-evaluation-reporting-services",
+   "reviewed_at": "2026-10-23"
+  },
+  {
+   "path": "/blog_single/why-proactive-licensing-audit-gap-assessments-are-critical-for-uae-healthcare-facilities",
+   "reviewer": "areej-m-bathurudeen",
+   "service_link": "/services/healthcare-licensing-audit-compliance-consultation",
+   "reviewed_at": "2026-10-23"
+  },
+  {
+   "path": "/blog_single/why-radiation-equipment-registration-in-the-uae-fails-before-it-starts",
+   "reviewer": "areej-m-bathurudeen",
+   "service_link": "/services/radiation-equipment-fanr-registration-uae",
+   "reviewed_at": "2026-10-23"
+  },
+  {
+   "path": "/service-category/healthcare-feasibility-evaluation",
+   "reviewer": "siraj-hm-ibrahim",
+   "service_link": null,
+   "reviewed_at": "2026-10-30"
+  },
+  {
+   "path": "/services/healthcare-business-plan-feasibility-study-uae",
+   "reviewer": "siraj-hm-ibrahim",
+   "service_link": null,
+   "reviewed_at": "2026-10-30"
+  },
+  {
+   "path": "/services/healthcare-facility-acquisition-due-diligence",
+   "reviewer": "siraj-hm-ibrahim",
+   "service_link": null,
+   "reviewed_at": "2026-10-30"
+  },
+  {
+   "path": "/services/post-acquisition-healthcare-integration-services",
+   "reviewer": "siraj-hm-ibrahim",
+   "service_link": null,
+   "reviewed_at": "2026-10-30"
+  },
+  {
+   "path": "/services/clinic-setup-licensing-uae",
+   "reviewer": "siraj-hm-ibrahim",
+   "service_link": null,
+   "reviewed_at": "2026-10-30"
+  },
+  {
+   "path": "/services/medical-centre-setup-licensing-dubai",
+   "reviewer": "siraj-hm-ibrahim",
+   "service_link": null,
+   "reviewed_at": "2026-10-30"
+  },
+  {
+   "path": "/blog_single/a-strategic-guide-for-investors",
+   "reviewer": "siraj-hm-ibrahim",
+   "service_link": "/services/doh-healthcare-facility-licensing-abu-dhabi",
+   "reviewed_at": "2026-10-30"
+  },
+  {
+   "path": "/blog_single/dha-health-facility-guidelines-what-investors-must-know-in-2026",
+   "reviewer": "siraj-hm-ibrahim",
+   "service_link": "/services/hospital-planning-requirement-mapping",
+   "reviewed_at": "2026-10-30"
+  },
+  {
+   "path": "/blog_single/the-hidden-risk-in-healthcare-real-estate-development-across-uae-and-gcc",
+   "reviewer": "siraj-hm-ibrahim",
+   "service_link": "/service-category/healthcare-feasibility-evaluation",
+   "reviewed_at": "2026-10-30"
+  },
+  {
+   "path": "/blog_single/why-healthcare-acquisitions-fail-without-a-post-integration-strategy-and-how-to-get-it-right-in-the-uae",
+   "reviewer": "siraj-hm-ibrahim",
+   "service_link": "/services/post-acquisition-healthcare-integration-services",
+   "reviewed_at": "2026-10-30"
+  },
+  {
+   "path": "/blog_single/why-healthcare-facility-acquisitions-in-the-uae-fail-and-how-due-diligence-prevents-it",
+   "reviewer": "siraj-hm-ibrahim",
+   "service_link": "/services/healthcare-facility-acquisition-due-diligence",
+   "reviewed_at": "2026-10-30"
+  },
+  {
+   "path": "/blog_single/why-most-healthcare-business-plans-fail-investor-due-diligence-in-the-uae-and-how-to-fix-yours",
+   "reviewer": "siraj-hm-ibrahim",
+   "service_link": "/services/healthcare-business-plan-feasibility-study-uae",
+   "reviewed_at": "2026-10-30"
+  },
+  {
+   "path": "/blog_single/complete-dha-licensing-guide-for-healthcare-entrepreneurs",
+   "reviewer": "siraj-hm-ibrahim",
+   "service_link": "/services/medical-centre-setup-licensing-dubai",
+   "reviewed_at": "2026-10-30"
+  },
+  {
+   "path": "/service-category/engineering-design-approvals",
+   "reviewer": "afrin-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/service-category/bio-medical-engineering",
+   "reviewer": "afrin-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/service-category/healthcare-design-build",
+   "reviewer": "afrin-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/service-category/hospital-design-master-planning",
+   "reviewer": "afrin-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/services/construction-project-management-supervision",
+   "reviewer": "afrin-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/services/healthcare-architectural-interior-design",
+   "reviewer": "afrin-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/services/healthcare-design-and-build",
+   "reviewer": "afrin-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/services/healthcare-facility-infrastructure-assessment",
+   "reviewer": "afrin-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/services/hospital-infrastructure-planning-engineering-design",
+   "reviewer": "afrin-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/services/hospital-planning-requirement-mapping",
+   "reviewer": "afrin-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/services/medical-engineering-equipment-planning",
+   "reviewer": "afrin-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/services/medical-equipment-procurement-consulting",
+   "reviewer": "afrin-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/services/medical-facility-fit-out",
+   "reviewer": "afrin-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/services/healthcare-engineering-design-compliance-approval",
+   "reviewer": "afrin-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/blog_single/a-strategic-necessity-for-facility-longevity",
+   "reviewer": "afrin-nakshabi",
+   "service_link": "/services/healthcare-facility-infrastructure-assessment",
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/blog_single/healthcare-design-and-build-services-in-the-uae-why-turnkey-delivery-protects-your-opening-date",
+   "reviewer": "afrin-nakshabi",
+   "service_link": "/services/healthcare-design-and-build",
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/blog_single/how-early-stage-hospital-planning-reduces-project-risk-and-accelerates-regulatory-approval-in-the-uae",
+   "reviewer": "afrin-nakshabi",
+   "service_link": "/services/hospital-planning-requirement-mapping",
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/blog_single/technical-requirements-and-compliance-roadmap-for-healthcare-facilities",
+   "reviewer": "afrin-nakshabi",
+   "service_link": "/services/healthcare-engineering-design-compliance-approval",
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/blog_single/the-strategic-imperative-of-medical-equipment-procurement-in-uae-healthcare",
+   "reviewer": "afrin-nakshabi",
+   "service_link": "/services/medical-equipment-procurement-consulting",
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/blog_single/why-healthcare-architectural-design-in-the-uae-is-a-compliance-decision-not-a-cosmetic-one",
+   "reviewer": "afrin-nakshabi",
+   "service_link": "/services/healthcare-architectural-interior-design",
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/blog_single/why-healthcare-construction-project-management-decides-whether-your-facility-opens-on-time",
+   "reviewer": "afrin-nakshabi",
+   "service_link": "/services/construction-project-management-supervision",
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/blog_single/why-healthcare-facility-infrastructure-assessments-are-non-negotiable-in-the-uae-and-gcc",
+   "reviewer": "afrin-nakshabi",
+   "service_link": "/services/healthcare-facility-infrastructure-assessment",
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/blog_single/why-hospital-engineering-design-determines-operational-success-in-uae-healthcare-facilities",
+   "reviewer": "afrin-nakshabi",
+   "service_link": "/services/hospital-infrastructure-planning-engineering-design",
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/blog_single/why-medical-equipment-planning-is-the-most-overlooked-risk-in-uae-healthcare-projects",
+   "reviewer": "afrin-nakshabi",
+   "service_link": "/services/medical-engineering-equipment-planning",
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/blog_single/why-medical-facility-fit-out-in-the-uae-is-a-compliance-project-not-just-an-interior-job",
+   "reviewer": "afrin-nakshabi",
+   "service_link": "/services/medical-facility-fit-out",
+   "reviewed_at": "2026-10-24"
+  },
+  {
+   "path": "/service-category/healthcare-information-security-consultation",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/service-category/healthcare-management-outsourcing",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/service-category/healthcare-professional-resourcing",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/service-category/hie-integration",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/service-category/insurance-empanelment",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/service-packages/healthcare-it-digital-strategy-consulting2",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/service-packages/healthcare-management-consultancy-in-uae",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/doh-clinical-cost-analysis-reporting",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/healthcare-cybersecurity-compliance",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/healthcare-facility-management-consulting-uae",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/healthcare-growth-expansion-strategy",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/healthcare-insurance-pricing-tariff-structuring",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/healthcare-kpi-performance-management-consulting",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/healthcare-management-consultancy-in-uae",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/healthcare-payer-relationship-management",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/healthcare-service-specialty-expansion-consulting",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/healthcare-staffing-solutions",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/hospital-cybersecurity-consulting-uae",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/hospital-digital-transformation-consulting",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/hospital-insurance-payer-contracting",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/licensed-nursing-allied-health-recruitment",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/malaffi-integration-compliance-abu-dhabi",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/nabidh-integration-dubai",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/phc-kpi-evaluation-reporting-services",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/physician-recruitment-specialist-placement",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/adhics-audit-consultation",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/healthcare-software-regulatory-advisory",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/services/hipaa-compliance-consulting-services",
+   "reviewer": "saroth-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/blog_single/adhics-v20-compliance-what-every-healthcare-facility-in-abu-dhabi-needs-to-know-in-2026",
+   "reviewer": "saroth-nakshabi",
+   "service_link": "/services/adhics-audit-consultation",
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/blog_single/why-adhics-v20-compliance-is-critical-for-abu-dhabi-healthcare-facilities-in-2024",
+   "reviewer": "saroth-nakshabi",
+   "service_link": "/services/adhics-audit-consultation",
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/blog_single/healthcare-insurance-compliance-in-the-uae-why-your-biggest-revenue-leak-is-a-compliance-problem",
+   "reviewer": "saroth-nakshabi",
+   "service_link": "/services/healthcare-insurance-compliance-consulting",
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/blog_single/healthcare-software-compliance-in-the-uae-why-regulatory-advisory-is-not-optional",
+   "reviewer": "saroth-nakshabi",
+   "service_link": "/services/healthcare-software-regulatory-advisory",
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/blog_single/how-healthcare-organisations-can-build-a-sustainable-growth-strategy-in-the-uae-and-gcc",
+   "reviewer": "saroth-nakshabi",
+   "service_link": "/services/healthcare-growth-expansion-strategy",
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/blog_single/how-to-successfully-expand-healthcare-services-and-specialties-in-the-uae",
+   "reviewer": "saroth-nakshabi",
+   "service_link": "/services/healthcare-service-specialty-expansion-consulting",
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/blog_single/strategic-imperatives-for-2026-and-beyond",
+   "reviewer": "saroth-nakshabi",
+   "service_link": "/services/healthcare-management-consultancy-in-uae",
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/blog_single/why-clinical-cost-analysis-is-now-a-strategic-priority-for-abu-dhabi-healthcare-providers",
+   "reviewer": "saroth-nakshabi",
+   "service_link": "/services/doh-clinical-cost-analysis-reporting",
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/blog_single/why-healthcare-kpi-frameworks-fail-and-how-uae-hospitals-can-build-systems-that-actually-drive-performance",
+   "reviewer": "saroth-nakshabi",
+   "service_link": "/services/healthcare-kpi-performance-management-consulting",
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/blog_single/why-healthcare-management-consultancy-is-essential-for-uae-medical-facilities",
+   "reviewer": "saroth-nakshabi",
+   "service_link": "/services/healthcare-management-consultancy-in-uae",
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/blog_single/why-healthcare-organizations-in-the-uae-cannot-afford-to-ignore-hipaa-compliance",
+   "reviewer": "saroth-nakshabi",
+   "service_link": "/services/hipaa-compliance-consulting-services",
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/blog_single/why-healthcare-staffing-in-the-uae-fails-after-the-offer-and-how-to-fix-it",
+   "reviewer": "saroth-nakshabi",
+   "service_link": "/services/healthcare-staffing-solutions",
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/blog_single/why-hospital-cybersecurity-has-become-a-patient-safety-priority-in-the-uae",
+   "reviewer": "saroth-nakshabi",
+   "service_link": "/services/hospital-cybersecurity-consulting-uae",
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/blog_single/why-payer-relationship-management-is-now-the-biggest-revenue-lever-in-uae-healthcare",
+   "reviewer": "saroth-nakshabi",
+   "service_link": "/services/healthcare-payer-relationship-management",
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/blog_single/why-uae-healthcare-providers-are-losing-revenue-to-outdated-tariff-structures-and-how-to-fix-it",
+   "reviewer": "saroth-nakshabi",
+   "service_link": "/services/healthcare-insurance-pricing-tariff-structuring",
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/blog_single/why-uae-healthcare-providers-lose-revenue-on-insurance-contracts-and-how-to-fix-it",
+   "reviewer": "saroth-nakshabi",
+   "service_link": "/services/hospital-insurance-payer-contracting",
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/blog_single/why-uae-hospitals-need-a-structured-digital-transformation-strategy-in-2026",
+   "reviewer": "saroth-nakshabi",
+   "service_link": "/services/hospital-digital-transformation-consulting",
+   "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/blog_single/why-uae-physician-recruitment-fails-after-the-offer-and-how-to-fix-it",
+   "reviewer": "saroth-nakshabi",
+   "service_link": "/services/physician-recruitment-specialist-placement",
+   "reviewed_at": "2026-10-17"
+  }
+ ],
+ "review_dates_note": "Sign-off dates given by Saroth in chat 30 Oct 2026: Dr Ehsaan reviewed 12 to 15 Oct (date shown: 15 Oct, the day he finished), Saroth 17 Oct, Areej 23 Oct, Afrin 24 Oct, Murshid 27 Oct, Siraj 30 Oct. Reviews were done on printed drafts of the live pages."
+}

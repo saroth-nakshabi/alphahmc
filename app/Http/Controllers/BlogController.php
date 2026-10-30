@@ -63,6 +63,7 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
+        \App\Support\ReviewerFields::validate($request, true);   // reviewer + review date (SEO brief 30 Oct)
 
         $request->validate([
             'title'       => 'required|max:255',
@@ -99,6 +100,7 @@ class BlogController extends Controller
             'meta_description' => $request->input('meta_description'),
             'meta_keywords'    => $request->input('meta_keywords'),
         ] + $this->reviewerInput($request));
+        \App\Support\ReviewerFields::apply($request, $blog, true);
 
         $blog->tags()->sync($request->input('tags', []));
         $blog->load('tags');
@@ -116,6 +118,7 @@ class BlogController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        \App\Support\ReviewerFields::validate($request, true);   // reviewer + review date (SEO brief 30 Oct)
         $request->validate([
             'title'       => 'required|max:255',
             'slug'        => 'required|max:255|unique:blogs,slug,' . $id,
@@ -147,6 +150,7 @@ class BlogController extends Controller
         // A person saved this post: the agent API will not overwrite a draft edited after its last write.
         $blog->forceFill(['admin_edited_at' => now()]);
         $blog->save();
+        \App\Support\ReviewerFields::apply($request, $blog, true);
 
         // Handle image uploads if a new image is provided
         if ($request->hasFile('image')) {
@@ -209,7 +213,10 @@ class BlogController extends Controller
             return response()->json(['success' => false, 'message' => 'This post is already published.'], 409);
         }
 
-        $problem = BlogPublishGuard::problem($blog->title, $blog->content, $blog->reviewer_name, $blog->last_reviewed, $blog->image, true);
+        // A reviewer from the reviewers list with a review date counts as the reviewer (SEO brief 30 Oct).
+        $listed = \App\Models\Reviewer::forPage($blog);
+        $problem = BlogPublishGuard::problem($blog->title, $blog->content, $listed?->name ?? $blog->reviewer_name,
+            $listed ? $blog->reviewed_at : $blog->last_reviewed, $blog->image, true);
         if ($problem) {
             return response()->json(['success' => false, 'message' => $problem], 422);
         }

@@ -46,6 +46,7 @@ class Category extends Model
     ];
 
     protected $casts = [
+        'reviewed_at' => 'date',   // reviewer sign-off (App\Models\Reviewer)
         'related_services' => 'array',
     ];
 

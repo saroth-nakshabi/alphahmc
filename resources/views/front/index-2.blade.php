@@ -432,6 +432,10 @@
                                             Book a Consultation
                                         </button>
                                     </div>
+                                    {{-- Hub link (SEO brief 30 Oct): the facility-type view of the same services. --}}
+                                    <p class="preview-facility-link" style="margin:14px 0 0;font-size:.95rem;">
+                                        Planning a specific facility? See <a href="{{ route('front.facility-types') }}" style="color:#006e72;text-decoration:underline;text-underline-offset:3px;">Services by facility type</a>.
+                                    </p>
                                 </div>
                             </div>
                         </div>

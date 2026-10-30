@@ -423,6 +423,13 @@ body {
         'breadcrumb'   => ['Home' => route('home'), 'Services' => null],
     ])
 
+    {{-- Hub link (SEO brief 30 Oct): the same services grouped by the facility you plan to open. --}}
+    <div class="container">
+        <p class="as-facility-link" style="margin:18px 0 0;font-size:1rem;">
+            Planning a specific facility? See <a href="{{ route('front.facility-types') }}" style="color:#006e72;text-decoration:underline;text-underline-offset:3px;">Services by facility type</a>.
+        </p>
+    </div>
+
     {{-- STICKY TOOLS (Search & Nav) --}}
     <div class="as-sticky-tools">
         <div class="container">

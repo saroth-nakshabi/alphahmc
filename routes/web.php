@@ -105,6 +105,13 @@ $toUaeLicensing = fn (\Illuminate\Http\Request $r) => redirect()->to(
 );
 Route::get('/services/healthcare-professional-licensing-uae', $toUaeLicensing);
 Route::get('/services/{slug}', [MainHomeController::class, 'Service'])->name('front.service');
+// Mega menu third column (services per category, guides per topic, case studies), loaded by nav.js on
+// first open so those links are not on every page. Not for search engines.
+Route::get('/nav-items', fn () => response()->view('front.partials.nav-items')
+    ->header('Cache-Control', 'public, max-age=600')
+    ->header('X-Robots-Tag', 'noindex'))->name('nav.items');
+// Reviewer bio pages (brief "alphahmc-reviewers-and-linking", 30 Oct 2026).
+Route::get('/team/{key}', [\App\Http\Controllers\ReviewerController::class, 'show'])->name('front.reviewer');
 Route::get('/new_service/{slug}', function ($slug) {
     return redirect()->route('front.service', $slug, 301);
 });

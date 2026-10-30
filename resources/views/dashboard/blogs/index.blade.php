@@ -298,6 +298,9 @@
                         </div>
                     </div>
                     <hr class="mt-4">
+                    <h6 class="fw-semibold mb-3">Review</h6>
+                    @include('dashboard.partials.reviewer-fields', ['page' => null, 'serviceLink' => true])
+                    <hr class="mt-4">
                     <h6 class="fw-semibold mb-3">Meta Details</h6>
                     <div class="row g-3">
                         <div class="col-md-12">
@@ -418,7 +421,25 @@
                     </div>
                     <hr class="mt-4">
                     <h6 class="fw-semibold mb-1">Review</h6>
-                    <p class="text-muted small mb-3">A draft can be published only with a cover image, a reviewer name and a last reviewed date.</p>
+                    <p class="text-muted small mb-3">A draft can be published only with a cover image and a reviewer with a review date: pick one from the list below, or type a name and date in the fields after it.</p>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="control-label mb-1" for="edit_reviewer">Reviewed by</label>
+                            <select name="reviewer" id="edit_reviewer" class="form-select">
+                                <option value="">No reviewer</option>
+                                @foreach(\App\Models\Reviewer::byKey() as $r)<option value="{{ $r->key }}">{{ $r->name }}, {{ $r->title }}</option>@endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="control-label mb-1" for="edit_reviewed_at">Review date</label>
+                            <input type="date" name="reviewed_at" id="edit_reviewed_at" class="form-control" max="{{ now()->toDateString() }}" />
+                        </div>
+                        <div class="col-md-12">
+                            <label class="control-label mb-1" for="edit_service_link">Service page this guide links to</label>
+                            <input type="text" name="service_link" id="edit_service_link" class="form-control" maxlength="255" placeholder="/services/dha-license-healthcare-professionals-dubai" aria-describedby="edit_service_link_help" />
+                            <div class="form-text" id="edit_service_link_help">Shown at the end of the guide with that page's H1 as the link text. Change the review date only after the reviewer has read the post again.</div>
+                        </div>
+                    </div>
                     <p class="text-muted small mb-3 d-none" id="edit_revision_note">This post has a pending revision from the SEO agent. This form edits the live post only; use Review, Publish revision or Discard revision in the list.</p>
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -760,6 +781,9 @@
                         // date cast serialises as full ISO; <input type="date"> needs YYYY-MM-DD
                         $('#edit_published_date').val(d.published_date ? String(d.published_date).substring(0, 10) : '');
                         $('#edit_updated_date').val(d.updated_date ? String(d.updated_date).substring(0, 10) : '');
+                        $('#edit_reviewer').val(d.reviewer || '');
+                        $('#edit_reviewed_at').val(d.reviewed_at ? String(d.reviewed_at).substring(0, 10) : '');
+                        $('#edit_service_link').val(d.service_link || '');
                         $('#edit_reviewer_name').val(d.reviewer_name || '');
                         $('#edit_reviewer_credential').val(d.reviewer_credential || '');
                         $('#edit_reviewer_url').val(d.reviewer_url || '');

@@ -21,9 +21,10 @@ class SitemapController extends Controller
         $blogs       = $this->blogPages();
         $projects    = $this->projectPages();
         $brands      = $this->brandPages();
+        $reviewers   = $this->reviewerPages();
 
         $xml = $this->buildXml(array_merge(
-            $staticPages, $groups, $categories, $services, $blogs, $projects, $brands
+            $staticPages, $groups, $categories, $services, $blogs, $projects, $brands, $reviewers
         ));
 
         return response($xml, 200, [
@@ -45,6 +46,24 @@ class SitemapController extends Controller
             ['loc' => route('front.ahg-updates'),         'priority' => '0.6', 'changefreq' => 'weekly'],
             ['loc' => route('front.privacy-policy'),      'priority' => '0.3', 'changefreq' => 'yearly'],
         ];
+    }
+
+    /** Reviewer bio pages at /team/{key}. */
+    private function reviewerPages(): array
+    {
+        $pages = [];
+        try {
+            \App\Models\Reviewer::orderBy('sort_order')->get(['key', 'updated_at'])->each(function ($r) use (&$pages) {
+                $pages[] = [
+                    'loc'        => route('front.reviewer', $r->key),
+                    'lastmod'    => $r->updated_at?->toAtomString(),
+                    'priority'   => '0.5',
+                    'changefreq' => 'monthly',
+                ];
+            });
+        } catch (\Throwable) {}
+
+        return $pages;
     }
 
     private function servicePages(): array

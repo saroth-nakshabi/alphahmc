@@ -59,6 +59,7 @@
                 <div class="row">
                     <div class="col-lg-10">
                         <h1 class="hero-title">{{ $service->name }}</h1>
+                        @include('front.partials.reviewed-by', ['page' => $service, 'class' => 'ahg-reviewed-by-hero'])
                         <div class="hero-desc-wrapper">
                             {!! \App\Support\Html::fixLinks($service->description) !!}
                         </div>

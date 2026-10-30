@@ -60,6 +60,7 @@ class ServiceController extends Controller
 
     public function store(Request $request)
     {
+        \App\Support\ReviewerFields::validate($request);   // reviewer + review date (SEO brief 30 Oct)
         $rules = [
             'name' => 'required|max:255',
             'slug' => 'required|max:255|unique:services,slug',
@@ -157,6 +158,7 @@ class ServiceController extends Controller
             'inq_officer_phone' => $request->input('inq_officer_phone'),
             'sort_order'        => (int) Service::max('sort_order') + 1, // new services go to the end
         ]);
+        \App\Support\ReviewerFields::apply($request, $service);
 
 
 
@@ -260,6 +262,7 @@ class ServiceController extends Controller
     
     public function update(Request $request, $id)
     {
+        \App\Support\ReviewerFields::validate($request);   // reviewer + review date (SEO brief 30 Oct)
         // Validate incoming request data
         $rules = [
             'name' => 'required|max:255',
@@ -330,6 +333,7 @@ class ServiceController extends Controller
             'inq_officer_name'  => $request->input('inq_officer_name'),
             'inq_officer_phone' => $request->input('inq_officer_phone'),
         ]);
+        \App\Support\ReviewerFields::apply($request, $service);
 
 
         if ($request->hasFile('hero_image')) {

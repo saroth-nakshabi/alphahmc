@@ -800,6 +800,9 @@
         {{-- ══════════════════════ TESTIMONIAL PILLS ══════════════════ --}}
         @include('front.partials.testimonial-pills')
 
+        {{-- ══════════════════════ OUR REVIEWERS ══════════════════════ --}}
+        @include('front.partials.reviewers-list')
+
         {{-- ══════════════════════ CTA SECTION ════════════════════════ --}}
         <section class="about-cta-section">
             <div class="container">

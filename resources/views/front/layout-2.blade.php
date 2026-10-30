@@ -205,6 +205,21 @@
 
     $schema[] = $professionalService;
 
+    // Reviewed page: WebPage with reviewedBy + lastReviewed, only once the reviewer has signed it off
+    // (reviewed_at set; brief "alphahmc-reviewers-and-linking").
+    if ($pageReviewer = \App\Models\Reviewer::forPage($service)) {
+        $schema[] = [
+            '@context'     => 'https://schema.org',
+            '@type'        => 'WebPage',
+            '@id'          => url()->current(),
+            'url'          => url()->current(),
+            'name'         => $service->name,
+            'reviewedBy'   => ['@type' => 'Person', '@id' => $pageReviewer->personId(), 'name' => $pageReviewer->name,
+                               'jobTitle' => $pageReviewer->title, 'url' => $pageReviewer->url()],
+            'lastReviewed' => $service->reviewed_at->toDateString(),
+        ];
+    }
+
     // FAQPage schema - only add if FAQs exist
     if (!empty($faqSchema)) {
         $schema[] = [
@@ -295,6 +310,7 @@
         json_encode(array_filter([
             '@context'     => 'https://schema.org',
             '@type'        => 'Organization',
+            '@id'          => url('/') . '/#organization',   // referenced by the reviewers' worksFor (/team pages)
             'name'         => 'Alpha Health Group',
             'alternateName'=> 'Alpha Health Consultancies',
             'url'          => config('app.url'),
@@ -747,52 +763,9 @@
 
                         <!-- Services -->
                         <div class="serv-col">
-                            <ul class="service-content-2 list-unstyled">
-                                @php $rendered_category_ids = []; @endphp
-                                @foreach ($main_categories as $main_category)
-                                    @foreach ($main_category->mergedCategories as $category)
-                                        @if (!in_array($category->id, $rendered_category_ids))
-                                            @php $rendered_category_ids[] = $category->id; @endphp
-                                            @foreach ($category->services as $service)
-                                                <li class="service-item filter-sub_{{ $category->id }}" style="display: none;">
-                                                    <a href="{{ route('front.service', $service->slug) }}">
-                                                        {{ $service->name }}
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                            @foreach ($category->serviceGroups as $group)
-                                                <li class="service-item filter-sub_{{ $category->id }}" style="display: none;">
-                                                    <a href="{{ route('service-packages', $group->slug) }}">
-                                                        {{ $group->name }}
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                        @endif
-                                    @endforeach
-                                @endforeach
-
-                                {{-- Knowledge Base: blogs under each tag --}}
-                                @if (isset($nav_blog_tags))
-                                    @foreach ($nav_blog_tags as $tag)
-                                        @foreach ($tag->blogs as $blog)
-                                            <li class="service-item filter-tag_{{ $tag->id }}" style="display: none;">
-                                                <a href="{{ route('front.singleBlog', $blog->slug) }}">{{ $blog->title }}</a>
-                                            </li>
-                                        @endforeach
-                                    @endforeach
-                                @endif
-
-                                {{-- Case Studies: projects under each category --}}
-                                @if (isset($nav_project_categories))
-                                    @foreach ($nav_project_categories as $pcat)
-                                        @foreach ($pcat->projects as $project)
-                                            <li class="service-item filter-pcat_{{ $pcat->id }}" style="display: none;">
-                                                <a href="{{ route('front.project_details', $project->slug) }}">{{ $project->name }}</a>
-                                            </li>
-                                        @endforeach
-                                    @endforeach
-                                @endif
-                            </ul>
+                            {{-- Filled from /nav-items on first open (nav.js): the per-category services, guides and
+                                 case studies are not in the page HTML, so each page links only the menu's hubs. --}}
+                            <ul class="service-content-2 list-unstyled" data-src="{{ route('nav.items') }}" aria-live="polite"></ul>
 
                             <!-- View All Button -->
                             <div class="view-all-services-wrapper mt-4" style="display: none;">
@@ -852,6 +825,11 @@
     <!-- FOOTER SECTION -->
 
     @yield('content')
+
+    {{-- Hand-picked related pages on service, package and category pages (App\Support\InternalLinks). --}}
+    @if($schemaOwnPage)
+        @include('front.partials.related-links', ['links' => \App\Support\InternalLinks::forPage(request()->getPathInfo())])
+    @endif
 
 
     <footer class="premium-footer" style="">
@@ -1002,7 +980,7 @@
             allServices: @json(route('front.all-services')),
         };
     </script>
-    <script src="{{ asset('public/front/assets/js/layout/nav.js') }}?v=1"></script>
+    <script src="{{ asset('public/front/assets/js/layout/nav.js') }}?v=2"></script>
 
     <script src="{{ asset('public/front/assets/js/layout/ui.js') }}?v=1"></script>
 

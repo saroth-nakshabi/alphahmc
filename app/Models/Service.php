@@ -61,6 +61,7 @@ class Service extends Model
     }
 
     protected $casts = [
+        'reviewed_at' => 'date',   // reviewer sign-off (App\Models\Reviewer)
         'related_services' => 'array',
         'published_date'   => 'date',
         'updated_date'     => 'date',

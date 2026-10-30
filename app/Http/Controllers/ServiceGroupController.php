@@ -121,6 +121,7 @@ class ServiceGroupController extends Controller
 
     public function store(Request $request)
     {
+        \App\Support\ReviewerFields::validate($request);   // reviewer + review date (SEO brief 30 Oct)
         $request->validate([
             'name'        => 'required|string|max:255',
             'slug'        => 'required|unique:service_groups,slug',
@@ -198,6 +199,7 @@ class ServiceGroupController extends Controller
             'published_date'           => $request->input('published_date') ?: now()->toDateString(),
             'updated_date'             => $request->input('updated_date') ?: null,
         ]);
+        \App\Support\ReviewerFields::apply($request, $serviceGroup);
 
         if ($request->has('service_ids')) {
             $serviceGroup->services()->sync($request->input('service_ids'));
@@ -239,6 +241,7 @@ class ServiceGroupController extends Controller
 
     public function update(Request $request, $id)
     {
+        \App\Support\ReviewerFields::validate($request);   // reviewer + review date (SEO brief 30 Oct)
         $serviceGroup = ServiceGroup::findOrFail($id);
 
         $request->validate([
@@ -324,6 +327,7 @@ class ServiceGroupController extends Controller
             'published_date'           => $request->input('published_date') ?: null,
             'updated_date'             => $request->input('updated_date') ?: null,
         ]);
+        \App\Support\ReviewerFields::apply($request, $serviceGroup);
 
         if ($request->has('service_ids')) {
             $serviceGroup->services()->sync($request->input('service_ids'));

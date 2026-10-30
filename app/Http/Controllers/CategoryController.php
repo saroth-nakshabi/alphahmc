@@ -113,6 +113,7 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
+        \App\Support\ReviewerFields::validate($request);   // reviewer + review date (SEO brief 30 Oct)
         $request->validate([
             'main_category_ids'          => 'required|array|min:1',
             'main_category_ids.*'        => 'exists:main_categories,id',
@@ -208,6 +209,7 @@ class CategoryController extends Controller
             'serviceType' => $request->input('serviceType'),
             'featured' => $request->has('featured') ? 1 : 0,
         ]);
+        \App\Support\ReviewerFields::apply($request, $item);
 
         $item->mainCategories()->sync($mainCategoryIds);
 
@@ -232,6 +234,7 @@ class CategoryController extends Controller
 
     public function update(Request $request, $id)
     {
+        \App\Support\ReviewerFields::validate($request);   // reviewer + review date (SEO brief 30 Oct)
         $item = Category::findOrFail($id);
 
         $request->validate([
@@ -341,6 +344,7 @@ class CategoryController extends Controller
             'serviceType' => $request->input('serviceType'),
             'featured' => $request->has('featured') ? 1 : 0,
         ]);
+        \App\Support\ReviewerFields::apply($request, $item);
 
         $item->mainCategories()->sync($mainCategoryIds);
 
