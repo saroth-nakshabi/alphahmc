@@ -89,6 +89,28 @@ class ReviewerPagesTest extends TestCase
         $this->get('/nav-items')->assertOk()->assertHeader('X-Robots-Tag', 'noindex');
     }
 
+    public function test_case_study_uses_its_own_title_and_shows_no_review_line_without_a_date(): void
+    {
+        $r = $this->reviewer();
+        $categoryId = DB::table('project_categories')->insertGetId(['name' => 'Test category', 'created_at' => now(), 'updated_at' => now()]);
+        $project = \App\Models\Project::create([
+            'project_category_id' => $categoryId, 'slug' => 'case-study-test', 'name' => 'Short Case Study Title',
+            'meta_title' => 'Longer Browser Title in Abu Dhabi', 'meta_description' => 'Meta text for the test.',
+            'description' => '<p>Overview.</p>', 'closing' => '<p>Closing paragraph.</p>',
+        ]);
+        $project->forceFill(['reviewer' => $r->key])->saveQuietly();
+
+        $res = $this->get('/project_details/case-study-test')->assertOk()
+            ->assertSee('<title>Longer Browser Title in Abu Dhabi | Alpha Health Group</title>', false)
+            ->assertSee('<h1>Short Case Study Title</h1>', false)
+            ->assertSee('Closing paragraph.');
+        $this->assertStringNotContainsString('Reviewed by', $res->getContent());
+
+        $project->forceFill(['reviewed_at' => '2026-10-28'])->saveQuietly();
+        $this->get('/project_details/case-study-test')->assertSee('"lastReviewed":"2026-10-28"', false)
+            ->assertSee('Reviewed by <a href="' . $r->url() . '">', false);
+    }
+
     public function test_case_studies_link_from_their_facility_category(): void
     {
         $links = InternalLinks::forPage('/service-category/day-surgery-centers');

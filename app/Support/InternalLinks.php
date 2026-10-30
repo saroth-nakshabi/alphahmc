@@ -40,8 +40,9 @@ class InternalLinks
         'day-surgery-centers'            => ['broadway-vascular', 'bone-care', 'royal-spanish-center'],
         'diagnostic-labs-imaging-centers' => ['sanimed-group'],
         'hospitals'                      => ['reem-hospital', 'smch'],
-        'rehabilitation-centers'         => ['revital-hospital'],
-        'medical-centers-polyclinics'    => ['beijing-therapy', 'nhs-medical-center', 'vfs-global', 'ihlad-abu-dhabi', 'dna-health-corp'],
+        'rehabilitation-centers'         => ['revital-hospital', 'mabc-abilities-development'],
+        'medical-centers-polyclinics'    => ['beijing-therapy', 'nhs-medical-center', 'vfs-global', 'ihlad-abu-dhabi', 'dna-health-corp',
+                                             'cryo-health-clinic', 'skin111'],   // case study brief, 30 Oct
         'drugstores'                     => ['healthcare-solutions'],
     ];
 
@@ -53,6 +54,12 @@ class InternalLinks
     ];
 
     private static array $resolved = [];
+
+    /** Client name for link text, without legal suffixes ("CRYO Health Clinic L.L.C" becomes "CRYO Health Clinic"). */
+    private static function clientName(string $name): string
+    {
+        return trim(preg_replace('/(\s+(L\.?L\.?C\.?|S\.?P\.?C\.?|FZ-?LLC|FZE|LTD\.?))+\s*$/i', '', trim($name)));
+    }
 
     /**
      * Extra links for a page, as [['url' => ..., 'text' => ...], ...]. Unpublished or missing targets are
@@ -73,7 +80,7 @@ class InternalLinks
             $projects = Project::whereIn('slug', self::CASE_STUDIES[$m[1]])->get()->keyBy('slug');
             foreach (self::CASE_STUDIES[$m[1]] as $slug) {
                 if ($p = $projects->get($slug)) {
-                    $links[] = ['url' => route('front.project_details', $p->slug), 'text' => trim($p->client_name ?: $p->name) . ' case study'];
+                    $links[] = ['url' => route('front.project_details', $p->slug), 'text' => self::clientName($p->client_name ?: $p->name) . ' case study'];
                 }
             }
         }

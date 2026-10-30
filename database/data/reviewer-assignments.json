@@ -31,6 +31,11 @@
    "name": "Saroth Nakshabi",
    "title": "Health Technology Consultant & CIO",
    "linkedin": "https://www.linkedin.com/in/sarothnakshabi/"
+  },
+  "rafah-razik": {
+   "name": "Rafah Razik",
+   "title": "Licensing & Project Account Manager",
+   "linkedin": "https://www.linkedin.com/in/rafah-razik-974828244/"
   }
  },
  "pages": [
@@ -1149,6 +1154,24 @@
    "reviewer": "saroth-nakshabi",
    "service_link": "/services/physician-recruitment-specialist-placement",
    "reviewed_at": "2026-10-17"
+  },
+  {
+   "path": "/project_details/cryo-health-clinic",
+   "reviewer": "afrin-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-30"
+  },
+  {
+   "path": "/project_details/mabc-abilities-development",
+   "reviewer": "rafah-razik",
+   "service_link": null,
+   "reviewed_at": "2026-10-29"
+  },
+  {
+   "path": "/project_details/skin111",
+   "reviewer": "afrin-nakshabi",
+   "service_link": null,
+   "reviewed_at": "2026-10-30"
   }
  ],
  "review_dates_note": "Sign-off dates given by Saroth in chat 30 Oct 2026: Dr Ehsaan reviewed 12 to 15 Oct (date shown: 15 Oct, the day he finished), Saroth 17 Oct, Areej 23 Oct, Afrin 24 Oct, Murshid 27 Oct, Siraj 30 Oct. Reviews were done on printed drafts of the live pages."

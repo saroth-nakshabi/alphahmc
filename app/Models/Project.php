@@ -28,11 +28,15 @@ class Project extends Model
         'challenge',
         'resolution',
         'challenges',
+        'meta_title',
+        'meta_description',
+        'closing',
     ];
 
     protected $casts = [
         'featured'    => 'boolean',
         'challenges'  => 'array',
+        'reviewed_at' => 'date',   // reviewer sign-off (App\Models\Reviewer)
         'service_ids' => 'array',
     ];
 

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProjectImage extends Model
 {
     use HasFactory;
-      protected $fillable = ['image','project_id'];
+      protected $fillable = ['image','project_id','alt'];
 
 
 public function project()

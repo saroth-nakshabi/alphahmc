@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Blog;
 use App\Models\Category;
+use App\Models\Project;
 use App\Models\Reviewer;
 use App\Models\Service;
 use App\Models\ServiceGroup;
@@ -76,6 +77,17 @@ class ReviewerSeeder extends Seeder
             'reviews' => 'business, IT and digital, cybersecurity and ADHICS, insurance and payers, KPIs, staffing.',
             'linkedin' => 'https://www.linkedin.com/in/sarothnakshabi/',
         ],
+        'rafah-razik' => [
+            // Added 30 Oct (Saroth). Title from the team profile until Saroth confirms it; qualifications and
+            // experience are still [confirm] in the bios file, so they stay empty and off the page.
+            'name' => 'Rafah Razik',
+            'title' => 'Licensing & Project Account Manager',
+            'qualifications' => null,
+            'experience' => null,
+            'bio' => 'Rafah plans and manages licensing applications and leads Alpha\'s application team. He handles end-to-end DOH licensing and regulatory approvals across several projects at a time, coordinates with the authorities and resolves issues in their systems, and oversees the documents submitted.',
+            'reviews' => 'facility licensing projects (first page: the MABC Abilities Development case study).',
+            'linkedin' => 'https://www.linkedin.com/in/rafah-razik-974828244/',
+        ],
     ];
 
     public function run(): void
@@ -90,6 +102,7 @@ class ReviewerSeeder extends Seeder
             'service-category' => Category::class,
             'service-packages' => ServiceGroup::class,
             'blog_single'      => Blog::class,
+            'project_details'  => Project::class,
         ];
         $missing = [];
         foreach ($json['pages'] as $page) {

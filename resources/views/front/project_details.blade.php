@@ -1,6 +1,6 @@
 ﻿@extends('front/layout-2')
 
-@push('page_title', $project->name . ' | Alpha Health Group')
+@push('page_title', ($project->meta_title ?: $project->name) . ' | Alpha Health Group')
 @php
     // Some client websites are stored without a scheme ("www.reemhospital.com"); as an href that
     // resolved to /project_details/www.reemhospital.com (404). Make them absolute.
@@ -9,7 +9,22 @@
         : null;
 @endphp
 {{-- The layout prints the one description tag: this page's text, else the site default --}}
-@section('meta_description', \Illuminate\Support\Str::limit(trim(strip_tags($project->description ?? '')), 160))
+@section('meta_description', $project->meta_description ?: \Illuminate\Support\Str::limit(trim(strip_tags($project->description ?? '')), 160))
+{{-- Reviewed case study: WebPage with reviewedBy + lastReviewed, only once the reviewer signed it off. --}}
+@if($caseReviewer = \App\Models\Reviewer::forPage($project))
+@push('meta')
+    <script type="application/ld+json">{!! json_encode([
+        '@context'     => 'https://schema.org',
+        '@type'        => 'WebPage',
+        '@id'          => url()->current(),
+        'url'          => url()->current(),
+        'name'         => $project->name,
+        'reviewedBy'   => ['@type' => 'Person', '@id' => $caseReviewer->personId(), 'name' => $caseReviewer->name,
+                           'jobTitle' => $caseReviewer->title, 'url' => $caseReviewer->url()],
+        'lastReviewed' => $project->reviewed_at->toDateString(),
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
+@endpush
+@endif
 
 @section('custom_css')
 <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
@@ -1596,6 +1611,10 @@
   margin-bottom: 20px;
 }
 @media (max-width: 600px) { .pdl-dm-grid { grid-template-columns: 1fr; } }
+.pdl-closing { padding: 72px 0 0; }
+.pdl-closing__body { max-width: 760px; font-size: 1.08rem; line-height: 1.75; color: inherit; }
+.pdl-closing__body p { margin: 0 0 18px; }
+.pdl-closing__body a { color: #006e72; text-decoration: underline; text-underline-offset: 3px; }
 
 .pdl-dm-item {
   background: var(--white);
@@ -1716,6 +1735,7 @@
                         <div class="pd-hero-text pd-reveal pd-active">
                             <span class="pd-hero-tagline">{{ $project->project_category->name }} </span> <!--Case Study-->
                             <h1>{{ $project->name }}</h1>
+                            @include('front.partials.reviewed-by', ['page' => $project])
                             <div class="pd-hero-desc-wrapper">
                                 <p class="pd-hero-desc-content" id="heroDesc">{!! strip_tags($project->description) !!}</p>
                                 <button id="heroReadMore" class="pd-hero-read-more" style="display: none;">
@@ -1749,7 +1769,7 @@
                                 <div class="pd-hero-slider" id="heroSlider">
                                     @foreach($heroImages as $i => $img)
                                     <div class="pd-hero-slide {{ $i === 0 ? 'active' : '' }}" data-index="{{ $i }}">
-                                        <img src="{{ asset('public/' . $img->image) }}" alt="{{ $project->name }} — {{ $i + 1 }}">
+                                        <img src="{{ asset('public/' . $img->image) }}" alt="{{ $img->alt ?: $project->name . ', photo ' . ($i + 1) }}">
                                     </div>
                                     @endforeach
                                 </div>
@@ -1768,7 +1788,7 @@
                                     <span id="heroSliderCurrent">1</span>&thinsp;/&thinsp;{{ $heroImages->count() }}
                                 </div>
                             @elseif($heroImages->count() === 1)
-                                <img src="{{ asset('public/' . $heroImages[0]->image) }}" alt="{{ $project->name }}">
+                                <img src="{{ asset('public/' . $heroImages[0]->image) }}" alt="{{ $heroImages[0]->alt ?: $project->name }}">
                             @else
                                 <img src="{{ asset('public/front-new/assets/images/section-3-1st-image.jpg') }}" alt="{{ $project->name }}">
                             @endif
@@ -1944,7 +1964,7 @@
              onclick="openGalleryModal('image','{{ asset('public/'.$image->image) }}','Project Visual Asset',this.querySelector('img').alt)">
           <span class="pdl-gcard__badge">Image</span>
           <span class="pdl-gcard__type"><i data-lucide="image" style="width:15px;"></i></span>
-          <div class="pdl-gcard__media"><img src="{{ asset('public/'.$image->image) }}" alt="Image {{ $index+1 }}" loading="lazy"></div>
+          <div class="pdl-gcard__media"><img src="{{ asset('public/'.$image->image) }}" alt="{{ $image->alt ?: 'Image ' . ($index + 1) }}" loading="lazy"></div>
           <div class="pdl-gcard__overlay">
             <div class="pdl-gcard__info"><h4>Visual Asset</h4><p>Snapshot {{ $index+1 }}</p></div>
           </div>
@@ -2132,6 +2152,15 @@
           </div>
         </div>
       @endif
+    </div>
+  </section>
+  @endif
+
+  {{-- Closing paragraphs and related services (case studies from 30 Oct 2026 on; older ones have none). --}}
+  @if(trim(strip_tags((string) $project->closing)) !== '')
+  <section class="pdl-closing">
+    <div class="pdl-wrap">
+      <div class="pdl-closing__body">{!! \App\Support\Html::fixLinks($project->closing) !!}</div>
     </div>
   </section>
   @endif
