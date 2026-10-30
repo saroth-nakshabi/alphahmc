@@ -6,21 +6,25 @@
         array_unshift($facilityTypes, $page->facility_type);
     }
 @endphp
-<section class="lp-section lp-contact" id="contact">
-    <div class="lp-wrap lp-contact-grid">
-        <div>
-            <h2>{{ $d['heading'] }}</h2>
-            @if($d['text'] !== '')<p class="lp-lede lp-mt">{{ $d['text'] }}</p>@endif
-            <div class="lp-lines">
-                @if($d['wa_display'] !== '')
-                <div><span><small>{{ $d['wa_label'] }}</small><span class="lp-num">{{ $d['wa_display'] }}</span></span><button class="lp-copy" type="button" data-copy="+{{ preg_replace('/\D/', '', $pg['wa_number']) }}">Copy number</button></div>
+{{-- CTA as on the service pages (Saroth, 30 Oct): title and subtitle on the left, Call / WhatsApp / Send an inquiry
+     on the right. The form stays closed until "Send an inquiry" (or any "Request a proposal" link) opens it. --}}
+<section class="lp-cta" id="contact">
+    <div class="lp-wrap">
+        <div class="lp-cta-row">
+            <div class="lp-cta-text">
+                <h2>{{ $d['heading'] }}</h2>
+                @if($d['text'] !== '')<p>{{ $d['text'] }}</p>@endif
+            </div>
+            <div class="lp-cta-actions">
+                @if($pg['phone_tel'] !== '' || $pg['phone_display'] !== '')
+                <a class="lp-cta-btn" href="tel:{{ preg_replace('/[^0-9+]/', '', $pg['phone_tel'] ?: $pg['phone_display']) }}"><i class="fas fa-phone" aria-hidden="true"></i>{{ $d['call_button'] ?: 'Call' }}</a>
                 @endif
-                @if($pg['phone_display'] !== '')
-                <div><span><small>{{ $d['call_label'] }}</small><span class="lp-num">{{ $pg['phone_display'] }}</span></span><button class="lp-copy" type="button" data-copy="{{ $pg['phone_tel'] ?: $pg['phone_display'] }}">Copy number</button></div>
-                @endif
+                <a class="lp-cta-btn lp-cta-btn-wa" href="{{ $waHref }}" target="_blank" rel="noopener"><i class="fab fa-whatsapp" aria-hidden="true"></i>{{ $d['wa_button'] ?: 'WhatsApp' }}</a>
+                <button class="lp-cta-btn lp-cta-btn-primary" type="button" id="lp-form-toggle" aria-expanded="false" aria-controls="lp-form-panel"><i class="fas fa-envelope" aria-hidden="true"></i>{{ $d['form_button'] ?: 'Send an inquiry' }}</button>
             </div>
         </div>
 
+        <div class="lp-form-panel" id="lp-form-panel" hidden>
         <form class="lp-form" id="lp-form" action="{{ route('front.inquiry.submit') }}" method="POST" novalidate>
             @csrf
             <h3>{{ $d['form_heading'] }}</h3>
@@ -80,5 +84,6 @@
             <div class="lp-done" id="lp-done" role="status" tabindex="-1" hidden>{{ $d['success_text'] }}</div>
             @if($d['fine_print'] !== '')<p class="lp-fine">{{ $d['fine_print'] }}</p>@endif
         </form>
+        </div>
     </div>
 </section>

@@ -86,6 +86,59 @@
         });
     });
 
+    // ── CTA: "Send an inquiry" opens the form below it; "Request a proposal" links open it too ──
+    var panel = $('#lp-form-panel'), toggle = $('#lp-form-toggle');
+    function openForm(scroll) {
+        if (!panel) return;
+        if (panel.hidden) {
+            panel.hidden = false;
+            panel.classList.add('is-opening');
+            if (toggle) toggle.setAttribute('aria-expanded', 'true');
+        }
+        if (scroll) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        var first = panel.querySelector('input:not([type=hidden]):not([tabindex="-1"])');
+        if (first) setTimeout(function () { first.focus({ preventScroll: true }); }, scroll ? 450 : 0);
+    }
+    if (toggle) toggle.addEventListener('click', function () {
+        if (!panel.hidden) { panel.hidden = true; toggle.setAttribute('aria-expanded', 'false'); toggle.focus(); return; }
+        openForm(true);
+    });
+    $$('a[href="#contact"]').forEach(function (a) {
+        a.addEventListener('click', function (e) { e.preventDefault(); openForm(true); });
+    });
+    if (location.hash === '#contact') openForm(true);
+
+    // ── Floating WhatsApp: a message window; only the send link opens WhatsApp (and counts) ──
+    var waBtn = $('#lp-wa-button'), waWin = $('#lp-wa-window'), waText = $('#lp-wa-text'), waSend = $('#lp-wa-send');
+    function setWa(open) {
+        if (!waWin) return;
+        waWin.hidden = !open;
+        waBtn.setAttribute('aria-expanded', String(open));
+        if (open && waText) { waText.focus(); waText.setSelectionRange(waText.value.length, waText.value.length); }
+        else if (!open) waBtn.focus();
+    }
+    function syncSend() {
+        // Keep the link's text current before the tap: the Ref script and the tracker read the link itself.
+        if (!waSend || !waText) return;
+        var url = new URL(waSend.href);
+        url.searchParams.set('text', waText.value.trim());
+        waSend.href = url.toString();
+    }
+    if (waBtn && waWin) {
+        waBtn.addEventListener('click', function () { setWa(waWin.hidden); });
+        $('#lp-wa-close').addEventListener('click', function () { setWa(false); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !waWin.hidden) setWa(false); });
+        if (waText) {
+            waText.addEventListener('input', syncSend);
+            waText.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); waSend.click(); }
+            });
+            syncSend();
+        }
+        $('#lp-wa-compose').addEventListener('submit', function (e) { e.preventDefault(); });
+        waSend.addEventListener('click', function () { setTimeout(function () { waWin.hidden = true; waBtn.setAttribute('aria-expanded', 'false'); }, 300); });
+    }
+
     // ── Proposal form ──
     var form = $('#lp-form');
     if (!form) return;

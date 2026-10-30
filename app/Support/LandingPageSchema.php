@@ -24,6 +24,10 @@ class LandingPageSchema
             'wa_header'      => ['Header WhatsApp button', 'text'],
             'dock_wa'        => ['Phone dock: WhatsApp button', 'text'],
             'dock_proposal'  => ['Phone dock: proposal button', 'text'],
+            'wa_window_title'   => ['WhatsApp window: title', 'text'],
+            'wa_window_subtitle'=> ['WhatsApp window: line under the title', 'text'],
+            'wa_window_message' => ['WhatsApp window: welcome message', 'textarea'],
+            'wa_window_send'    => ['WhatsApp window: send button label (for screen readers)', 'text'],
         ],
     ];
 
@@ -156,6 +160,9 @@ class LandingPageSchema
             'fields' => [
                 'heading'       => ['Heading', 'text', true],
                 'text'          => ['Text', 'textarea'],
+                'call_button'   => ['Call button', 'text'],
+                'wa_button'     => ['WhatsApp button', 'text'],
+                'form_button'   => ['Send an inquiry button (opens the form)', 'text'],
                 'wa_label'      => ['WhatsApp line label', 'text'],
                 'wa_display'    => ['WhatsApp number as shown', 'text'],
                 'call_label'    => ['Phone line label', 'text'],

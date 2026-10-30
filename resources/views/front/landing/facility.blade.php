@@ -89,12 +89,63 @@
         @endforeach
     </main>
 
+    {{-- Footer: the site footer's bottom section (logo, policies, social, email and phone, legal line) on a plain colour. --}}
     <footer class="lp-footer">
         <div class="lp-wrap">
-            <span>Alpha Health Group. Dubai, Abu Dhabi, Al Ain and Colombo.</span>
-            <a href="{{ route('home') }}">alphahmc.com</a>
+            <div class="lp-footer-row">
+                <a class="lp-footer-logo" href="{{ route('home') }}" aria-label="Alpha Health Group home">
+                    <picture>
+                        <source type="image/webp" srcset="{{ asset('public/front-new/assets/images/about/alpha-logo5-200.webp') }}">
+                        <img src="{{ asset('public/front-new/assets/images/about/alpha-logo5-200.png') }}" alt="Alpha Health Group" width="200" height="215" loading="lazy" decoding="async">
+                    </picture>
+                </a>
+                <nav class="lp-footer-policies" aria-label="Policies">
+                    <a href="{{ url('/alpha-privacy-policy') }}">Privacy Policy</a>
+                    <a href="{{ route('front.terms-of-service') }}">Terms of Service</a>
+                    <a href="{{ route('front.cookie-policy') }}">Cookie Policy</a>
+                    <a href="{{ route('front.privacy-policy') }}">GDPR &amp; Data Protection</a>
+                </nav>
+                <div class="lp-footer-social">
+                    <span>Connect With Us:</span>
+                    <a href="https://www.linkedin.com/company/alphatsm" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+                    <a href="https://x.com/alphatsm_" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+                    <a href="https://www.facebook.com/alphatsm" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
+                    <a href="https://www.instagram.com/alphahealthgroup/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                </div>
+                <div class="lp-footer-contact">
+                    <a class="lp-footer-email" href="mailto:info@alphatsm.com"><i class="fas fa-envelope" aria-hidden="true"></i>info@alphatsm.com</a>
+                    <a class="lp-footer-phone" href="tel:+97142724064"><i class="fas fa-phone" aria-hidden="true"></i>+971 4 272 4064</a>
+                </div>
+            </div>
+            <div class="lp-footer-legal">
+                <p>Alpha Health Group provides healthcare management consultancy, accreditation support, and advisory services to healthcare organisations across the GCC and Middle East. All consultancy services are provided for organisational and management purposes only and do not constitute clinical medical advice or treatment.</p>
+                <p>&copy; {{ date('Y') }} Alpha Health Group. All rights reserved.</p>
+            </div>
         </div>
     </footer>
+
+    {{-- Floating WhatsApp: opens a message window (as on alphatsm.com). Only "Send" opens WhatsApp, so the
+         conversion and the Ref code apply to a real message, through the wa.me link click as everywhere else. --}}
+    <div class="lp-wa" id="lp-wa">
+        <div class="lp-wa-window" id="lp-wa-window" role="dialog" aria-modal="false" aria-labelledby="lp-wa-title" hidden>
+            <div class="lp-wa-head">
+                <span class="lp-wa-avatar" aria-hidden="true"><i class="fab fa-whatsapp"></i></span>
+                <span class="lp-wa-head-text"><strong id="lp-wa-title">{{ $pg['wa_window_title'] ?: 'Alpha Health Group' }}</strong><small>{{ $pg['wa_window_subtitle'] ?: 'Facility setup team' }}</small></span>
+                <button type="button" class="lp-wa-close" id="lp-wa-close" aria-label="Close the WhatsApp window">&times;</button>
+            </div>
+            <div class="lp-wa-body">
+                <p class="lp-wa-bubble">{{ $pg['wa_window_message'] ?: 'Hello. Tell us what you plan to open and where, and the facility team will reply on WhatsApp.' }}</p>
+            </div>
+            <form class="lp-wa-compose" id="lp-wa-compose">
+                <label class="lp-visually-hidden" for="lp-wa-text">Your message</label>
+                <textarea id="lp-wa-text" rows="2">{{ $pg['wa_text'] }}</textarea>
+                <a class="lp-wa-send" id="lp-wa-send" href="{{ $waHref }}" target="_blank" rel="noopener" aria-label="{{ $pg['wa_window_send'] ?: 'Send on WhatsApp' }}"><i class="fas fa-paper-plane" aria-hidden="true"></i></a>
+            </form>
+        </div>
+        <button type="button" class="lp-wa-button" id="lp-wa-button" aria-expanded="false" aria-controls="lp-wa-window" aria-label="Chat with us on WhatsApp">
+            <i class="fab fa-whatsapp" aria-hidden="true"></i>
+        </button>
+    </div>
 
     <div class="lp-dock" id="lp-dock">
         <a class="lp-btn lp-btn-primary" href="{{ $waHref }}" target="_blank" rel="noopener">{{ $pg['dock_wa'] ?: 'WhatsApp' }}</a>
