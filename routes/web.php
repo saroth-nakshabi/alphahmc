@@ -112,6 +112,8 @@ Route::get('/nav-items', fn () => response()->view('front.partials.nav-items')
     ->header('X-Robots-Tag', 'noindex'))->name('nav.items');
 // Reviewer bio pages (brief "alphahmc-reviewers-and-linking", 30 Oct 2026).
 Route::get('/team/{key}', [\App\Http\Controllers\ReviewerController::class, 'show'])->name('front.reviewer');
+// Landing pages built in the admin (Landing pages); drafts are an admin-only preview.
+Route::get('/facility-setup/{slug}', [\App\Http\Controllers\LandingPageController::class, 'show'])->name('front.landing');
 Route::get('/new_service/{slug}', function ($slug) {
     return redirect()->route('front.service', $slug, 301);
 });
@@ -368,6 +370,17 @@ Route::middleware(['auth', 'check_student_profile'])->group(function () {
     Route::delete('/dashboard/planner/delete/{id}', [AdminPlannerController::class, 'destroy'])->name('admin.planner.destroy')->middleware('permission:delete planner');
 
     // Mega-menu promo slides (max 3, auto-rotating in the menu's default panel)
+    // Landing pages (brief "alphahmc-facility-landing-build", 30 Oct 2026)
+    Route::get('/dashboard/landing-pages', [App\Http\Controllers\AdminLandingPageController::class, 'index'])->name('admin.landing-pages.index')->middleware('permission:view landing pages');
+    Route::get('/dashboard/landing-pages/create', [App\Http\Controllers\AdminLandingPageController::class, 'create'])->name('admin.landing-pages.create')->middleware('permission:create landing pages');
+    Route::post('/dashboard/landing-pages', [App\Http\Controllers\AdminLandingPageController::class, 'store'])->name('admin.landing-pages.store')->middleware('permission:create landing pages');
+    Route::get('/dashboard/landing-pages/{id}/edit', [App\Http\Controllers\AdminLandingPageController::class, 'edit'])->name('admin.landing-pages.edit')->middleware('permission:view landing pages');
+    Route::post('/dashboard/landing-pages/{id}', [App\Http\Controllers\AdminLandingPageController::class, 'update'])->name('admin.landing-pages.update')->middleware('permission:edit landing pages');
+    Route::post('/dashboard/landing-pages/{id}/duplicate', [App\Http\Controllers\AdminLandingPageController::class, 'duplicate'])->name('admin.landing-pages.duplicate')->middleware('permission:create landing pages');
+    Route::delete('/dashboard/landing-pages/{id}', [App\Http\Controllers\AdminLandingPageController::class, 'destroy'])->name('admin.landing-pages.destroy')->middleware('permission:delete landing pages');
+    Route::get('/dashboard/landing-pages/{id}/history', [App\Http\Controllers\AdminLandingPageController::class, 'history'])->name('admin.landing-pages.history')->middleware('permission:view landing pages');
+    Route::post('/dashboard/landing-pages/{id}/revisions/{revision}/restore', [App\Http\Controllers\AdminLandingPageController::class, 'restore'])->name('admin.landing-pages.restore')->middleware('permission:edit landing pages');
+
     Route::get('/dashboard/menu-promos', [App\Http\Controllers\MenuPromoController::class, 'index'])->name('admin.menu-promos.index')->middleware('permission:view menu promos');
     Route::post('/dashboard/menu-promos', [App\Http\Controllers\MenuPromoController::class, 'store'])->name('admin.menu-promos.store')->middleware('permission:create menu promos');
     Route::post('/dashboard/menu-promos/{id}', [App\Http\Controllers\MenuPromoController::class, 'update'])->name('admin.menu-promos.update')->middleware('permission:edit menu promos');

@@ -14,6 +14,10 @@ class Inquiry extends Model
         'email',
         'phone',
         'service_id',
+        'landing_page_id',
+        'facility_type',
+        'emirate',
+        'source',
         'message',
         'meeting_at',
         'status',
@@ -22,6 +26,7 @@ class Inquiry extends Model
 
     protected $casts = [
         'reply_history' => 'array',
+        'source'        => 'array',
         'meeting_at'    => 'datetime',
     ];
 

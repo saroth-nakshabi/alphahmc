@@ -34,6 +34,7 @@ class DashboardAreaPermissionsSeeder extends Seeder
         'Project Process'   => 'project process',
         'Pages & SEO'       => 'pages',
         'Menu Promos'       => 'menu promos',
+        'Landing Pages'     => 'landing pages',
         'About Us'          => 'about us',
         'About Quote'       => 'about quote',
         'About Counters'    => 'about counters',
@@ -57,6 +58,11 @@ class DashboardAreaPermissionsSeeder extends Seeder
                     ['name' => "{$verb} {$base}"],
                     ['guard_name' => 'web']
                 );
+                // guard_name is not fillable on App\Models\Permission: reload a new one so it carries the
+                // database default ('web'), or givePermissionTo() fails on a null guard.
+                if ($permission->wasRecentlyCreated) {
+                    $permission = $permission->fresh();
+                }
 
                 // Ensure it is filed under its category (in case it pre-existed uncategorised).
                 if ($permission->permission_category_id !== $category->id) {

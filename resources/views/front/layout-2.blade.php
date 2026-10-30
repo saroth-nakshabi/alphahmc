@@ -27,7 +27,8 @@
     @if($pmKeys)<meta name="keywords" content="{{ $pmKeys }}">@endif
     @stack('meta')
 
-    <link rel="canonical" href="{{ url()->current() }}">
+    {{-- Pages may set their own canonical (landing pages: the admin's canonical field). --}}
+    <link rel="canonical" href="@yield('canonical', url()->current())">
 
     {{-- Default Open Graph tags — pages can override via @push('og_tags') --}}
     <meta property="og:site_name" content="Alpha Health Group" />
@@ -496,6 +497,10 @@
     </div>
     @endguest --}}
 
+    {{-- Landing pages (@section('bare_layout')) bring their own header and footer: the menu, footer and
+         dwell popup are left out; consent, tags, tracking and the Meta Pixel stay as on every page. --}}
+    @php $bareLayout = View::hasSection('bare_layout'); @endphp
+    @unless($bareLayout)
     <!-- Unified Navbar Container -->
     <div class="navbar-content" id="main-navbar">
 
@@ -783,6 +788,8 @@
 
     
 
+    @endunless
+
     <!-- Login Modal (Kept as is, just hidden trigger for now unless requested) -->
     <!-- ... (Modal code remains if needed, but removed from view to match image) ... -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
@@ -832,6 +839,7 @@
     @endif
 
 
+    @unless($bareLayout)
     <footer class="premium-footer" style="">
         <!-- Animated Background Elements -->
         <div class="footer-bg-elements">
@@ -961,6 +969,7 @@
 
 
     </footer>
+    @endunless
 
 
     
@@ -970,6 +979,7 @@
          and the menu script. Kept synchronous and before every script that uses jQuery. --}}
     <script src="{{ asset('public/front/assets/js/vendor/jquery-3.6.0.min.js') }}?v=3.6.0"></script>
 
+    @unless($bareLayout)
     <!-- JavaScript for Unified Menu (Fixed & Cleaned) -->
     <script>
         window.AHG_NAV = {
@@ -983,6 +993,7 @@
     <script src="{{ asset('public/front/assets/js/layout/nav.js') }}?v=2"></script>
 
     <script src="{{ asset('public/front/assets/js/layout/ui.js') }}?v=1"></script>
+    @endunless
 
     {{-- Bootstrap, Swiper and AOS are self-hosted (byte-identical to jsDelivr: Bootstrap sha384 kenU1KFd...,
          Swiper 11.2.10 = what swiper@11 resolved to, AOS 2.3.4), so pages no longer connect to cdn.jsdelivr.net.
@@ -1031,7 +1042,9 @@
     {{-- "Chat with Alpha" AI widget stays only on Contact + About Us — everywhere
          else it was high-click/low-inquiry friction, so the dwell popup + the
          direct WhatsApp floating button (below) carry the CTA instead. --}}
-    @if(request()->routeIs('contact', 'front.new-about'))
+    @if($bareLayout)
+        {{-- Landing pages carry their own WhatsApp and proposal buttons. --}}
+    @elseif(request()->routeIs('contact', 'front.new-about'))
         @include('front.partials.ai-assistant')
     @else
         @include('front.partials.wa-dwell-popup')
@@ -1070,6 +1083,8 @@
     });
 </script>
 
+{{-- Landing pages have their own WhatsApp buttons (the facility number), so no floating button. --}}
+@unless($bareLayout)
 @php
     // ── Unified page-level WhatsApp number + context-aware message ──────────
     // Service, ServiceGroup and Category pages all pass their entity as $service.
@@ -1105,5 +1120,6 @@
         .ahg-float-wa svg { width: 24px; height: 24px; }
     }
 </style>
+@endunless
 
 </html>

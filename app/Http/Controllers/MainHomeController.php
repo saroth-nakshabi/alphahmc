@@ -598,6 +598,23 @@ class MainHomeController extends Controller
         return back()->with('success', $successMsg);
     }
 
+    /** The landing form's source JSON (Ref record and ad parameters), kept only as flat short strings. */
+    private function inquirySource(?string $json): ?array
+    {
+        $data = json_decode((string) $json, true);
+        if (!is_array($data)) {
+            return null;
+        }
+        $clean = [];
+        foreach ($data as $key => $value) {
+            if (is_string($key) && preg_match('/^[a-z_]{1,30}$/', $key) && is_scalar($value)) {
+                $clean[$key] = mb_substr((string) $value, 0, 500);
+            }
+        }
+
+        return $clean ?: null;
+    }
+
     public function submitInquiry(Request $request)
     {
         $request->validate([
@@ -608,6 +625,11 @@ class MainHomeController extends Controller
             'message'      => 'nullable|string',
             'meeting_date' => 'nullable|date',
             'meeting_time' => 'nullable|string|max:10',
+            // Landing page form (front/landing): its page, the facility and emirate picked, and the ad source.
+            'landing_page_id' => 'nullable|integer|exists:landing_pages,id',
+            'facility_type'   => 'nullable|string|max:100',
+            'emirate'         => 'nullable|string|max:50',
+            'source'          => 'nullable|string|max:3000',
         ], [
             'email.required_without' => 'Please provide at least an email address or mobile number.',
             'phone.required_without' => 'Please provide at least a mobile number or email address.',
@@ -643,6 +665,19 @@ class MainHomeController extends Controller
 
         // Record the contact consent on the CRM message so it's visible in the dashboard.
         $message = $request->input('message');
+        // Landing page leads: show the facility, emirate and page on the message, as the CRM list and
+        // the alert email show only the message.
+        if ($request->filled('landing_page_id')) {
+            $landing = \App\Models\LandingPage::find($request->input('landing_page_id'));
+            $lines = array_filter([
+                $request->filled('facility_type') ? 'Facility: ' . $request->input('facility_type') : null,
+                $request->filled('emirate') ? 'Emirate: ' . $request->input('emirate') : null,
+                $landing ? 'Page: ' . $landing->url() : null,
+            ]);
+            $message = trim(implode("
+", $lines) . ($message ? "
+" . $message : ''));
+        }
         if ($request->boolean('consent')) {
             $message = trim(($message ? $message . "\n" : '') . '— Consent: agreed to be contacted (privacy policy accepted).');
         }
@@ -653,6 +688,10 @@ class MainHomeController extends Controller
             'email'      => $request->input('email'),
             'phone'      => $request->input('phone'),
             'service_id' => $request->input('service_id') ?: null,
+            'landing_page_id' => $request->input('landing_page_id') ?: null,
+            'facility_type'   => $request->input('facility_type') ?: null,
+            'emirate'         => $request->input('emirate') ?: null,
+            'source'          => $this->inquirySource($request->input('source')),
             'message'    => $message,
             'meeting_at' => $meetingAt,
             'status'     => $isSuspicious ? 'spam' : 'pending',

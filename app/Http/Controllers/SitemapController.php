@@ -22,9 +22,10 @@ class SitemapController extends Controller
         $projects    = $this->projectPages();
         $brands      = $this->brandPages();
         $reviewers   = $this->reviewerPages();
+        $landing     = $this->landingPages();
 
         $xml = $this->buildXml(array_merge(
-            $staticPages, $groups, $categories, $services, $blogs, $projects, $brands, $reviewers
+            $staticPages, $groups, $categories, $services, $landing, $blogs, $projects, $brands, $reviewers
         ));
 
         return response($xml, 200, [
@@ -46,6 +47,29 @@ class SitemapController extends Controller
             ['loc' => route('front.ahg-updates'),         'priority' => '0.6', 'changefreq' => 'weekly'],
             ['loc' => route('front.privacy-policy'),      'priority' => '0.3', 'changefreq' => 'yearly'],
         ];
+    }
+
+    /** Published landing pages that are set to show in search and keep their own URL as canonical. */
+    private function landingPages(): array
+    {
+        $pages = [];
+        try {
+            \App\Models\LandingPage::published()->where('indexable', true)->get(['slug', 'canonical', 'updated_at'])
+                ->each(function ($p) use (&$pages) {
+                    $url = route('front.landing', $p->slug);
+                    if ($p->canonical && rtrim($p->canonical, '/') !== $url) {
+                        return;
+                    }
+                    $pages[] = [
+                        'loc'        => $url,
+                        'lastmod'    => $p->updated_at?->toAtomString(),
+                        'priority'   => '0.8',
+                        'changefreq' => 'monthly',
+                    ];
+                });
+        } catch (\Throwable) {}
+
+        return $pages;
     }
 
     /** Reviewer bio pages at /team/{key}. */

@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Models\Category;
+use App\Models\LandingPage;
 use App\Models\Service;
 use App\Models\ServiceGroup;
 
@@ -13,6 +14,7 @@ use App\Models\ServiceGroup;
  * general "WhatsApp Click" and "Inquiry Sent" (Ads agent, 29 Oct 2026). A page is 'facility' when
  * it is one of the five categories below, or a service or package in one of them, or one of the
  * listed slugs that sits in other categories. Every other page is 'general'.
+ * A landing page (App\Models\LandingPage) sets its own lead type in the admin.
  */
 class LeadType
 {
@@ -35,10 +37,14 @@ class LeadType
         'medical-facility-fit-out',
     ];
 
-    public static function for(Service|Category|ServiceGroup|null $page): string
+    public static function for(Service|Category|ServiceGroup|LandingPage|null $page): string
     {
         if (!$page) {
             return self::GENERAL;
+        }
+
+        if ($page instanceof LandingPage) {
+            return $page->lead_type === self::FACILITY ? self::FACILITY : self::GENERAL;
         }
 
         if ($page instanceof Category) {

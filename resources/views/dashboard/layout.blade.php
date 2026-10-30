@@ -219,7 +219,7 @@
                         <!-- ============================= -->
                         <!-- Apps -->
                         <!-- ============================= -->
-                        @canany(['view main categories', 'view categories', 'view services', 'view service groups', 'view pages', 'view menu promos', 'view project process', 'view inquiries', 'view planner', 'view planner builder', 'view settings', 'view home sliders', 'view announcements', 'view blogs', 'view tags', 'view projects', 'view project categories', 'view global tags', 'view google tags', 'view clients', 'view brands', 'view testimonials', 'view about us', 'view about quote', 'view eco system', 'view about counters', 'view about staff'])
+                        @canany(['view main categories', 'view categories', 'view services', 'view service groups', 'view pages', 'view menu promos', 'view landing pages', 'view project process', 'view inquiries', 'view planner', 'view planner builder', 'view settings', 'view home sliders', 'view announcements', 'view blogs', 'view tags', 'view projects', 'view project categories', 'view global tags', 'view google tags', 'view clients', 'view brands', 'view testimonials', 'view about us', 'view about quote', 'view eco system', 'view about counters', 'view about staff'])
                         <li class="nav-small-cap">
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu">Service</span>
@@ -336,6 +336,17 @@
                             </ul>
                         </li>
                         @endcanany
+
+                        @can('view landing pages')
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('admin.landing-pages.index') }}" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-file-text"></i>
+                                </span>
+                                <span class="hide-menu">Landing pages</span>
+                            </a>
+                        </li>
+                        @endcan
 
                         @can('view menu promos')
                         <li class="sidebar-item">
