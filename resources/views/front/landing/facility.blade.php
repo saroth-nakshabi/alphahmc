@@ -57,6 +57,16 @@
 @push('meta')
     <link rel="preload" as="image" type="image/webp" imagesrcset="{{ $pic['desktop']['webp'] }}" imagesizes="(min-width: 1344px) 1320px, 100vw" media="(min-width: 768px)">
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/landing-facility.css') }}?v={{ substr(md5_file(public_path('front/assets/css/landing-facility.css')), 0, 10) }}">
+    {{-- Reviewed page: WebPage with reviewedBy + lastReviewed, as on the service pages. --}}
+    @if($lpReviewer = \App\Models\Reviewer::forPage($page))
+    <script type="application/ld+json">{!! json_encode([
+        '@context' => 'https://schema.org', '@type' => 'WebPage', '@id' => $canonical, 'url' => $canonical,
+        'name' => $page->seo_title ?: $page->name,
+        'reviewedBy' => ['@type' => 'Person', '@id' => $lpReviewer->personId(), 'name' => $lpReviewer->name,
+                         'jobTitle' => $lpReviewer->title, 'url' => $lpReviewer->url()],
+        'lastReviewed' => $page->reviewed_at->toDateString(),
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
+    @endif
     @if($faq && count($faq['items']))
     <script type="application/ld+json">{!! json_encode([
         '@context'   => 'https://schema.org',

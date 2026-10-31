@@ -33,6 +33,7 @@ class LandingPage extends Model
         'related_ids'  => 'array',
         'content'      => 'array',
         'published_at' => 'datetime',
+        'reviewed_at'  => 'date',
     ];
 
     public function revisions()

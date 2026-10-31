@@ -8,6 +8,7 @@
         </p>
         @endif
         <h1>{!! $highlight($hero['h1_before'], $hero['h1_highlight'], $hero['h1_after']) !!}</h1>
+        @include('front.partials.reviewed-by', ['page' => $page, 'class' => 'lp-reviewed-by'])
         <div class="lp-hero-intro">
             <p class="lp-lede">{{ $hero['intro'] }}</p>
             <div class="lp-hero-cta" id="lp-hero-cta">
