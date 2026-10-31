@@ -24,14 +24,22 @@
         .hero-desc-wrapper a, .lead-text a, .quote-text a,
         .sdb-header a, .sdb-desc a, .large-info a, .transformation-desc a,
         .help-text-block a, .process-header a, .feature-card p a,
-        .process-card p a, .faq-body a,
+        .process-card p a, .faq-body a, .mag-desc a,
         .hero-desc-wrapper a:hover, .lead-text a:hover, .quote-text a:hover,
         .sdb-header a:hover, .sdb-desc a:hover, .large-info a:hover, .transformation-desc a:hover,
         .help-text-block a:hover, .process-header a:hover, .feature-card p a:hover,
-        .process-card p a:hover, .faq-body a:hover {
+        .process-card p a:hover, .faq-body a:hover, .mag-desc a:hover {
             color: inherit;
             text-decoration: none;
         }
+
+        /* Comparison tables in the long description (clinic setup: mainland or DHCC). Thin rules, no coloured cells. */
+        .transformation-desc table { width: 100%; border-collapse: collapse; margin: 0 0 1.25rem; font: inherit; color: inherit; }
+        .transformation-desc th, .transformation-desc td { padding: .7rem .75rem .7rem 0; text-align: left; vertical-align: top;
+            border-bottom: 1px solid rgba(127, 127, 127, .35); }
+        .transformation-desc thead th { font-weight: 600; border-bottom-width: 2px; }
+        .transformation-desc tbody th { font-weight: 500; }
+        @media (max-width: 400px) { .transformation-desc th, .transformation-desc td { padding-right: .5rem; font-size: .9rem; } }
     </style>
 @endsection
 @php
@@ -223,7 +231,7 @@
         <div class="swiper-slide">
             <div class="mag-card" data-img="{{ $currImg }}">
                 <span class="mag-card-eyebrow">{{ $mag->title }}</span>
-                <div class="mag-desc">{!! strip_tags($mag->description) !!}</div>
+                <div class="mag-desc">{!! \App\Support\Html::fixLinks(strip_tags($mag->description, '<a><strong><em>')) !!}</div>
             </div>
         </div>
     @endforeach

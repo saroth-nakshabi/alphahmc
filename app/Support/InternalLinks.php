@@ -19,15 +19,12 @@ class InternalLinks
         '/services/mohap-license-healthcare-professionals',
     ];
 
-    /** Extra links per page (3c). */
+    /** Extra links per page (3c). The lone "Plan your healthcare project" chips were removed (Saroth, 31 Oct 2026). */
     private const EXTRA = [
         '/service-category/healthcare-professional-licensing'  => self::PRO_LICENSING,
         '/service-packages/healthcare-professional-licensing-uae' => self::PRO_LICENSING,
-        '/service-category/facility-licensing-setup'           => ['/plan-your-project'],
         // Linked from nowhere else in the server-rendered HTML (orphan check, 30 Oct).
         '/service-category/regulatory-quality'                 => ['/healthcare_quality_assurance'],
-        '/services/clinic-setup-licensing-uae'                 => ['/plan-your-project'],
-        '/services/medical-centre-setup-licensing-dubai'       => ['/plan-your-project'],
     ];
 
     /** Blogs reviewed by these reviewers also link to these pages (3c). */
