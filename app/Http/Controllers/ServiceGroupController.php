@@ -21,8 +21,27 @@ class ServiceGroupController extends Controller
 {
     use SyncsProcess;
 
+    /** Old package slugs => current slug (permanent redirect, query string kept). */
+    private const RENAMED_SLUGS = [
+        'healthcare-it-digital-strategy-consulting2' => 'healthcare-it-digital-strategy-consulting', // 4 Nov 2026
+    ];
+
+    /** 301 to the renamed package's address on the same route, or null when the slug was not renamed. */
+    private function renamedRedirect(?string $slug, string $route): ?\Illuminate\Http\RedirectResponse
+    {
+        if ($slug === null || !isset(self::RENAMED_SLUGS[$slug])) {
+            return null;
+        }
+        $query = request()->getQueryString();
+
+        return redirect(route($route, self::RENAMED_SLUGS[$slug]) . ($query ? '?' . $query : ''), 301);
+    }
+
     public function front(Request $request, $slug = null)
     {
+        if ($redirect = $this->renamedRedirect($slug, 'service-packages')) {
+            return $redirect;
+        }
         $serviceQuery = ServiceGroup::with(['agent.user', 'services' => fn ($q) => $q->where('status', 'published'), 'faqs', 'announcement']);
         $service = $slug
             ? $serviceQuery->where('slug', $slug)->first()
@@ -54,6 +73,9 @@ class ServiceGroupController extends Controller
 
     public function allServices($slug)
     {
+        if ($redirect = $this->renamedRedirect($slug, 'service-group.all-services')) {
+            return $redirect;
+        }
         $service = ServiceGroup::with(['services' => fn ($q) => $q->where('status', 'published')])->where('slug', $slug)->first();
 
         if (!$service) {
