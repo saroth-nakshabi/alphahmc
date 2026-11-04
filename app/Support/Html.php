@@ -69,4 +69,37 @@ class Html
             1
         );
     }
+
+    /**
+     * Renders the headings of a CMS body below the page h1 without skipped levels: the highest level used becomes h2
+     * and each later heading is at most one level below the one before it. A heading that changes level gets the
+     * Bootstrap class of its stored level (h3 -> <h2 class="h3">), so it keeps its look. The stored text is unchanged.
+     */
+    public static function bodyHeadingsFrom2(?string $html): string
+    {
+        $html = (string) $html;
+        if (!preg_match_all('~<h([1-6])\b~i', $html, $found)) {
+            return $html;
+        }
+        $shift = min(array_map('intval', $found[1])) - 2;
+        $prev = 1;
+
+        return preg_replace_callback(
+            '~<h([1-6])\b([^>]*)>(.*?)</h\1\s*>~is',
+            function ($m) use ($shift, &$prev) {
+                $stored = (int) $m[1];
+                $level = max(2, min(6, $stored - $shift, $prev + 1));
+                $prev = $level;
+                if ($level === $stored) {
+                    return $m[0];
+                }
+                $attrs = preg_match('~\bclass\s*=~i', $m[2])
+                    ? preg_replace('~\bclass\s*=\s*(["\'])~i', 'class=$1h' . $stored . ' ', $m[2], 1)
+                    : ' class="h' . $stored . '"' . $m[2];
+
+                return '<h' . $level . $attrs . '>' . $m[3] . '</h' . $level . '>';
+            },
+            $html
+        );
+    }
 }

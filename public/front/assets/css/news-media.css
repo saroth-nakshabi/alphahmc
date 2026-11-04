@@ -432,7 +432,7 @@ body {
     border-bottom: none;
 }
 
-.project-row-item h4 {
+.project-row-item h4, .project-row-item .project-row-title {
     font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
     font-size: 1.8rem;
     font-weight: 800;
@@ -441,7 +441,7 @@ body {
     transition: var(--transition);
 }
 
-.project-row-item:hover h4 {
+.project-row-item:hover h4, .project-row-item:hover .project-row-title {
     color: var(--accent-orange);
 }
 

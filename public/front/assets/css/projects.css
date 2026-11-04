@@ -631,7 +631,7 @@ html {
         margin-bottom: 20px;
         padding-top: 18px;
     }
-    .meta-item h4 {
+    .meta-item h4, .meta-item .meta-item-title {
         margin-bottom: 10px;
     }
     .meta-list li {

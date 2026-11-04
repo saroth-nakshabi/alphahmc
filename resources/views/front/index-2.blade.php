@@ -93,7 +93,7 @@
                                 {{ $slider->main_title }}
                             </{{ $titleTag }}>
                             @if($slider->pre_title)
-                                <h3 class="hero-pre-title">{{ $slider->pre_title }}</h3>
+                                <h2 class="h3 hero-pre-title">{{ $slider->pre_title }}</h2>
                             @endif
                             
 
@@ -187,7 +187,7 @@
         </div>
     </section>
 
-    @include('front.partials.stylesheet', ['href' => asset('public/front/assets/css/home.css') . '?v=10', 'bundle' => 'home', 'criticalTemplate' => 'home'])
+    @include('front.partials.stylesheet', ['href' => asset('public/front/assets/css/home.css') . '?v=11', 'bundle' => 'home', 'criticalTemplate' => 'home'])
 
 
     <script>
@@ -469,7 +469,7 @@
                     style="background-image: url('{{ $category->card_image ? \App\Support\Img::thumb(ltrim($category->card_image, '/'), 700) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}')" data-aos="fade-up"
                     data-aos-delay="{{ $index * 50 }}">
                     <div class="article-content">
-                        <h4>{{ $category->name }}</h4>
+                        <h3 class="h4 article-card-title">{{ $category->name }}</h3>
                         <p>{{ Str::limit(strip_tags($category->description), 100) }}</p>
                         <span class="btn-premium-read-more">
                             Explore <i class="fa-solid fa-arrow-right ms-2" aria-hidden="true"></i>

@@ -13,7 +13,7 @@
 @endpush
 
 @section('custom_css')
-<link rel="stylesheet" href="{{ asset('public/front/assets/css/legal-pages.css') }}?v=2">
+<link rel="stylesheet" href="{{ asset('public/front/assets/css/legal-pages.css') }}?v=3">
 @endsection
 
 @section('content')
@@ -49,7 +49,7 @@
 
             <div class="col-lg-3 d-none d-lg-block">
                 <nav class="gdpr-toc" aria-label="On this page">
-                    <h4>On this page</h4>
+                    <div class="h4 gdpr-toc-title">On this page</div>
                     <ol>
                         <li><a href="#who-we-are">Who we are</a></li>
                         <li><a href="#data-we-collect">Data we collect</a></li>

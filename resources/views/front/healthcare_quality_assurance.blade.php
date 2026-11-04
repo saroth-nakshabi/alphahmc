@@ -110,7 +110,7 @@
             background: linear-gradient(90deg, #066D77, #009095);
         }
         .pkg-card:hover { transform: translateY(-5px); box-shadow: 0 14px 36px rgba(6,109,119,0.13); }
-        .pkg-card h4 { font-size: 1.1rem; font-weight: 700; color: #066D77; margin-bottom: 14px; }
+        .pkg-card h4, .pkg-card .pkg-card-title { font-size: 1.1rem; font-weight: 700; color: #066D77; margin-bottom: 14px; }
         .pkg-card p { color: #5a7070; font-size: 0.93rem; line-height: 1.7; }
 
         /* Facility cards */
@@ -725,7 +725,7 @@
                         <div class="feat-icon-wrap mb-3" style="width:52px;height:52px;font-size:1.4rem;border-radius:12px;">
                             <i class="bi bi-shield-check"></i>
                         </div>
-                        <h4>Audit Compliance</h4>
+                        <h3 class="h4 pkg-card-title">Audit Compliance</h3>
                         <p>A one-off solution for situational audits: periodic regulatory inspections, change of location, addition of specialty, or internal plan changes. Ensures your facility is audit-ready and fully compliant.</p>
                     </div>
                 </div>
@@ -734,7 +734,7 @@
                         <div class="feat-icon-wrap mb-3" style="width:52px;height:52px;font-size:1.4rem;border-radius:12px;">
                             <i class="bi bi-arrow-up-circle-fill"></i>
                         </div>
-                        <h4>Facility Enhancement</h4>
+                        <h3 class="h4 pkg-card-title">Facility Enhancement</h3>
                         <p>Redesign existing work processes, optimize resources, improve efficiency and business productivity while satisfying regulatory requirements. A complete facility overhaul across all operational domains.</p>
                     </div>
                 </div>
@@ -743,7 +743,7 @@
                         <div class="feat-icon-wrap mb-3" style="width:52px;height:52px;font-size:1.4rem;border-radius:12px;">
                             <i class="bi bi-award-fill"></i>
                         </div>
-                        <h4>Full Compliance Program</h4>
+                        <h3 class="h4 pkg-card-title">Full Compliance Program</h3>
                         <p>The comprehensive package ensuring long-term sustainability of enhancements. Overseen by a dedicated client manager, each domain is optimised for compliance, keeping your facility ready for any regulatory audit at any time.</p>
                     </div>
                 </div>

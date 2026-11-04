@@ -338,7 +338,7 @@
                     <!-- Left: Contact Form -->
                     <div class="col-lg-7" data-aos="fade-right">
                         <div class="contact-form-container">
-                            <h3 class="contact-heading-main">Send us a Message</h3>
+                            <h2 class="h3 contact-heading-main">Send us a Message</h2>
                             @php $rcSiteKey = config('services.recaptcha.site_key', ''); @endphp
                             {{-- reCAPTCHA v3 loads on demand (front.partials.recaptcha-loader in the layout) --}}
                             {{-- Add CSRF and correct action --}}
@@ -409,7 +409,7 @@
                     <!-- Right: Office Details -->
                     <div class="col-lg-5 ps-lg-5 mt-4 mt-lg-0" data-aos="fade-left">
                         <div class="ps-lg-4">
-                            <h4 class="contact-heading-main">Connect Directly</h4>
+                            <h2 class="h4 contact-heading-main">Connect Directly</h2>
 
                             {{-- Offices in the order of the business listings (SEO brief 30 Oct 2026): Dubai is the main address.
                                  Dubai and Abu Dhabi share the main number; the Al Ain Office keeps its own (Saroth). --}}
@@ -972,7 +972,7 @@
                                         style="border:0;" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
                                         allowfullscreen title="{{ $office->name }} office location"></iframe>
                                 </div>
-                                <h6 class="office-name">{{ $office->name }}</h6>
+                                <h3 class="h6 office-name">{{ $office->name }}</h3>
                             </div>
                         </div>
                         @empty

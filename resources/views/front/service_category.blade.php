@@ -183,7 +183,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
                     <div class="feature-card">
                       <div class="card-header">
                         <span class="card-num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                        <h4>{{ $tab->name }}</h4>
+                        <div class="h4 feature-card-title">{{ $tab->name }}</div>
                       </div>
                       <p>{{ $tab->description }}</p>
                     </div>
@@ -194,7 +194,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
                         <div class="feature-card aria-hidden">
                           <div class="card-header">
                             <span class="card-num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                            <h4>{{ $tab->name }}</h4>
+                            <div class="h4 feature-card-title">{{ $tab->name }}</div>
                           </div>
                           <p>{{ $tab->description }}</p>
                         </div>
@@ -205,7 +205,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
                     <div class="feature-card">
                       <div class="card-header">
                         <span class="card-num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                        <h4>{{ $header }}</h4>
+                        <div class="h4 feature-card-title">{{ $header }}</div>
                       </div>
                       <p>{!! \App\Support\Html::fixLinks($coreDescriptions[$index] ?? '') !!}</p>
                     </div>
@@ -215,7 +215,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
                         <div class="feature-card aria-hidden">
                           <div class="card-header">
                             <span class="card-num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                            <h4>{{ $header }}</h4>
+                            <div class="h4 feature-card-title">{{ $header }}</div>
                           </div>
                           <p>{!! \App\Support\Html::fixLinks($coreDescriptions[$index] ?? '') !!}</p>
                         </div>
@@ -226,28 +226,28 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
                 <div class="feature-card">
                   <div class="card-header">
                     <span class="card-num">01</span>
-                    <h4>Authority Expertise</h4>
+                    <div class="h4 feature-card-title">Authority Expertise</div>
                   </div>
                   <p>DOH, DHA, and MOH specific checklists tailored to your specialty mix.</p>
                 </div>
                 <div class="feature-card">
                   <div class="card-header">
                     <span class="card-num">02</span>
-                    <h4>End-to-End Management</h4>
+                    <div class="h4 feature-card-title">End-to-End Management</div>
                   </div>
                   <p>We manage submissions, inspector coordination, and follow-ups directly.</p>
                 </div>
                 <div class="feature-card">
                   <div class="card-header">
                     <span class="card-num">03</span>
-                    <h4>Predictable Timelines</h4>
+                    <div class="h4 feature-card-title">Predictable Timelines</div>
                   </div>
                   <p>Realistic milestones with resubmissions handled at no extra cost.</p>
                 </div>
                 <div class="feature-card">
                   <div class="card-header">
                     <span class="card-num">04</span>
-                    <h4>Integrated Logistics</h4>
+                    <div class="h4 feature-card-title">Integrated Logistics</div>
                   </div>
                   <p>Coordination with engineering and accreditation for a turnkey launch.</p>
                 </div>
@@ -508,7 +508,7 @@ document.getElementById('scrollToHelp').addEventListener('click', function () {
               <span class="step-num">{{ str_pad((string) ($i + 1), 2, '0', STR_PAD_LEFT) }}</span>
               <div class="step-icon"></div>
             </div>
-            <h4>{{ $processHeaders[$i] ?? 'Process Step' }}</h4>
+            <h3 class="h4 process-card-title">{{ $processHeaders[$i] ?? 'Process Step' }}</h3>
             <p>{!! \App\Support\Html::fixLinks($processDescriptions[$i] ?? '') !!}</p>
             @php $stepService = !empty($processServiceIds[$i]) ? ($processServiceMap[$processServiceIds[$i]] ?? null) : null; @endphp
             @if ($stepService)
@@ -909,7 +909,7 @@ function toggleTransformationDesc() {
                                         </div>
                                         <div class="ey-case-body">
                                             <span class="ey-case-cat">{{ $project->project_category->name }}</span>
-                                            <h4 class="ey-case-title">{{ $project->name }}</h4>
+                                            <h3 class="ey-case-title">{{ $project->name }}</h3>
                                             <a href="{{ route('front.project_details', $project->slug) }}" class="text-dark fw-bold text-decoration-none">
                                 VIEW CASE STUDY →
                             </a>

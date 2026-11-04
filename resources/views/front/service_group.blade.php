@@ -92,23 +92,6 @@
             </nav>
         </section>
 
-        
-
-
-
-        <!-- Quote Section -->
-       <!-- <section class="quote-section" data-aos="fade-up">
-    <div class="container">
-        <div class="quote-inner">
-            {{-- <span class="quote-eyebrow">Our Approach</span> --}}
-            <div class="quote-text">
-                {!! \App\Support\Html::fixLinks($service->overview) !!}
-            </div>
-            <div class="quote-divider"></div>
-        </div>
-    </div>
-</section> -->
-
 <!-- Service Details Band (light) — header left, intro description right -->
 <section class="service-detail-band">
   <div class="container">

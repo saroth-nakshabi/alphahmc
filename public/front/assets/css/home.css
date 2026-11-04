@@ -1650,7 +1650,7 @@
                     rgba(12, 47, 47, 0.95) 100%);
         }
 
-        .article-content h4 {
+        .article-content h4, .article-content .article-card-title {
             color: #fff;
             font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif;
             font-size: 1.6rem;
@@ -1660,7 +1660,7 @@
             transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        .article-card:hover .article-content h4 {
+        .article-card:hover .article-content h4, .article-card:hover .article-content .article-card-title {
             color: #ffffff;
             opacity: 1;
         }

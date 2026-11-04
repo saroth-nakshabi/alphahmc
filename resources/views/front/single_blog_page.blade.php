@@ -441,7 +441,7 @@
             @endif
 
             <div class="article-body-text">
-                {!! \App\Support\Html::fixLinks($blog->content) !!}
+                {!! \App\Support\Html::fixLinks(\App\Support\Html::bodyHeadingsFrom2($blog->content)) !!}
             </div>
 
             @include('front.partials.blog-next-steps', ['blog' => $blog])
@@ -464,7 +464,7 @@
         <div class="container">
             <div class="row align-items-end mb-5">
                 <div class="col-md-8">
-                    <h6 class="article-badge">Our Blogs</h6>
+                    <div class="h6 article-badge">Our Blogs</div>
                     <h2 class="thinking-title mb-0">Our Latest Insights</h2>
                 </div>
                 <div class="col-md-4 text-md-end d-none d-md-block">
@@ -480,7 +480,7 @@
                             <div class="thinking-card-overlay"></div>
                             <div class="thinking-card-content">
                                 <span class="badge bg-teal" style="background: var(--accent-teal)">{{ $bt->tags->first()->name ?? 'INSIGHT' }}</span>
-                                <h4 class="thinking-card-title">{{ $bt->title }}</h4>
+                                <h3 class="thinking-card-title">{{ $bt->title }}</h3>
                             </div>
                         </a>
                     </div>

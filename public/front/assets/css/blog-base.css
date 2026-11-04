@@ -103,7 +103,7 @@
     border-top: 1px solid #f1f5f9;
 }
 
-.meta-item h4 {
+.meta-item h4, .meta-item .meta-item-title {
     font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 1.2px;

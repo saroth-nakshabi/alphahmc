@@ -5,8 +5,8 @@
 @section('meta_description', 'Latest news, media coverage and updates from Alpha Health Group, healthcare consultancy across the UAE and GCC.')
 
 @section('content')
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/blog-base.css') }}?v=2">
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/news-media.css') }}?v=5">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/blog-base.css') }}?v=4">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/news-media.css') }}?v=6">
     <style>
         .news-hero { background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.65)), url('{{ \App\Support\Img::thumb('uploads/about_us_images/1776870777_69e8e57980c25.jpg', 1600) }}'); }
     </style>
@@ -53,7 +53,7 @@
 
                             <div class="featured-meta-grid">
                                 <div class="meta-item">
-                                    <h4>News Focus</h4>
+                                    <div class="h4 meta-item-title">News Focus</div>
                                     @php
                                         $focusItems = collect(explode(',', $featuredBlog->news_focus ?? ''))
                                             ->map(fn ($x) => trim($x))->filter()->take(3);
@@ -68,14 +68,14 @@
                                     </ul>
                                 </div>
                                 <div class="meta-item">
-                                    <h4>Author</h4>
+                                    <div class="h4 meta-item-title">Author</div>
                                     <div class="meta-list">
                                         <li style="font-size: 1.2rem; color: var(--primary-navy);"><i class="far fa-user"></i> {{ $featuredBlog->author_name ?? 'Alpha Team' }}</li>
                                     </div>
                                 </div>
                                 <div class="meta-item">
                                     @php $catCount = $featuredBlog->tags->isEmpty() ? 2 : $featuredBlog->tags->take(4)->count(); @endphp
-                                    <h4>{{ $catCount === 1 ? 'Blog Category' : 'Blog Categories' }}</h4>
+                                    <div class="h4 meta-item-title">{{ $catCount === 1 ? 'Blog Category' : 'Blog Categories' }}</div>
                                     <div class="tag-highlights">
                                         @foreach($featuredBlog->tags->take(4) as $tag)
                                             <span class="tag-highlight-item">{{ $tag->name }}</span>
@@ -87,7 +87,7 @@
                                     </div>
                                 </div>
                                 <div class="meta-item">
-                                    <h4>Last Updated</h4>
+                                    <div class="h4 meta-item-title">Last Updated</div>
                                     <div class="tag-highlights">
                                         <span class="tag-highlight-item">{{ ($featuredBlog->updated_date ?? $featuredBlog->updated_at)->format('M d, Y') }}</span>
                                     </div>
@@ -195,7 +195,7 @@
                         @forelse($projects as $project)
                             <a href="{{ route('front.project_details', $project->slug) }}" class="project-row-item">
                                 <div class="project-row-content">
-                                    <h4>{{ $project->name }}</h4>
+                                    <h3 class="h4 project-row-title">{{ $project->name }}</h3>
                                     <div class="project-row-meta">
                                         <span
                                             style="color: var(--accent-orange);">{{ $project->project_category->name ?? 'Enterprise Solution' }}</span>

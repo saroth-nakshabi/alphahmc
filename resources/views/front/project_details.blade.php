@@ -86,7 +86,7 @@
   -webkit-font-smoothing: antialiased;
 }
 
-.pdl h1, .pdl h2, .pdl h3, .pdl h4 {
+.pdl h1, .pdl h2, .pdl h3, .pdl h4, .pdl .pdl-gcard__label {
   font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif;
   font-weight: 700;
   line-height: 1.08;
@@ -1015,7 +1015,7 @@
   z-index: 2;
 }
 
-.pdl-gcard__info h4 {
+.pdl-gcard__info .pdl-gcard__label {
   color: #fff;
   font-size: 1.1rem;
   margin-bottom: 4px;
@@ -1029,7 +1029,7 @@
   transform: translateY(12px);
   transition: transform 0.4s 0.05s var(--ease-expo);
 }
-.pdl-gcard:hover .pdl-gcard__info h4,
+.pdl-gcard:hover .pdl-gcard__info .pdl-gcard__label,
 .pdl-gcard:hover .pdl-gcard__info p { transform: translateY(0); }
 
 .pdl-doc-thumb {
@@ -1966,7 +1966,7 @@
           <span class="pdl-gcard__type"><i data-lucide="image" style="width:15px;"></i></span>
           <div class="pdl-gcard__media"><img src="{{ asset('public/'.$image->image) }}" alt="{{ $image->alt ?: 'Image ' . ($index + 1) }}" loading="lazy"></div>
           <div class="pdl-gcard__overlay">
-            <div class="pdl-gcard__info"><h4>Visual Asset</h4><p>Snapshot {{ $index+1 }}</p></div>
+            <div class="pdl-gcard__info"><div class="h4 pdl-gcard__label">Visual Asset</div><p>Snapshot {{ $index+1 }}</p></div>
           </div>
         </div>
         @empty
@@ -2022,7 +2022,7 @@
           <div class="modal-header">
             <div style="display:flex;align-items:center;gap:14px;">
               <div class="pdl-modal-icon" id="modalTypeIconWrap"><i data-lucide="image" style="width:17px;"></i></div>
-              <h5 class="modal-title" id="galleryTitle">Preview</h5>
+              <div class="h5 modal-title" id="galleryTitle">Preview</div>
             </div>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
@@ -2042,7 +2042,7 @@
             <div style="display:flex;align-items:center;gap:14px;">
               <div class="pdl-modal-icon"><i data-lucide="book-open" style="width:17px;"></i></div>
               <div>
-                <h5 class="modal-title" id="pdfTitle">Document Preview</h5>
+                <div class="h5 modal-title" id="pdfTitle">Document Preview</div>
                 <small style="font-family:'Roboto Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);" id="pdfPageCounter">Preparing…</small>
               </div>
             </div>
@@ -2080,7 +2080,7 @@
         <div class="modal-header">
           <div style="display:flex;align-items:center;gap:14px;">
             <div class="pdl-modal-icon"><i data-lucide="file-text" style="width:17px;"></i></div>
-            <h5 class="modal-title">Project Overview</h5>
+            <div class="h5 modal-title">Project Overview</div>
           </div>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
@@ -2204,7 +2204,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <div>
-            <h5 class="modal-title">Project Details</h5>
+            <div class="h5 modal-title">Project Details</div>
             <div style="font-family:'Roboto Mono',monospace;font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-top:4px;">
               {{ $project->name }}
             </div>

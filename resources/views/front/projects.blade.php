@@ -1,8 +1,8 @@
 @extends('front/layout-2')
 
 @section('content')
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/blog-base.css') }}?v=3">
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/projects.css') }}?v=6">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/blog-base.css') }}?v=4">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/projects.css') }}?v=7">
     <style>
         .service-banner { background-image: linear-gradient(rgba(0, 0, 0, 0.3), var(--premium-black)),
                           url('{{ \App\Support\Img::thumb('uploads/service_images/1777903827_hero_image_f2b72665-520c-438d-b7ab-0df3442aecce.jpg', 1600) }}'); }
@@ -40,9 +40,9 @@
 
                 <!-- Right: Value Proposition -->
                 <div class="content-panel">
-                    <h6 class="text-uppercase tracking-widest text-primary fw-bold small mb-3">
+                    <div class="h6 text-uppercase tracking-widest text-primary fw-bold small mb-3">
                         Alpha Health Group
-                    </h6>
+                    </div>
                     <h2 class="display-title">Innovating <br><span class="text-gradient">Healthcare Excellence</span></h2>
                     <p class="description-text">
                         From facility licensing and JCI accreditation to quality assurance, staffing and end-to-end
@@ -87,7 +87,7 @@
 
                 <div class="featured-meta-grid">
                     <div class="meta-item">
-                        <h4>Services Delivered</h4>
+                        <h3 class="h4 meta-item-title">Services Delivered</h3>
                         @if(isset($featuredServices) && $featuredServices->count() > 0)
                         <ul class="meta-list">
                             @foreach($featuredServices->take(4) as $svc)
@@ -101,7 +101,7 @@
                         @endif
                     </div>
                     <div class="meta-item">
-                        <h4>Project Details</h4>
+                        <h3 class="h4 meta-item-title">Project Details</h3>
                         <div class="tech-tags">
                             @if($featuredProject->project_category)
                                 <span class="tech-tag">{{ $featuredProject->project_category->name }}</span>
