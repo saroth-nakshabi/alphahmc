@@ -2,7 +2,7 @@
 
 @php
     $brandMetaTitle = empty($brand->meta_title) ? $brand->name : $brand->meta_title;
-    $brandMetaDesc  = $brand->meta_description ?: \Illuminate\Support\Str::limit(strip_tags($brand->description ?? ''), 160);
+    $brandMetaDesc  = \App\Support\Seo::description($brand->meta_description, $brand->description);
 @endphp
 @push('page_title', $brandMetaTitle . ' | Alpha Health Group')
 {{-- The layout prints the one description tag: this page's text, else the site default --}}

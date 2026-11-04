@@ -2,7 +2,7 @@
 
 @push('page_title', 'How Alpha Works | Healthcare Management Consultancy | Alpha Health Group')
 
-@section('meta_description')Our proven 4-step methodology — Research, Plan, Execute, and Results — ensures your healthcare facility achieves full DOH compliance and sustained operational excellence.@endsection
+@section('meta_description')How Alpha works: a 4-step method of research, plan, execute and results that helps your healthcare facility meet DOH requirements and sustain its operations.@endsection
 
 @section('custom_css')
     {{-- Bootstrap Icons: only this page and a few others use it, so the layout no longer loads it --}}

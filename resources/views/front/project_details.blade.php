@@ -10,7 +10,7 @@
 @endphp
 {{-- The layout prints the one description tag: this page's text, else the site default --}}
 @if(isset($project->projects_images[0]))@section('og_image', asset('public/' . $project->projects_images[0]->image))@endif
-@section('meta_description', $project->meta_description ?: \Illuminate\Support\Str::limit(trim(strip_tags($project->description ?? '')), 160))
+@section('meta_description', \App\Support\Seo::description($project->meta_description, $project->description))
 {{-- Reviewed case study: WebPage with reviewedBy + lastReviewed, only once the reviewer signed it off. --}}
 @if($caseReviewer = \App\Models\Reviewer::forPage($project))
 @push('meta')

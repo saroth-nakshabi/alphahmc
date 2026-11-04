@@ -9,7 +9,7 @@
     if (empty($blogKeywords)) {
         $blogKeywords = optional($blog->tags)->pluck('name')->filter()->implode(', ');
     }
-    $blogMetaDesc = $blog->meta_description ?: \Illuminate\Support\Str::limit(strip_tags($blog->description ?? $blog->content ?? ''), 160);
+    $blogMetaDesc = \App\Support\Seo::description($blog->meta_description, $blog->description ?: $blog->content);
     // <title>: cut to 60 at a word; the brand suffix only when it still fits.
     $blogSeoTitle = \App\Support\Seo::title($blog->meta_title, $blog->title, 'Alpha Health Group');
     // Dates shown on the page and in the JSON-LD (one source for both).

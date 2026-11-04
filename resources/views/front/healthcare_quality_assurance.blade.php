@@ -2,7 +2,7 @@
 
 @push('page_title', 'Healthcare Quality Assurance | Tawqeet | Alpha Health Group')
 
-@section('meta_description')Tawqeet by Alpha Health Group: a comprehensive healthcare quality assurance platform that monitors KPIs, tracks compliance, and drives excellence for medical and homecare facilities in the UAE.@endsection
+@section('meta_description')Facility quality assurance with Tawqeet, a platform that monitors KPIs and tracks compliance for medical and homecare facilities in the UAE.@endsection
 
 @section('custom_css')
     {{-- Bootstrap Icons: only this page and a few others use it, so the layout no longer loads it --}}

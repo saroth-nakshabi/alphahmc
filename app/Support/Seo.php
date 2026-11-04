@@ -33,6 +33,19 @@ class Seo
         return $title;
     }
 
+    public const DESCRIPTION_MAX = 155;
+
+    /**
+     * A page's meta description: the stored text as written, else the page text cut at a word boundary
+     * (155 characters, no "..."), so a fallback never ends mid-sentence with an ellipsis (meta brief, 4 Nov 2026).
+     */
+    public static function description(?string $metaDescription, ?string $fallback, int $max = self::DESCRIPTION_MAX): string
+    {
+        $stored = self::clean($metaDescription);
+
+        return $stored !== '' ? $stored : self::cut(self::clean($fallback), $max);
+    }
+
     private static function clean(?string $text): string
     {
         $text = html_entity_decode(strip_tags((string) $text), ENT_QUOTES | ENT_HTML5, 'UTF-8');

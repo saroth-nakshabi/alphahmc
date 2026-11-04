@@ -2,7 +2,7 @@
 
 @push('page_title', 'Alpha Blueprint AI, AI Healthcare Project Planner | Alpha Health Group')
 
-@section('meta_description', 'Alpha Blueprint AI, an AI-powered healthcare project planner. Tell us your goal and it maps the right licensing, accreditation, quality and operational path, with the services best suited to you, in about a minute.')
+@section('meta_description', 'Alpha Blueprint AI plans your healthcare project: tell us your goal and it maps the licensing, accreditation, quality and operational path in about a minute.')
 
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('public/front/assets/css/plan-your-project.css') }}?v=13">
