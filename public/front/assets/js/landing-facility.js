@@ -77,13 +77,18 @@
         }, { threshold: 0 }).observe(heroCta);
     }
 
+    // Interface text in the page language (window._lpText, App\Support\LandingText); English when it is missing.
+    var T = window._lpText || {};
+    var LANG = (window._ahgPage && window._ahgPage.lang) || document.documentElement.lang || 'en';
+    function tx(key, en) { return T[key] || en; }
+
     // ── Copy buttons ──
     $$('.lp-copy').forEach(function (b) {
         var label = b.textContent;
         b.addEventListener('click', function () {
             var done = function (text) { b.textContent = text; setTimeout(function () { b.textContent = label; }, 1800); };
             if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(b.dataset.copy).then(function () { done('Copied'); }, select);
+                navigator.clipboard.writeText(b.dataset.copy).then(function () { done(tx('copied', 'Copied')); }, select);
             } else {
                 select();
             }
@@ -91,7 +96,7 @@
                 var n = b.previousElementSibling.querySelector('.lp-num');
                 var range = document.createRange(); range.selectNodeContents(n);
                 var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
-                done('Selected');
+                done(tx('selected', 'Selected'));
             }
         });
     });
@@ -142,10 +147,10 @@
         var phone = $('#lp-phone').value.trim();
         var email = $('#lp-email').value.trim();
         var checks = [
-            ['name', name.length < 2 ? 'Enter your full name.' : ''],
-            ['phone', !PHONE.test(phone) ? 'Enter a mobile number with country code, for example +971 50 000 0000.' : ''],
-            ['email', email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? 'Enter a valid email address, or leave it empty.' : ''],
-            ['consent', !$('#lp-consent').checked ? 'Tick the box so the facility team can contact you.' : ''],
+            ['name', name.length < 2 ? tx('err_name', 'Enter your full name.') : ''],
+            ['phone', !PHONE.test(phone) ? tx('err_phone', 'Enter a mobile number with country code, for example +971 50 000 0000.') : ''],
+            ['email', email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? tx('err_email', 'Enter a valid email address, or leave it empty.') : ''],
+            ['consent', !$('#lp-consent').checked ? tx('err_consent', 'Tick the box so the facility team can contact you.') : ''],
         ];
         var first = null;
         checks.forEach(function (c) { if (!setError(c[0], c[1]) && !first) first = c[0]; });
@@ -155,15 +160,20 @@
 
     // Where the visitor came from: the Ref code and first-touch click data from the WhatsApp Ref script
     // (window.ahgRef.formSource), so the lead keeps its Ref, gclid and UTM tags (Ref click log brief, 30 Oct).
+    // The page language goes with it ("lang": "ar" on the Arabic pages).
     function source() {
-        if (window.ahgRef && typeof window.ahgRef.formSource === 'function') return window.ahgRef.formSource();
-        return JSON.stringify({ page_url: location.href.split('#')[0] });
+        var data = { page_url: location.href.split('#')[0] };
+        if (window.ahgRef && typeof window.ahgRef.formSource === 'function') {
+            try { data = JSON.parse(window.ahgRef.formSource()) || data; } catch (e) {}
+        }
+        data.lang = LANG;
+        return JSON.stringify(data);
     }
 
     function busy(on) {
         btn.disabled = on;
         btn.setAttribute('aria-busy', on ? 'true' : 'false');
-        btn.textContent = on ? 'Sending' : btnLabel;
+        btn.textContent = on ? tx('sending', 'Sending') : btnLabel;
     }
 
     form.addEventListener('submit', function (e) {
@@ -202,15 +212,16 @@
             var errors = (res.d && res.d.errors) || {};
             var shown = false;
             Object.keys(errors).forEach(function (k) {
-                if (fields[k]) { setError(k, errors[k][0]); shown = true; }
+                // Server messages are in English: the Arabic page shows its own text for the same field.
+                if (fields[k]) { setError(k, LANG === 'en' ? errors[k][0] : tx('err_' + k, errors[k][0])); shown = true; }
             });
             if (!shown) {
-                alertBox.textContent = (res.d && res.d.message) || 'We could not send your request. Please try again, or message us on WhatsApp.';
+                alertBox.textContent = (LANG === 'en' && res.d && res.d.message) || tx('failure', 'We could not send your request. Please try again, or message us on WhatsApp.');
                 alertBox.hidden = false;
             }
             busy(false);
         }).catch(function () {
-            alertBox.textContent = 'We could not send your request. Check your connection and try again, or message us on WhatsApp.';
+            alertBox.textContent = tx('failure_network', 'We could not send your request. Check your connection and try again, or message us on WhatsApp.');
             alertBox.hidden = false;
             busy(false);
         });

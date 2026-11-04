@@ -42,10 +42,12 @@ class LandingPageSchema
             'intro'           => ['Intro line', 'textarea', true],
             'wa_button'       => ['WhatsApp button label', 'text', true],
             'proposal_button' => ['Proposal button label', 'text', true],
+            'cta_note'        => ['Line under the buttons (optional)', 'text'],
             'chips_label'     => ['Label before the facility links', 'text'],
             'list_label'      => ['Label before the facilities list (pages without facility links)', 'text'],
             'caption_bold'    => ['Photo caption: bold part', 'text'],
             'caption'         => ['Photo caption: rest', 'text'],
+            'coverage'        => ['Line under the photo, for example the emirates you cover (optional)', 'text'],
         ],
         'lists' => [
             'facilities' => ['Facilities we set up (shown when no facility links are chosen)', ['name' => ['Facility', 'text']]],
@@ -143,6 +145,9 @@ class LandingPageSchema
         'others' => [
             'label'  => 'Other facility types (links to the other published landing pages)',
             'fields' => ['heading' => ['Heading', 'text', true], 'text' => ['Text', 'text']],
+            'lists'  => ['links' => ['Chosen links (optional; when set they replace the automatic list of published pages)', [
+                'label' => ['Link text', 'text'], 'url' => ['Address (for example /ar/facility-setup/dubai)', 'text'],
+            ]]],
         ],
         'projects' => [
             'label'  => 'Facilities we have delivered',
@@ -150,6 +155,7 @@ class LandingPageSchema
             'fields' => [
                 'nav_label'     => ['Header link label', 'text'],
                 'heading'       => ['Heading', 'text', true],
+                'text'          => ['Text under the heading (optional)', 'text'],
                 'see_all_label' => ['See all projects button', 'text'],
                 'card_link'     => ['Card link label', 'text'],
             ],

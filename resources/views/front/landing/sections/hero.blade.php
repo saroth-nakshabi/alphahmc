@@ -8,7 +8,15 @@
         </p>
         @endif
         <h1>{!! $highlight($hero['h1_before'], $hero['h1_highlight'], $hero['h1_after']) !!}</h1>
+        @if($page->isRtl())
+            @php $lpRev = \App\Models\Reviewer::forPage($page); @endphp
+            @if($lpRev)
+            <p class="ahg-reviewed-by lp-reviewed-by">{{ $t('reviewed_by') }} <a href="{{ $lpRev->url() }}" dir="ltr">{{ $lpRev->name }}</a>، {{ $t('reviewer_title') }}، <time datetime="{{ $page->reviewed_at->toDateString() }}">{{ \App\Support\LandingText::date('ar', $page->reviewed_at) }}</time>
+                <br>{{ $t('updated') }} <time datetime="{{ $page->updated_at->toDateString() }}">{{ \App\Support\LandingText::date('ar', $page->updated_at) }}</time></p>
+            @endif
+        @else
         @include('front.partials.reviewed-by', ['page' => $page, 'class' => 'lp-reviewed-by'])
+        @endif
         <div class="lp-hero-intro">
             <p class="lp-lede">{{ $hero['intro'] }}</p>
             <div class="lp-hero-cta" id="lp-hero-cta">
@@ -18,12 +26,13 @@
                 </a>
                 <a class="lp-btn lp-btn-ghost" href="#contact">{{ $hero['proposal_button'] }}</a>
             </div>
+            @if($hero['cta_note'] !== '')<p class="lp-cta-note">{{ $hero['cta_note'] }}</p>@endif
         </div>
 
         @if($related->count() > 1)
             <div class="lp-switch">
                 @if($hero['chips_label'] !== '')<p class="lp-switch-label" id="lp-switch-label">{{ $hero['chips_label'] }}</p>@endif
-                <nav class="lp-chips" @if($hero['chips_label'] !== '') aria-labelledby="lp-switch-label" @else aria-label="Facility types" @endif>
+                <nav class="lp-chips" @if($hero['chips_label'] !== '') aria-labelledby="lp-switch-label" @else aria-label="{{ $t('facility_types_aria') }}" @endif>
                     @foreach($related as $other)
                         @if($other->id === $page->id)
                             <a class="lp-chip" href="{{ $other->url() }}" aria-current="page">{{ $other->facility_type ?: $other->name }}</a>
@@ -56,5 +65,6 @@
                 <figcaption>@if($hero['caption_bold'] !== '')<b>{{ $hero['caption_bold'] }}</b>@endif {{ $hero['caption'] }}</figcaption>
             @endif
         </figure>
+        @if($hero['coverage'] !== '')<p class="lp-coverage">{{ $hero['coverage'] }}</p>@endif
     </div>
 </section>

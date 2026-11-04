@@ -114,6 +114,8 @@ Route::get('/nav-items', fn () => response()->view('front.partials.nav-items')
 Route::get('/team/{key}', [\App\Http\Controllers\ReviewerController::class, 'show'])->name('front.reviewer');
 // Landing pages built in the admin (Landing pages); drafts are an admin-only preview.
 Route::get('/facility-setup/{slug}', [\App\Http\Controllers\LandingPageController::class, 'show'])->name('front.landing');
+// Arabic facility setup landing pages (brief "alphahmc-arabic-facility-pages-build", 4 Nov 2026).
+Route::get('/ar/facility-setup/{slug}', [\App\Http\Controllers\LandingPageController::class, 'showArabic'])->name('front.landing.ar');
 Route::get('/new_service/{slug}', function ($slug) {
     return redirect()->route('front.service', $slug, 301);
 });

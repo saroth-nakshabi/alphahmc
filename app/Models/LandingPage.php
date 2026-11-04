@@ -24,7 +24,7 @@ class LandingPage extends Model
 
     protected $fillable = [
         'name', 'slug', 'status', 'lead_type', 'facility_type', 'emirate', 'seo_title', 'meta_description',
-        'canonical', 'indexable', 'hero_image', 'hero_image_alt', 'related_ids', 'content', 'published_at', 'updated_by',
+        'canonical', 'indexable', 'hero_image', 'hero_image_alt', 'related_ids', 'content', 'published_at', 'updated_by', 'locale',
         'plan_before_image', 'plan_before_alt', 'plan_after_image', 'plan_after_alt',
     ];
 
@@ -51,9 +51,27 @@ class LandingPage extends Model
         return $this->status === 'published';
     }
 
+    /** Page language: "en" (served at /facility-setup/{slug}) or "ar" (/ar/facility-setup/{slug}, right to left). */
+    public function lang(): string
+    {
+        return $this->locale ?: 'en';
+    }
+
+    public function isRtl(): bool
+    {
+        return $this->lang() === 'ar';
+    }
+
     public function url(): string
     {
-        return route('front.landing', $this->slug);
+        return $this->lang() === 'ar' ? route('front.landing.ar', $this->slug) : route('front.landing', $this->slug);
+    }
+
+    public function scopeLocale($query, string $locale)
+    {
+        return $locale === 'en'
+            ? $query->where(fn ($q) => $q->whereNull('locale')->orWhere('locale', 'en'))
+            : $query->where('locale', $locale);
     }
 
     /** Content in the full schema shape, whatever was stored. */

@@ -7,12 +7,17 @@ use App\Models\Project;
 use App\Support\LandingPageSchema;
 use Illuminate\Support\Facades\Auth;
 
-/** Public landing pages at /facility-setup/{slug}; drafts only as an admin preview. */
+/** Public landing pages at /facility-setup/{slug} and, in Arabic, /ar/facility-setup/{slug}; drafts only as an admin preview. */
 class LandingPageController extends Controller
 {
-    public function show(string $slug)
+    public function showArabic(string $slug)
     {
-        $page = LandingPage::where('slug', $slug)->firstOrFail();
+        return $this->show($slug, 'ar');
+    }
+
+    public function show(string $slug, string $locale = 'en')
+    {
+        $page = LandingPage::locale($locale)->where('slug', $slug)->firstOrFail();
 
         $preview = !$page->isPublished();
         if ($preview && !(Auth::check() && Auth::user()->can('view landing pages'))) {

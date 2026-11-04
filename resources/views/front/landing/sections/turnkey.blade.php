@@ -21,7 +21,7 @@
             @endforeach
         </ul>
         @if($d['note'] !== '')<p class="lp-turnkey-note">{{ $d['note'] }}</p>@endif
-        <p class="lp-turnkey-cta"><a class="lp-btn lp-btn-ghost" href="#contact">{{ $hero['proposal_button'] ?: 'Request a proposal' }}</a></p>
+        <p class="lp-turnkey-cta"><a class="lp-btn lp-btn-ghost" href="#contact">{{ $hero['proposal_button'] ?: $t('proposal') }}</a></p>
     </div>
 </section>
 @endif

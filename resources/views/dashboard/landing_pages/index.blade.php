@@ -39,7 +39,7 @@
                 @foreach($pages as $p)
                     <tr>
                         <td class="fw-semibold">{{ $p->name }}</td>
-                        <td><a href="{{ $p->url() }}" target="_blank" rel="noopener" class="small">/facility-setup/{{ $p->slug }}</a></td>
+                        <td><a href="{{ $p->url() }}" target="_blank" rel="noopener" class="small">{{ parse_url($p->url(), PHP_URL_PATH) }}</a></td>
                         <td>
                             @if($p->isPublished())<span class="badge bg-light-success text-success">Published</span>
                             @else<span class="badge bg-light-secondary text-muted">Draft</span>@endif

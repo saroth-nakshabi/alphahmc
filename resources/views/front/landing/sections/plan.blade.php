@@ -13,14 +13,14 @@
         <div class="lp-gantt" id="lp-gantt" style="--cols: {{ $cols }}">
             @foreach($phases as $i => $phase)
             <button class="lp-phase" type="button" aria-expanded="{{ $i === 0 ? 'true' : 'false' }}"
-                    data-label="Phase {{ $i + 1 }}" data-title="{{ $phase['title'] }}" data-text="{{ $phase['text'] }}">
+                    data-label="{{ $t('phase', ['n' => $i + 1]) }}" data-title="{{ $phase['title'] }}" data-text="{{ $phase['text'] }}">
                 <span class="lp-phase-name"><span class="lp-n">{{ $i + 1 }}</span><span class="lp-t">{{ $phase['title'] }}</span></span>
                 <span class="lp-bar" style="--s: {{ $phase['start'] + 1 }}; --e: {{ $phase['end'] + 1 }}"></span>
             </button>
             @endforeach
         </div>
         <div class="lp-detail" aria-live="polite">
-            <div class="lp-wk" id="lp-d-wk">Phase 1</div>
+            <div class="lp-wk" id="lp-d-wk">{{ $t('phase', ['n' => 1]) }}</div>
             <div><h3 id="lp-d-t">{{ $phases[0]['title'] }}</h3><p id="lp-d-p">{{ $phases[0]['text'] }}</p></div>
         </div>
         @endif

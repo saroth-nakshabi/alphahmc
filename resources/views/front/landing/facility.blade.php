@@ -8,6 +8,9 @@
 
     $pg   = $content['page'];
     $hero = $content['hero'];
+    // Language of the page (Arabic pages read right to left) and its interface text (App\Support\LandingText).
+    $lang = $page->lang();
+    $t = fn (string $key, array $replace = []) => \App\Support\LandingText::get($lang, $key, $replace);
     // "before <em>highlight</em> after", with a space only where the next part does not start with punctuation.
     $highlight = function (string $before, string $mark, string $after): string {
         $html = e($before);
@@ -15,7 +18,7 @@
             $html .= ($html !== '' ? ' ' : '') . '<em>' . e($mark) . '</em>';
         }
         if ($after !== '') {
-            $html .= (preg_match('/^[,.;:!?]/', $after) ? '' : ' ') . e($after);
+            $html .= (preg_match('/^[,.;:!?\x{060C}\x{061B}\x{061F}]/u', $after) ? '' : ' ') . e($after);
         }
 
         return $html;
@@ -46,6 +49,12 @@
 @endphp
 
 @section('bare_layout', '1')
+@if($page->isRtl())
+    @section('html_lang', 'ar')
+    @section('html_dir', 'rtl')
+    @section('og_locale', 'ar_AE')
+    @section('no_wa_chat', '1')
+@endif
 {{-- Ads landing pages stay out of search by default (SEO brief 30 Oct: they would compete with the /services pages
      and read as doorway pages). Links are still followed; robots.txt must not block /facility-setup/. --}}
 @section('robots', ($page->indexable && !$preview) ? 'index, follow' : 'noindex, follow')
@@ -62,12 +71,33 @@
     <script type="application/ld+json">{!! json_encode([
         '@context' => 'https://schema.org', '@type' => 'WebPage', '@id' => $canonical, 'url' => $canonical,
         'name' => $page->seo_title ?: $page->name,
+        'inLanguage' => $lang,
         'reviewedBy' => ['@type' => 'Person', '@id' => $lpReviewer->personId(), 'name' => $lpReviewer->name,
                          'jobTitle' => $lpReviewer->title, 'url' => $lpReviewer->url()],
         'lastReviewed' => $page->reviewed_at->toDateString(),
     ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
     @endif
-    @if($faq && count($faq['items']))
+    @if($page->isRtl())
+    {{-- Arabic pages: the Arabic font, Service (provider by @id, as on the service pages) and the breadcrumb; no FAQPage
+         (brief "alphahmc-arabic-facility-pages-build", 4 Nov 2026). --}}
+    <link rel="preload" as="font" type="font/woff2" href="{{ asset('public/front/assets/fonts/ibm-plex-arabic-400.woff2') }}?v=4fa3d81d41" crossorigin>
+    <script type="application/ld+json">{!! json_encode([
+        '@context' => 'https://schema.org', '@type' => 'Service', 'name' => $page->seo_title ?: $page->name,
+        'description' => (string) $page->meta_description, 'url' => $canonical, 'inLanguage' => 'ar',
+        'serviceType' => $page->seo_title ?: $page->name,
+        'provider' => ['@id' => url('/') . '/#organization'],
+        'areaServed' => \App\Support\AreaServed::schema($page->emirate ? $page->emirate . ', UAE' : 'UAE'),
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
+    <script type="application/ld+json">{!! json_encode([
+        '@context' => 'https://schema.org', '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            ['@type' => 'ListItem', 'position' => 1, 'name' => $t('home'), 'item' => url('/')],
+            ['@type' => 'ListItem', 'position' => 2, 'name' => $hero['crumb_parent'] ?: $t('crumb_parent')],
+            ['@type' => 'ListItem', 'position' => 3, 'name' => $hero['crumb_current'] ?: $page->name, 'item' => $canonical],
+        ],
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
+    @endif
+    @if($faq && count($faq['items']) && !$page->isRtl())
     <script type="application/ld+json">{!! json_encode([
         '@context'   => 'https://schema.org',
         '@type'      => 'FAQPage',
@@ -90,21 +120,21 @@
     <header class="lp-top" id="lp-header">
         <div class="lp-wrap">
             <div class="lp-island">
-                <a class="lp-island-logo" href="{{ route('home') }}" aria-label="Alpha Health Group home">
+                <a class="lp-island-logo" href="{{ route('home') }}" aria-label="{{ $t('home_aria') }}">
                     <img src="{{ asset('public/front-new/assets/images/ahg-logo-header.png') }}" alt="Alpha Health Group" width="185" height="60">
                 </a>
                 @if($navLinks)
-                <nav class="lp-island-nav" aria-label="On this page">
+                <nav class="lp-island-nav" aria-label="{{ $t('nav_aria') }}">
                     @foreach($navLinks as $key => $label)<a href="#{{ $key }}">{{ $label }}</a>@endforeach
                 </nav>
                 @endif
                 <div class="lp-contact-menu">
-                    <button type="button" class="lp-contact-btn" id="lp-contact-btn" aria-expanded="false" aria-controls="lp-contact-list">Contact</button>
+                    <button type="button" class="lp-contact-btn" id="lp-contact-btn" aria-expanded="false" aria-controls="lp-contact-list">{{ $t('contact') }}</button>
                     <div class="lp-contact-list" id="lp-contact-list" hidden>
                         @if($pg['phone_tel'] !== '' || $pg['phone_display'] !== '')
-                        <a href="tel:{{ preg_replace('/[^0-9+]/', '', $pg['phone_tel'] ?: $pg['phone_display']) }}"><i class="fas fa-phone" aria-hidden="true"></i><span><strong>Call</strong><small>{{ $pg['phone_display'] }}</small></span></a>
+                        <a href="tel:{{ preg_replace('/[^0-9+]/', '', $pg['phone_tel'] ?: $pg['phone_display']) }}"><i class="fas fa-phone" aria-hidden="true"></i><span><strong>{{ $t('menu_call') }}</strong><small dir="ltr">{{ $pg['phone_display'] }}</small></span></a>
                         @endif
-                        <a href="{{ $waHref }}" target="_blank" rel="noopener"><i class="fab fa-whatsapp" aria-hidden="true"></i><span><strong>{{ $pg['wa_header'] ?: 'WhatsApp' }}</strong><small>Chat with the facility team</small></span></a>
+                        <a href="{{ $waHref }}" target="_blank" rel="noopener"><i class="fab fa-whatsapp" aria-hidden="true"></i><span><strong>{{ $pg['wa_header'] ?: $t('menu_wa') }}</strong><small>{{ $t('menu_wa_sub') }}</small></span></a>
                     </div>
                 </div>
             </div>
@@ -123,40 +153,44 @@
     <footer class="lp-footer">
         <div class="lp-wrap">
             <div class="lp-footer-row">
-                <a class="lp-footer-logo" href="{{ route('home') }}" aria-label="Alpha Health Group home">
+                <a class="lp-footer-logo" href="{{ route('home') }}" aria-label="{{ $t('home_aria') }}">
                     <picture>
                         <source type="image/webp" srcset="{{ asset('public/front-new/assets/images/about/alpha-logo5-200.webp') }}">
                         <img src="{{ asset('public/front-new/assets/images/about/alpha-logo5-200.png') }}" alt="Alpha Health Group" width="200" height="215" loading="lazy" decoding="async">
                     </picture>
                 </a>
-                <nav class="lp-footer-policies" aria-label="Policies">
-                    <a href="{{ url('/alpha-privacy-policy') }}">Privacy Policy</a>
-                    <a href="{{ route('front.terms-of-service') }}">Terms of Service</a>
-                    <a href="{{ route('front.cookie-policy') }}">Cookie Policy</a>
-                    <a href="{{ route('front.privacy-policy') }}">GDPR &amp; Data Protection</a>
+                <nav class="lp-footer-policies" aria-label="{{ $t('policies_aria') }}">
+                    <a href="{{ url('/alpha-privacy-policy') }}">{{ $t('privacy') }}</a>
+                    <a href="{{ route('front.terms-of-service') }}">{{ $t('terms') }}</a>
+                    <a href="{{ route('front.cookie-policy') }}">{{ $t('cookies') }}</a>
+                    <a href="{{ route('front.privacy-policy') }}">{{ $t('gdpr') }}</a>
                 </nav>
                 <div class="lp-footer-social">
-                    <span>Connect With Us:</span>
+                    <span>{{ $t('connect') }}</span>
                     <a href="https://www.linkedin.com/company/alphatsm" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
                     <a href="https://x.com/alphatsm_" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)"><i class="fab fa-twitter" aria-hidden="true"></i></a>
                     <a href="https://www.facebook.com/alphatsm" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
                     <a href="https://www.instagram.com/alphahealthgroup/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
                 </div>
                 <div class="lp-footer-contact">
-                    <a class="lp-footer-email" href="mailto:info@alphatsm.com"><i class="fas fa-envelope" aria-hidden="true"></i>info@alphatsm.com</a>
-                    <a class="lp-footer-phone" href="tel:+97142724064"><i class="fas fa-phone" aria-hidden="true"></i>+971 4 272 4064</a>
+                    <a class="lp-footer-email" href="mailto:info@alphatsm.com" dir="ltr"><i class="fas fa-envelope" aria-hidden="true"></i>info@alphatsm.com</a>
+                    <a class="lp-footer-phone" href="tel:+97142724064" dir="ltr"><i class="fas fa-phone" aria-hidden="true"></i>+971 4 272 4064</a>
                 </div>
             </div>
             <div class="lp-footer-legal">
-                <p>Alpha Health Group provides healthcare management consultancy, accreditation support, and advisory services to healthcare organisations across the GCC and Middle East. All consultancy services are provided for organisational and management purposes only and do not constitute clinical medical advice or treatment.</p>
-                <p>&copy; {{ date('Y') }} Alpha Health Group. All rights reserved.</p>
+                <p>{{ $t('legal') }}</p>
+                @if($page->isRtl())
+                <p>&copy; {{ date('Y') }} <span dir="ltr">Alpha Health Group.</span> {{ $t('rights') }}</p>
+                @else
+                <p>&copy; {{ date('Y') }} Alpha Health Group. {{ $t('rights') }}</p>
+                @endif
             </div>
         </div>
     </footer>
 
     <div class="lp-dock" id="lp-dock">
-        <a class="lp-btn lp-btn-primary" href="{{ $waHref }}" target="_blank" rel="noopener">{{ $pg['dock_wa'] ?: 'WhatsApp' }}</a>
-        <a class="lp-btn lp-btn-ghost" href="#contact">{{ $pg['dock_proposal'] ?: 'Request a proposal' }}</a>
+        <a class="lp-btn lp-btn-primary" href="{{ $waHref }}" target="_blank" rel="noopener">{{ $pg['dock_wa'] ?: $t('dock_wa') }}</a>
+        <a class="lp-btn lp-btn-ghost" href="#contact">{{ $pg['dock_proposal'] ?: $t('dock_proposal') }}</a>
     </div>
 </div>
 @endsection
@@ -169,7 +203,9 @@
             service_slug: @json($page->slug),
             page_type:    'landing_page',
             lead_type:    @json(\App\Support\LeadType::for($page)),
+            lang:         @json($lang),
         };
+        window._lpText = @json(\App\Support\LandingText::script($lang));
     </script>
     <script src="{{ asset('public/front/assets/js/landing-facility.js') }}?v={{ substr(md5_file(public_path('front/assets/js/landing-facility.js')), 0, 10) }}" defer></script>
 @endpush

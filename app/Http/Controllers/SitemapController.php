@@ -59,9 +59,9 @@ class SitemapController extends Controller
     {
         $pages = [];
         try {
-            \App\Models\LandingPage::published()->where('indexable', true)->get(['slug', 'canonical', 'updated_at'])
+            \App\Models\LandingPage::published()->where('indexable', true)->get(['slug', 'locale', 'canonical', 'updated_at'])
                 ->each(function ($p) use (&$pages) {
-                    $url = route('front.landing', $p->slug);
+                    $url = $p->url();
                     if ($p->canonical && rtrim($p->canonical, '/') !== $url) {
                         return;
                     }

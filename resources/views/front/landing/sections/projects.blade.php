@@ -4,9 +4,12 @@
 <section class="lp-section lp-projects" id="projects">
     <div class="lp-wrap">
         <div class="lp-proj-head">
-            <h2>{{ $d['heading'] }}</h2>
+            <div>
+                <h2>{{ $d['heading'] }}</h2>
+                @if(($d['text'] ?? '') !== '')<p class="lp-lede lp-mt">{{ $d['text'] }}</p>@endif
+            </div>
             @if($shownProjects->isEmpty())
-                <a class="lp-btn lp-btn-ghost" href="{{ route('front.project') }}">See our projects</a>
+                <a class="lp-btn lp-btn-ghost" href="{{ route('front.project') }}">{{ $t('see_projects') }}</a>
             @elseif($d['see_all_label'] !== '')
                 <a class="lp-btn lp-btn-ghost" href="{{ route('front.project') }}">{{ $d['see_all_label'] }}</a>
             @endif

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@yield('html_lang', 'en')" dir="@yield('html_dir', 'ltr')">
 
 <head>
     {{-- One robots tag per page: search results, previews and removed pages set their own --}}
@@ -32,7 +32,7 @@
 
     {{-- Default Open Graph tags — pages can override via @push('og_tags') --}}
     <meta property="og:site_name" content="Alpha Health Group" />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content="@yield('og_locale', 'en_US')" />
     <meta property="og:type" content="@yield('og_type', 'website')" />
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="og:title" content="{{ $pmTitle ?? '' }}@unless($pmTitle)@stack('page_title')@endunless" />
@@ -1064,7 +1064,10 @@
          direct WhatsApp floating button (below) carry the CTA instead. --}}
     {{-- WhatsApp chat window on every page (Saroth, 30 Oct 2026): it replaces the "Need help?" popup, the "Chat with
          Alpha" widget on Contact and About, and the old floating button. Landing pages pass $waChat (auto-open). --}}
+    {{-- Pages that set @section('no_wa_chat') carry no chat window (the Arabic landing pages: no floating button, no popup). --}}
+    @unless(View::hasSection('no_wa_chat'))
     @include('front.partials.wa-chat')
+    @endunless
 
     {{-- Reusable global inquiry modal: pages opt in via @push('inquiry_modal') --}}
     @stack('inquiry_modal')

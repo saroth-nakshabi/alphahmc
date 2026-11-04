@@ -629,7 +629,8 @@ class MainHomeController extends Controller
         $request->validate([
             'name'         => 'required|string|max:255',
             'email'        => 'required_without:phone|nullable|email|max:255',
-            'phone'        => ['required_without:email', 'nullable', 'string', 'max:20', 'regex:/^\+[\d\s\-]{7,17}$/'],
+            // Landing page forms ask for a phone number (required on the page too).
+            'phone'        => ['required_without:email', 'required_with:landing_page_id', 'nullable', 'string', 'max:20', 'regex:/^\+[\d\s\-]{7,17}$/'],
             'service_id'   => 'nullable|exists:services,id',
             'message'      => 'nullable|string',
             'meeting_date' => 'nullable|date',
