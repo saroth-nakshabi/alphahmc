@@ -78,12 +78,10 @@
     @if(!empty($service->meta_keywords))<meta name="keywords" content="{{ $service->meta_keywords }}">@endif
     @include('front.partials.hero-preload', ['pic' => $pic])
 @endpush
+@if($service->hero_image)@section('og_image', asset('public/uploads/service_images/' . $service->hero_image))@endif
 @push('og_tags')
     {{-- og:site_name/title/description/url/type and twitter:card come from the layout. --}}
     <meta name="author" content="Alpha Health Group">
-    @if($service->hero_image)
-        <meta property="og:image" content="{{ asset('public/uploads/service_images/' . $service->hero_image) }}" />
-    @endif
     <meta name="twitter:title" content="{{ $seoTitle }}" />
     @if($seoDesc !== '')<meta name="twitter:description" content="{{ $seoDesc }}" />@endif
 @endpush

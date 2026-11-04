@@ -477,7 +477,7 @@ body {
                         @foreach ($category->services as $service)
                             <div class="as-card single-service-cart">
                                 <div class="as-card__media">
-                                    <img src="{{ $service->hero_image ? asset('public/uploads/service_images/' . $service->hero_image) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}"
+                                    <img src="{{ $service->hero_image ? \App\Support\Img::thumb('uploads/service_images/' . $service->hero_image, 640) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}"
                                          alt="{{ $service->name }}" loading="lazy">
                                     @if($service->featured)
                                         <span class="as-card__badge">Featured</span>
@@ -499,7 +499,7 @@ body {
                         @foreach ($category->serviceGroups as $group)
                             <div class="as-card single-service-cart">
                                 <div class="as-card__media">
-                                    <img src="{{ $group->hero_image ? asset('public/' . ltrim($group->hero_image, '/')) : ($group->image ? asset('public/uploads/service_group_images/' . $group->image) : asset('public/front/assets/img/hero/service-details-bg.jpg')) }}"
+                                    <img src="{{ $group->hero_image ? \App\Support\Img::thumb(ltrim($group->hero_image, '/'), 640) : ($group->image ? \App\Support\Img::thumb('uploads/service_group_images/' . $group->image, 640) : asset('public/front/assets/img/hero/service-details-bg.jpg')) }}"
                                          alt="{{ $group->name }}" loading="lazy">
                                     @if($group->is_featured)
                                         <span class="as-card__badge">Featured</span>

@@ -30,6 +30,7 @@
 @endif
 @push('page_title', e($blogSeoTitle))
 @section('og_type', 'article')
+@if($blog->image)@section('og_image', asset('public/uploads/blog_images/' . $blog->image))@endif
 @section('meta_description', trim(preg_replace('/\s+/u', ' ', html_entity_decode($blogMetaDesc, ENT_QUOTES | ENT_HTML5, 'UTF-8'))))
 @push('meta')
     @if(!empty($blogKeywords))<meta name="keywords" content="{{ $blogKeywords }}">@endif

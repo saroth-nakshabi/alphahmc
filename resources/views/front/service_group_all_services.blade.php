@@ -7,17 +7,18 @@
 @endpush
 {{-- The layout prints the one description tag: this page's text, else the site default --}}
 @section('meta_description', trim((string) $service->meta_description))
+{{-- Same content as the package page (Ahrefs audit, 4 Nov 2026): point search engines there. --}}
+@section('canonical', route('service-packages', $service->slug))
 @push('meta')
     <meta name="keywords" content="{{ $service->meta_keywords }}">
 @endpush
+@if($service->hero_image)@section('og_image', asset('public/' . ltrim($service->hero_image, '/')))@endif
 @push('og_tags')
     <meta name="author" content="Alpha Health Management Consultancy">
     <meta property="og:title" content="{{ $service->meta_title }} - All Services" />
     <meta property="og:description" content="{{ $service->meta_description }}" />
-    <meta property="og:image" content="{{ $service->hero_image ? asset('public/' . ltrim($service->hero_image, '/')) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}" />
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="{{ strip_tags($service->content)}}">
 @endpush
 @section('content')
     <!-- Standardized Typography & Modern Iconography -->

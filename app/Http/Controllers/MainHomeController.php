@@ -377,6 +377,12 @@ class MainHomeController extends Controller
         'healthcare-acquisition-due-diligence'       => '/services/healthcare-facility-acquisition-due-diligence',
         'healthcare-it-digital-strategy-consulting2' => '/services/hospital-digital-transformation-consulting',
         'gcc-healthcare-consulting'                  => '/service-category/regulatory-quality',
+        // Ahrefs audit, 4 Nov 2026: were temporary redirects to All Services
+        'healthcare-facility-licensing-abu-dhabi'    => '/services/doh-healthcare-facility-licensing-abu-dhabi',
+        'health-information-systems'                 => '/service-category/hie-integration',
+        'health-information-system-integration'      => '/service-category/hie-integration',
+        'hospital-infrastructure-planning'           => '/services/hospital-planning-requirement-mapping',
+        'healthcare-business-setup-uae'              => '/service-category/facility-licensing-setup',
     ];
 
     /** Service URLs removed on purpose: 410 Gone (Saroth, 22 Oct 2026: not required, unpublished). */

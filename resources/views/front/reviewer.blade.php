@@ -21,6 +21,7 @@
 @endphp
 
 @section('meta_description', \Illuminate\Support\Str::limit($reviewer->bio, 155))
+@if($reviewer->photo)@section('og_image', asset('public/' . $reviewer->photo))@endif
 @push('page_title'){{ \App\Support\Seo::title($rvTitle, $rvTitle, 'Alpha Health Group') }}@endpush
 @push('meta')
     <script type="application/ld+json">{!! json_encode([

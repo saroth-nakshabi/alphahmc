@@ -365,7 +365,7 @@
         @foreach($clients as $client)
             <div class="cl-ticker-item">
                 @if($client->logo)
-                    <img src="{{ asset('public/uploads/clients/' . $client->logo) }}" alt="{{ $client->name }}">
+                    <img src="{{ \App\Support\Img::thumb('uploads/clients/' . $client->logo, 240) }}" alt="{{ $client->name }}">
                 @else
                     <span class="cl-ticker-name">{{ $client->name }}</span>
                 @endif
@@ -375,7 +375,7 @@
         @foreach($clients as $client)
             <div class="cl-ticker-item" aria-hidden="true">
                 @if($client->logo)
-                    <img src="{{ asset('public/uploads/clients/' . $client->logo) }}" alt="{{ $client->name }}">
+                    <img src="{{ \App\Support\Img::thumb('uploads/clients/' . $client->logo, 240) }}" alt="{{ $client->name }}">
                 @else
                     <span class="cl-ticker-name">{{ $client->name }}</span>
                 @endif
@@ -420,7 +420,7 @@
                             {{-- Logo area --}}
                             <div class="cl-card-logo-area">
                                 @if($client->logo)
-                                    <img src="{{ asset('public/uploads/clients/' . $client->logo) }}"
+                                    <img src="{{ \App\Support\Img::thumb('uploads/clients/' . $client->logo, 240) }}"
                                          alt="{{ $client->name }} logo" loading="lazy">
                                 @else
                                     <div class="cl-logo-placeholder">

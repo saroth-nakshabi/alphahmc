@@ -41,7 +41,9 @@
     @elseif($metaDesc !== '')
         <meta property="og:description" content="{!! $metaDesc !!}" />
     @endif
-    @if($pmOg)<meta property="og:image" content="{{ $pmOg }}" /><meta name="twitter:image" content="{{ $pmOg }}" />@endif
+    {{-- Share image: the admin's page image, else the page's own (@section('og_image')), else the site default. --}}
+    @php $ogImage = str_replace(' ', '%20', html_entity_decode($pmOg ?: (trim($__env->yieldContent('og_image')) ?: asset('public/front/assets/img/og-default.jpg')), ENT_QUOTES)); @endphp
+    <meta property="og:image" content="{{ $ogImage }}" /><meta name="twitter:image" content="{{ $ogImage }}" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@AlphaHealthGrp" />
     @stack('og_tags')
@@ -180,31 +182,28 @@
 
     $schema = [];
 
-    // ProfessionalService schema
-    $professionalService = [
+    // Service schema (Ahrefs audit, 4 Nov 2026): ProfessionalService is a LocalBusiness type, which needs an
+    // address and has no provider; Service names the Organization below by its @id.
+    $serviceSchema = [
         '@context'    => 'https://schema.org',
-        '@type'       => 'ProfessionalService',
+        '@type'       => 'Service',
         'name'        => $service->name,
         // The page's own meta description (what search shows), else the hero text.
         'description' => trim((string) $service->meta_description) !== ''
             ? trim((string) $service->meta_description)
             : trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags((string) $service->content), ENT_QUOTES | ENT_HTML5, 'UTF-8'))),
         'url'         => $schemaPageUrl,
-        'provider'    => [
-            '@type' => 'Organization',
-            'name'  => 'Alpha Health Group',
-            'url'   => config('app.url'),
-        ],
+        'serviceType' => $service->name,
+        'provider'    => ['@id' => url('/') . '/#organization'],
     ];
 
-    // Only emit these when set — avoids null properties in the JSON-LD.
-    if (!empty($service->areaServed)) {
-        $professionalService['areaServed'] = $service->areaServed;
+    // Only emit when set: avoids empty properties in the JSON-LD.
+    $serviceAreas = \App\Support\AreaServed::schema($service->areaServed);
+    if ($serviceAreas) {
+        $serviceSchema['areaServed'] = $serviceAreas;
     }
-    // serviceType is not a ProfessionalService property (schema.org warns); the
-    // service is already named in 'name'.
 
-    $schema[] = $professionalService;
+    $schema[] = $serviceSchema;
 
     // Reviewed page: WebPage with reviewedBy + lastReviewed, only once the reviewer has signed it off
     // (reviewed_at set; brief "alphahmc-reviewers-and-linking").

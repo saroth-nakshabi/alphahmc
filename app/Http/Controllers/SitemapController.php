@@ -46,6 +46,11 @@ class SitemapController extends Controller
             ['loc' => route('front.brands'),              'priority' => '0.5', 'changefreq' => 'monthly'],
             ['loc' => route('front.ahg-updates'),         'priority' => '0.6', 'changefreq' => 'weekly'],
             ['loc' => route('front.privacy-policy'),      'priority' => '0.3', 'changefreq' => 'yearly'],
+            ['loc' => route('front.our-clients'),         'priority' => '0.5', 'changefreq' => 'monthly'],
+            ['loc' => route('front.testimonials'),        'priority' => '0.5', 'changefreq' => 'monthly'],
+            ['loc' => route('front.facility-types'),      'priority' => '0.7', 'changefreq' => 'monthly'],
+            ['loc' => route('planner.page'),              'priority' => '0.6', 'changefreq' => 'monthly'],
+            ['loc' => route('how_alpha_work'),            'priority' => '0.5', 'changefreq' => 'monthly'],
         ];
     }
 

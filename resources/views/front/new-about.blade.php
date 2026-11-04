@@ -777,7 +777,7 @@
                         @foreach($clients as $client)
                         <div class="swiper-slide partner-slide">
                             <div class="partner-logo-item">
-                                <img src="{{ asset('public/uploads/clients/' . $client->logo) }}"
+                                <img src="{{ \App\Support\Img::thumb('uploads/clients/' . $client->logo, 240) }}"
                                     alt="{{ $client->name }}" loading="lazy">
                                 <span class="partner-name">{{ $client->name }}</span>
                             </div>
