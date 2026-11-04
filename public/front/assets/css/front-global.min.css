@@ -475,7 +475,7 @@ margin-bottom: 50px;
 padding-bottom: 40px;
 border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
-.mission-statement h3 {
+.mission-statement .footer-heading {
 font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif !important;
 font-size: 18px !important;
 font-weight: 600 !important;
@@ -483,7 +483,7 @@ margin-bottom: 25px;
 position: relative;
 display: inline-block;
 }
-.mission-statement h3::after {
+.mission-statement .footer-heading::after {
 content: '';
 position: absolute;
 bottom: -8px;
@@ -524,7 +524,7 @@ display: grid;
 grid-template-columns: repeat(2, 1fr);
 gap: 30px;
 }
-.links-column h4 {
+.links-column .footer-heading {
 font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif !important;
 font-size: 18px !important;
 font-weight: 600 !important;
@@ -533,7 +533,7 @@ color: #fff;
 position: relative;
 padding-bottom: 8px;
 }
-.links-column h4::after {
+.links-column .footer-heading::after {
 content: '';
 position: absolute;
 bottom: 0;
@@ -543,7 +543,7 @@ height: 2px;
 background: #4CAF50;
 transition: width 0.3s ease;
 }
-.links-column:hover h4::after {
+.links-column:hover .footer-heading::after {
 width: 40px;
 }
 .footer-links {
@@ -910,7 +910,7 @@ visibility: visible;
 grid-template-columns: 1fr;
 gap: 40px;
 }
-.mission-statement h3 {
+.mission-statement .footer-heading {
 font-size: 1.6rem;
 }
 .footer-go-to-top {
@@ -959,7 +959,7 @@ gap: 15px;
 flex-wrap: wrap;
 justify-content: center;
 }
-.mission-statement h3 {
+.mission-statement .footer-heading {
 font-size: 1.4rem;
 }
 .logo-text {
@@ -1004,3 +1004,6 @@ opacity: 0;
 
 @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
 @media (max-width:600px){#cookie-consent-banner{padding:12px 16px;gap:10px}#cookie-consent-banner .cookie-title{display:none}#cookie-consent-banner .cookie-content{padding-right:28px}#cookie-consent-banner .cookie-text{font-size:0.8rem;line-height:1.4;color:#475569}#cookie-consent-banner .cookie-btn{padding:10px 12px;min-height:44px}#cookie-consent-banner .cookie-btn-reject{background:#ffffff;color:#1e293b;border:1px solid #475569}#cookie-consent-banner .cookie-btn-accept{background:#006e72;border:1px solid #006e72;box-shadow:none}#cookie-consent-banner .cookie-close{top:6px;right:6px;min-width:32px;min-height:32px}}
+
+/* Login popup title is a div since 4 Nov 2026 (heading levels); keeps the size of the bare h2 rule in base.css. */
+.login-heading { font-size: 2rem; margin-bottom: 1.5rem; }

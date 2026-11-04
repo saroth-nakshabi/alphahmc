@@ -33,6 +33,21 @@
             text-decoration: none;
         }
 
+        /* Heading levels (SEO brief 4 Nov 2026): the long-description and CTA headings render as h2 and the card
+           titles as h3, with the look they had as h3 and span. */
+        .transformation-section .large-info h2.section-lead-heading {
+            font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 600; line-height: 1.2; letter-spacing: normal;
+            margin: 0 0 15px; color: #e0e0e0; }
+        .help-info .help-text-block h2.section-lead-heading {
+            font-size: 1.4rem; font-weight: 600; line-height: 1.35; letter-spacing: normal;
+            font-family: inherit; margin: 0 0 12px; color: #2e2e2e; }
+        h3.mag-card-eyebrow { margin-top: 0; line-height: inherit;
+            font-family: 'Inter', 'Inter Fallback', 'Inter Fallback Android', sans-serif !important; }
+        /* Optional slider heading above the five cards. */
+        .magazine-section .mag-section-heading {
+            font-size: clamp(1.6rem, 2.6vw, 2.1rem); font-weight: 600; line-height: 1.25; letter-spacing: -0.01em;
+            color: #1a1a1a; margin: 0 0 32px; max-width: 820px; }
+
         /* Comparison tables in the long description (clinic setup: mainland or DHCC). Thin rules, no coloured cells. */
         .transformation-desc table { width: 100%; border-collapse: collapse; margin: 0 0 1.25rem; font: inherit; color: inherit; }
         .transformation-desc th, .transformation-desc td { padding: .7rem .75rem .7rem 0; text-align: left; vertical-align: top;
@@ -142,7 +157,7 @@
                 <div class="row">
                     <div class="col-lg-4" data-aos="fade-right">
                         <div class="large-info">
-                            {!! \App\Support\Html::fixLinks($service->info_one) !!}
+                            {!! \App\Support\Html::fixLinks(\App\Support\Html::leadHeadingToH2($service->info_one, 'section-lead-heading')) !!}
                         </div>
                         {{-- Left Read more removed as requested --}}
                         <p class="content-updated-meta" style="margin-top:18px;font-size:0.85rem;color:#6b7280;">
@@ -184,6 +199,9 @@
         @if ($displayMagazines->count())
         <section class="magazine-section" id="magazine-insights">
             <div class="container">
+                @if (trim((string) $service->slider_heading) !== '')
+                    <h2 class="mag-section-heading" data-aos="fade-up">{{ $service->slider_heading }}</h2>
+                @endif
                 @php
                     $firstMag = $displayMagazines->first();
                     $hasFirstImg = $firstMag && $firstMag->image;
@@ -230,7 +248,7 @@
         @endphp
         <div class="swiper-slide">
             <div class="mag-card" data-img="{{ $currImg }}">
-                <span class="mag-card-eyebrow">{{ $mag->title }}</span>
+                <h3 class="mag-card-eyebrow">{{ $mag->title }}</h3>
                 <div class="mag-desc">{!! \App\Support\Html::fixLinks(strip_tags($mag->description, '<a><strong><em>')) !!}</div>
             </div>
         </div>
@@ -350,7 +368,7 @@ function toggleTransformationDesc() {
                         <div class="help-text-block">
                             {{-- <h4>{{ $service->name }} solution</h4> --}}
                             @if($service->info_three && trim($service->info_three) != '')
-                                {!! \App\Support\Html::fixLinks($service->info_three) !!}
+                                {!! \App\Support\Html::fixLinks(\App\Support\Html::leadHeadingToH2($service->info_three, 'section-lead-heading')) !!}
                             @else
                                 <p>Our multidisciplinary team combines architectural excellence with deep clinical insights to
                                     deliver projects that are not just buildings, but platforms for healing.</p>

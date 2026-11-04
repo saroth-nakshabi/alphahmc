@@ -416,7 +416,7 @@
         @endif
     @endforeach
 
-    @include('front.partials.stylesheet', ['href' => asset('public/front/assets/css/front-global.min.css') . '?v=13', 'bundle' => 'front-global'])
+    @include('front.partials.stylesheet', ['href' => asset('public/front/assets/css/front-global.min.css') . '?v=14', 'bundle' => 'front-global'])
 
 {{-- Consent update functions (called by banner buttons) --}}
     <script>
@@ -481,7 +481,7 @@
             🍪
         </div> --}}
         <div class="cookie-content">
-            <h6 class="cookie-title">We use cookies</h6>
+            <div class="h6 cookie-title">We use cookies</div>
             <p class="cookie-text">
                 We use cookies to analyse traffic, personalise content, and improve your experience. You can manage your preferences at any time.
                 <a href="{{ route('front.cookie-policy') }}" class="cookie-policy-link">Cookie Policy</a>
@@ -630,7 +630,7 @@
                 <!-- Left Column: Menu Groups -->
                 <div class="sidebar-content">
                     <div class="menu-group">
-                        <h6 class="sidebar-menu-heading">OUR SERVICES</h6>
+                        <div class="h6 sidebar-menu-heading">OUR SERVICES</div>
                         @if (isset($main_categories) && count($main_categories) > 0)
                             @foreach ($main_categories as $main_category)
                                 <div class="service-content">
@@ -649,7 +649,7 @@
                     </div>
 
                     <div class="menu-group">
-                        <h6 class="sidebar-menu-heading">Discover Alpha</h6>
+                        <div class="h6 sidebar-menu-heading">Discover Alpha</div>
                         {{-- Opens its sub-links in the right panel (like the categories / Our Packages) --}}
                         <div class="service-content"><a href="{{ route('front.new-about') }}" class="group-link" id="group_about">Who We Are</a></div>
                         <div class="service-content"><a href="{{ route('front.new_blog') }}" class="kb-link" id="kb_trigger">Knowledge Base</a></div>
@@ -660,7 +660,7 @@
                 <!-- Right Column: Results -->
                 <div class="sidebar-content-1">
                     <div class="sidebar-heading">
-                        <h2 id="dynamic-heading">Our Expertise</h2>
+                        <div class="h2" id="dynamic-heading">Our Expertise</div>
                         <p id="dynamic-desc">Discover our comprehensive healthcare solutions tailored for your needs.
                         </p>
                     </div>
@@ -690,7 +690,7 @@
                                             @if($promo->eyebrow)
                                                 <span class="mdp-promo-eyebrow">{{ $promo->eyebrow }}</span>
                                             @endif
-                                            <h4 class="mdp-promo-title">{{ $promo->title }}</h4>
+                                            <div class="h4 mdp-promo-title">{{ $promo->title }}</div>
                                             @if($promo->text)
                                                 <p class="mdp-promo-text">{{ $promo->text }}</p>
                                             @endif
@@ -818,7 +818,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content text-center">
                 <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
-                <h2 class="mt-2 login-heading">Log In To Your Account</h2>
+                <div class="h2 mt-2 login-heading">Log In To Your Account</div>
                 <form id="login_form" method="post" action="{{ route('login.store') }}">
                     @csrf
                     <div class="mb-3 text-start px-4 mt-3">
@@ -877,7 +877,7 @@
             <div class="footer-top">
                 <!-- Mission Statement -->
                 <div class="mission-statement">
-                    <h3>Our Mission</h3>
+                    <div class="h3 footer-heading">Our Mission</div>
                     <p class="mission-text">
                         We provide world-class healthcare management consultancy with a focus on
                         safety, compassion, and excellence. Partnering with facilities, health systems,
@@ -888,7 +888,7 @@
                 <!-- Quick Links -->
                 <div class="quick-links-grid">
                     <div class="links-column">
-                        <h4>About AHG</h4>
+                        <div class="h4 footer-heading">About AHG</div>
                         <ul class="footer-links">
                             <li><a href="{{ route('front.new-about') }}"><i class="fas fa-chevron-right"></i> About Alpha Health Group</a></li>
                             <li><a href="{{ route('contact') }}"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
@@ -898,7 +898,7 @@
                     </div>
 
                     <div class="links-column">
-                        <h4>Resources</h4>
+                        <div class="h4 footer-heading">Resources</div>
                         <ul class="footer-links">
                             <li><a href="{{ route('front.all-services') }}"><i class="fas fa-chevron-right"></i> All Services</a></li>
                             <li><a href="{{ route('front.new_blog') }}"><i class="fas fa-chevron-right"></i> Knowledge Base</a></li>

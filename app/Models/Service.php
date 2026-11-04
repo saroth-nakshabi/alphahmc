@@ -22,6 +22,7 @@ class Service extends Model
         'info_two',
         'info_three',
         'info_four',
+        'slider_heading',
         'related_services',
         'announcement_id',
         'featured',

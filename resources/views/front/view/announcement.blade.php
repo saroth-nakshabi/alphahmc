@@ -16,7 +16,7 @@
                     <!-- Left: Content Block - Occupying more space -->
                     <div class="col-lg-8 offset-lg-1 mb-5 mb-lg-0">
                         <div class="ann-text-content" data-aos="fade-up" data-aos-duration="1000">
-                            <h2 class="ann-main-title mb-4">{{ $ann->title }}</h2>
+                            <div class="h2 ann-main-title mb-4">{{ $ann->title }}</div>
                             <p class="ann-sub-description mb-5">{{ $ann->description }}</p>
 
                             @if($ann->button_text)

@@ -589,7 +589,7 @@ h1, .h1 { font-weight: 500 !important; }
         }
 
         /* Mission Statement */
-        .mission-statement h3 {
+        .mission-statement .footer-heading {
             font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif !important;
             font-size: 18px !important;
             font-weight: 600 !important;
@@ -598,7 +598,7 @@ h1, .h1 { font-weight: 500 !important; }
             display: inline-block;
         }
 
-        .mission-statement h3::after {
+        .mission-statement .footer-heading::after {
             content: '';
             position: absolute;
             bottom: -8px;
@@ -623,7 +623,7 @@ h1, .h1 { font-weight: 500 !important; }
             gap: 30px;
         }
 
-        .links-column h4 {
+        .links-column .footer-heading {
             font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif !important;
             font-size: 18px !important;
             font-weight: 600 !important;
@@ -633,7 +633,7 @@ h1, .h1 { font-weight: 500 !important; }
             padding-bottom: 8px;
         }
 
-        .links-column h4::after {
+        .links-column .footer-heading::after {
             content: '';
             position: absolute;
             bottom: 0;
@@ -644,7 +644,7 @@ h1, .h1 { font-weight: 500 !important; }
             transition: width 0.3s ease;
         }
 
-        .links-column:hover h4::after {
+        .links-column:hover .footer-heading::after {
             width: 40px;
         }
 
@@ -1085,7 +1085,7 @@ h1, .h1 { font-weight: 500 !important; }
                 gap: 40px;
             }
 
-            .mission-statement h3 {
+            .mission-statement .footer-heading {
                 font-size: 1.6rem;
             }
 
@@ -1147,7 +1147,7 @@ h1, .h1 { font-weight: 500 !important; }
                 justify-content: center;
             }
 
-            .mission-statement h3 {
+            .mission-statement .footer-heading {
                 font-size: 1.4rem;
             }
 
@@ -1216,3 +1216,6 @@ h1, .h1 { font-weight: 500 !important; }
     #cookie-consent-banner .cookie-btn-accept { background: #006e72; border: 1px solid #006e72; box-shadow: none; }
     #cookie-consent-banner .cookie-close { top: 6px; right: 6px; min-width: 32px; min-height: 32px; }
 }
+
+/* Login popup title is a div since 4 Nov 2026 (heading levels); keeps the size of the bare h2 rule in base.css. */
+.login-heading { font-size: 2rem; margin-bottom: 1.5rem; }

@@ -275,6 +275,12 @@
                         </button>
                     </div>
                     <div class="section-body p-3">
+                        <div class="mb-3">
+                            <label class="control-label" for="slider_heading">Slider heading <span class="text-muted fw-normal">(optional, shown above the cards)</span></label>
+                            <input type="text" name="slider_heading" id="slider_heading" class="form-control" maxlength="150"
+                                value="{{ old('slider_heading', $service->slider_heading) }}" placeholder="For example: Steps to set up a clinic in Dubai" />
+                            <small class="text-muted">Leave it empty to show the cards without a heading.</small>
+                        </div>
                         @if($service->magazines->count() === 0)
                             <div id="mag-empty-state" class="empty-state">
                                 <i class="ti ti-news"></i>

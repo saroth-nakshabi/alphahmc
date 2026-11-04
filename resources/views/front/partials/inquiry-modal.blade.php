@@ -49,7 +49,7 @@
 
             {{-- ── Modal header ── --}}
             <div class="ahg-im-head">
-                <h2 class="ahg-im-title" id="inquiryModalTitle">Book a Consultation</h2>
+                <div class="h2 ahg-im-title" id="inquiryModalTitle">Book a Consultation</div>
                 <p class="ahg-im-sub">Share a few details and our healthcare consulting team will get back to you shortly.</p>
             </div>
 
@@ -138,7 +138,7 @@
                 <div class="ahg-im-thanks-check">
                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                 </div>
-                <h3 class="ahg-im-thanks-title">Inquiry Received!</h3>
+                <div class="h3 ahg-im-thanks-title">Inquiry Received!</div>
                 <p class="ahg-im-thanks-msg">Our consulting team will reach out within 1 business day. For a faster response, chat with us on WhatsApp.</p>
                 <a href="{{ $waLink }}" class="ahg-wa-big-btn" target="_blank" rel="noopener" data-wa-link>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 1.895.523 3.665 1.432 5.18L2 22l4.981-1.398A9.944 9.944 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a8 8 0 01-4.073-1.112l-.292-.17-3.017.847.848-3.073-.186-.303A7.955 7.955 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8zm4.29-5.835c-.232-.116-1.373-.677-1.585-.754-.213-.077-.367-.116-.522.116-.155.232-.598.754-.733.91-.135.154-.27.174-.502.058-.232-.116-.98-.361-1.867-1.15-.69-.615-1.156-1.375-1.292-1.607-.135-.232-.015-.358.101-.474.104-.104.232-.27.348-.406.116-.135.154-.232.232-.386.077-.155.038-.29-.019-.406-.058-.116-.522-1.259-.715-1.722-.188-.45-.38-.389-.522-.396l-.444-.008a.852.852 0 00-.618.29c-.212.232-.81.79-.81 1.926 0 1.136.83 2.233.945 2.388.116.155 1.634 2.494 3.96 3.498.553.24 1.03.382 1.382.49.58.18 1.107.154 1.524.093.465-.069 1.373-.56 1.567-1.1.193-.54.193-1.004.135-1.1-.058-.096-.213-.155-.445-.27z"/></svg>

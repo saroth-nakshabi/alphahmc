@@ -46,4 +46,27 @@ class Html
             $html
         );
     }
+
+    /**
+     * Renders the opening h3 of a CMS block as an h2 with the given class, so the section heading sits at the right
+     * outline level while keeping its h3 look. Only an h3 that opens the block (after optional wrapper divs) changes;
+     * later h3s and blocks that open with text or another heading stay as they are.
+     */
+    public static function leadHeadingToH2(?string $html, string $class): string
+    {
+        $html = (string) $html;
+
+        return preg_replace_callback(
+            '~^(\s*(?:<div\b[^>]*>\s*)*)<h3\b([^>]*)>(.*?)</h3>~is',
+            function ($m) use ($class) {
+                $attrs = preg_match('~\bclass\s*=~i', $m[2])
+                    ? preg_replace('~\bclass\s*=\s*(["\'])~i', 'class=$1' . $class . ' ', $m[2], 1)
+                    : ' class="' . $class . '"' . $m[2];
+
+                return $m[1] . '<h2' . $attrs . '>' . $m[3] . '</h2>';
+            },
+            $html,
+            1
+        );
+    }
 }
