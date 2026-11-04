@@ -395,7 +395,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="writeReviewModalLabel">Write a Review</h5>
+                <div class="h5 modal-title" id="writeReviewModalLabel">Write a Review</div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

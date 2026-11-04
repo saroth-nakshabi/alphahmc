@@ -5,7 +5,7 @@
 @section('meta_description', 'Alpha Blueprint AI, an AI-powered healthcare project planner. Tell us your goal and it maps the right licensing, accreditation, quality and operational path, with the services best suited to you, in about a minute.')
 
 @section('custom_css')
-    <link rel="stylesheet" href="{{ asset('public/front/assets/css/plan-your-project.css') }}?v=12">
+    <link rel="stylesheet" href="{{ asset('public/front/assets/css/plan-your-project.css') }}?v=13">
 @endsection
 
 @section('content')
@@ -160,25 +160,25 @@
             <div class="pp-step" data-step="results">
                 <div class="pp-results-head">
                     <span class="pp-step-tag pp-tag-done"><i class="fa-solid fa-circle-check"></i> Your blueprint is ready</span>
-                    <h2 class="pp-q" id="ppSummary"></h2>
+                    <div class="h2 pp-q" id="ppSummary"></div>
                     <p class="pp-engine-note" id="ppEngineNote" style="display:none"></p>
                 </div>
 
                 {{-- Your custom plan --}}
                 <div id="ppPlanBlock" class="pp-section" style="display:none">
-                    <h4 class="pp-block-title"><span class="pp-sec-num">01</span> Your custom plan</h4>
+                    <h3 class="h4 pp-block-title"><span class="pp-sec-num">01</span> Your custom plan</h3>
                     <p class="pp-section-body" id="ppPlan"></p>
                 </div>
 
                 {{-- Regulatory pathway --}}
                 <div id="ppRegBlock" class="pp-section" style="display:none">
-                    <h4 class="pp-block-title"><span class="pp-sec-num">02</span> Regulatory &amp; licensing pathway</h4>
+                    <h3 class="h4 pp-block-title"><span class="pp-sec-num">02</span> Regulatory &amp; licensing pathway</h3>
                     <p class="pp-section-body" id="ppRegulatory"></p>
                 </div>
 
                 {{-- Our project plan (delivery phases) --}}
                 <div id="ppPhasesBlock" class="pp-section" style="display:none">
-                    <h4 class="pp-block-title"><span class="pp-sec-num">03</span> Our project plan</h4>
+                    <h3 class="h4 pp-block-title"><span class="pp-sec-num">03</span> Our project plan</h3>
                     <div class="pp-phases" id="ppPhases"></div>
                 </div>
 
@@ -196,13 +196,13 @@
 
                 {{-- What Alpha can offer --}}
                 <div id="ppOfferBlock" class="pp-section pp-section--offer" style="display:none">
-                    <h4 class="pp-block-title"><span class="pp-sec-num">04</span> What Alpha can offer</h4>
+                    <h3 class="h4 pp-block-title"><span class="pp-sec-num">04</span> What Alpha can offer</h3>
                     <p class="pp-section-body" id="ppOffer"></p>
                 </div>
 
                 {{-- Our list of services tailored to the client --}}
                 <div class="pp-tailored-head">
-                    <h4 class="pp-block-title pp-block-title--lg">We've tailor-made these services for you</h4>
+                    <h3 class="h4 pp-block-title pp-block-title--lg">We've tailor-made these services for you</h3>
                     <p class="pp-tailored-sub">Pulled from our catalogue and matched to your answers, these are where Alpha can help you most.</p>
                 </div>
                 <div class="pp-recs" id="ppRecs"></div>
@@ -210,7 +210,7 @@
                 {{-- Single results contact band: step-5 style, captures details + an optional consultation --}}
                 <div class="pp-results-band" id="ppResultsBand">
                     <div class="pp-results-band-head">
-                        <h4>Want our experts to take it from here?</h4>
+                        <h3 class="h4 pp-band-title">Want our experts to take it from here?</h3>
                         <p>Share your details and we'll send your blueprint and follow up with the next steps. Want to talk it
                             through? Book a free consultation below and a specialist will walk you through your plan.</p>
                     </div>
@@ -267,7 +267,7 @@
                 {{-- Follow-up (before-flow): we already have their details, only offer consent / a consultation --}}
                 <div class="pp-followup" id="ppFollowup" style="display:none">
                     <div class="pp-followup-head">
-                        <h4>One more step, want us to reach out?</h4>
+                        <h3 class="h4 pp-band-title">One more step, want us to reach out?</h3>
                         <p>We already have your details. Give the go-ahead for a consultant to contact you, or book a free consultation to walk through your plan.</p>
                     </div>
                     <form id="ppFollowupForm" novalidate>

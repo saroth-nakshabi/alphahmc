@@ -242,13 +242,13 @@
 /* Results contact band — single, step-5 style form on the results page */
 .pp-results-band { margin-top: 38px; padding: 30px 30px 26px; border: 1px solid var(--line); border-radius: 22px; background: #fbfdfd; }
 .pp-results-band-head { margin-bottom: 22px; }
-.pp-results-band-head h4 { margin: 0 0 6px; font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif; font-weight: 700; color: var(--ink); font-size: 1.25rem; letter-spacing: -.01em; }
+.pp-results-band-head h4, .pp-results-band-head .pp-band-title { margin: 0 0 6px; font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif; font-weight: 700; color: var(--ink); font-size: 1.25rem; letter-spacing: -.01em; }
 .pp-results-band-head p { margin: 0; color: var(--ink-soft); font-size: .94rem; line-height: 1.6; }
 
 /* Before-flow follow-up (consent / meeting only) */
 .pp-followup { margin-top: 22px; padding: 26px 28px; border: 1px solid #cfe6e3; border-radius: 20px; background: var(--accent-soft); animation: ppIn .4s cubic-bezier(.16,1,.3,1) both; }
 .pp-followup-head { margin-bottom: 16px; }
-.pp-followup-head h4 { margin: 0 0 5px; font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif; font-weight: 700; color: var(--ink); font-size: 1.15rem; letter-spacing: -.01em; }
+.pp-followup-head h4, .pp-followup-head .pp-band-title { margin: 0 0 5px; font-family: 'Outfit', 'Outfit Fallback', 'Outfit Fallback Android', sans-serif; font-weight: 700; color: var(--ink); font-size: 1.15rem; letter-spacing: -.01em; }
 .pp-followup-head p { margin: 0; color: var(--ink-soft); font-size: .92rem; line-height: 1.6; }
 .pp-followup .pp-meeting { border-top: none; padding-top: 4px; margin-top: 8px; }
 

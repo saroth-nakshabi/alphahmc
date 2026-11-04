@@ -115,7 +115,7 @@
             color: #fff;
             font-size: 1.4rem;
         }
-        .process-card h4 { font-size: 1.15rem; font-weight: 700; color: #0d2126; margin-bottom: 10px; }
+        .process-card h4, .process-card .process-card-title { font-size: 1.15rem; font-weight: 700; color: #0d2126; margin-bottom: 10px; }
         .process-card p { color: #5a7070; font-size: 0.93rem; line-height: 1.7; margin: 0; }
 
         /* Connector line between steps (desktop) */
@@ -278,7 +278,7 @@
                         <div class="step-icon">
                             <i class="bi bi-search"></i>
                         </div>
-                        <h4>Research</h4>
+                        <h3 class="h4 process-card-title">Research</h3>
                         <p>We conduct multi-point evaluations to identify gaps between current practice and international best practices, establishing a clear baseline for improvement.</p>
                     </div>
                 </div>
@@ -289,7 +289,7 @@
                         <div class="step-icon">
                             <i class="bi bi-lightbulb-fill"></i>
                         </div>
-                        <h4>Plan</h4>
+                        <h3 class="h4 process-card-title">Plan</h3>
                         <p>A dedicated account manager is assigned to your facility, taking full ownership of the work process and distributing planned tasks to the relevant subject matter experts.</p>
                     </div>
                 </div>
@@ -300,7 +300,7 @@
                         <div class="step-icon">
                             <i class="bi bi-gear-wide-connected"></i>
                         </div>
-                        <h4>Execute</h4>
+                        <h3 class="h4 process-card-title">Execute</h3>
                         <p>Specialised teams are deployed to execute targeted tasks. Short-term goals are monitored until completion; for annual outsourcing this becomes a continuous improvement cycle.</p>
                     </div>
                 </div>
@@ -311,7 +311,7 @@
                         <div class="step-icon">
                             <i class="bi bi-graph-up-arrow"></i>
                         </div>
-                        <h4>Results</h4>
+                        <h3 class="h4 process-card-title">Results</h3>
                         <p>At the end of each project cycle, achieved results are reviewed against the initial baseline to measure success rate, validate outcomes, and inform the next phase of growth.</p>
                     </div>
                 </div>
