@@ -32,6 +32,10 @@
             color: inherit;
             text-decoration: none;
         }
+        /* The hero's in-page link to the requirements (nurse ads) reads as a link, unlike the blended content links. */
+        .hero-desc-wrapper a.hero-anchor-link, .hero-desc-wrapper a.hero-anchor-link:hover {
+            text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+        .transformation-desc [id] { scroll-margin-top: 110px; }
 
         /* Heading levels (SEO brief 4 Nov 2026): the long-description and CTA headings render as h2 and the card
            titles as h3, with the look they had as h3 and span. */
@@ -176,6 +180,30 @@
                 </div>
             </div>
         </section>
+        {{-- In-page links into the long description (for example #requirements from the hero, for nurse ads; SEO brief
+             5 Nov 2026): the section sits behind Read more, so open it first, then scroll to the heading. --}}
+        <script>
+        (function () {
+            function openAndScroll(id, smooth) {
+                var target = id && document.getElementById(id);
+                var wrapper = document.getElementById('transformation-desc-wrapper');
+                if (!target || !wrapper || !wrapper.contains(target)) return false;
+                var button = document.getElementById('transformation-toggle');
+                var open = wrapper.classList.contains('active') || wrapper.classList.contains('expanded');
+                if (!open && button) button.click();
+                setTimeout(function () { target.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' }); }, open ? 0 : 450);
+                return true;
+            }
+            document.addEventListener('click', function (e) {
+                var a = e.target.closest && e.target.closest('a[href^="#"]');
+                if (a && openAndScroll(a.getAttribute('href').slice(1), true)) {
+                    e.preventDefault();
+                    history.replaceState(null, '', a.getAttribute('href'));
+                }
+            });
+            window.addEventListener('load', function () { if (location.hash) openAndScroll(location.hash.slice(1), false); });
+        })();
+        </script>
 
         <script>
             function toggleTransformationDesc() {
