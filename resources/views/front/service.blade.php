@@ -263,7 +263,9 @@
 
         <!-- Slider Script (Screenshot Style) -->
   <script>
-document.addEventListener('DOMContentLoaded', function () {
+// Started when the slider nears the screen (speed brief, 5 Nov 2026): it sits below the first screen, and starting it
+// on load ran its autoplay and layout work while the page was still loading.
+window.ahgWhenNear('.mag-swiper-container', function () {
     const mainImage = document.getElementById('mag-main-image');
 
     // Each magazine is rendered once; Swiper clones slides itself for the loop.
@@ -731,8 +733,8 @@ function toggleTransformationDesc() {
                 }
 
 
-                // New 4th Item Slider
-                new Swiper('.gallery-slider-4', {
+                // New 4th Item Slider (started when it nears the screen, speed brief 5 Nov 2026)
+                window.ahgWhenNear('.gallery-slider-4', () => new Swiper('.gallery-slider-4', {
                     effect: 'fade',
                     fadeEffect: {
                         crossFade: true
@@ -751,7 +753,7 @@ function toggleTransformationDesc() {
                         el: '.swiper-pagination',
                         clickable: true,
                     },
-                });
+                }));
 
                 // AOS init
                 if (typeof AOS !== 'undefined') {

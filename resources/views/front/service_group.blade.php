@@ -374,7 +374,7 @@
                                         : \App\Support\Img::thumb('uploads/magazines/' . $firstMag->image, 720))
                                     : '';
                             @endphp
-                            <img src="{{ $firstImg }}" alt="Magazine Feature" id="mag-main-image">
+                            <img src="{{ $firstImg }}" alt="Magazine Feature" id="mag-main-image" loading="lazy" decoding="async">
 
                             <div class="mag-img-nav">
                                 <button class="mag-img-btn" id="mag-img-prev" aria-label="Previous image">
@@ -554,7 +554,7 @@ function toggleTransformationDesc() {
                         <hr class="leader-hr">
                         <div class="leader-profile">
                             <img src="{{ isset($service->agent) && $service->agent->image ? \App\Support\Img::thumb('uploads/agent_images/' . $service->agent->image, 250) : asset('public/front-new/assets/images/blog_images/Doctor-image/2.webp') }}"
-                                alt="Leader" class="leader-circle-img">
+                                alt="Leader" class="leader-circle-img" loading="lazy" decoding="async">
                             <div class="leader-meta">
                                 <div class="leader-name-bold">
                                     {{ isset($service->agent) ? ($service->agent->user->first_name . ' ' . $service->agent->user->last_name) : 'Dr. Vikram Singh' }}
@@ -676,7 +676,7 @@ function toggleTransformationDesc() {
                                         <div class="ey-case-img-wrapper">
                                             @if(isset($project->projects_images[0]))
                                                 <img src="{{ \App\Support\Img::thumb($project->projects_images[0]->image, 800) }}"
-                                                    class="ey-case-img" alt="{{ $project->name }}">
+                                                    class="ey-case-img" alt="{{ $project->name }}" loading="lazy" decoding="async">
                                             @endif
                                         </div>
                                         <div class="ey-case-body">
@@ -700,7 +700,7 @@ function toggleTransformationDesc() {
                             <h2 class="ey-section-title">Related Article</h2>
                                 <a href="{{ route('front.singleBlog', $blog->slug) }}" class="ey-related-card">
                                     <img src="{{ isset($blog->image) && $blog->image ? \App\Support\Img::thumb('uploads/blog_images/' . $blog->image, 800) : asset('public/front-new/assets/images/blog_images/Doctor-image/2.webp') }}"
-                                        class="rc-bg-img" alt="{{ $blog->title }}">
+                                        class="rc-bg-img" alt="{{ $blog->title }}" loading="lazy" decoding="async">
 
                                     <div class="ey-related-content">
                                         <h3 class="rc-title">{{ $blog->title }}</h3>
@@ -739,7 +739,7 @@ function toggleTransformationDesc() {
                                 <div class="interest-card">
                                     <div class="interest-img-wrapper">
                                         <img src="{{ $related->hero_image ? \App\Support\Img::thumb('uploads/service_images/' . $related->hero_image, 800) : asset('public/front/assets/img/hero/service-details-bg.jpg') }}"
-                                            alt="{{ $related->name }}">
+                                            alt="{{ $related->name }}" loading="lazy" decoding="async">
                                     </div>
                                     <div class="interest-content">
                                         <span class="text-uppercase small fw-bold text-muted mb-2 d-block">
@@ -837,8 +837,8 @@ function toggleTransformationDesc() {
                 }
 
 
-                // New 4th Item Slider
-                new Swiper('.gallery-slider-4', {
+                // New 4th Item Slider (started when it nears the screen, speed brief 5 Nov 2026)
+                window.ahgWhenNear('.gallery-slider-4', () => new Swiper('.gallery-slider-4', {
                     effect: 'fade',
                     fadeEffect: {
                         crossFade: true
@@ -856,7 +856,7 @@ function toggleTransformationDesc() {
                         el: '.swiper-pagination',
                         clickable: true,
                     },
-                });
+                }));
 
                 // AOS init
                 if (typeof AOS !== 'undefined') {

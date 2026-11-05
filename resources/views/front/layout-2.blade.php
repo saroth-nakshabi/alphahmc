@@ -367,6 +367,22 @@
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
     @include('front.partials.fonts')
+    {{-- ahgWhenNear(selector, fn): runs fn once when the element nears the screen (400px ahead), after the deferred
+         scripts (Swiper) have loaded. Below-the-fold sliders start this way instead of on load (speed brief, 5 Nov 2026). --}}
+    <script>
+        window.ahgWhenNear = function (sel, fn) {
+            var start = function () {
+                var el = document.querySelector(sel);
+                if (!el) return;
+                if (!('IntersectionObserver' in window)) { fn(); return; }
+                var io = new IntersectionObserver(function (entries) {
+                    if (entries.some(function (e) { return e.isIntersecting; })) { io.disconnect(); fn(); }
+                }, { rootMargin: '400px 0px' });
+                io.observe(el);
+            };
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+        };
+    </script>
 
     {{-- Bootstrap 5.2.3 (unused rules removed) + style.min.css + slide-menu.min.css as one file
          (scripts/css/build.mjs). Templates with @section('critical', ...) inline their first-screen
