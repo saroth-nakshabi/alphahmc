@@ -459,6 +459,21 @@
                                 </select>
                                 <div class="field-hint">Shown at the bottom of the service page.</div>
                             </div>
+                            <div class="col-md-12">
+                                <label class="control-label" for="related_blog_ids">Related articles (up to 3)</label>
+                                <select name="related_blog_ids[]" id="related_blog_ids" class="form-control select2"
+                                    data-placeholder="Select related articles" multiple>
+                                    <option></option>
+                                    @foreach ($blogs ?? [] as $blog_item)
+                                        <option value="{{ $blog_item->id }}"
+                                            {{ isset($service->related_blog_ids) && is_array($service->related_blog_ids) && in_array($blog_item->id, $service->related_blog_ids) ? 'selected' : '' }}>
+                                            {{ $blog_item->title }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div class="field-hint">Shown in the related content section. Empty: the page picks one matching article itself.</div>
+                            </div>
+
                             <div>
                                 <label class="control-label">Announcement</label>
                                 <select name="announcement_id" class="form-control select2"

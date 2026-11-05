@@ -53,6 +53,7 @@ class ServiceController extends Controller
         $data['main_categories'] = MainCategory::all();
         $data['agents'] = Agent::all();
         $data['services'] = Service::all();
+        $data['blogs'] = \App\Models\Blog::orderBy('title')->get(['id', 'title']);
         $data['announcements'] = \App\Models\Announcement::where('status', true)->get();
 
         return view('dashboard.services.create', $data);
@@ -84,6 +85,8 @@ class ServiceController extends Controller
             'slider_heading' => 'nullable|string|max:150',
             'related_services' => 'nullable|array',
             'related_services.*' => 'integer|exists:services,id',
+            'related_blog_ids' => 'nullable|array|max:3',
+            'related_blog_ids.*' => 'integer|exists:blogs,id',
             'announcement_id' => 'nullable|integer|exists:announcements,id',
             'inq_officer_name' => 'nullable|string|max:255',
             'inq_officer_phone' => 'nullable|string|max:20',
@@ -145,6 +148,7 @@ class ServiceController extends Controller
             'info_four' => $request->input('info_four'),
             'slider_heading' => trim((string) $request->input('slider_heading')) ?: null,
             'related_services' => $request->input('related_services'),
+            'related_blog_ids' => array_values(array_map('intval', (array) $request->input('related_blog_ids', []))) ?: null,
             'announcement_id' => $request->input('announcement_id'),
             'featured'       => $request->input('featured') ?? 0,
             'status'         => in_array($request->input('status'), ['draft', 'published']) ? $request->input('status') : 'published',
@@ -247,6 +251,7 @@ class ServiceController extends Controller
         // dd($data['service']);
         $data['agents'] = Agent::all();
         $data['services'] = Service::where('id', '!=', $id)->get();
+        $data['blogs'] = \App\Models\Blog::orderBy('title')->get(['id', 'title']);
         $data['announcements'] = \App\Models\Announcement::where('status', true)->get();
 
         return view('dashboard.services.edit', $data);
@@ -289,6 +294,8 @@ class ServiceController extends Controller
             'slider_heading' => 'nullable|string|max:150',
             'related_services' => 'nullable|array',
             'related_services.*' => 'integer|exists:services,id',
+            'related_blog_ids' => 'nullable|array|max:3',
+            'related_blog_ids.*' => 'integer|exists:blogs,id',
             'announcement_id' => 'nullable|integer|exists:announcements,id',
             'magazines' => 'nullable|array',
             'magazines.*.title' => 'required_with:magazines|string|max:255',
@@ -322,6 +329,7 @@ class ServiceController extends Controller
             'info_four' => $request->input('info_four'),
             'slider_heading' => trim((string) $request->input('slider_heading')) ?: null,
             'related_services' => $request->input('related_services'),
+            'related_blog_ids' => array_values(array_map('intval', (array) $request->input('related_blog_ids', []))) ?: null,
             'announcement_id' => $request->input('announcement_id'),
             'featured'          => $request->input('featured') ?? 0,
             'show_testimonials' => $request->input('show_testimonials') ?? 0,

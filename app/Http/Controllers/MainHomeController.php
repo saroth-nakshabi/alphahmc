@@ -163,6 +163,12 @@ class MainHomeController extends Controller
             $data['service']->name . ' ' . $data['service']->meta_title,
             $categoryIds->all()
         );
+        // Articles chosen in the admin (Related articles, up to 3), in the chosen order; they replace the automatic pick.
+        $chosen = array_values(array_filter(array_map('intval', $data['service']->related_blog_ids ?? [])));
+        $data['relatedBlogs'] = $chosen
+            ? \App\Models\Blog::whereIn('id', $chosen)->get()->sortBy(fn ($b) => array_search($b->id, $chosen))->values()
+            : collect($data['relatedBlog'] ? [$data['relatedBlog']] : []);
+        $data['relatedBlog'] = $data['relatedBlogs']->first();
 
         $data['globaltag'] = globaltag::all();
         $data['googletag'] = googletag::all();

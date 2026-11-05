@@ -36,6 +36,14 @@
         .hero-desc-wrapper a.hero-anchor-link, .hero-desc-wrapper a.hero-anchor-link:hover {
             text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
         .transformation-desc [id] { scroll-margin-top: 110px; }
+        /* Related articles side by side (pages without case studies): the single-card design scaled to a third or
+           half of the width, so titles are not cut off (layout fix, 5 Nov 2026). */
+        .ey-related-grid .ey-related-card { height: 100%; min-height: 440px; }
+        .ey-related-grid .ey-related-content { padding: 32px 26px; }
+        .ey-related-grid .ey-related-card .rc-title { font-size: clamp(1.3rem, 1.05rem + .7vw, 1.6rem); line-height: 1.25;
+            display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+        .ey-related-grid .rc-desc { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        @media (max-width: 767px) { .ey-related-grid .ey-related-card { min-height: 380px; } }
 
         /* Heading levels (SEO brief 4 Nov 2026): the long-description and CTA headings render as h2 and the card
            titles as h3, with the look they had as h3 and span. */
@@ -631,7 +639,12 @@ function toggleTransformationDesc() {
         @endif
 
         <!-- Case Studies & Related Content Split Section (only related items; hidden when none) -->
-        @php $blog = $relatedBlog ?? null; @endphp
+        @php
+            // Related articles: chosen in the admin (up to 3), else the automatic pick (layout fix, Saroth 5 Nov 2026).
+            $relatedList = ($relatedBlogs ?? collect())->filter()->values();
+            $blog = $relatedList->first() ?? ($relatedBlog ?? null);
+            if ($relatedList->isEmpty() && $blog) { $relatedList = collect([$blog]); }
+        @endphp
         @if ($projects->count() || $blog)
         <section class="split-section-ey">
             <div class="container">
@@ -669,9 +682,48 @@ function toggleTransformationDesc() {
                     </div>
                     @endif
 
-                    @if ($blog)
+                    @if ($blog && !$projects->count())
+                    <!-- No case studies: the related articles take the full width, side by side (never one card in a
+                         two-thirds column). -->
+                    <div class="col-12" data-aos="fade-up">
+                        <div class="related-content-block">
+                            <h2 class="ey-section-title">{{ $relatedList->count() > 1 ? 'Related Articles' : 'Related Article' }}</h2>
+                            <div class="row g-4 ey-related-grid">
+                                @foreach ($relatedList->take(3) as $blog)
+                                <div class="{{ $relatedList->count() >= 3 ? 'col-lg-4 col-md-6' : ($relatedList->count() === 2 ? 'col-md-6' : 'col-12') }}">
+                                <a href="{{ route('front.singleBlog', $blog->slug) }}" class="ey-related-card">
+                                    @php $blogImg = isset($blog->image) && $blog->image ? \App\Support\Img::thumb('uploads/blog_images/' . $blog->image, 800) : asset('public/front-new/assets/images/blog_images/Doctor-image/2.webp'); @endphp
+                                    <img src="{{ $blogImg }}"
+                                        class="rc-bg-img" alt="{{ $blog->title }}" @if($_sz = \App\Support\Img::size($blogImg)) width="{{ $_sz[0] }}" height="{{ $_sz[1] }}" @endif loading="lazy" decoding="async">
+
+                                    <div class="ey-related-content">
+                                        <h3 class="rc-title">{{ $blog->title }}</h3>
+                                        <div class="rc-desc">
+                                            {!! Str::limit(strip_tags($blog->content), 120) !!}
+                                        </div>
+                                        <div class="rc-meta">
+                                            <span class="rc-author">
+                                                <i class="far fa-user"></i> By {{ $blog->tags->first()->name ?? 'Alpha Team' }}
+                                            </span>
+                                            <div class="rc-divider"></div>
+                                            <span class="rc-date" title="Published Date">
+                                                <i class="far fa-calendar-alt"></i> {{ $blog->created_at->format('M d, Y') }}
+                                            </span>
+                                            <div class="rc-divider"></div>
+                                            <span class="rc-date" title="Last Updated">
+                                                <i class="fas fa-history"></i> {{ $blog->updated_at->format('M d, Y') }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                    @elseif ($blog)
                     <!-- Right Column: Related article -->
-                    <div class="{{ $projects->count() ? 'col-lg-5' : 'col-lg-8' }}" data-aos="fade-left">
+                    <div class="col-lg-5" data-aos="fade-left">
                         <div class="related-content-block">
                             <h2 class="ey-section-title">Related Article</h2>
                                 <a href="{{ route('front.singleBlog', $blog->slug) }}" class="ey-related-card">
