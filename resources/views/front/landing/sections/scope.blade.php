@@ -22,7 +22,18 @@
             <div class="lp-group">
                 @if($group !== '')<h3>{{ $group }}</h3>@endif
                 <ul class="lp-rows">
-                    @foreach($rows as $row)<li><b>{{ $row['title'] }}</b><span>{{ $row['text'] }}</span></li>@endforeach
+                    @foreach($rows as $row)
+                        @php
+                            // Optional link on words already in the text (the official authority, SEO agent 5 Nov 2026).
+                            $rowText = e($row['text']);
+                            $linkText = $row['link_text'] ?? ''; $linkUrl = $row['link_url'] ?? '';
+                            if ($linkText !== '' && preg_match('#^https?://#', $linkUrl) && str_contains($rowText, e($linkText))) {
+                                $pos = strpos($rowText, e($linkText));
+                                $rowText = substr_replace($rowText, '<a href="' . e($linkUrl) . '">' . e($linkText) . '</a>', $pos, strlen(e($linkText)));
+                            }
+                        @endphp
+                        <li><b>{{ $row['title'] }}</b><span>{!! $rowText !!}</span></li>
+                    @endforeach
                 </ul>
             </div>
             @endforeach

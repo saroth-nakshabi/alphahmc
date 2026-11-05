@@ -110,6 +110,8 @@ class LandingPageSchema
             ],
             'lists' => ['rows' => ['Scope rows (rows with the same group sit together)', [
                 'group' => ['Group', 'text'], 'title' => ['Title', 'text'], 'text' => ['Text', 'textarea'],
+                'link_text' => ['Words in the text to link (optional, for example the authority name)', 'text'],
+                'link_url'  => ['Link address for those words', 'text'],
             ]]],
         ],
         'turnkey' => [
