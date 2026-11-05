@@ -33,7 +33,9 @@
             window.dataLayer = window.dataLayer || [];
             window.dataLayer.push(payload);
 
-            // 2. gtag event (for GA4 / Google Ads when configured via GTM)
+            // 2. gtag event (for GA4 / Google Ads when configured via GTM). GA4 starts on the first interaction or
+            //    after 4 s (googletags row); start it now so this event still reaches GA4 (5 Nov 2026).
+            if (typeof window.ahgGa4Init === 'function') window.ahgGa4Init();
             if (typeof gtag === 'function') {
                 gtag('event', eventName, params || {});
             }
@@ -44,6 +46,7 @@
         // whose URL contains "wa.me" (whatsapp_click) or starts with "tel:" (call_click);
         // inquiry_sent fires from the inquiry modal. None is a GA4 key event.
         window.ahgGa4Event = function (name) {
+            if (typeof window.ahgGa4Init === 'function') window.ahgGa4Init();   // GA4 config first, or the event is dropped
             if (typeof gtag === 'function') gtag('event', name, { send_to: 'G-KBQ7ZEQ196' });
         };
         document.addEventListener('click', function (e) {

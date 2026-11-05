@@ -1,6 +1,7 @@
 {{-- Meta Pixel 831972843129414, moved from Tag Manager GTM-ND5F4WS v39 (tags 21, 29-35) into site code
      so the site no longer loads GTM (page speed, 2026-10-23). A 1:1 port, so Meta numbers stay the same:
-     - starts on the window load event, as before (GTM itself loaded after the load event);
+     - starts on the first interaction (pointerdown, touchstart, keydown, scroll) or 4 s after load, whichever is first
+       (page speed, Saroth 5 Nov 2026; it started on the window load event before);
      - order: init, PageView, the ViewContent groups in GTM tag order, then Lead;
      - each rule is the GTM trigger regex, unanchored and case-sensitive, tested against the full URL
        ({{Page URL}}: host, path and query, no #fragment); a URL can match more than one group;
@@ -38,6 +39,13 @@
             fbq('track', 'Lead', { content_category: 'consultation-request', content_type: 'service' });
         }
     }
-    if (document.readyState === 'complete') { startMetaPixel(); } else { window.addEventListener('load', startMetaPixel); }
+    var kinds = ['pointerdown', 'touchstart', 'keydown', 'scroll'];
+    function go() {
+        kinds.forEach(function (k) { window.removeEventListener(k, go, true); });
+        startMetaPixel();
+    }
+    kinds.forEach(function (k) { window.addEventListener(k, go, { capture: true, passive: true }); });
+    function timer() { setTimeout(go, 4000); }
+    if (document.readyState === 'complete') { timer(); } else { window.addEventListener('load', timer); }
 })();
 </script>

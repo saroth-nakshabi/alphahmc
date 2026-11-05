@@ -105,6 +105,8 @@
     } catch (err) {}
     var params = { ref_code: code, source_channel: src.channel, source_campaign: src.campaign, source_adgroup: src.adgroup,
       source_term: src.term, click_id: src.gclid, link_number: (link.href.match(/wa\.me\/(\d+)/) || [])[1] || '', send_to: 'G-KBQ7ZEQ196' };
+    // GA4 starts on the first interaction or after 4 s (googletags row): start it first so whatsapp_ref is not dropped.
+    if (typeof window.ahgGa4Init === 'function') window.ahgGa4Init();
     if (typeof window.gtag === 'function') window.gtag('event', 'whatsapp_ref', params);
     // Ref click log: survives the page leaving for WhatsApp and never delays the tap.
     try {
